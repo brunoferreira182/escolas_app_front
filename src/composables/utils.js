@@ -37,11 +37,8 @@ const useUtils = {
     }
   },
   registerLogin (data, key) {
-    console.log('data aqui', data)
-    console.log('key aqui', key)
     window.localStorage.setItem("ul", data.userId);
     window.localStorage.setItem("$k", key);
-    // const key = window.localStorage.getItem("$k");
     const d = CryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
     window.localStorage.setItem("u" + data.userId, d);
     window.localStorage.setItem("au", data.userId);
