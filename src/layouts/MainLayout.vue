@@ -98,7 +98,7 @@ export default defineComponent({
         if(this.userPermissions[0].role === 'IS_PARENT') {
           this.$router.push("/tabsParent")
         }
-        else if(this.userPermissions[0].role ==='WORKER'){
+        else if(this.userPermissions[0].role ==='IS_WORKER'){
           this.$router.push("/tabsWorker")
         }
       }

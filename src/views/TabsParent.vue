@@ -30,11 +30,21 @@
 </template>
 
 <script setup>
+import { IonItem, 
+  IonLabel, 
+  IonList, 
+  IonButton, 
+  IonPage,
+  IonContent, 
+  IonButtons, 
+  IonRouterOutlet,
+  IonIcon, 
+  IonTabButton,
+  IonTabBar, 
+  IonTabs  
+} from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useFetch } from '../composables/fetch.js';
-import { IonItem, IonLabel, IonList, IonButton, IonPage,
-  IonContent, IonButtons, IonRouterOutlet, IonIcon, IonTabButton,
-  IonTabBar, IonTabs  } from '@ionic/vue';
 import { useBackButton, useIonRouter, isPlatform } from '@ionic/vue';
 import { App } from '@capacitor/app';
 import { chatboxOutline } from 'ionicons/icons';
@@ -51,10 +61,7 @@ export default defineComponent({
   name: "MainLayout",
   data() {
     return {
-      chatboxOutline,
-      idCardOutline,
-      personCircleOutline,
-      ellipsisHorizontalOutline
+      
     };
   },
   methods: {
