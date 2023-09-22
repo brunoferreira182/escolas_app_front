@@ -101,6 +101,10 @@ export default {
       utils.loading.hide()
       pushService.initPush()
       console.log(data)
+      if(data.status === 'waitingApproval') {
+        this.$router.push("/waitingAproval")
+        return
+      }
       this.$router.replace('/tabs/home?updateTabs=true' + extra)
     },
     goToRegister() {

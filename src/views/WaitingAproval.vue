@@ -18,7 +18,7 @@
         Seu cadastro está aguardando aprovação pela escola, tente novamente mais tarde.
       </div>
       <div class="text-right ion-padding">
-        <ion-button expand="block" @click="backLogin">Voltar</ion-button>
+        <ion-button expand="block" @click="backLogin">Ir para login</ion-button>
       </div>
     </ion-content>
   </ion-page>
