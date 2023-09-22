@@ -96,25 +96,16 @@ export default {
       this.$router.push('/forgotPassword')
     },
     async registerLogin(data, key) {
-      // window.localStorage.setItem("ul", data.userId);
-      // window.localStorage.setItem("$k", key);
-      //waiting aproval
       utils.registerLogin(data, key)
-      utils.loading.clear()
+      //waiting aproval
+      utils.loading.hide()
       pushService.initPush()
+      console.log(data)
       this.$router.replace('/tabs/home?updateTabs=true' + extra)
     },
-    gotoSignup() {
-      this.$router.push("/newAccount?postAction=createGuestUser");
-    },
     goToRegister() {
-      this.$router.push('/register?postAction=newAd')
+      this.$router.push('/register')
     },
-    gotoEmail() {
-      this.loginStep = "email";
-      this.labelBtnEnter = "Próximo";
-    },
-    
   },
 };
 </script>
