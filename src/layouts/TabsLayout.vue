@@ -50,10 +50,15 @@ export default {
       tabs: [],
       tabsGuest: [
         { name: "home", icon: "/assets/home.svg", to: '/tabs/home', label: "Início" },
-        // { name: "messenger", icon: '/assets/message2.svg', to: '/tabs/messenger', label: "Messenger" },
         { name: "profile", icon: "/assets/user.svg", to: '/profile', label: "Perfil" },
       ],
-      tabsUser: [
+      tabsParents: [
+        { name: "home", icon: "/assets/home.svg", to: '/tabs/home', label: "Início" },
+        { name: "messenger", icon: '/assets/message2.svg', to: '/tabs/messenger', label: "Messenger" },
+        { name: "serviceAgreements", icon: '/assets/agreement2.svg', to: '/serviceAgreementsList', label: "Serviços" },
+        { name: "profile", icon: "/assets/user.svg", to: '/profile', label: "Perfil" },
+      ],
+      tabsWorkers: [
         { name: "home", icon: "/assets/home.svg", to: '/tabs/home', label: "Início" },
         { name: "messenger", icon: '/assets/message2.svg', to: '/tabs/messenger', label: "Messenger" },
         { name: "serviceAgreements", icon: '/assets/agreement2.svg', to: '/serviceAgreementsList', label: "Serviços" },
@@ -68,7 +73,6 @@ export default {
           this.userInfo = r.data
           if (r.data.isGuestUser === 1) this.tabs = this.tabsGuest
           else this.tabs = this.tabsUser
-          // this.$router.replace(this.$route.path)
         })
       }
     }

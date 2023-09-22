@@ -142,16 +142,12 @@ const useUtils = {
   },
   getUserInfoByToken () {
     const opt = {
-      serverName: 'authentication',
-      mode: MODE_AUTH_SERVER,
-      route: '/getUserInfoByToken'
+      route: '/mobile/auth/getUserInfoByToken'
     }
     return useFetch(opt)
   },
   async updateUserInfoLocalStorage () {
     const opt = {
-      serverName: 'authentication',
-      mode: MODE_AUTH_SERVER,
       route: '/getUserInfoByToken'
     }
     const userInfo = await useFetch(opt)
