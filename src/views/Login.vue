@@ -5,10 +5,10 @@
       <div class="ion-padding">
         <div class="ion-text-center ">
           <ion-img
-            src="/assets/logo.png"
+            src="/assets/logo_login_custom.png"
             class="login-logo"
           />
-          <!-- <div class="login-logo-letters q-mb-md">Bem Cuidar</div> -->
+          <div class="login-logo-letters q-mb-md">{{ APP_NAME }}</div>
         </div>
         <div class="text-center">
           <LoginCarousel
@@ -36,15 +36,6 @@
             color="primary"
           >
             Faça seu cadastro
-          </ion-button>
-          <div class="q-mt-sm q-mb-sm">Ou</div>
-          <ion-button
-            fill="outline"
-            expand="block"
-            @click="gotoSignup"
-            color="primary"
-          >
-            Entre como convidado
           </ion-button>
         </div>
       </div>
@@ -97,8 +88,6 @@ export default {
     utils.getIuguLib()
     
   },
-
-
   methods: {
     changeStep (step) {
       this.step = step
@@ -109,23 +98,11 @@ export default {
     async registerLogin(data, key) {
       // window.localStorage.setItem("ul", data.userId);
       // window.localStorage.setItem("$k", key);
+      //waiting aproval
       utils.registerLogin(data, key)
       utils.loading.clear()
       pushService.initPush()
-      const location = await this.getUserLocation()
-      if (!location.data || !location.data.city) {
-        this.$router.replace('/editUserLocation')
-      }
-      window.localStorage.setItem('location', JSON.stringify(location.data))
-      const extra = this.$route.query.postAction ? '&postAction=' + this.$route.query.postAction : ''
-
       this.$router.replace('/tabs/home?updateTabs=true' + extra)
-    },
-    getUserLocation () {
-      const opt = {
-        route: '/mobile/profile/getUserLocation',
-      }
-      return useFetch(opt)
     },
     gotoSignup() {
       this.$router.push("/newAccount?postAction=createGuestUser");
@@ -154,9 +131,7 @@ export default {
 .login-logo-letters {
   font-weight: 600;
   color: var(--ion-color-primary);
-  font-size: 56px;
-  font-family: BickleyScript;
-  text-shadow: 2px 2px #fff,4px 4px var(--ion-color-secondary);
+  font-size: 35px;
   translate:0 20px;
 }
 </style>

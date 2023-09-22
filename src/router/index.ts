@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import Login from '../views/Login.vue'
+import  Login from '../views/Login.vue';
+import  Register from '../views/Register.vue';
+import waitingAproval from '../views/WaitingAproval.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -8,9 +10,19 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/home'
   },
   {
-    path: '/home',
-    name: 'Home',
+    path: '/login',
+    name: 'Login',
     component: Login
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
+  {
+    path: '/waitingAproval',
+    name: 'WaitingAproval',
+    component: waitingAproval
   }
 ]
 

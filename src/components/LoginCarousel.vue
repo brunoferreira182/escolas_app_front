@@ -97,7 +97,7 @@ export default defineComponent({
       this.btnLoginLoading = true
       const opt = {
         serverName: 'authentication',
-        route: '/getKey',
+        route: '/mobile/auth/getKey',
         body: { login: this.email.email }
       }
       utils.loading.show()
@@ -124,7 +124,7 @@ export default defineComponent({
       utils.loading.show()
       const opt = {
         serverName: 'authentication',
-        route: '/makeLogin',
+        route: '/mobile/auth/makeLogin',
         body: {
           user: this.email.email,
           token: CryptoJS.AES.encrypt(
