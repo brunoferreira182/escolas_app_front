@@ -30,13 +30,13 @@ export default defineComponent({
   name: "MainLayout",
   data() {
     return {
+      userPermissions: [],
       appVersion: "",
       mainClass: 'main-white',
       // subscriptionDataStore: useSubscriptionDataStore()
     };
   },
   mounted () {
-    console.log("cheguei no mounted")
     this.startView()
     // utils.fetchIuguId()
     // utils.getIuguLib()
@@ -48,6 +48,12 @@ export default defineComponent({
       this.changeAppBar()
       if (this.$route.path === '/login') return
       else this.checkUserAuthentication()
+    },
+    async getUserPermissions(){
+      const opt = {
+        route:'/mobile/auth/getUserPermissions'
+      }
+      return await useFetch(opt)
     },
     backButtonManager () {
       const ionRouter = useIonRouter();
@@ -86,9 +92,15 @@ export default defineComponent({
         this.$router.push("/waitingAproval")
         return
       }
-      if (!this.userInfo.isActiveParent) {
-        utils.toast('Seu usuário está inativo. Fale com a gestora da escola.')
-        this.$router.replace('/login')
+      if(r.data.status === 'active') {
+        const permissions = await this.getUserPermissions()
+        this.userPermissions = permissions.data
+        if(this.userPermissions[0].role === 'IS_PARENT') {
+          this.$router.push("/tabsParent")
+        }
+        else if(this.userPermissions[0].role ==='WORKER'){
+          this.$router.push("/tabsWorker")
+        }
       }
     },
   }

@@ -105,7 +105,7 @@ export default {
         this.$router.push("/waitingAproval")
         return
       }
-      this.$router.replace('/tabs/home?updateTabs=true' + extra)
+      this.$router.replace('/')
     },
     goToRegister() {
       this.$router.push('/register')
