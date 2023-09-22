@@ -21,8 +21,8 @@ import { App } from '@capacitor/app';
 import utils from '../composables/utils'
 import pushService from '../composables/notifications'
 import { defineCustomElements } from '@ionic/pwa-elements/loader'
-import { useSubscriptionDataStore } from '../stores/subscriptionData'
-const subscriptionDataStore = useSubscriptionDataStore()
+// import { useSubscriptionDataStore } from '../stores/subscriptionData'
+// const subscriptionDataStore = useSubscriptionDataStore()
 </script>
 
 <script>
@@ -32,13 +32,14 @@ export default defineComponent({
     return {
       appVersion: "",
       mainClass: 'main-white',
-      subscriptionDataStore: useSubscriptionDataStore()
+      // subscriptionDataStore: useSubscriptionDataStore()
     };
   },
   mounted () {
+    console.log("cheguei no mounted")
     this.startView()
-    utils.fetchIuguId()
-    utils.getIuguLib()
+    // utils.fetchIuguId()
+    // utils.getIuguLib()
     this.backButtonManager()
     defineCustomElements(window)
   },
@@ -71,10 +72,9 @@ export default defineComponent({
     async checkUserAuthentication () {
       const ui = utils.presentUserInfo();
       if (!ui || !ui.token) { 
-        this.$router.push('/login')
+        this.$router.replace('/login')
         return
       }
-      this.logged = true;
       const r = await utils.getUserInfoByToken()
       if (r.error) {
         this.$router.push("/login")
@@ -82,6 +82,10 @@ export default defineComponent({
       } 
       this.userInfo = r.data;
       pushService.initPush()
+      if(r.data.status === 'waitingApproval') {
+        this.$router.push("/waitingAproval")
+        return
+      }
       if (!this.userInfo.isActiveParent) {
         utils.toast('Seu usuário está inativo. Fale com a gestora da escola.')
         this.$router.replace('/login')
