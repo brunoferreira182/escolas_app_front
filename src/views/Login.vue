@@ -88,8 +88,6 @@ export default {
     utils.getIuguLib()
     
   },
-
-
   methods: {
     changeStep (step) {
       this.step = step

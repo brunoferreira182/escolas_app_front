@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
-import waitingAproval from '../views/WaitingAproval.vue'
+import  Login from '../views/Login.vue';
+import  Register from '../views/Register.vue';
+import waitingAproval from '../views/WaitingAproval.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
