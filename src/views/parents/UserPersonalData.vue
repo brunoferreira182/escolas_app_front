@@ -183,31 +183,18 @@ export default {
         city: '',
         state: '', 
       },
-      addressButtonText: ''
+      addressButtonText: '',
+      userPersonalData: null
     };
   },
   mounted(){
     utils.loading.hide()
     // this.getUserProfileInfo()
-    this.getUserDocument()
-    this.getUserAddress()
+    this.getUserPersonalData()
     if (this.$route.query.postAction === 'none') this.addressButtonText = 'Salvar'
     else this.addressButtonText = 'Avançar'
   },
   methods: {
-    getUserDocument () {
-      const opt = {
-        route: '/mobile/profile/getUserDocument'
-      }
-      useFetch(opt).then(r => {
-        if (!r.data || r.data === '' || r.data === '0') {
-          this.hasDocument = false
-          return
-        }
-        this.document = r.data
-        this.hasDocument = true
-      })
-    },
     getUserAddress () {
       const opt = {
         route: '/mobile/profile/getUserAddress'
@@ -221,6 +208,19 @@ export default {
         this.hasAddress = true
       })
     },
+    getUserPersonalData() {
+      const opt = {
+        route: '/mobile/parents/profile/getUserPersonalData'
+      }
+      useFetch(opt).then((r) => {
+        if(!r.error) {
+          this.document = r.data.document
+          this.addressData = r.data.address
+        } 
+        else if (r.error) console.log("Erro getUserPersonalData")
+
+      })
+    } ,
     displayDialog(){
       this.dialogInformative.open = true
     },
