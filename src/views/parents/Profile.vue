@@ -3,8 +3,8 @@
     <ion-content >
       <div style="height: var(--ion-safe-area-top);"></div>
       <div class="ion-padding" style="background-color: rgb(0, 174, 255); border-bottom-left-radius: 10%; border-bottom-right-radius: 10%;">
-        <div class="ion-text-center text-h5" style="color: white;">
-          Mais
+        <div class="ion-text-center text-h5" style="color: white;" >
+          Perfil
         </div>
       </div>
       <div class="ion-text-center q-pa-lg text-h5">
@@ -22,7 +22,7 @@
 
 <script>
 import { IonPage, IonButton, IonContent, IonImg } from '@ionic/vue';
-import { APP_NAME, COMPANY_ID } from '../composables/variables';
+import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 
 

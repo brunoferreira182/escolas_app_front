@@ -96,10 +96,10 @@ export default defineComponent({
         const permissions = await this.getUserPermissions()
         this.userPermissions = permissions.data
         if(this.userPermissions[0].role === 'IS_PARENT') {
-          this.$router.push("/tabsParent")
+          this.$router.push("/tabsParents")
         }
         else if(this.userPermissions[0].role ==='IS_WORKER'){
-          this.$router.push("/tabsWorker")
+          this.$router.push("/tabsWorkers")
         }
       }
     },

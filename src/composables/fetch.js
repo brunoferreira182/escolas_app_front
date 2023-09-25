@@ -1,4 +1,4 @@
-import { PROJECT_NAME, MODE_APP_SERVER, DEFAULT_SERVER_NAME, COMPANY_ID, CRYPTOYESORNO, MODE_MASTER_SERVER } from './variables'
+import { PROJECT_NAME, MODE_APP_SERVER, DEFAULT_SERVER_NAME, COMPANY_ID, CRYPTOYESORNO, MODE_SERVER } from './variables'
 import { masterServerRoute } from './masterServerRoutes'
 import CryptoJS from "crypto-js"
 import axios from 'axios'
@@ -98,6 +98,9 @@ export async function useFetch ({
   }
   //////////////////////////////////////////////////
   if (destinationUrl) routeMasterServer = destinationUrl
+
+  /////// tirando do master server
+  if (MODE_SERVER !== 'master') routeMasterServer += route
 
   let ret
   try {
