@@ -21,6 +21,26 @@
           <ion-label class="q-pa-sm">Meus filhos</ion-label>
         </ion-item>
       </ion-list>
+      <ion-alert
+        :is-open="dialogUserData.open"
+        header="Você precisa preencher seus dados cadastrais"
+        :backdropDismiss="false"
+        animated
+        :buttons="[
+          {
+            text: 'Depois',
+            handler: () => {
+              dialogUserData.open = false
+            }
+          },
+          {
+            text: 'Preencher',
+            handler: () => {
+              this.$router.push('/tabsParents/userPersonalData')
+            }
+          }
+        ]"
+      ></ion-alert>
     </ion-content>
   </ion-page>
 </template>
@@ -36,7 +56,8 @@ import {
   IonAvatar,
   IonList,
   IonNote,
-  IonIcon } from '@ionic/vue';
+  IonIcon,
+  IonAlert } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { chevronForward, listCircle, personCircleOutline, happyOutline } from 'ionicons/icons'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -54,7 +75,9 @@ import { useFetch } from '@/composables/fetch';
     data() {
       return {
         APP_NAME,
-        userProfile: []
+        userProfile: [],
+        dialogUserData: {open: false},
+        userData: null
       };
     },
     watch: {
@@ -72,6 +95,9 @@ import { useFetch } from '@/composables/fetch';
       async startView () {
         const userData = await this.getUserProfileById()
         this.userData = userData.data
+        if (!this.userData.document) {
+          this.dialogUserData.open = true
+        }
       },
       backLogin() {
         this.$router.push('/login')

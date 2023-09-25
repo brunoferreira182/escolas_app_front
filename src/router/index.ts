@@ -10,6 +10,7 @@ import parentsSocial from '../views/parents/Social.vue'
 import parentsChat from '../views/parents/Chat.vue'
 import parentsProfile from '../views/parents/Profile.vue'
 import parentsMore from '../views/parents/More.vue'
+import userPersonalData from '../views/parents/UserPersonalData.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -46,6 +47,7 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsParents/chat', component: parentsChat },
           { path: '/tabsParents/profile', component: parentsProfile },
           { path: '/tabsParents/more', component: parentsMore },
+          { path: '/tabsParents/userPersonalData', component: userPersonalData },
         ]
       },
     ]

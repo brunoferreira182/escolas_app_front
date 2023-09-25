@@ -113,11 +113,8 @@ export default {
         return
       }
       const r = await this.getUserPermissions()
-      if (r.data.length === 0) {
-        this.$router.push("/waitingPermission")
-        return
-      }
-      if (r.data[0].role === 'IS_PARENT') this.$router.push("/tabsParents")
+      if (r.data.length === 0) this.$router.push("/waitingPermission")
+      else if (r.data[0].role === 'IS_PARENT') this.$router.push("/tabsParents")
       else if (r.data[0].role === 'WORKER') this.$router.push("/tabsWorkers")
     },
     goToRegister() {
