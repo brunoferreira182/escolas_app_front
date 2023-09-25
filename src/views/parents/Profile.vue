@@ -4,31 +4,56 @@
       title="Perfil"
       :backButton="false"
     />
-    <ion-content >
+    <ion-content class="ion-padding">
       <ion-item
         @click="$router.push('/editProfile')"
         lines="none"
         class="profile-item"
         v-if="userInfo"
       >
-        <ion-avatar style="width:60px; height:auto" slot="start">
+        <ion-avatar style="width:60px; height:auto" >
           <img :src="'/assets/default_avatar.svg'" class="profile-avatar">
         </ion-avatar>
-        <ion-label>
+        <ion-label class="q-px-sm">
           <h2>{{ userInfo.name }}</h2>
           <p>{{ userInfo.email }}</p>
           <p>Editar perfil</p>
         </ion-label>
       </ion-item>
+      <div class="ion-text-center text-h5 q-py-sm">
+        {{ userInfo.familyData.name }}
+      </div>
       <ion-list :inset="true">
-        <ion-item :button="true">
-          <ion-icon :icon="personCircleOutline"></ion-icon>
-          <ion-label class="q-pa-sm">Adicionar foto de perfil</ion-label>
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">
+          Filhos:
+        </div>
+        <ion-item 
+          v-for="child in userInfo.children"
+          :key="child"
+        >
+        <div>
+          {{ child.data.name }}
+          <div class="text-subtitle2">
+            {{ child.status.label }}
+          </div>
+        </div>
         </ion-item>
-        <ion-item :button="true">
-          <ion-icon color="primary" :icon="happyOutline" size="large"/>
-          <ion-label class="q-pa-sm">Meus filhos</ion-label>
+        <ion-item :button="true" @click="addChild">Adicionar Filho</ion-item>
+      </ion-list>
+      <ion-list :inset="true">
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">
+          Familiares
+        </div>
+        <ion-item 
+        >
+        <div>
+          {{  }}
+          <div class="text-subtitle2">
+            {{  }}
+          </div>
+        </div>
         </ion-item>
+        <ion-item :button="true" @click="addParent">Adicionar Familiar</ion-item>
       </ion-list>
       <ion-alert
         :is-open="dialogUserData.open"
@@ -50,6 +75,33 @@
           }
         ]"
       ></ion-alert>
+      <ion-alert
+        :is-open="dialogUserAddFamily.open"
+        header="Antes de adicionar seus filhos você precisa criar uma família!"
+        :backdropDismiss="false"
+        animated
+        :inputs="[
+          {
+            type: 'text',
+            placeholder: 'Dê um nome para sua família',
+            value: familyName
+          }
+        ]"
+        :buttons="[
+          {
+            text: 'Depois',
+            handler: () => {
+              dialogUserAddFamily.open = false
+            }
+          },
+          {
+            text: 'Criar',
+            handler: (e) => {
+              createFamilyName(e)
+            }
+          }
+        ]"
+      />
     </ion-content>
   </ion-page>
 </template>
@@ -68,56 +120,81 @@ import {
   IonIcon,
   IonAlert } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
-import { chevronForward, listCircle, personCircleOutline, happyOutline } from 'ionicons/icons'
+import { chevronForward, listCircle, personCircleOutline, happyOutline, peopleOutline } from 'ionicons/icons'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { defineComponent } from 'vue';
 </script>
 
 <script>
 import { useFetch } from '@/composables/fetch';
-  export default {
-    components: {
-      IonPage, IonButton,
-      IonContent,
-      IonImg
-    },
-    data() {
-      return {
-        APP_NAME,
-        userProfile: [],
-        dialogUserData: {open: false},
-        userInfo: null
-      };
-    },
-    watch: {
-      $route (to, from) {
-        if (to === '/tabsParents/profile') {
-          this.startView()
-        }
-      }
-    },
-    mounted () {
-      this.startView()
-    },
-
-    methods: {
-      async startView () {
-        const userInfo = await this.getUserProfileById()
-        this.userInfo = userInfo.data
-        if (!this.userInfo.document) {
-          this.dialogUserData.open = true
-        }
-      },
-      backLogin() {
-        this.$router.push('/login')
-      },
-      async getUserProfileById() {
-        const opt = {
-          route: '/mobile/parents/profile/getUserProfileById'
-        }
-        return await useFetch(opt)
+export default {
+  components: {
+    IonPage, IonButton,
+    IonContent,
+    IonImg
+  },
+  data() {
+    return {
+      APP_NAME,
+      userProfile: [],
+      dialogUserData: {open: false},
+      dialogUserAddFamily: {open: false},
+      userInfo: [],
+      familyName: ''
+    };
+  },
+  watch: {
+    $route (to, from) {
+      if (to === '/tabsParents/profile') {
+        this.startView()
       }
     }
+  },
+  beforeMount () {
+    this.startView()
+  },
+  methods: {
+    createFamilyName (e) {
+      const opt = {
+        route: '/mobile/parents/profile/createFamily',
+        body: {
+          name: e[0]
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          console.log("EErrou ao atualizar familia")
+        }
+        this.startView()
+      })
+    },
+    addChild() {
+      if(this.userInfo.familyIdObj === 'noFamily') {
+        this.dialogUserAddFamily.open = true
+        return
+      }
+      this.$router.push('/tabsParents/addChild')
+    },
+    addParent() {
+      this.$router.push('/tabsParents/addParent')
+    },
+    async startView () {
+      const userInfo = await this.getUserProfileById()
+      this.userInfo = userInfo.data
+      if (!this.userInfo.document) {
+        this.dialogUserData.open = true
+      }
+    },
+    backLogin() {
+      this.$router.push('/login')
+    },
+    async getUserProfileById() {
+      const opt = {
+        route: '/mobile/parents/profile/getUserProfileById'
+      }
+      return await useFetch(opt)
+    }
+  }
 }
 </script>
 
