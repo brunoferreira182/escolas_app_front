@@ -5,6 +5,7 @@ import MainLayout from '../layouts/MainLayout.vue'
 import  Login from '../views/Login.vue';
 import  Register from '../views/Register.vue';
 import waitingAproval from '../views/WaitingAproval.vue';
+import waitingPermission from '../views/WaitingPermission.vue';
 import parentsSocial from '../views/parents/Social.vue'
 import parentsChat from '../views/parents/Chat.vue'
 import parentsProfile from '../views/parents/Profile.vue'
@@ -31,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
         component: waitingAproval
       },
       {
+        path: '/waitingpermission',
+        name: 'WaitingPermission',
+        component: waitingPermission
+      },
+      {
         path: '/tabsParents',
         name: 'TabsParents',
         component: TabsLayoutParent,
@@ -44,7 +50,6 @@ const routes: Array<RouteRecordRaw> = [
       },
     ]
   },
-  
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

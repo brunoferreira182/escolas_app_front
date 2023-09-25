@@ -469,7 +469,18 @@ export default {
       console.log('deu refresh?')
       this.getPosts({ fromRefresh: true, event })
     },
-    
+    getUserProfileById() {
+      const opt = {
+        route: '/mobile/parents/profile/getUserProfileById'
+      }
+      useFetch(opt).then((r) => {
+        if(!r.error) {
+          this.userProfile = r.data
+        } else {
+          console.log("Deu erro aqui ó getUserProfileById")
+        }
+      })
+    },
     getPosts () {
       const opt = {
         method: 'POST',

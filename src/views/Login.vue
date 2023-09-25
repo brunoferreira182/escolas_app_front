@@ -89,6 +89,15 @@ export default {
     
   },
   methods: {
+    async getUserPermissions(){
+      const opt = {
+        route:'/mobile/auth/getUserPermissions',
+        body: {
+          permissionType: 'mobile'
+        }
+      }
+      return await useFetch(opt)
+    },
     changeStep (step) {
       this.step = step
     },
@@ -97,13 +106,28 @@ export default {
     },
     async registerLogin(data, key) {
       utils.registerLogin(data, key)
-      //waiting aproval
       utils.loading.hide()
       pushService.initPush()
-      console.log(data)
-      if(data.status === 'waitingApproval') {
+      if (data.status === 'waitingApproval') {
         this.$router.push("/waitingAproval")
         return
+      }
+      console.log(data, "Macacacocco")
+      const r = await this.getUserPermissions()
+      console.log(r.data, "CACETINHO")
+      if (r.data.length === 0) {
+        this.$router.push("/waitingPermission")
+        return
+      }
+      else if (r.data[0].role === 'IS_PARENT') {
+        if (r.data[1].role === 'WORKER') {
+          this.$router.push("../layouts/tabsParents?worker=true")
+          return
+        }
+        this.$router.push("../layouts/tabsParents")
+      }
+      else if (r.data[0].role === 'WORKER') {
+        this.$router.push("../layouts/tabsWorkers")
       }
       this.$router.replace('/')
     },

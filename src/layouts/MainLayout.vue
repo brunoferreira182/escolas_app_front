@@ -51,7 +51,10 @@ export default defineComponent({
     },
     async getUserPermissions(){
       const opt = {
-        route:'/mobile/auth/getUserPermissions'
+        route:'/mobile/auth/getUserPermissions',
+        body: {
+          permissionType: 'mobile'
+        }
       }
       return await useFetch(opt)
     },
@@ -95,11 +98,17 @@ export default defineComponent({
       if(r.data.status === 'active') {
         const permissions = await this.getUserPermissions()
         this.userPermissions = permissions.data
+        if(this.userPermissions[0] === undefined){
+          this.$router.push("/waitingPermission")
+          return
+        }
         if(this.userPermissions[0].role === 'IS_PARENT') {
           this.$router.push("/tabsParents")
+          return
         }
         else if(this.userPermissions[0].role ==='IS_WORKER'){
           this.$router.push("/tabsWorkers")
+          return
         }
       }
     },

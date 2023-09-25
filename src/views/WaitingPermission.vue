@@ -15,7 +15,7 @@
         Olá, seja bem vindo ao nosso aplicativo!
       </div>
       <div class="ion-text-center q-pa-lg text-subtitle1">
-        Seu cadastro está aguardando aprovação pela escola, tente novamente mais tarde.
+        Você ainda não tem permissão para acessar o app, fale com a escola.
       </div>
       <div class="text-right ion-padding">
         <ion-button expand="block" @click="backLogin">Ir para login</ion-button>
@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     backLogin() {
-      this.$router.back('/login')
+      this.$router.push("/login")
     }
   }
 }

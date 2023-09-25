@@ -53,7 +53,8 @@ export default {
         { name: "messenger", icon: chatboxOutline, to: '/tabsParents/chat', label: "Chat" },
         { name: "profile", icon: personCircleOutline, to: '/tabsParents/profile', label: "Perfil" },
         { name: "more", icon: ellipsisHorizontalOutline, to: '/tabsParents/more', label: "Mais" },
-      ]
+      ],
+      userProfile: []
     };
   },
   watch: {
@@ -68,9 +69,9 @@ export default {
     }
   },
   beforeMount () {
-
   },
   methods: {
+    
     verifyUserType () {
       
     },

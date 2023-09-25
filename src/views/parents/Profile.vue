@@ -1,49 +1,73 @@
 <template>
   <ion-page>
+    <ToolbarEscolas
+      title="Perfil"
+      :backButton="false"
+    />
     <ion-content >
-      <div style="height: var(--ion-safe-area-top);"></div>
-      <div class="ion-padding" style="background-color: rgb(0, 174, 255); border-bottom-left-radius: 10%; border-bottom-right-radius: 10%;">
-        <div class="ion-text-center text-h5" style="color: white;" >
-          Perfil
-        </div>
-      </div>
-      <div class="ion-text-center q-pa-lg text-h5">
-        Olá, seja bem vindo ao nosso aplicativo!
-      </div>
-      <div class="ion-text-center q-pa-lg text-subtitle1">
-        Seu cadastro está aguardando aprovação pela escola, tente novamente mais tarde.
-      </div>
-      <div class="text-right ion-padding">
-        <ion-button expand="block" @click="backLogin">Ir para login</ion-button>
-      </div>
+      <ion-item >
+        <ion-avatar aria-hidden="true">
+          <img alt="Imagem de perfil" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
+        </ion-avatar>
+        <ion-label class="q-pa-sm">Nome do usuário</ion-label>
+      </ion-item>
+      <ion-list :inset="true">
+        <ion-item :button="true">
+          <ion-icon :icon="personCircleOutline"></ion-icon>
+          <ion-label class="q-pa-sm">Adicionar foto de perfil</ion-label>
+        </ion-item>
+        <ion-item :button="true">
+          <ion-icon color="primary" :icon="happyOutline" size="large"/>
+          <ion-label class="q-pa-sm">Meus filhos</ion-label>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
 
-<script>
-import { IonPage, IonButton, IonContent, IonImg } from '@ionic/vue';
+<script setup>
+import { 
+  IonPage,
+  IonButton,
+  IonContent,
+  IonImg,
+  IonItem,
+  IonLabel,
+  IonAvatar,
+  IonList,
+  IonNote,
+  IonIcon } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
+import { chevronForward, listCircle, personCircleOutline, happyOutline } from 'ionicons/icons'
+import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { defineComponent } from 'vue';
+</script>
 
-
-export default {
-  components: {
-    IonPage, IonButton,
-    IonContent,
-    IonImg
-  },
-  data() {
-    return {
-      APP_NAME
-    };
-  },
-  methods: {
-    backLogin() {
-      this.$router.push('/login')
+<script>
+  export default {
+    components: {
+      IonPage, IonButton,
+      IonContent,
+      IonImg
+    },
+    data() {
+      return {
+        APP_NAME,
+        userProfile: []
+      };
+    },
+    mounted () {
+    this.startProfile()
+    },
+    methods: {
+      backLogin() {
+        this.$router.push('/login')
+      },
+      async startProfile() {
+        await this.getUserProfileById()
+      }
     }
-  }
 }
-
 </script>
 
 <style scoped>
