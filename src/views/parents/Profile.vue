@@ -5,11 +5,20 @@
       :backButton="false"
     />
     <ion-content >
-      <ion-item >
-        <ion-avatar aria-hidden="true">
-          <img alt="Imagem de perfil" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
+      <ion-item
+        @click="$router.push('/editProfile')"
+        lines="none"
+        class="profile-item"
+        v-if="userInfo"
+      >
+        <ion-avatar style="width:60px; height:auto" slot="start">
+          <img :src="'/assets/default_avatar.svg'" class="profile-avatar">
         </ion-avatar>
-        <ion-label class="q-pa-sm">Nome do usuário</ion-label>
+        <ion-label>
+          <h2>{{ userInfo.name }}</h2>
+          <p>{{ userInfo.email }}</p>
+          <p>Editar perfil</p>
+        </ion-label>
       </ion-item>
       <ion-list :inset="true">
         <ion-item :button="true">
@@ -77,7 +86,7 @@ import { useFetch } from '@/composables/fetch';
         APP_NAME,
         userProfile: [],
         dialogUserData: {open: false},
-        userData: null
+        userInfo: null
       };
     },
     watch: {
@@ -93,9 +102,9 @@ import { useFetch } from '@/composables/fetch';
 
     methods: {
       async startView () {
-        const userData = await this.getUserProfileById()
-        this.userData = userData.data
-        if (!this.userData.document) {
+        const userInfo = await this.getUserProfileById()
+        this.userInfo = userInfo.data
+        if (!this.userInfo.document) {
           this.dialogUserData.open = true
         }
       },
