@@ -2,7 +2,7 @@
   <ion-page>
     <ToolbarEscolas
       title="Social"
-      :backButton="false"
+      :backButton="true"
     />
 
     <ion-content >

@@ -98,18 +98,12 @@ export default defineComponent({
       if(r.data.status === 'active') {
         const permissions = await this.getUserPermissions()
         this.userPermissions = permissions.data
-        if(this.userPermissions[0] === undefined){
+        if (this.userPermissions.length === 0){
           this.$router.push("/waitingPermission")
           return
         }
-        if(this.userPermissions[0].role === 'IS_PARENT') {
-          this.$router.push("/tabsParents")
-          return
-        }
-        else if(this.userPermissions[0].role ==='IS_WORKER'){
-          this.$router.push("/tabsWorkers")
-          return
-        }
+        if (permissions.data[0].role === 'IS_PARENT') this.$router.push("/tabsParents")
+        else if (permissions.data[0].role === 'WORKER') this.$router.push("/tabsWorkers")
       }
     },
   }

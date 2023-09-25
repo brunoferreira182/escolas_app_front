@@ -112,24 +112,13 @@ export default {
         this.$router.push("/waitingAproval")
         return
       }
-      console.log(data, "Macacacocco")
       const r = await this.getUserPermissions()
-      console.log(r.data, "CACETINHO")
       if (r.data.length === 0) {
         this.$router.push("/waitingPermission")
         return
       }
-      else if (r.data[0].role === 'IS_PARENT') {
-        if (r.data[1].role === 'WORKER') {
-          this.$router.push("../layouts/tabsParents?worker=true")
-          return
-        }
-        this.$router.push("../layouts/tabsParents")
-      }
-      else if (r.data[0].role === 'WORKER') {
-        this.$router.push("../layouts/tabsWorkers")
-      }
-      this.$router.replace('/')
+      if (r.data[0].role === 'IS_PARENT') this.$router.push("/tabsParents")
+      else if (r.data[0].role === 'WORKER') this.$router.push("/tabsWorkers")
     },
     goToRegister() {
       this.$router.push('/register')

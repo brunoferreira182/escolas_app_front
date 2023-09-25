@@ -44,6 +44,7 @@ import { defineComponent } from 'vue';
 </script>
 
 <script>
+import { useFetch } from '@/composables/fetch';
   export default {
     components: {
       IonPage, IonButton,
@@ -56,15 +57,30 @@ import { defineComponent } from 'vue';
         userProfile: []
       };
     },
-    mounted () {
-    this.startProfile()
+    watch: {
+      $route (to, from) {
+        if (to === '/tabsParents/profile') {
+          this.startView()
+        }
+      }
     },
+    mounted () {
+      this.startView()
+    },
+
     methods: {
+      async startView () {
+        const userData = await this.getUserProfileById()
+        this.userData = userData.data
+      },
       backLogin() {
         this.$router.push('/login')
       },
-      async startProfile() {
-        await this.getUserProfileById()
+      async getUserProfileById() {
+        const opt = {
+          route: '/mobile/parents/profile/getUserProfileById'
+        }
+        return await useFetch(opt)
       }
     }
 }
