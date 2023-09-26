@@ -15,6 +15,7 @@ import postDetail from '../views/parents/postDetail.vue'
 import addChild from '../views/parents/AddChild.vue'
 import addParent from '../views/parents/AddParent.vue'
 import childDetail from '../views/parents/ChildDetail.vue'
+import editProfile from '../views/parents/EditProfile.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -58,6 +59,7 @@ const routes: Array<RouteRecordRaw> = [
         ]
       },
       { path: '/postDetail', component: postDetail },
+      { path: '/editProfile', component: editProfile },
     ]
   },
 ]
