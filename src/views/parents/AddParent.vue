@@ -4,46 +4,47 @@
       title="Adicionar familiar"
       :backButton="true"
     />
-    <ion-content class="ion-padding">
-      <div class="q-my-md"><strong>Adicionar familiar</strong></div>
-      <div>
-        <InputDocument
-          mode="md"
-          @keyup="getUserByCpf"
-          label-placement="floating"
-          label="Insira o cpf do familiar"
-          v-model="parent.searchDocument"
-          class="q-mb-sm"
-        />
-      </div>
-      <div>
-        <ion-button 
-          expand="block"
-          class="q-pt-sm"
-          @click="searchParent"
-        >
-          Pesquisar familiar
-        </ion-button>
+    <ion-content color="light">
+      <div class="ion-padding">
+        <div class="q-my-md"><strong>Adicionar familiar</strong></div>
+        <div>
+          <InputDocument
+            mode="md"
+            label-placement="floating"
+            label="Insira o cpf do familiar"
+            v-model="searchDocument"
+            class="q-mb-sm"
+          />
+        </div>
+        <div>
+          <ion-button 
+            expand="block"
+            class="q-pt-sm"
+            @click="searchParent"
+          >
+            Pesquisar familiar
+          </ion-button>
+        </div>
       </div>
       <div 
-        v-if="canShowParentData === true"
+        v-if="searchResult"
         class="q-pt-md"  
       >
-        <ion-input
-          fill="outline"
-          rows="1" 
-          v-model="parent.name" 
-          hint="Nome"
-          label-placement="floating"
-          readonly
-        />
-        <ion-button 
-          expand="block" 
-          class="q-pt-md"
-          @click="inviteParentToFamily"
-        >
-          Convidar para minha família
-        </ion-button>
+        <ion-list :inset="true">
+          <!-- <div class="ion-text-left text-h6 q-py-sm q-pl-md">Resultado</div> -->
+          <ion-item 
+            :button="true"
+            @click="inviteParentToFamily"
+          >
+            <ion-avatar slot="start">
+              <ion-img :src="utils.makeFileUrl(searchResult.image)"/>
+            </ion-avatar>
+            <ion-label>
+              <h6>{{ searchResult.name }}</h6>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
       </div>
     </ion-content>
   </ion-page>
@@ -55,17 +56,14 @@ import {
   IonPage,
   IonButton,
   IonAlert,
-  IonGrid,
-  IonText,
   IonInput,
-  IonRow,
   IonItem,
   IonLabel,
-  IonCol,
   IonContent,
   onIonViewWillEnter,
   IonImg,
-  IonAvatar
+  IonAvatar,
+  IonList
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import InputDocument from '../../components/InputDocument.vue'
@@ -77,26 +75,14 @@ import PhotoHandler from '../../components/PhotoHandler.vue'
 <script>
 
 export default {
-  name: "UserPersonalData",
+  name: "AddParent",
   data() {
     return {
-      canShowParentData: false,
-      parent: {
-        searchDocument: '',
-        document: '',
-        name: '',
-        id: ''
-      },
-      familyId: ''
+      searchDocument: '',
+      searchResult: null,
     };
   },
-  mounted(){
-    this.getFamilyId()
-  },
   methods: {
-    getFamilyId() {
-      this.familyId = this.$route.query.familyId
-    },
     getUserProfileById() {
       const opt = {
         route: '/mobile/parents/profile/getUserProfileById'
@@ -113,8 +99,7 @@ export default {
       const opt = {
         route: '/mobile/parents/profile/addSolicitationToUserGetFamily',
         body: {
-          userId: this.parent.id,
-          familyId: this.familyId,
+          userId: this.searchResult._id,
         }
       }
       useFetch(opt).then((r) => {
@@ -123,42 +108,28 @@ export default {
         }
         else {
           utils.toast("Convite enviado com sucesso.")
+          this.$router.back()
         }
       })
     },
-    searchParent(){
-      if (this.parent.searchDocument.length !== 14 || this.parent.document === '' || this.parent.name === '') {
+    searchParent () {
+      if (this.searchDocument.length !== 14) {
         utils.toast("Preencha um cpf válido")
         return
       }
-      this.canShowParentData = true
-    },  
-    getUserByCpf() {
       const opt = {
         route: '/mobile/parents/profile/getUserByCpf',
         body: {
-          cpf: this.parent.searchDocument
+          document: this.searchDocument
         }
       }
+      utils.loading.show()
       useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast("Ocorreu um erro, tente novamente.")
-          return
-        }
-        if (r.data.length) {
-          this.parent.document = r.data[0].document
-          this.parent.name = r.data[0].name
-          this.parent.id = r.data[0]._id
-          return
-        }
-        else {
-          this.parent.document = '',
-          this.parent.name = '',
-          this.parent.id = '',
-          this.canShowParentData = false
-        }
+        utils.loading.hide()
+        if (r.error) return
+        this.searchResult = r.data
       })
-    },
+    },  
   }
 };
 </script>
