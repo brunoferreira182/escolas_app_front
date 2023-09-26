@@ -149,7 +149,7 @@ export default {
       dialogUserAddParent: {open: false},
       userInfo: null,
       familyName: '',
-      searchCpf: ''
+      searchCpf: '',
     };
   },
   watch: {

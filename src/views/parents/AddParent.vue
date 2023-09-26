@@ -40,9 +40,9 @@
         <ion-button 
           expand="block" 
           class="q-pt-md"
-          @click="addParentToFamily"
+          @click="inviteParentToFamily"
         >
-          Adicionar na minha família
+          Convidar para minha família
         </ion-button>
       </div>
     </ion-content>
@@ -109,9 +109,9 @@ export default {
         }
       })
     },
-    addParentToFamily() {
+    inviteParentToFamily() {
       const opt = {
-        route: '/mobile/parents/profile/addUserToFamily',
+        route: '/mobile/parents/profile/addSolicitationToUserGetFamily',
         body: {
           userId: this.parent.id,
           familyId: this.familyId,
@@ -120,6 +120,9 @@ export default {
       useFetch(opt).then((r) => {
         if (r.error) {
           utils.toast("Ocorreu um erro, tente novamente.")
+        }
+        else {
+          utils.toast("Convite enviado com sucesso.")
         }
       })
     },
