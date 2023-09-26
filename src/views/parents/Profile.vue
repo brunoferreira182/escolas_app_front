@@ -25,11 +25,13 @@
       <div class="ion-text-center text-h5 q-py-sm" v-if="userInfo.familyData">
         {{ userInfo.familyData.name }}
       </div>
-      <ion-list :inset="true">
+      <ion-list :inset="true" v-if="userInfo.children">
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Filhos</div>
         <ion-item 
           v-for="child in userInfo.children"
           :key="child"
+          :button="true"
+          @click="goToChildDetail(child._id)"
         >
           <ion-avatar aria-hidden="true" slot="start">
             <img :src="utils.makeFileUrl(child.image)"/>
@@ -45,32 +47,15 @@
       <ion-list :inset="true">
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
         <ion-item 
-          v-for="child in userInfo.children"
-          :key="child"
+          
         >
           <ion-avatar aria-hidden="true" slot="start">
-            <img :src="utils.makeFileUrl(child.image)"/>
+            <!-- <img :src="utils.makeFileUrl(child.image)"/> -->
           </ion-avatar>
           <ion-label>
-            <h6>{{ child.name }}</h6>
-            <ion-badge>{{ child.status.label }}</ion-badge>
+            <!-- <h6>{{ child.name }}</h6> -->
+            <!-- <ion-badge>{{ child.status.label }}</ion-badge> -->
           </ion-label>
-        </ion-item>
-        <ion-item :button="true" @click="addChild">Adicionar Filho</ion-item>
-      </ion-list>
-
-
-      <ion-list :inset="true">
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">
-          Familiares
-        </div>
-        <ion-item >
-        <div>
-          {{  }}
-          <div class="text-subtitle2">
-            {{  }}
-          </div>
-        </div>
         </ion-item>
         <ion-item :button="true" @click="addParent">Adicionar Familiar</ion-item>
       </ion-list>
@@ -95,7 +80,7 @@
         ]"
       ></ion-alert>
       <ion-alert
-        :is-open="dialogUserAddFamily.open"
+        :is-open="dialogUserAddFamilyName.open"
         header="Antes de adicionar seus filhos você precisa criar uma família!"
         :backdropDismiss="false"
         animated
@@ -110,7 +95,7 @@
           {
             text: 'Depois',
             handler: () => {
-              dialogUserAddFamily.open = false
+              dialogUserAddFamilyName.open = false
             }
           },
           {
@@ -160,9 +145,11 @@ export default {
       APP_NAME,
       userProfile: null,
       dialogUserData: {open: false},
-      dialogUserAddFamily: {open: false},
+      dialogUserAddFamilyName: {open: false},
+      dialogUserAddParent: {open: false},
       userInfo: null,
-      familyName: ''
+      familyName: '',
+      searchCpf: ''
     };
   },
   watch: {
@@ -176,6 +163,9 @@ export default {
     this.startView()
   },
   methods: {
+    goToChildDetail(childId) {
+      this.$router.push("/tabsParents/childDetail?userId=" + childId)
+    },
     createFamilyName (e) {
       const opt = {
         route: '/mobile/parents/profile/createFamily',
@@ -192,13 +182,17 @@ export default {
     },
     addChild() {
       if(this.userInfo.familyIdObj === 'noFamily') {
-        this.dialogUserAddFamily.open = true
+        this.dialogUserAddFamilyName.open = true
         return
       }
       this.$router.push('/tabsParents/addChild')
     },
     addParent() {
-      this.$router.push('/tabsParents/addParent')
+      if(this.userInfo.familyIdObj === 'noFamily') {
+        this.dialogUserAddFamilyName.open = true
+        return
+      }
+      this.$router.push('/tabsParents/addParent?familyId=' + this.userInfo.familyId)
     },
     async startView () {
       const userInfo = await this.getUserProfileById()

@@ -477,7 +477,7 @@ export default {
         if(!r.error) {
           this.userProfile = r.data
         } else {
-          console.log("Deu erro aqui ó getUserProfileById")
+          utils.toast("Ocorreu um erro, tente novamente.")
         }
       })
     },
