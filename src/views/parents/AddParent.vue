@@ -5,38 +5,45 @@
       :backButton="true"
     />
     <ion-content class="ion-padding">
-      <div class="q-mt-md"><strong>Adicionar familiar</strong></div>
-      <div style="display:flex;flex-direction: column; gap: 8px;margin-top: 20px;">
-        <ion-input 
-          mode="md" 
-          fill="outline" 
-          label-placement="floating" 
-          label="Nome" 
-          v-model="childData.name"
-          />
+      <div class="q-my-md"><strong>Adicionar familiar</strong></div>
+      <div>
         <InputDocument
           mode="md"
+          @keyup="getUserByCpf"
           label-placement="floating"
-          label="CPF/CNPJ"
-          v-model="childData.document"
-        />
-        <ion-input 
-          mode="md" 
-          fill="outline" 
-          label-placement="floating" 
-          label="Data de nascimento" 
-          type="date" 
-          v-model="childData.birthDayDate"
+          label="Insira o cpf do familiar"
+          v-model="parent.searchDocument"
+          class="q-mb-sm"
         />
       </div>
       <div>
         <ion-button 
           expand="block"
           class="q-pt-sm"
-          @click="addChild"
+          @click="searchParent"
         >
-        Adicionar familiar
-      </ion-button>
+          Pesquisar familiar
+        </ion-button>
+      </div>
+      <div 
+        v-if="canShowParentData === true"
+        class="q-pt-md"  
+      >
+        <ion-input
+          fill="outline"
+          rows="1" 
+          v-model="parent.name" 
+          hint="Nome"
+          label-placement="floating"
+          readonly
+        />
+        <ion-button 
+          expand="block" 
+          class="q-pt-md"
+          @click="addParentToFamily"
+        >
+          Adicionar na minha família
+        </ion-button>
       </div>
     </ion-content>
   </ion-page>
@@ -57,12 +64,15 @@ import {
   IonCol,
   IonContent,
   onIonViewWillEnter,
+  IonImg,
+  IonAvatar
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import InputDocument from '../../components/InputDocument.vue'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../composables/utils'
 import { cpf } from 'cpf-cnpj-validator'
+import PhotoHandler from '../../components/PhotoHandler.vue'
 </script>
 <script>
 
@@ -70,38 +80,91 @@ export default {
   name: "UserPersonalData",
   data() {
     return {
-      childData: {
-        name: '',
+      canShowParentData: false,
+      parent: {
+        searchDocument: '',
         document: '',
-        birthDayDate: '',
+        name: '',
+        id: ''
       },
+      familyId: ''
     };
   },
   mounted(){
+    this.getFamilyId()
   },
   methods: {
-    addChild() {
-      if (this.childData.name !== '' && this.childData.document !== '' && this.childData.birthDayDate !== '') {
-        const opt = {
-          route: '/mobile/parents/profile/createChild',
-          body: {
-            childData: this.childData
-          }
-        }
-        useFetch(opt).then((r) => {
-          if (r.error) {
-            console.log("Erro ao salvar o filho")
-          }
-          this.$router.back
-        })
-      } else {
-        this.$q.notify("Preencha todos os dados e tente novamente.")
+    getFamilyId() {
+      this.familyId = this.$route.query.familyId
+    },
+    getUserProfileById() {
+      const opt = {
+        route: '/mobile/parents/profile/getUserProfileById'
       }
-    }
+      useFetch(opt).then((r) => {
+        if(!r.error) {
+          this.userProfile = r.data
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente.")
+        }
+      })
+    },
+    addParentToFamily() {
+      const opt = {
+        route: '/mobile/parents/profile/addUserToFamily',
+        body: {
+          userId: this.parent.id,
+          familyId: this.familyId,
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente.")
+        }
+      })
+    },
+    searchParent(){
+      if (this.parent.searchDocument.length !== 14 || this.parent.document === '' || this.parent.name === '') {
+        utils.toast("Preencha um cpf válido")
+        return
+      }
+      this.canShowParentData = true
+    },  
+    getUserByCpf() {
+      const opt = {
+        route: '/mobile/parents/profile/getUserByCpf',
+        body: {
+          cpf: this.parent.searchDocument
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente.")
+          return
+        }
+        if (r.data.length) {
+          this.parent.document = r.data[0].document
+          this.parent.name = r.data[0].name
+          this.parent.id = r.data[0]._id
+          return
+        }
+        else {
+          this.parent.document = '',
+          this.parent.name = '',
+          this.parent.id = '',
+          this.canShowParentData = false
+        }
+      })
+    },
   }
 };
 </script>
 <style scoped>
+ion-avatar {
+  --border-radius: 4px;
+  width: 100px;
+  height: 100px
+}
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
 }

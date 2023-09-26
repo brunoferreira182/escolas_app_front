@@ -21,9 +21,15 @@
             label="Digite seu email"
             idField = "email"
             v-model="userData.email"
-            class="q-my-md"
+            class="q-my-sm"
           ></InputEmail>
-
+          <InputDocument
+          mode="md"
+          label-placement="floating"
+          label="Insira seu cpf"
+          v-model="userData.document"
+          class="q-mb-sm"
+          />
           <InputTelephone
             label="Digite seu telefone"
             idField="phone"
@@ -131,6 +137,7 @@ import {
   IonChip,
   IonIcon
 } from '@ionic/vue';
+import InputDocument from '../components/InputDocument.vue'
 import InputEmail from '../components/InputEmail.vue'
 import InputPassword from '../components/InputPassword.vue'
 import InputTelephone from '../components/InputTelephone.vue'
@@ -155,6 +162,7 @@ export default {
       userData: {
         acceptTerms: 'false',
         email: '',
+        document: '',
         phone: '',
         birthdate: null,
         name: '',

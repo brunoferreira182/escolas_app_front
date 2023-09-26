@@ -14,6 +14,7 @@ import userPersonalData from '../views/parents/UserPersonalData.vue'
 import postDetail from '../views/parents/postDetail.vue'
 import addChild from '../views/parents/AddChild.vue'
 import addParent from '../views/parents/AddParent.vue'
+import childDetail from '../views/parents/ChildDetail.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -53,6 +54,7 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsParents/userPersonalData', component: userPersonalData },
           { path: '/tabsParents/addChild', component: addChild },
           { path: '/tabsParents/addParent', component: addParent },
+          { path: '/tabsParents/childDetail', component: childDetail },
         ]
       },
       { path: '/postDetail', component: postDetail },
