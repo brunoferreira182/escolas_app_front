@@ -4,48 +4,67 @@
       title="Perfil"
       :backButton="false"
     />
-    <ion-content class="ion-padding">
-      <ion-item
-        @click="$router.push('/editProfile')"
-        lines="none"
-        class="profile-item"
-        v-if="userInfo"
-      >
-        <ion-avatar style="width:60px; height:auto" >
-          <img :src="'/assets/default_avatar.svg'" class="profile-avatar">
-        </ion-avatar>
-        <ion-label class="q-px-sm">
-          <h2>{{ userInfo.name }}</h2>
-          <p>{{ userInfo.email }}</p>
-          <p>Editar perfil</p>
-        </ion-label>
-      </ion-item>
-      <div class="ion-text-center text-h5 q-py-sm">
+    <ion-content v-if="userInfo" color="light">
+      <ion-list :inset="true">
+        <ion-item
+          @click="$router.push('/editProfile')"
+          lines="none"
+          class="profile-item"
+          v-if="userInfo"
+        >
+          <ion-avatar style="width:60px; height:auto" >
+            <img :src="'/assets/default_avatar.svg'" class="profile-avatar">
+          </ion-avatar>
+          <ion-label class="q-px-sm">
+            <h2>{{ userInfo.name }}</h2>
+            <p>{{ userInfo.email }}</p>
+            <p>Editar perfil</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <div class="ion-text-center text-h5 q-py-sm" v-if="userInfo.familyData">
         {{ userInfo.familyData.name }}
       </div>
       <ion-list :inset="true">
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">
-          Filhos:
-        </div>
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Filhos</div>
         <ion-item 
           v-for="child in userInfo.children"
           :key="child"
         >
-        <div>
-          {{ child.data.name }}
-          <div class="text-subtitle2">
-            {{ child.status.label }}
-          </div>
-        </div>
+          <ion-avatar aria-hidden="true" slot="start">
+            <img :src="utils.makeFileUrl(child.image)"/>
+          </ion-avatar>
+          <ion-label>
+            <h6>{{ child.name }}</h6>
+            <ion-badge>{{ child.status.label }}</ion-badge>
+          </ion-label>
         </ion-item>
         <ion-item :button="true" @click="addChild">Adicionar Filho</ion-item>
       </ion-list>
+
+      <ion-list :inset="true">
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
+        <ion-item 
+          v-for="child in userInfo.children"
+          :key="child"
+        >
+          <ion-avatar aria-hidden="true" slot="start">
+            <img :src="utils.makeFileUrl(child.image)"/>
+          </ion-avatar>
+          <ion-label>
+            <h6>{{ child.name }}</h6>
+            <ion-badge>{{ child.status.label }}</ion-badge>
+          </ion-label>
+        </ion-item>
+        <ion-item :button="true" @click="addChild">Adicionar Filho</ion-item>
+      </ion-list>
+
+
       <ion-list :inset="true">
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">
           Familiares
         </div>
-        <ion-item 
-        >
+        <ion-item >
         <div>
           {{  }}
           <div class="text-subtitle2">
@@ -118,11 +137,14 @@ import {
   IonList,
   IonNote,
   IonIcon,
-  IonAlert } from '@ionic/vue';
+  IonAlert,
+  IonBadge
+} from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { chevronForward, listCircle, personCircleOutline, happyOutline, peopleOutline } from 'ionicons/icons'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { defineComponent } from 'vue';
+import utils from '../../composables/utils'
 </script>
 
 <script>
@@ -136,16 +158,16 @@ export default {
   data() {
     return {
       APP_NAME,
-      userProfile: [],
+      userProfile: null,
       dialogUserData: {open: false},
       dialogUserAddFamily: {open: false},
-      userInfo: [],
+      userInfo: null,
       familyName: ''
     };
   },
   watch: {
     $route (to, from) {
-      if (to === '/tabsParents/profile') {
+      if (to.path === '/tabsParents/profile') {
         this.startView()
       }
     }

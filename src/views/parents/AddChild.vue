@@ -5,20 +5,42 @@
       :backButton="true"
     />
     <ion-content class="ion-padding">
-      <div class="q-mt-md"><strong>Adicionar filho(a)</strong></div>
-      <div style="display:flex;flex-direction: column; gap: 8px;margin-top: 20px;">
+      <div class="q-my-md"><strong>Adicionar filho(a)</strong></div>
+      <div>
+        <ion-button
+          expand="block"
+          class="q-mb-md"
+          fill="outline"
+          @click="startPhotoHandler = true"
+          v-if="!image.blob"
+        >Foto</ion-button>
+        <ion-row class="q-my-md" v-if="image.blob">
+          <ion-col>
+            <ion-avatar >
+              <ion-img :src="image.url" ></ion-img>
+            </ion-avatar>
+          </ion-col>
+          <ion-col>
+            <ion-button
+              @click="startPhotoHandler = true"
+              fill="outline"
+            >Trocar foto</ion-button>
+          </ion-col>
+        </ion-row>
         <ion-input 
           mode="md" 
           fill="outline" 
           label-placement="floating" 
           label="Nome" 
           v-model="childData.name"
-          />
+          class="q-mb-md"
+        />
         <InputDocument
           mode="md"
           label-placement="floating"
           label="CPF/CNPJ"
           v-model="childData.document"
+          class="q-mb-sm"
         />
         <ion-input 
           mode="md" 
@@ -26,7 +48,8 @@
           label-placement="floating" 
           label="Data de nascimento" 
           type="date" 
-          v-model="childData.birthDayDate"
+          v-model="childData.birthdate"
+          class="q-mb-md"
         />
       </div>
       <div>
@@ -35,9 +58,17 @@
           class="q-pt-sm"
           @click="addChild"
         >
-        Adicionar filho
-      </ion-button>
+          Adicionar filho
+        </ion-button>
       </div>
+      <PhotoHandler
+        v-show="startPhotoHandler"
+        :start="startPhotoHandler"
+        :allFiles="true"
+        :noCrop="false"
+        @captured="captured"
+        @cancel="cancelPhotoHandler"
+      />
     </ion-content>
   </ion-page>
 </template>
@@ -57,12 +88,15 @@ import {
   IonCol,
   IonContent,
   onIonViewWillEnter,
+  IonImg,
+  IonAvatar
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import InputDocument from '../../components/InputDocument.vue'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../composables/utils'
 import { cpf } from 'cpf-cnpj-validator'
+import PhotoHandler from '../../components/PhotoHandler.vue'
 </script>
 <script>
 
@@ -73,35 +107,63 @@ export default {
       childData: {
         name: '',
         document: '',
-        birthDayDate: '',
+        birthdate: '',
       },
+      startPhotoHandler: false,
+      image: {
+        url: null,
+        blob: null,
+        name: null
+      }
     };
   },
   mounted(){
   },
   methods: {
-    addChild() {
-      if (this.childData.name !== '' && this.childData.document !== '' && this.childData.birthDayDate !== '') {
-        const opt = {
-          route: '/mobile/parents/profile/createChild',
-          body: {
-            childData: this.childData
-          }
-        }
-        useFetch(opt).then((r) => {
-          if (r.error) {
-            console.log("Erro ao salvar o filho")
-          }
-          this.$router.back
-        })
-      } else {
-        this.$q.notify("Preencha todos os dados e tente novamente.")
+    cancelPhotoHandler () {
+      this.startPhotoHandler = false
+    },
+    captured(fileUrl, fileBlob, fileName) {
+      this.startPhotoHandler = false
+      this.image = {
+        url: fileUrl,
+        blob: fileBlob,
+        name: fileName,
+        type: 'newImage'
       }
+    },
+    addChild() {
+      if (this.childData.name === ''
+          || this.childData.document === ''
+          || this.childData.birthDayDate === ''
+          || !this.image.blob)
+      {
+        utils.toast('Preencha todos os dados e insira uma foto')
+        return
+      }
+      const opt = {
+        route: '/mobile/parents/profile/createChild',
+        body: this.childData,
+        file: [{ file: this.image.blob, name: 'userPhoto' }]
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast('Ocorreu um erro. Tente novamente.')
+          return
+        }
+        utils.toast('Filho adicionado com sucesso.')
+        this.$router.back()
+      })
     }
   }
 };
 </script>
 <style scoped>
+ion-avatar {
+  --border-radius: 4px;
+  width: 100px;
+  height: 100px
+}
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
 }

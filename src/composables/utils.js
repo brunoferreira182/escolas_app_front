@@ -47,6 +47,10 @@ const useUtils = {
     const userInfo = this.presentUserInfo();
     return this.attachmentsAddress() + userInfo.profilePhoto + '?' + new Date().getTime()
   },
+  makeFileUrl (filename) {
+    if (!filename) return '/assets/default_avatar.svg'
+    return this.attachmentsAddress() + filename + '?' + new Date().getTime()
+  },
   localStorage: {
     set (key, value) {
       window.localStorage.setItem(key, JSON.stringify(value))

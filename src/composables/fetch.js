@@ -92,7 +92,7 @@ export async function useFetch ({
     file.forEach(f => {
       console.log(typeof f)
       console.log(f)
-      form.append('file', f, filename ? filename : 'userFile.png');
+      form.append('file', f.file, f.name ? filename : 'userFile.png');
     })
     bodyToSend = form
   }
