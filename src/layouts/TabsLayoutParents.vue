@@ -21,6 +21,27 @@
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
+    <ion-alert
+      v-if="familySolicitation"
+        :is-open="dialogAcceptSolicitation.open"
+        :header="`Você recebeu um convite de ${familySolicitation.sendBy} para participar da  ${familySolicitation.familyName }` " 
+        :backdropDismiss="false"
+        animated
+        :buttons="[
+          {
+            text: 'Recusar',
+            handler: () => {
+              refuseFamilySolicitation()
+            }
+          },
+          {
+            text: 'Aceitar',
+            handler: () => {
+              acceptFamilySolicitation()
+            }
+          }
+        ]"
+      />
   </ion-page>
 </template>
 <script setup>
@@ -31,7 +52,7 @@ import {
   IonPage, IonRouterOutlet,
   IonFab, IonFabButton,
   IonModal, IonContent,
-  IonImg, IonAvatar,
+  IonImg, IonAvatar, IonAlert
 } from '@ionic/vue';
 import { 
   idCardOutline,
@@ -43,7 +64,7 @@ import utils from '../composables/utils'
 import { useBackButton } from '@ionic/vue';
 </script>
 <script>
-
+import { useFetch } from '@/composables/fetch';
 export default {
   name: "TabsLayoutParents",
   data() {
@@ -54,7 +75,9 @@ export default {
         { name: "profile", icon: personCircleOutline, to: '/tabsParents/profile', label: "Perfil" },
         { name: "more", icon: ellipsisHorizontalOutline, to: '/tabsParents/more', label: "Mais" },
       ],
-      userProfile: []
+      userProfile: [],
+      familySolicitation: null,
+      dialogAcceptSolicitation: {open: false}
     };
   },
   watch: {
@@ -70,8 +93,53 @@ export default {
   },
   beforeMount () {
   },
+  mounted () {
+    this.getFamiliesSolicitationsToUser()
+  },
   methods: {
-    
+    getFamiliesSolicitationsToUser() {
+      const opt = {
+        route: '/mobile/parents/profile/getFamiliesSolicitationsToUser'
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente")
+        }
+        this.familySolicitation = r.data
+        this.dialogUserAcceptSolicitation()
+      })
+    },
+    acceptFamilySolicitation() {
+      const opt = {
+        route: '/mobile/parents/profile/respondFamiliesSolicitation',
+        body: {
+          solicitationsId: this.familySolicitation._id,
+          respond: 'accepted' 
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
+    refuseFamilySolicitation() {
+      const opt = {
+        route: '/mobile/parents/profile/respondFamiliesSolicitation',
+        body: {
+          solicitationsId: this.familySolicitation._id,
+          respond: 'refused' 
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
+    dialogUserAcceptSolicitation() {
+      this.dialogAcceptSolicitation.open = true
+    },
     verifyUserType () {
       
     },

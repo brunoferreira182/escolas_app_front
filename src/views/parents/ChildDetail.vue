@@ -4,10 +4,9 @@
       title="Dados pessoais"
       :backButton="true"
     />
-    <ion-content class="ion-padding">
+    <ion-content class="ion-padding" v-if="userDetail.userData">
       <ion-list :inset="true">
         <ion-item
-          v-if="userDetail.userData"
           lines="none"
           class="profile-item"
         >
@@ -22,14 +21,20 @@
         </ion-item>
       </ion-list>
       <ion-list>
-        <div>
+        <div class="ion-padding">
           Status: {{ userDetail.userData.status.label }}
         </div>
+      </ion-list>
+      <ion-list>
+        <!-- <ion-input
+          v-model="userDetail.userData."
+        >
+
+        </ion-input> -->
       </ion-list>
     </ion-content>
   </ion-page>
 </template>
-
 
 <script setup>
 import {
@@ -43,6 +48,8 @@ import {
   IonItem,
   IonLabel,
   IonCol,
+  IonList,
+  IonAvatar,
   IonContent,
   onIonViewWillEnter,
 } from '@ionic/vue';
@@ -50,7 +57,6 @@ import { useFetch } from '../../composables/fetch'
 import InputDocument from '../../components/InputDocument.vue'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../composables/utils'
-import { cpf,cnpj } from 'cpf-cnpj-validator'
 </script>
 <script>
 
