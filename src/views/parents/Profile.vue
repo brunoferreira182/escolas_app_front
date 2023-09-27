@@ -25,10 +25,10 @@
       <div class="ion-text-center text-h5 q-py-sm" v-if="userInfo.familyData">
         {{ userInfo.familyData.name }}
       </div>
-      <ion-list :inset="true" v-if="userInfo.children">
+      <ion-list :inset="true" v-if="userInfo.family">
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Filhos</div>
         <ion-item 
-          v-for="child in userInfo.children"
+          v-for="child in userInfo.family.children"
           :key="child"
           :button="true"
           @click="goToChildDetail(child._id)"
@@ -41,23 +41,53 @@
             <ion-badge>{{ child.status.label }}</ion-badge>
           </ion-label>
         </ion-item>
-        <ion-item :button="true" @click="addChild">Adicionar Filho</ion-item>
+        <ion-item 
+          :button="true" 
+          @click="addChild"
+          v-if="userInfo.familyData.isFamilyAdmin === true"
+        >
+        Adicionar Filho</ion-item>
       </ion-list>
 
       <ion-list :inset="true">
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
         <ion-item 
-          
+          v-for="parent in userInfo.family.family"
+          :key="parent"
+          :button="true"
+          @click="goToParentDetail(parent._id)"
         >
           <ion-avatar aria-hidden="true" slot="start">
-            <!-- <img :src="utils.makeFileUrl(child.image)"/> -->
+            <img :src="utils.makeFileUrl(parent.image)"/>
           </ion-avatar>
           <ion-label>
-            <!-- <h6>{{ child.name }}</h6> -->
-            <!-- <ion-badge>{{ child.status.label }}</ion-badge> -->
+            <h6>{{ parent.name }}</h6> 
+            <ion-badge>{{ parent.status.label }}</ion-badge> 
           </ion-label>
         </ion-item>
-        <ion-item :button="true" @click="addParent">Adicionar Familiar</ion-item>
+        <ion-item 
+          :button="true" 
+          @click="addParent"
+          v-if="userInfo.familyData.isFamilyAdmin === true"
+        >
+        Adicionar Familiar</ion-item>
+      </ion-list>
+      <ion-list :inset="true">
+        <ion-item 
+          v-if="familySolicitations.length !== 0"
+          :button="true"
+          @click="goToSolicitationsDetail"
+        >
+          Convites para família pendentes
+        </ion-item>
+      </ion-list>
+      <ion-list :inset="true">
+        <ion-item 
+          :button="true"
+          @click="goToTabsWorkers"
+        >
+          Área do trabalhador
+        </ion-item>
       </ion-list>
       <ion-alert
         :is-open="dialogUserData.open"
@@ -74,7 +104,7 @@
           {
             text: 'Preencher',
             handler: () => {
-              this.$router.push('/tabsParents/userPersonalData')
+              this.$router.push('/userPersonalData')
             }
           }
         ]"
@@ -150,6 +180,8 @@ export default {
       userInfo: null,
       familyName: '',
       searchCpf: '',
+      familySolicitations: [],
+      permissions: []
     };
   },
   watch: {
@@ -162,9 +194,37 @@ export default {
   beforeMount () {
     this.startView()
   },
+  mounted () {
+    this.getFamilySolicitationsStatusByFamily()
+    this.getUserPermissions()
+  },
   methods: {
+    goToTabsWorkers() {
+      this.$router.push("/tabsWorkers")
+    },
+    getUserPermissions(){
+      const opt = {
+        route:'/mobile/auth/getUserPermissions',
+        body: {
+          permissionType: 'mobile'
+        }
+      }
+      useFetch(opt).then((r) => {
+        if(r.error) {
+          console.log("Erro getUserPermissions")
+          return
+        }
+        this.permissions = r.data
+      })
+    },
     goToChildDetail(childId) {
-      this.$router.push("/tabsParents/childDetail?userId=" + childId)
+      this.$router.push("/childDetail?userId=" + childId)
+    },
+    goToSolicitationsDetail() {
+      this.$router.push("/solicitationsDetail")
+    },
+    goToParentDetail(parentId) {
+      this.$router.push("/parentDetail?userId=" + parentId)
     },
     createFamilyName (e) {
       const opt = {
@@ -185,14 +245,14 @@ export default {
         this.dialogUserAddFamilyName.open = true
         return
       }
-      this.$router.push('/tabsParents/addChild')
+      this.$router.push('/addChild')
     },
     addParent() {
       if(this.userInfo.familyIdObj === 'noFamily') {
         this.dialogUserAddFamilyName.open = true
         return
       }
-      this.$router.push('/tabsParents/addParent')
+      this.$router.push('/addParent')
     },
     async startView () {
       const userInfo = await this.getUserProfileById()
@@ -209,6 +269,17 @@ export default {
         route: '/mobile/parents/profile/getUserProfileById'
       }
       return await useFetch(opt)
+    },
+    getFamilySolicitationsStatusByFamily() {
+      const opt = {
+        route: '/mobile/parents/profile/getFamiliesSolicitationsByFamilyId'
+      }
+      useFetch(opt).then((r) => {
+        if(r.error) {
+          utils.toast('Ocorreu um erro, tente novamente')
+        }
+        this.familySolicitations = r.data
+      })
     }
   }
 }

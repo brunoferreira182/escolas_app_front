@@ -23,25 +23,25 @@
     </ion-tabs>
     <ion-alert
       v-if="familySolicitation"
-        :is-open="dialogAcceptSolicitation.open"
-        :header="`Você recebeu um convite de ${familySolicitation.sendBy} para participar da  ${familySolicitation.familyName }` " 
-        :backdropDismiss="false"
-        animated
-        :buttons="[
-          {
-            text: 'Recusar',
-            handler: () => {
-              refuseFamilySolicitation()
-            }
-          },
-          {
-            text: 'Aceitar',
-            handler: () => {
-              acceptFamilySolicitation()
-            }
+      :is-open="dialogAcceptSolicitation.open"
+      :header="`Você recebeu um convite de ${familySolicitation.sendBy} para participar da  ${familySolicitation.familyName }` " 
+      :backdropDismiss="false"
+      animated
+      :buttons="[
+        {
+          text: 'Recusar',
+          handler: () => {
+            refuseFamilySolicitation()
           }
-        ]"
-      />
+        },
+        {
+          text: 'Aceitar',
+          handler: () => {
+            acceptFamilySolicitation()
+          }
+        }
+      ]"
+    />
   </ion-page>
 </template>
 <script setup>

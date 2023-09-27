@@ -15,7 +15,10 @@ import postDetail from '../views/parents/postDetail.vue'
 import addChild from '../views/parents/AddChild.vue'
 import addParent from '../views/parents/AddParent.vue'
 import childDetail from '../views/parents/ChildDetail.vue'
+import parentDetail from '../views/parents/ParentDetail.vue'
 import editProfile from '../views/parents/EditProfile.vue'
+import solicitationsDetail from '../views/parents/SolicitationsDetail.vue'
+import tabsLayoutWorkers from '../layouts/TabsLayoutWorkers.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -43,6 +46,41 @@ const routes: Array<RouteRecordRaw> = [
         component: waitingPermission
       },
       {
+        path: '/userPersonalData',
+        name: 'UserPersonalData',
+        component: userPersonalData
+      },
+      {
+        path: '/addChild',
+        name: 'AddChild',
+        component: addChild
+      },
+      {
+        path: '/addParent',
+        name: 'AddParent',
+        component: addParent
+      },
+      {
+        path: '/childDetail',
+        name: 'ChildDetail',
+        component: childDetail
+      },
+      {
+        path: '/parentDetail',
+        name: 'ParentDetail',
+        component: parentDetail
+      },
+      {
+        path: '/solicitationsDetail',
+        name: 'SolicitationsDetail',
+        component: solicitationsDetail
+      },
+      {
+        path: '/tabsWorkers',
+        name: 'TabsWorkers',
+        component: tabsLayoutWorkers
+      },
+      {
         path: '/tabsParents',
         name: 'TabsParents',
         component: TabsLayoutParent,
@@ -52,10 +90,6 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsParents/chat', component: parentsChat },
           { path: '/tabsParents/profile', component: parentsProfile },
           { path: '/tabsParents/more', component: parentsMore },
-          { path: '/tabsParents/userPersonalData', component: userPersonalData },
-          { path: '/tabsParents/addChild', component: addChild },
-          { path: '/tabsParents/addParent', component: addParent },
-          { path: '/tabsParents/childDetail', component: childDetail },
         ]
       },
       { path: '/postDetail', component: postDetail },

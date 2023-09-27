@@ -21,6 +21,27 @@
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
+    <ion-alert
+      v-if="familySolicitation"
+      :is-open="dialogAcceptSolicitation.open"
+      :header="`Você recebeu um convite de ${familySolicitation.sendBy} para participar da  ${familySolicitation.familyName }` " 
+      :backdropDismiss="false"
+      animated
+      :buttons="[
+        {
+          text: 'Recusar',
+          handler: () => {
+            refuseFamilySolicitation()
+          }
+        },
+        {
+          text: 'Aceitar',
+          handler: () => {
+            acceptFamilySolicitation()
+          }
+        }
+      ]"
+    />
   </ion-page>
 </template>
 <script setup>
@@ -31,39 +52,32 @@ import {
   IonPage, IonRouterOutlet,
   IonFab, IonFabButton,
   IonModal, IonContent,
-  IonImg, IonAvatar,
+  IonImg, IonAvatar, IonAlert
 } from '@ionic/vue';
 import { 
-  home,
-  person,
-  chatbox
+  idCardOutline,
+  chatboxOutline,
+  personCircleOutline,
+  ellipsisHorizontalOutline
 } from 'ionicons/icons';
 import utils from '../composables/utils'
 import { useBackButton } from '@ionic/vue';
 </script>
 <script>
-
+import { useFetch } from '@/composables/fetch';
 export default {
-  name: "TabsLayout",
+  name: "TabsLayoutParents",
   data() {
     return {
-      tabs: [],
-      tabsGuest: [
-        { name: "home", icon: "/assets/home.svg", to: '/tabs/home', label: "Início" },
-        { name: "profile", icon: "/assets/user.svg", to: '/profile', label: "Perfil" },
+      tabs: [
+        { name: "social", icon: idCardOutline, to: '/tabsParents/social', label: "Social" },
+        { name: "messenger", icon: chatboxOutline, to: '/tabsParents/chat', label: "Chat" },
+        { name: "profile", icon: personCircleOutline, to: '/tabsParents/profile', label: "Perfil" },
+        { name: "more", icon: ellipsisHorizontalOutline, to: '/tabsParents/more', label: "Mais" },
       ],
-      tabsParents: [
-        { name: "home", icon: "/assets/home.svg", to: '/tabs/home', label: "Início" },
-        { name: "messenger", icon: '/assets/message2.svg', to: '/tabs/messenger', label: "Messenger" },
-        { name: "serviceAgreements", icon: '/assets/agreement2.svg', to: '/serviceAgreementsList', label: "Serviços" },
-        { name: "profile", icon: "/assets/user.svg", to: '/profile', label: "Perfil" },
-      ],
-      tabsWorkers: [
-        { name: "home", icon: "/assets/home.svg", to: '/tabs/home', label: "Início" },
-        { name: "messenger", icon: '/assets/message2.svg', to: '/tabs/messenger', label: "Messenger" },
-        { name: "serviceAgreements", icon: '/assets/agreement2.svg', to: '/serviceAgreementsList', label: "Serviços" },
-        { name: "profile", icon: "/assets/user.svg", to: '/profile', label: "Perfil" },
-      ],
+      userProfile: [],
+      familySolicitation: null,
+      dialogAcceptSolicitation: {open: false}
     };
   },
   watch: {
@@ -78,26 +92,56 @@ export default {
     }
   },
   beforeMount () {
-    utils.getUserInfoByToken().then(r => {
-      this.userInfo = r.data
-      if (r.data.isGuestUser === 1) this.tabs = this.tabsGuest
-      else {
-        this.tabs = this.tabsUser
-        utils.fetchIuguId()
-
-      }
-    })
+  },
+  mounted () {
+    this.getFamiliesSolicitationsToUser()
   },
   methods: {
-    verifyUserType () {
-      const userType = utils.userType.get()
-      // if (!userType) this.$router.replace('/login')
-      if (userType.name === 'serviceProvider') this.tabs.push({
-        name: 'provider',
-        icon: '/assets/bookmark.svg',
-        to: '/providerProfile',
-        label: 'Prestador'
+    getFamiliesSolicitationsToUser() {
+      const opt = {
+        route: '/mobile/parents/profile/getFamiliesSolicitationsToUser'
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente")
+        }
+        this.familySolicitation = r.data
+        this.dialogUserAcceptSolicitation()
       })
+    },
+    acceptFamilySolicitation() {
+      const opt = {
+        route: '/mobile/parents/profile/respondFamiliesSolicitation',
+        body: {
+          solicitationsId: this.familySolicitation._id,
+          respond: 'accepted' 
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
+    refuseFamilySolicitation() {
+      const opt = {
+        route: '/mobile/parents/profile/respondFamiliesSolicitation',
+        body: {
+          solicitationsId: this.familySolicitation._id,
+          respond: 'refused' 
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
+    dialogUserAcceptSolicitation() {
+      this.dialogAcceptSolicitation.open = true
+    },
+    verifyUserType () {
+      
     },
     makeProfilePhotoUrl () {
       this.userProfilePhotoUrl = this.userInfo.profileImage ? `${utils.attachmentsAddress()}${this.userInfo.profileImage.filename}` : '../../assets/blank-profile-picture-973460.svg'
@@ -110,9 +154,4 @@ export default {
   }
 };
 </script>
-<style>
-ion-tab-bar {
-  --background: #fff;
-  border: 0.1px solid #ebebec;
-}
-</style>
+
