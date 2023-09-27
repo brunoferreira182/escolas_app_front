@@ -19,6 +19,9 @@ import parentDetail from '../views/parents/ParentDetail.vue'
 import editProfile from '../views/parents/EditProfile.vue'
 import solicitationsDetail from '../views/parents/SolicitationsDetail.vue'
 import tabsLayoutWorkers from '../layouts/TabsLayoutWorkers.vue'
+import workerClass from '../views/workers/Class.vue'
+import workerChat from '../views/workers/Chat.vue'
+import workerProfile from '../views/workers/Profile.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -78,8 +81,15 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/tabsWorkers',
         name: 'TabsWorkers',
-        component: tabsLayoutWorkers
+        component: tabsLayoutWorkers,
+        children: [
+          { path: '/', redirect: '/tabsWorkers/class'},
+          { path: '/tabsWorkers/class', component: workerClass},
+          { path: '/tabsWorkers/chat', component: workerChat},
+          { path: '/tabsWorkers/profile', component: workerProfile},
+        ]
       },
+      
       {
         path: '/tabsParents',
         name: 'TabsParents',

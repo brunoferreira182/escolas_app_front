@@ -21,27 +21,6 @@
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
-    <ion-alert
-      v-if="familySolicitation"
-      :is-open="dialogAcceptSolicitation.open"
-      :header="`Você recebeu um convite de ${familySolicitation.sendBy} para participar da  ${familySolicitation.familyName }` " 
-      :backdropDismiss="false"
-      animated
-      :buttons="[
-        {
-          text: 'Recusar',
-          handler: () => {
-            refuseFamilySolicitation()
-          }
-        },
-        {
-          text: 'Aceitar',
-          handler: () => {
-            acceptFamilySolicitation()
-          }
-        }
-      ]"
-    />
   </ion-page>
 </template>
 <script setup>
@@ -70,14 +49,11 @@ export default {
   data() {
     return {
       tabs: [
-        { name: "social", icon: idCardOutline, to: '/tabsParents/social', label: "Social" },
-        { name: "messenger", icon: chatboxOutline, to: '/tabsParents/chat', label: "Chat" },
-        { name: "profile", icon: personCircleOutline, to: '/tabsParents/profile', label: "Perfil" },
-        { name: "more", icon: ellipsisHorizontalOutline, to: '/tabsParents/more', label: "Mais" },
+        { name: "turmas", icon: idCardOutline, to: '/tabsWorkers/class', label: "Turmas" },
+        { name: "messenger", icon: chatboxOutline, to: '/tabsWorkers/chat', label: "Chat" },
+        { name: "profile", icon: personCircleOutline, to: '/tabsWorkers/profile', label: "Perfil" },
       ],
       userProfile: [],
-      familySolicitation: null,
-      dialogAcceptSolicitation: {open: false}
     };
   },
   watch: {
@@ -94,52 +70,8 @@ export default {
   beforeMount () {
   },
   mounted () {
-    this.getFamiliesSolicitationsToUser()
   },
   methods: {
-    getFamiliesSolicitationsToUser() {
-      const opt = {
-        route: '/mobile/parents/profile/getFamiliesSolicitationsToUser'
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast("Ocorreu um erro, tente novamente")
-        }
-        this.familySolicitation = r.data
-        this.dialogUserAcceptSolicitation()
-      })
-    },
-    acceptFamilySolicitation() {
-      const opt = {
-        route: '/mobile/parents/profile/respondFamiliesSolicitation',
-        body: {
-          solicitationsId: this.familySolicitation._id,
-          respond: 'accepted' 
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
-        }
-      })
-    },
-    refuseFamilySolicitation() {
-      const opt = {
-        route: '/mobile/parents/profile/respondFamiliesSolicitation',
-        body: {
-          solicitationsId: this.familySolicitation._id,
-          respond: 'refused' 
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
-        }
-      })
-    },
-    dialogUserAcceptSolicitation() {
-      this.dialogAcceptSolicitation.open = true
-    },
     verifyUserType () {
       
     },
