@@ -41,12 +41,14 @@
             <ion-badge>{{ child.status.label }}</ion-badge>
           </ion-label>
         </ion-item>
-        <ion-item 
-          :button="true" 
-          @click="addChild"
-          v-if="userInfo.familyData.isFamilyAdmin === true"
-        >
-        Adicionar Filho</ion-item>
+        <div v-if="userInfo.familyData">
+          <ion-item 
+            :button="true" 
+            @click="addChild"
+            v-if="userInfo.familyData.isFamilyAdmin === true"
+          >
+          Adicionar Filho</ion-item>
+        </div>
       </ion-list>
 
       <ion-list :inset="true">
@@ -65,12 +67,14 @@
             <ion-badge>{{ parent.status.label }}</ion-badge> 
           </ion-label>
         </ion-item>
-        <ion-item 
-          :button="true" 
-          @click="addParent"
-          v-if="userInfo.familyData.isFamilyAdmin === true"
-        >
-        Adicionar Familiar</ion-item>
+        <div v-if="userInfo.familyData">
+          <ion-item 
+            :button="true" 
+            @click="addParent"
+            v-if="userInfo.familyData.isFamilyAdmin === true"
+          >
+          Adicionar Familiar</ion-item>
+        </div>
       </ion-list>
       <ion-list :inset="true">
         <ion-item 
