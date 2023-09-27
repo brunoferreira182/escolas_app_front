@@ -83,10 +83,11 @@
       </ion-list>
       <ion-list :inset="true">
         <ion-item 
-          v-if="familySolicitations.length !== 0"
+          v-if="isWorker === true"
         >
           Modo trabalhador
-          <ion-toggle 
+          <ion-toggle
+            v-model="switchWork"
             alignment="center" 
             justify="end"
             @ionChange="toggleChange($event)"
@@ -186,7 +187,9 @@ export default {
       familyName: '',
       searchCpf: '',
       familySolicitations: [],
-      permissions: []
+      permissions: [],
+      isWorker: false,
+      switchWork: false
     };
   },
   watch: {
@@ -202,10 +205,33 @@ export default {
   mounted () {
     this.getFamilySolicitationsStatusByFamily()
     this.getUserPermissions()
+    this.chkChangeViewIfIsWorker()
   },
   methods: {
+    chkChangeViewIfIsWorker() {
+      const currentVision = localStorage.getItem("currentVision")
+      console.log(currentVision, "hahahahah")
+      if (currentVision == 'worker') {
+        this.switchWork = true
+      }
+    },
+    verifyIsWorker() {
+      this.permissions.forEach((p) => {
+        if (p.role === 'IS_WORKER') {
+          this.isWorker = true
+        }
+      })
+    },
     toggleChange(ev) {
       console.log(ev.detail.checked)
+      if (ev.detail.checked) {
+        localStorage.setItem("currentVision", "worker")
+        this.$router.push("/tabsWorkers/profile")
+      } else {
+        localStorage.removeItem("currentVision")
+        this.$router.replace("/tabsParents/profile")
+        this.switchWork = false
+      }
     },
     goToTabsWorkers() {
       this.$router.push("/tabsWorkers")
@@ -223,6 +249,7 @@ export default {
           return
         }
         this.permissions = r.data
+        this.verifyIsWorker()
       })
     },
     goToChildDetail(childId) {

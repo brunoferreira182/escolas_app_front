@@ -102,8 +102,10 @@ export default defineComponent({
           this.$router.push("/waitingPermission")
           return
         }
-        if (permissions.data[0].role === 'IS_PARENT') this.$router.push("/tabsParents")
-        else if (permissions.data[0].role === 'WORKER') this.$router.push("/tabsWorkers")
+        this.userPermissions.forEach((p) => {
+          if (p.role === 'IS_PARENT') this.$router.push("/tabsParents")
+          else if (p.role === 'IS_WORKER') this.$router.push("/tabsWorkers")
+        })
       }
     },
   }
