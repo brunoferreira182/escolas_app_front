@@ -123,7 +123,9 @@ export async function useFetch ({
       router.push('/login')
     } else {
       let message = 'Ocorreu um erro. Tente novamente.'
-      if (ret.data.errorMessage) message = ret.data.errorMessage
+      if (ret.data.errorMessage) {
+        message = ret.data.errorMessage
+      }
       toast(message)
     }
     

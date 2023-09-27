@@ -13,7 +13,7 @@
           v-if="userInfo"
         >
           <ion-avatar style="width:60px; height:auto" >
-            <img :src="'/assets/default_avatar.svg'" class="profile-avatar">
+            <img :src="utils.makeFileUrl(userInfo.userImage)" class="profile-avatar">
           </ion-avatar>
           <ion-label class="q-px-sm">
             <h2>{{ userInfo.name }}</h2>
@@ -192,7 +192,7 @@ export default {
         this.dialogUserAddFamilyName.open = true
         return
       }
-      this.$router.push('/tabsParents/addParent?familyId=' + this.userInfo.familyId)
+      this.$router.push('/tabsParents/addParent')
     },
     async startView () {
       const userInfo = await this.getUserProfileById()
