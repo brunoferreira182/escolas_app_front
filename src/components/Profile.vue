@@ -81,6 +81,18 @@
           Convites para família pendentes
         </ion-item>
       </ion-list>
+      <ion-list :inset="true">
+        <ion-item 
+          v-if="familySolicitations.length !== 0"
+        >
+          Modo trabalhador
+          <ion-toggle 
+            alignment="center" 
+            justify="end"
+            @ionChange="toggleChange($event)"
+          />
+        </ion-item>
+      </ion-list>
       <ion-alert
         :is-open="dialogUserData.open"
         header="Você precisa preencher seus dados cadastrais"
@@ -145,7 +157,8 @@ import {
   IonNote,
   IonIcon,
   IonAlert,
-  IonBadge
+  IonBadge,
+  IonToggle
 } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../composables/variables';
 import { chevronForward, listCircle, personCircleOutline, happyOutline, peopleOutline } from 'ionicons/icons'
@@ -191,6 +204,9 @@ export default {
     this.getUserPermissions()
   },
   methods: {
+    toggleChange(ev) {
+      console.log(ev.detail.checked)
+    },
     goToTabsWorkers() {
       this.$router.push("/tabsWorkers")
     },
