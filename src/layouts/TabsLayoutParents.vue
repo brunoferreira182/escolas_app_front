@@ -71,7 +71,7 @@ export default {
     return {
       tabs: [
         { name: "social", icon: idCardOutline, to: '/tabsParents/social', label: "Social" },
-        { name: "messenger", icon: chatboxOutline, to: '/tabsParents/chat', label: "Chat" },
+        { name: "messenger", icon: chatboxOutline, to: '/tabsParents/chat' , label: "Chat" },
         { name: "profile", icon: personCircleOutline, to: '/tabsParents/profile', label: "Perfil" },
         { name: "more", icon: ellipsisHorizontalOutline, to: '/tabsParents/more', label: "Mais" },
       ],
@@ -91,8 +91,7 @@ export default {
       }
     }
   },
-  beforeMount () {
-  },
+  
   mounted () {
     this.getFamiliesSolicitationsToUser()
   },

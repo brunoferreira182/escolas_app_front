@@ -105,11 +105,11 @@ export default defineComponent({
         this.userPermissions.forEach((p) => {
           if (p.role === 'IS_PARENT') {
             this.$router.push("/tabsParents")
-            consol.log('fOI PRA PRANET')
+            return
           }
           else if (p.role === 'IS_WORKER') {
             this.$router.push("/tabsWorkers")
-            console.log('Foi pra workr')
+            return
           }
         })
       }

@@ -22,6 +22,7 @@ import tabsLayoutWorkers from '../layouts/TabsLayoutWorkers.vue'
 import workerClass from '../views/workers/Class.vue'
 import workerChat from '../views/workers/Chat.vue'
 import workerProfile from '../views/workers/Profile.vue'
+import chatDetail from '../views/parents/ChatDetail.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -79,6 +80,11 @@ const routes: Array<RouteRecordRaw> = [
         component: solicitationsDetail
       },
       {
+        path: '/chatDetaill',
+        name: 'ChatDetail',
+        component: chatDetail
+      },
+      {
         path: '/tabsWorkers',
         name: 'TabsWorkers',
         component: tabsLayoutWorkers,
@@ -89,7 +95,6 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsWorkers/profile', component: workerProfile},
         ]
       },
-      
       {
         path: '/tabsParents',
         name: 'TabsParents',
