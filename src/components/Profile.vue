@@ -193,7 +193,8 @@ export default {
       familySolicitations: [],
       permissions: [],
       isWorker: false,
-      switchWork: false
+      switchWork: false,
+      currentVision: null
     };
   },
   watch: {
@@ -209,14 +210,18 @@ export default {
   mounted () {
     this.getFamilySolicitationsStatusByFamily()
     this.getUserPermissions()
-    this.chkChangeViewIfIsWorker()
+    this.getCurrentVision()
   },
   methods: {
-    chkChangeViewIfIsWorker() {
+    getCurrentVision() {
       const currentVision = localStorage.getItem("currentVision")
-      console.log(currentVision, "hahahahah")
-      if (currentVision == 'worker') {
-        this.switchWork = true
+      if (currentVision) {
+        this.currentVision = currentVision
+        if (this.currentVision === 'worker') this.switchWork = true
+        else if (this.currentVision !== 'worker') this.switchWork = false
+      }
+      else {
+        this.switchWork = false
       }
     },
     verifyIsWorker() {
@@ -230,15 +235,12 @@ export default {
       console.log(ev.detail.checked)
       if (ev.detail.checked) {
         localStorage.setItem("currentVision", "worker")
-        this.$router.push("/tabsWorkers/profile")
+        this.$router.replace("/tabsWorkers/profile")
       } else {
         localStorage.removeItem("currentVision")
         this.$router.replace("/tabsParents/profile")
         this.switchWork = false
       }
-    },
-    goToTabsWorkers() {
-      this.$router.push("/tabsWorkers")
     },
     getUserPermissions(){
       const opt = {
@@ -274,7 +276,7 @@ export default {
       }
       useFetch(opt).then((r) => {
         if (r.error) {
-          console.log("EErrou ao atualizar familia")
+          console.log("Errou ao atualizar familia")
         }
         this.startView()
       })

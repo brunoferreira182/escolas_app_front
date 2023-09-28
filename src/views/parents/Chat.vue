@@ -1,31 +1,47 @@
 <template>
   <ion-page>
+    <ToolbarEscolas
+      title="Chat"
+      :backButton="false"
+    />
     <ion-content >
-      <div style="height: var(--ion-safe-area-top);"></div>
-      <div class="ion-padding" style="background-color: rgb(0, 174, 255); border-bottom-left-radius: 10%; border-bottom-right-radius: 10%;">
-        <div class="ion-text-center text-h5" style="color: white;" >
-          Chat
+      <div class="q-mt-md">
+        <ion-progress-bar type="indeterminate" v-if="progressBar"></ion-progress-bar>
+        <div class="slide">
+          <ion-list lines="full">
+            <ion-item
+              button
+              detail="false"
+            >
+              <!-- <ion-avatar>
+                <img :src="item.messages.profileImage ? utils.attachmentsAddress() + item.messages.profileImage  + '_thumbnail' : '/assets/default_avatar.svg'" />
+              </ion-avatar>
+              <ion-label class="q-pl-md">
+                <h4>{{ item._id.name }}</h4>
+                <p>	
+                  <span v-if="item.messages.userId === userInfo.userId">Você: </span>
+                  {{ item.messages.message }} 
+                </p>
+              </ion-label>
+              <ion-label slot="end" class="ion-text-end">
+                <p>{{ item.messages.createdAt.createdAtInFullShort }}</p>
+                <p>{{ item.messages.createdAt.createdAtLocale.split(' ')[1] }}</p>
+              </ion-label> -->
+            </ion-item>
+          </ion-list>
         </div>
-      </div>
-      <div class="ion-text-center q-pa-lg text-h5">
-        Olá, seja bem vindo ao nosso aplicativo!
-      </div>
-      <div class="ion-text-center q-pa-lg text-subtitle1">
-        Seu cadastro está aguardando aprovação pela escola, tente novamente mais tarde.
-      </div>
-      <div class="text-right ion-padding">
-        <ion-button expand="block" @click="backLogin">Ir para login</ion-button>
       </div>
     </ion-content>
   </ion-page>
 </template>
-
-<script>
-import { IonPage, IonButton, IonContent, IonImg } from '@ionic/vue';
+<script setup>
+import { IonPage, IonButton, IonContent, IonImg,IonProgressBar } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
+import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+</script>
 
-
+<script>
 export default {
   components: {
     IonPage, IonButton,
@@ -38,9 +54,6 @@ export default {
     };
   },
   methods: {
-    backLogin() {
-      this.$router.push('/login')
-    }
   }
 }
 
