@@ -219,8 +219,7 @@ export default {
         this.currentVision = currentVision
         if (this.currentVision === 'worker') this.switchWork = true
         else if (this.currentVision !== 'worker') this.switchWork = false
-      }
-      else {
+      } else {
         this.switchWork = false
       }
     },
