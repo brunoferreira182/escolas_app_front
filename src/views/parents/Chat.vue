@@ -1,16 +1,16 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="item"
+      title="grupos de conversa"
       :backButton="false"
     />
     <ion-content >
       <div class="q-mt-md">
         <ion-progress-bar type="indeterminate" v-if="progressBar"></ion-progress-bar>
         <div class="slide">
-          <ion-list lines="full" v-if="userInfo">
+          <ion-list lines="full" v-if="childClassInfo">
             <ion-item
-              v-for="item in userInfo.list"
+              v-for="item in childClassInfo.list"
               :key="item"
               button
               detail="false"
@@ -22,7 +22,7 @@
               <ion-label class="q-pl-md">
                 <h4>{{ item.className }}</h4>
                 <!-- <p>	
-                  <span v-if="item.messages.userId === userInfo.userId">Você: </span>
+                  <span v-if="item.messages.userId === childClassInfo.userId">Você: </span>
                   {{ item.messages.message }} 
                 </p> -->
               </ion-label>
@@ -61,7 +61,7 @@ export default {
     return {
       APP_NAME,
       progressBar: false,
-      userInfo: null,
+      childClassInfo: null,
       pagination: {
         page: 1,
         rowsPerPage: 10
@@ -73,25 +73,20 @@ export default {
     this.getUserProfile()
   },
   methods: {
-    getUserInfo(){
+    getChildClass() {
       const opt = {
-        route: '/mobile/parents/profile/getParentChildren',
-        body: {
-          userId: this.userProfile._id,
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        }
+        route: '/mobile/parents/chat/getClassesOfChildrenByUserId',
       }
       utils.loading.show()
       useFetch(opt).then(r => {
         utils.loading.hide()
-        this.userInfo = r.data
+        this.childClassInfo = r.data
       })
     },
     clkConectedUser (item) {
       console.log(item)
       const userId = item._id
-      this.$router.push('/messengerChat?userId=' + userId)
+      this.$router.push('/chatDetail?userId=' + userId)
     },
     getUserProfile() {
       const opt = {
@@ -100,7 +95,7 @@ export default {
       useFetch(opt).then((r)=> {
         if(!r.error) {
           this.userProfile = r.data
-          this.getUserInfo()
+          this.getChildClass()
         }
       })
     }

@@ -1,11 +1,6 @@
 <template>
   <ion-page>
     <ion-header>
-      <HeaderComponent
-        :title="userNameAndPhoto.name"
-        :avatar="`${utils.attachmentsAddress()}profileImage_${COMPANY_ID}_${userNameAndPhoto.userId}`"
-        :userId="userNameAndPhoto.userId"
-      />
     </ion-header>
     <ion-content ref="elIonContent">
       <!-- <div style="height: var(--ion-safe-area-top);"></div> -->
@@ -27,7 +22,6 @@
         >
           <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>
-
         <ion-list ref="listAnswerMsg">
           <div v-for="message in messages" :key="message._id" :id="message._id">
             <ion-item-sliding>
@@ -160,7 +154,6 @@
   </ion-page>
 </template>
 <script setup>
-import HeaderComponent from '../components/HeaderComponent_v2.vue'
 import { defineComponent } from 'vue'
 import {
   IonPage, 
@@ -182,14 +175,14 @@ import {
   alertController,
   IonRange
 } from '@ionic/vue';
-import { useFetch } from '../../src/composables/fetch.js';
+import { useFetch } from '../../../src/composables/fetch.js';
 import { send, attach, close, mic, play, pause, chevronBack } from 'ionicons/icons';
-import utils from '../../src/composables/utils.js';
-import PhotoHandler from '../components/PhotoHandler.vue'
+import utils from '../../../src/composables/utils.js';
+import PhotoHandler from '../../components/PhotoHandler.vue'
 import { io } from "socket.io-client";
-import { masterServerRoute } from '../composables/masterServerRoutes'
-import AudioRecorder from '../components/AudioRecorder.vue'
-import { COMPANY_ID } from '../composables/variables'
+import { masterServerRoute } from '../../composables/masterServerRoutes'
+import AudioRecorder from '../../components/AudioRecorder.vue'
+import { COMPANY_ID } from '../../composables/variables'
 </script>
 <script>
 

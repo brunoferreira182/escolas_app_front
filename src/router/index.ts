@@ -80,7 +80,7 @@ const routes: Array<RouteRecordRaw> = [
         component: solicitationsDetail
       },
       {
-        path: '/chatDetaill',
+        path: '/chatDetail',
         name: 'ChatDetail',
         component: chatDetail
       },
