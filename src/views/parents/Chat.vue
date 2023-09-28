@@ -72,14 +72,17 @@ export default {
   watch: {
     $route (to, from) {
       if (to.path === '/tabsParents/chat') {
-        this.getChildClass()
+        this.startView()
       }
     }
   },
-  mounted () {
-    this.getChildClass()
+  beforeMount () {
+    this.startView()
   },
   methods: {
+    startView () {
+      this.getChildClass()
+    },
     getChildClass() {
       const opt = {
         route: '/mobile/parents/chat/getClassesOfChildrenByUserId',
