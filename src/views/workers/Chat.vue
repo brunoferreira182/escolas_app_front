@@ -1,33 +1,41 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Grupos de conversa"
+      title="grupos de conversa"
       :backButton="false"
     />
     <ion-content >
       <div class="q-mt-md">
-        <ion-progress-bar type="indeterminate" v-if="progressBar"></ion-progress-bar>
-        <div class="slide">
-          <ion-list lines="full" v-if="userInfo">
+        <div class="slide" v-if="childClassInfo">
+          <ion-list 
+            class="q-pa-md"
+            lines="full" 
+            v-for="_class in childClassInfo"
+            :key="_class"
+          >
             <ion-item
-              v-for="item in userInfo.list"
-              :key="item"
               button
-              detail="false"
-              @click="clkConectedUser(item)"
+              detail="true"
+              @click="goToChatDetail(_class.classData.id)"
             >
               <!-- <ion-avatar>
                 <img :src="item.messages.profileImage ? utils.attachmentsAddress() + item.messages.profileImage  + '_thumbnail' : '/assets/default_avatar.svg'" />
               </ion-avatar> -->
               <ion-label class="q-pl-md">
-                <h4>{{ item.className }}</h4>
+                <h4>{{ _class.classData.name }}</h4>
                 <!-- <p>	
-                  <span v-if="item.messages.userId === userInfo.userId">Você: </span>
+                  <span v-if="item.messages.userId === childClassInfo.userId">Você: </span>
                   {{ item.messages.message }} 
                 </p> -->
               </ion-label>
+              <ion-chip
+                v-for="child in _class.users"
+                :key="child"
+              >
+                {{ child.userName }}
+              </ion-chip>
               <!-- <ion-label slot="end" class="ion-text-end">
-                <p>{{ item.messages.createdAt.createdAtInFullShort }}</p>
+                <p>macaquiho</p>
                 <p>{{ item.messages.createdAt.createdAtLocale.split(' ')[1] }}</p>
               </ion-label> -->
             </ion-item>
@@ -41,7 +49,7 @@
 import { 
   IonPage, IonButton, 
   IonContent, IonImg, 
-  IonProgressBar,  IonList,
+  IonList, IonChip,
   IonItem, IonLabel } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
@@ -61,7 +69,7 @@ export default {
     return {
       APP_NAME,
       progressBar: false,
-      userInfo: null,
+      childClassInfo: null,
       pagination: {
         page: 1,
         rowsPerPage: 10
@@ -69,41 +77,33 @@ export default {
       userProfile: []
     };
   },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/tabsParents/chat') {
+        this.startView()
+      }
+    }
+  },
   beforeMount () {
-    this.getUserProfile()
+    this.startView()
   },
   methods: {
-    getClassesThatIWork(){
+    startView () {
+      this.getChildClass()
+    },
+    getChildClass() {
       const opt = {
-        route: '/mobile/parents/profile/getClassesByUserId',
-        body: {
-          userId: this.userProfile._id,
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        }
+        route: '/mobile/parents/chat/getClassesOfChildrenByUserId',
       }
       utils.loading.show()
       useFetch(opt).then(r => {
         utils.loading.hide()
-        this.userInfo = r.data
+        this.childClassInfo = r.data
       })
     },
-    clkConectedUser (item) {
-      console.log(item)
-      const userId = item._id
-      this.$router.push('/chatDetail?userId=' + userId)
+    goToChatDetail (classId) {
+      this.$router.push('/chatDetail?classId=' + classId)
     },
-    getUserProfile() {
-      const opt = {
-        route: '/mobile/parents/profile/getUserProfileById'
-      }
-      useFetch(opt).then((r)=> {
-        if(!r.error) {
-          this.userProfile = r.data
-          this.getClassesThatIWork()
-        }
-      })
-    }
   }
 }
 
