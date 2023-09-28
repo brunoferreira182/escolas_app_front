@@ -69,8 +69,15 @@ export default {
       userProfile: []
     };
   },
-  beforeMount () {
-    this.getUserProfile()
+  watch: {
+    $route (to, from) {
+      if (to.path === '/tabsParents/chat') {
+        this.getChildClass()
+      }
+    }
+  },
+  mounted () {
+    this.getChildClass()
   },
   methods: {
     getChildClass() {
@@ -88,17 +95,6 @@ export default {
       const userId = item._id
       this.$router.push('/chatDetail?userId=' + userId)
     },
-    getUserProfile() {
-      const opt = {
-        route: '/mobile/parents/profile/getUserProfileById'
-      }
-      useFetch(opt).then((r)=> {
-        if(!r.error) {
-          this.userProfile = r.data
-          this.getChildClass()
-        }
-      })
-    }
   }
 }
 
