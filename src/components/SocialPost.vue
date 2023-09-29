@@ -1,5 +1,4 @@
 <template>
-  <ion-page>
     <div v-if="i % 2 === 0" class="card">
       <div class="even-card">
         <img 
@@ -36,7 +35,6 @@
         </div>
       </div>
     </div>
-  </ion-page>
 </template>
 
 <script setup>

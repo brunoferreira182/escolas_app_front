@@ -9,32 +9,17 @@
         <div v-for="(item,i) in post.postData.detail" :key="i" >
           <div v-if="item.type === 'text'" :style="'color:' + item.color" :class="item.class">{{ item.value }}</div>
           <div v-if="item.type === 'image'" :class="item.class">
-            <img :class="item.class" :src="createImgURL(item)">
+            <div class="ion-text-right q-pb-sm">{{ post.createdAt.createdAtInFullLong }}</div>
+            <img :class="item.class" :src="createImgURL(item)"> 
           </div>
-          <hr :class="item.class" style="background-color: #eed5b4;color: #eed5b4;" v-if="item.type === 'separator'"/>
         </div>
-        <div class="q-mt-md" style="margin:0px;margin-top: 30px;color:var(--ion-color-secondary);font-family: Montserrat;font-weight: 400;">
-          <div style="display: flex;justify-content: center;margin-bottom: 10px;">
-            <ion-button
-              id="click-trigger"
-              color="secondary"
-              fill="outline"
-              class="q-mb-md"
-              mode="md"
-              style="
-                scale: 1.2;
-                font-family: Montserrat;
-                font-weight: 500;
-                text-transform: none;
-                margin-left: -10px;
-                margin-bottom: 0px;
-                --border-width: 1px;
-                "
-            >
-              <!-- <ion-icon style="padding-bottom: 3px;" src="/assets/icons/heart.svg"></ion-icon> -->
-              {{liked ? 'Você reagiu!' : 'Reagir!'}} 
-            </ion-button>
-            <ion-popover
+        <div>
+          <div>
+              <ion-icon size="large" @click="clkReaction(heart)" src="/assets/icons/heart.svg"></ion-icon>
+              <ion-icon size="large" @click="clkReaction(smile)" src="/assets/icons/smile.svg"></ion-icon>
+              <ion-icon size="large" @click="clkReaction(like)" src="/assets/icons/like.svg"></ion-icon>
+            <!-- </ion-button> -->
+            <!-- <ion-popover
               mode="md"
               class="popover-reactions"
               trigger="click-trigger"
@@ -63,38 +48,27 @@
                   </ion-button>
                 </div>
               </ion-content>
-            </ion-popover>
+            </ion-popover> -->
           </div>
-          <div style="display: flex;align-items: center;">
-              <ion-button
-                @click="$router.push('/postReactions?postId=' + $route.query.postId)"
-                color="secondary"
-                fill="clear"
-                mode="ios"
-                style="
-                  scale: 0.9;
-                  font-family: Montserrat;
-                  text-transform: none;
-                  margin-right: auto;
-                  display: flex;
-                  align-items: center;
-                  margin-left: -10px;
-                  "
-              >
-              {{post.reactions}}x Reações 
-              </ion-button>
-              
-            <div 
-              style="font-size: 14px;
-                padding-bottom: 3px;
-                font-weight: 400;
+          <!-- <div style="display: flex;align-items: center;">
+            <ion-button
+              @click="$router.push('/postReactions?postId=' + $route.query.postId)"
+              color="secondary"
+              fill="clear"
+              mode="ios"
+              style="
+                scale: 0.9;
                 font-family: Montserrat;
-                margin-right: 10px;"
-              >
-              {{ post.createdAt.createdAtInFullLong }}
-            </div>
-          </div>
-          
+                text-transform: none;
+                margin-right: auto;
+                display: flex;
+                align-items: center;
+                margin-left: -10px;
+                "
+            >
+              {{post.reactions}}x Reações 
+            </ion-button>
+          </div> -->
           <h4 
             v-if="comments.length > 0" 
             style="
@@ -173,7 +147,7 @@ import {
   IonPage,
   IonRow, IonGrid,
   IonContent, IonAvatar, IonButton, IonItem, IonList, IonLabel,IonTextarea,
-  IonIcon,
+  IonIcon, IonChip,
   IonPopover
 } from '@ionic/vue';
 import { send } from 'ionicons/icons';
