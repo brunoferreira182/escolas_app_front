@@ -38,12 +38,20 @@ export default {
   data() {
     return {
       APP_NAME,
-      page: 0,
+      page: 1,
+      rowsPerPage: 10,
       posts: []
     };
   },
   mounted () {
     this.startView()
+  },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/tabsParents/social') {
+        this.startView()
+      }
+    }
   },
   methods: {
     backLogin() {
@@ -57,7 +65,8 @@ export default {
       const opt = {
         route: '/mobile/social/getPosts',
         body: {
-          page: this.page
+          page: this.page,
+          rowsPerPage: this.rowsPerPage
         }
       }
       const ret = await useFetch(opt)
