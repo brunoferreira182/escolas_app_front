@@ -1,39 +1,43 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Salas de aula"
+      title="grupos de conversa"
       :backButton="false"
     />
     <ion-content >
       <div class="q-mt-md">
-        <div class="slide" v-if="childClassInfo">
+        <div class="slide" v-if="classesInfo">
           <ion-list 
             class="q-pa-md"
             lines="full" 
-            v-for="_class in childClassInfo"
+            v-for="_class in classesInfo"
             :key="_class"
           >
             <ion-item
               button
               detail="true"
-              @click="goToChatDetail(_class.classData.id)"
+              @click="goToChatDetail(_class._id)"
             >
-              <ion-label>
-                <strong class="q-mb-md">{{ _class.classData.name }}</strong><br />
-                <ion-note class="q-mt-md">
-                  <div
-                    v-for="child in _class.users"
-                    :key="child"
-                  >
-                    <ion-chip>
-                      <ion-avatar>
-                        <img :src="utils.makeFileUrl(child.userImage)" />
-                      </ion-avatar>
-                      <ion-label>{{ child.userName }}</ion-label>
-                    </ion-chip>
-                  </div><br/>
-                </ion-note>
+              <!-- <ion-avatar>
+                <img :src="item.messages.profileImage ? utils.attachmentsAddress() + item.messages.profileImage  + '_thumbnail' : '/assets/default_avatar.svg'" />
+              </ion-avatar> -->
+              <ion-label class="q-pl-md">
+                <h4>{{ _class.className }}</h4>
+                <p>	
+                  <span v-if="_class.functionName">Função:</span>
+                  {{ _class.functionName }} 
+                </p>
               </ion-label>
+              <ion-chip
+                v-for="child in _class.users"
+                :key="child"
+              >
+                {{ child.userName }}
+              </ion-chip>
+              <!-- <ion-label slot="end" class="ion-text-end">
+                <p>macaquiho</p>
+                <p>{{ item.messages.createdAt.createdAtLocale.split(' ')[1] }}</p>
+              </ion-label> -->
             </ion-item>
           </ion-list>
         </div>
@@ -45,8 +49,8 @@
 import { 
   IonPage, IonButton, 
   IonContent, IonImg, 
-  IonList, IonChip, IonAvatar,
-  IonItem, IonLabel, IonNote } from '@ionic/vue';
+  IonList, IonChip,
+  IonItem, IonLabel } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -65,7 +69,7 @@ export default {
     return {
       APP_NAME,
       progressBar: false,
-      childClassInfo: null,
+      classesInfo: null,
       pagination: {
         page: 1,
         rowsPerPage: 10
@@ -85,16 +89,20 @@ export default {
   },
   methods: {
     startView () {
-      this.getChildClass()
+      this.getClassesByUserId()
     },
-    getChildClass() {
+    getClassesByUserId() {
       const opt = {
-        route: '/mobile/parents/chat/getClassesOfChildrenByUserId',
+        route: '/mobile/workers/getClassesByUserId',
+        body: {
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        }
       }
       utils.loading.show()
       useFetch(opt).then(r => {
         utils.loading.hide()
-        this.childClassInfo = r.data
+        this.classesInfo = r.data.list
       })
     },
     goToChatDetail (classId) {

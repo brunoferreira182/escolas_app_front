@@ -4,7 +4,6 @@
       title="Social"
       :backButton="true"
     />
-
     <ion-content >
       <SocialPost
         v-for="(post, i) in posts"
@@ -38,12 +37,20 @@ export default {
   data() {
     return {
       APP_NAME,
-      page: 0,
+      page: 1,
+      rowsPerPage: 10,
       posts: []
     };
   },
   mounted () {
     this.startView()
+  },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/tabsParents/social') {
+        this.startView()
+      }
+    }
   },
   methods: {
     backLogin() {
@@ -57,13 +64,14 @@ export default {
       const opt = {
         route: '/mobile/social/getPosts',
         body: {
-          page: this.page
+          page: this.page,
+          rowsPerPage: this.rowsPerPage
         }
       }
       const ret = await useFetch(opt)
-      this.page++
-      if (!refreshPage) this.posts = ret.data
-      else this.posts.push(...ret.data)
+      // this.page++
+      if (!refreshPage) this.posts = ret.data.list
+      else this.posts.push(...ret.data.list)
       return
     },
   }

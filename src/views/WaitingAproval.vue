@@ -21,14 +21,34 @@
         <ion-button expand="block" @click="backLogin">Ir para login</ion-button>
       </div>
     </ion-content>
+    <ion-alert
+      v-if="familySolicitation"
+      :is-open="dialogAcceptSolicitation.open"
+      :header="`Você recebeu um convite de ${familySolicitation.sendBy} para participar da  ${familySolicitation.familyName }` " 
+      :backdropDismiss="false"
+      animated
+      :buttons="[
+        {
+          text: 'Recusar',
+          handler: () => {
+            refuseFamilySolicitation()
+          }
+        },
+        {
+          text: 'Aceitar',
+          handler: () => {
+            acceptFamilySolicitation()
+          }
+        }
+      ]"
+    />
   </ion-page>
 </template>
-
 <script>
-import { IonPage, IonButton, IonContent, IonImg } from '@ionic/vue';
+import { useFetch } from '@/composables/fetch';
+import { IonPage, IonButton, IonContent, IonAlert, IonImg } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../composables/variables';
 import { defineComponent } from 'vue';
-
 
 export default {
   components: {
@@ -38,10 +58,59 @@ export default {
   },
   data() {
     return {
-      APP_NAME
+      APP_NAME,
+      familySolicitation: null,
+      dialogAcceptSolicitation: {open: false}
     };
   },
+  mounted () {
+    this.getFamiliesSolicitationsToUser()
+  },
   methods: {
+    acceptFamilySolicitation() {
+      const opt = {
+        route: '/mobile/parents/profile/respondFamiliesSolicitation',
+        body: {
+          solicitationsId: this.familySolicitation._id,
+          respond: 'accepted' 
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+        this.$router.replace('/tabsParents')
+      })
+    },
+    refuseFamilySolicitation() {
+      const opt = {
+        route: '/mobile/parents/profile/respondFamiliesSolicitation',
+        body: {
+          solicitationsId: this.familySolicitation._id,
+          respond: 'refused' 
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
+    getFamiliesSolicitationsToUser() {
+      const opt = {
+        route: '/mobile/parents/profile/getFamiliesSolicitationsToUser'
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente")
+        }
+        this.familySolicitation = r.data
+        this.dialogUserAcceptSolicitation()
+      })
+    },
+    dialogUserAcceptSolicitation() {
+      this.dialogAcceptSolicitation.open = true
+    },
     backLogin() {
       this.$router.back('/login')
     }

@@ -5,7 +5,7 @@
       <div class="ion-padding">
         <div class="ion-text-center ">
           <ion-img
-            src="/assets/logo_login_custom.png"
+            src="/assets/logo_login_custom.svg"
             class="login-logo"
           />
           <div class="login-logo-letters q-mb-md">{{ APP_NAME }}</div>

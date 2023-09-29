@@ -11,11 +11,19 @@ import parentsChat from '../views/parents/Chat.vue'
 import parentsProfile from '../views/parents/Profile.vue'
 import parentsMore from '../views/parents/More.vue'
 import userPersonalData from '../views/parents/UserPersonalData.vue'
-import postDetail from '../views/parents/postDetail.vue'
+import postDetail from '../views/parents/PostDetail.vue'
 import addChild from '../views/parents/AddChild.vue'
 import addParent from '../views/parents/AddParent.vue'
 import childDetail from '../views/parents/ChildDetail.vue'
+import parentDetail from '../views/parents/ParentDetail.vue'
 import editProfile from '../views/parents/EditProfile.vue'
+import solicitationsDetail from '../views/parents/SolicitationsDetail.vue'
+import tabsLayoutWorkers from '../layouts/TabsLayoutWorkers.vue'
+import workerClass from '../views/workers/Class.vue'
+import workerChat from '../views/workers/Chat.vue'
+import workerProfile from '../views/workers/Profile.vue'
+import chatDetail from '../views/parents/ChatDetail.vue'
+import postReactions from '../views/parents/PostReactions.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -43,6 +51,52 @@ const routes: Array<RouteRecordRaw> = [
         component: waitingPermission
       },
       {
+        path: '/userPersonalData',
+        name: 'UserPersonalData',
+        component: userPersonalData
+      },
+      {
+        path: '/addChild',
+        name: 'AddChild',
+        component: addChild
+      },
+      {
+        path: '/addParent',
+        name: 'AddParent',
+        component: addParent
+      },
+      {
+        path: '/childDetail',
+        name: 'ChildDetail',
+        component: childDetail
+      },
+      {
+        path: '/parentDetail',
+        name: 'ParentDetail',
+        component: parentDetail
+      },
+      {
+        path: '/solicitationsDetail',
+        name: 'SolicitationsDetail',
+        component: solicitationsDetail
+      },
+      {
+        path: '/chatDetail',
+        name: 'ChatDetail',
+        component: chatDetail
+      },
+      {
+        path: '/tabsWorkers',
+        name: 'TabsWorkers',
+        component: tabsLayoutWorkers,
+        children: [
+          { path: '/', redirect: '/tabsWorkers/class'},
+          { path: '/tabsWorkers/class', component: workerClass},
+          { path: '/tabsWorkers/chat', component: workerChat},
+          { path: '/tabsWorkers/profile', component: workerProfile},
+        ]
+      },
+      {
         path: '/tabsParents',
         name: 'TabsParents',
         component: TabsLayoutParent,
@@ -52,14 +106,11 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsParents/chat', component: parentsChat },
           { path: '/tabsParents/profile', component: parentsProfile },
           { path: '/tabsParents/more', component: parentsMore },
-          { path: '/tabsParents/userPersonalData', component: userPersonalData },
-          { path: '/tabsParents/addChild', component: addChild },
-          { path: '/tabsParents/addParent', component: addParent },
-          { path: '/tabsParents/childDetail', component: childDetail },
         ]
       },
       { path: '/postDetail', component: postDetail },
       { path: '/editProfile', component: editProfile },
+      { path: '/postReactions', component: postReactions },
     ]
   },
 ]

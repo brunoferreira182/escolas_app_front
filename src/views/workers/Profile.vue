@@ -22,68 +22,16 @@
           </ion-label>
         </ion-item>
       </ion-list>
-      <div class="ion-text-center text-h5 q-py-sm" v-if="userInfo.familyData">
-        {{ userInfo.familyData.name }}
+      <div class="ion-text-center text-h5 q-py-sm" >
+        Área do trabalhador
       </div>
       <ion-list :inset="true" v-if="userInfo.family">
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Filhos</div>
-        <ion-item 
-          v-for="child in userInfo.family.children"
-          :key="child"
-          :button="true"
-          @click="goToChildDetail(child._id)"
-        >
-          <ion-avatar aria-hidden="true" slot="start">
-            <img :src="utils.makeFileUrl(child.image)"/>
-          </ion-avatar>
-          <ion-label>
-            <h6>{{ child.name }}</h6>
-            <ion-badge>{{ child.status.label }}</ion-badge>
-          </ion-label>
-        </ion-item>
-        <div v-if="userInfo.familyData">
-          <ion-item 
-            :button="true" 
-            @click="addChild"
-            v-if="userInfo.familyData.isFamilyAdmin === true"
-          >
-          Adicionar Filho</ion-item>
-        </div>
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Horários</div>
+        
       </ion-list>
 
       <ion-list :inset="true">
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
-        <ion-item 
-          v-for="parent in userInfo.family.family"
-          :key="parent"
-          :button="true"
-          @click="goToParentDetail(parent._id)"
-        >
-          <ion-avatar aria-hidden="true" slot="start">
-            <img :src="utils.makeFileUrl(parent.image)"/>
-          </ion-avatar>
-          <ion-label>
-            <h6>{{ parent.name }}</h6> 
-            <ion-badge>{{ parent.status.label }}</ion-badge> 
-          </ion-label>
-        </ion-item>
-        <div v-if="userInfo.familyData">
-          <ion-item 
-            :button="true" 
-            @click="addParent"
-            v-if="userInfo.familyData.isFamilyAdmin === true"
-          >
-          Adicionar Familiar</ion-item>
-        </div>
-      </ion-list>
-      <ion-list :inset="true">
-        <ion-item 
-          v-if="familySolicitations.length !== 0"
-          :button="true"
-          @click="goToSolicitationsDetail"
-        >
-          Convites para família pendentes
-        </ion-item>
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico</div>
       </ion-list>
       <ion-list :inset="true">
         <ion-item 

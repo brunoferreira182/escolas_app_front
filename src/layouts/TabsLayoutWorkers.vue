@@ -31,39 +31,29 @@ import {
   IonPage, IonRouterOutlet,
   IonFab, IonFabButton,
   IonModal, IonContent,
-  IonImg, IonAvatar,
+  IonImg, IonAvatar, IonAlert
 } from '@ionic/vue';
 import { 
-  home,
-  person,
-  chatbox
+  idCardOutline,
+  chatboxOutline,
+  personCircleOutline,
+  ellipsisHorizontalOutline
 } from 'ionicons/icons';
 import utils from '../composables/utils'
 import { useBackButton } from '@ionic/vue';
 </script>
 <script>
-
+import { useFetch } from '@/composables/fetch';
 export default {
-  name: "TabsLayout",
+  name: "TabsLayoutParents",
   data() {
     return {
-      tabs: [],
-      tabsGuest: [
-        { name: "home", icon: "/assets/home.svg", to: '/tabs/home', label: "Início" },
-        { name: "profile", icon: "/assets/user.svg", to: '/profile', label: "Perfil" },
+      tabs: [
+        { name: "turmas", icon: idCardOutline, to: '/tabsWorkers/class', label: "Turmas" },
+        { name: "messenger", icon: chatboxOutline, to: '/tabsWorkers/chat', label: "Chat" },
+        { name: "profile", icon: personCircleOutline, to: '/tabsWorkers/profile', label: "Perfil" },
       ],
-      tabsParents: [
-        { name: "home", icon: "/assets/home.svg", to: '/tabs/home', label: "Início" },
-        { name: "messenger", icon: '/assets/message2.svg', to: '/tabs/messenger', label: "Messenger" },
-        { name: "serviceAgreements", icon: '/assets/agreement2.svg', to: '/serviceAgreementsList', label: "Serviços" },
-        { name: "profile", icon: "/assets/user.svg", to: '/profile', label: "Perfil" },
-      ],
-      tabsWorkers: [
-        { name: "home", icon: "/assets/home.svg", to: '/tabs/home', label: "Início" },
-        { name: "messenger", icon: '/assets/message2.svg', to: '/tabs/messenger', label: "Messenger" },
-        { name: "serviceAgreements", icon: '/assets/agreement2.svg', to: '/serviceAgreementsList', label: "Serviços" },
-        { name: "profile", icon: "/assets/user.svg", to: '/profile', label: "Perfil" },
-      ],
+      userProfile: [],
     };
   },
   watch: {
@@ -78,26 +68,12 @@ export default {
     }
   },
   beforeMount () {
-    utils.getUserInfoByToken().then(r => {
-      this.userInfo = r.data
-      if (r.data.isGuestUser === 1) this.tabs = this.tabsGuest
-      else {
-        this.tabs = this.tabsUser
-        utils.fetchIuguId()
-
-      }
-    })
+  },
+  mounted () {
   },
   methods: {
     verifyUserType () {
-      const userType = utils.userType.get()
-      // if (!userType) this.$router.replace('/login')
-      if (userType.name === 'serviceProvider') this.tabs.push({
-        name: 'provider',
-        icon: '/assets/bookmark.svg',
-        to: '/providerProfile',
-        label: 'Prestador'
-      })
+      
     },
     makeProfilePhotoUrl () {
       this.userProfilePhotoUrl = this.userInfo.profileImage ? `${utils.attachmentsAddress()}${this.userInfo.profileImage.filename}` : '../../assets/blank-profile-picture-973460.svg'
@@ -110,9 +86,4 @@ export default {
   }
 };
 </script>
-<style>
-ion-tab-bar {
-  --background: #fff;
-  border: 0.1px solid #ebebec;
-}
-</style>
+
