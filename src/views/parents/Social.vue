@@ -4,7 +4,6 @@
       title="Social"
       :backButton="true"
     />
-
     <ion-content >
       <SocialPost
         v-for="(post, i) in posts"
@@ -70,9 +69,9 @@ export default {
         }
       }
       const ret = await useFetch(opt)
-      this.page++
-      if (!refreshPage) this.posts = ret.data
-      else this.posts.push(...ret.data)
+      // this.page++
+      if (!refreshPage) this.posts = ret.data.list
+      else this.posts.push(...ret.data.list)
       return
     },
   }

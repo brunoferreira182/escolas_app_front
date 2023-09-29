@@ -14,9 +14,7 @@
           <hr :class="item.class" style="background-color: #eed5b4;color: #eed5b4;" v-if="item.type === 'separator'"/>
         </div>
         <div class="q-mt-md" style="margin:0px;margin-top: 30px;color:var(--ion-color-secondary);font-family: Montserrat;font-weight: 400;">
-
           <div style="display: flex;justify-content: center;margin-bottom: 10px;">
-
             <ion-button
               id="click-trigger"
               color="secondary"
@@ -153,7 +151,6 @@
             v-model="newComment"
             :rows="1"
             :auto-grow="true"
-            style="--placeholder-opacity: 1;--placeholder-color: var(--ion-color-secondary)"
             @keyup.enter="newPostComment"
           />
           <ion-button 
@@ -183,7 +180,6 @@ import { send } from 'ionicons/icons';
 import { useFetch } from '../../composables/fetch'
 import utils from '../../composables/utils'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-
 import heart from '/assets/icons/heart.svg'
 import smile from '/assets/icons/smile.svg'
 import like from '/assets/icons/like.svg'
@@ -199,14 +195,17 @@ export default {
       liked: false,
       newComment: '',
       reactions: [heart, smile, like],
+      postReactions: [],
       comments: [],
-      commentsPage: 0,
+      commentsPage: 1,
+      commentsRowsPerPage: 10,
       noMoreData: false
     }
   },
   mounted () {
     this.getPostDataById()
     this.getPostComments()
+    this.getPostReactions()
   },
 
   methods: {
@@ -226,7 +225,7 @@ export default {
     },
     clkReaction (icon) {
       const opt = {
-        route: '/mobile/social/newPostReaction',
+        route: '/mobile/social/addNewPostReaction',
         body: {
           postId: this.$route.query.postId,
           reaction: icon
@@ -242,10 +241,30 @@ export default {
       this.commentsPage++
       this.getPostComments()
     },
+    getPostReactions() {
+      const opt = {
+        route: '/mobile/social/getReactionsByPostId',
+        body: {
+          postId: this.$route.query.postId,
+          page: this.commentsPage,
+          rowsPerPage: this.commentsRowsPerPage
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          if (r.data.list.length === 0) {
+            this.noMoreData === true
+          }
+          this.postReactions = r.data.list
+          return
+        }
+        utils.toast("Ocorreu um erro, tente novamente.")
+      })
+    },
     newPostComment () {
       if (this.newComment.length > 0) {
         const opt = {
-          route: '/mobile/social/newPostComment',
+          route: '/mobile/social/addNewPostComment',
           body: {
             postId: this.$route.query.postId,
             text: this.newComment
@@ -253,25 +272,26 @@ export default {
         }
         useFetch(opt).then(r => {
           this.newComment = ''
-          this.commentsPage = 0
+          this.commentsPage = 1
           this.getPostComments()
         })
       }
     },
     getPostComments () {
+      this.comments = []
       const opt = {
-        route: '/mobile/social/getPostComments',
+        route: '/mobile/social/getCommentsByPostId',
         body: {
           postId: this.$route.query.postId,
-          page: this.commentsPage
+          page: this.commentsPage,
+          rowsPerPage: this.commentsRowsPerPage
         }
       }
       useFetch(opt).then(r => {
         if (r.data.length < 4) {
           this.noMoreData = true
         }
-        this.comments.push(...r.data)
-        console.log(this.comments)
+        this.comments.push(...r.data.list)
       })
     },
   }
@@ -283,8 +303,7 @@ export default {
   margin: 10px;
   --border-color:  transparent;
   --border-radius: 0.4rem;
-  /* border: 1px solid var(--ion-color-secondary); */
-  --background: var(--ion-color-tertiary);
+  border: 1px solid var(--ion-color-secondary);
 }
 
 .popover-reactions {

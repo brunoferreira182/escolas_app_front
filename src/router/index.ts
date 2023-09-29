@@ -11,7 +11,7 @@ import parentsChat from '../views/parents/Chat.vue'
 import parentsProfile from '../views/parents/Profile.vue'
 import parentsMore from '../views/parents/More.vue'
 import userPersonalData from '../views/parents/UserPersonalData.vue'
-import postDetail from '../views/parents/postDetail.vue'
+import postDetail from '../views/parents/PostDetail.vue'
 import addChild from '../views/parents/AddChild.vue'
 import addParent from '../views/parents/AddParent.vue'
 import childDetail from '../views/parents/ChildDetail.vue'
@@ -23,6 +23,7 @@ import workerClass from '../views/workers/Class.vue'
 import workerChat from '../views/workers/Chat.vue'
 import workerProfile from '../views/workers/Profile.vue'
 import chatDetail from '../views/parents/ChatDetail.vue'
+import postReactions from '../views/parents/PostReactions.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -109,6 +110,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       { path: '/postDetail', component: postDetail },
       { path: '/editProfile', component: editProfile },
+      { path: '/postReactions', component: postReactions },
     ]
   },
 ]
