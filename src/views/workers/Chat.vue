@@ -6,27 +6,27 @@
     />
     <ion-content >
       <div class="q-mt-md">
-        <div class="slide" v-if="childClassInfo">
+        <div class="slide" v-if="classesInfo">
           <ion-list 
             class="q-pa-md"
             lines="full" 
-            v-for="_class in childClassInfo"
+            v-for="_class in classesInfo"
             :key="_class"
           >
             <ion-item
               button
               detail="true"
-              @click="goToChatDetail(_class.classData.id)"
+              @click="goToChatDetail(_class._id)"
             >
               <!-- <ion-avatar>
                 <img :src="item.messages.profileImage ? utils.attachmentsAddress() + item.messages.profileImage  + '_thumbnail' : '/assets/default_avatar.svg'" />
               </ion-avatar> -->
               <ion-label class="q-pl-md">
-                <h4>{{ _class.classData.name }}</h4>
-                <!-- <p>	
-                  <span v-if="item.messages.userId === childClassInfo.userId">Você: </span>
-                  {{ item.messages.message }} 
-                </p> -->
+                <h4>{{ _class.className }}</h4>
+                <p>	
+                  <span v-if="_class.functionName">Função:</span>
+                  {{ _class.functionName }} 
+                </p>
               </ion-label>
               <ion-chip
                 v-for="child in _class.users"
@@ -69,7 +69,7 @@ export default {
     return {
       APP_NAME,
       progressBar: false,
-      childClassInfo: null,
+      classesInfo: null,
       pagination: {
         page: 1,
         rowsPerPage: 10
@@ -89,16 +89,20 @@ export default {
   },
   methods: {
     startView () {
-      this.getChildClass()
+      this.getClassesByUserId()
     },
-    getChildClass() {
+    getClassesByUserId() {
       const opt = {
-        route: '/mobile/parents/chat/getClassesOfChildrenByUserId',
+        route: '/mobile/workers/getClassesByUserId',
+        body: {
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        }
       }
       utils.loading.show()
       useFetch(opt).then(r => {
         utils.loading.hide()
-        this.childClassInfo = r.data
+        this.classesInfo = r.data.list
       })
     },
     goToChatDetail (classId) {
