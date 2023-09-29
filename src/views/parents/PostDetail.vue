@@ -31,8 +31,7 @@
           </h4> -->
         </div>
         <ion-item
-        fill="outline"
-        lines="none"
+        class="q-mb-sm"
         >
           <ion-textarea
             placeholder="Deixe um comentário..."
@@ -49,36 +48,37 @@
             <ion-icon  slot="icon-only" :icon="send"></ion-icon>
           </ion-button>
         </ion-item>
-
-        <ion-list v-if="comments.length > 0" class="q-mx-md">
-          <ion-item 
-            v-for="(comment,i) in comments"
-            :key="i"
-            lines="none"
-          >
-            <ion-label>
-              <h4>{{ comment.createdBy.name }}</h4>
-              <p>
-                {{ comment.text }}
-              </p>
-            </ion-label>
-            <ion-label slot="end">
-              <p 
-                style="
-                  font-size: small; 
-                  color: var(--ion-color-secondary);"
-              >{{ comment.createdAt.createdAtOnlyDate.substring(0,5) }}</p>
-            </ion-label>
-
-          </ion-item>
-          <div v-if="!noMoreData">
-            <ion-button
-              fill="clear"
-              color="secondary"
-              @click="clkLoadMore"
-            >Ver mais</ion-button>
-          </div>
-        </ion-list>
+        <ion-item>
+          <ion-list v-if="comments.length > 0" class="q-mx-md">
+            <ion-item 
+              v-for="(comment,i) in comments"
+              :key="i"
+              lines="none"
+            >
+              <ion-label>
+                <h4>{{ comment.createdBy.name }}</h4>
+                <p>
+                  {{ comment.text }}
+                </p>
+              </ion-label>
+              <ion-label slot="end">
+                <p 
+                  style="
+                    font-size: small; 
+                    color: var(--ion-color-secondary);"
+                >{{ comment.createdAt.createdAtOnlyDate.substring(0,5) }}</p>
+              </ion-label>
+  
+            </ion-item>
+            <div v-if="!noMoreData">
+              <ion-button
+                fill="clear"
+                color="secondary"
+                @click="clkLoadMore"
+              >Ver mais</ion-button>
+            </div>
+          </ion-list>
+        </ion-item>
 
       </div>
     </ion-content>
@@ -115,7 +115,7 @@ export default {
       postReactions: [],
       comments: [],
       commentsPage: 1,
-      commentsRowsPerPage: 10,
+      commentsRowsPerPage: 3,
       noMoreData: false
     }
   },
