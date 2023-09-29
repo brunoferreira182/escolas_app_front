@@ -1,10 +1,10 @@
 <template>
   <ion-page>
-    <ToolbarEscolas
-      :title="classDetail ? classDetail.className : 'Carregando...'"
-      :backButton="true"
-    />
-    <ion-content ref="elIonContent" color="light">
+    <ion-header>
+    </ion-header>
+    <ion-content ref="elIonContent">
+      <!-- <div style="height: var(--ion-safe-area-top);"></div> -->
+      
       <PhotoHandler
         v-show="startPhotoHandler"
         :start="startPhotoHandler"
@@ -13,7 +13,7 @@
         @captured="captured"
         @cancel="cancelPhotoHandler"
       />
-      <div >
+      <div v-if="statusConnection === 'connected'">
         <ion-infinite-scroll
           position="top"
           style="position:absolute;pointer-events: none; "
@@ -96,13 +96,20 @@
             </ion-item-sliding>
           </div>
         </ion-list>
+
       </div>
+      <div v-if="statusConnection === 'pending'">
+        <div class="vertical-center ion-text-center q-pa-md">
+          {{ pendingMessage }}
+        </div>
+      </div>
+      
     </ion-content>
-    <ion-footer>
+    <ion-footer v-if="statusConnection === 'connected'">
       <form :style="footerColor">
         <ion-item v-if="isAnsweringMessage.isAnswering" lines="none" >
-          <ion-avatar slot="start">
-            <img />
+          <ion-avatar slot="start" v-if="isAnsweringMessage.message.messageData.file && isAnsweringMessage.message.messageData.file.mimetype.includes('image')">
+            <img :src="utils.attachmentsAddress() + isAnsweringMessage.message.messageData.file.filename"/>
           </ion-avatar>
           <ion-label class="ion-text-wrap">
             <p>Respondendo à mensagem de {{ isAnsweringMessage.message.createdBy.name }}</p>
@@ -143,34 +150,54 @@
       :open="openAudioRecorder"
       @done="doneAudioRecorder"
     />
-
+    
   </ion-page>
 </template>
-
 <script setup>
-import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import AudioRecorder from '../../components/AudioRecorder.vue'
-import PhotoHandler from '../../components/PhotoHandler.vue'
+import { defineComponent } from 'vue'
+import {
+  IonPage, 
+  IonIcon, 
+  IonTextarea, 
+  IonContent, 
+  IonButton,
+  IonHeader,
+  IonToolbar,
+  IonRow, IonCol,
+  IonFooter,
+  IonItem,
+  IonButtons,
+  IonTitle,
+  IonInfiniteScroll,IonInfiniteScrollContent,
+  IonProgressBar,
+  IonItemSliding, IonItemOptions, IonItemOption, IonList, IonAvatar, IonLabel,
+  IonCard,
+  alertController,
+  IonRange
+} from '@ionic/vue';
+import { useFetch } from '../../../src/composables/fetch.js';
 import { send, attach, close, mic, play, pause, chevronBack } from 'ionicons/icons';
 import utils from '../../../src/composables/utils.js';
-import {
-  IonPage, IonContent,
-  IonInfiniteScroll, IonInfiniteScrollContent,
-  IonCard, IonIcon, IonRange, IonLabel,
-  IonRow, IonItem, IonItemOption, IonItemOptions,
-  IonItemSliding, IonList, IonAvatar, IonTextarea,
-  IonButton, IonCol, IonFooter, 
-} from '@ionic/vue'
+import PhotoHandler from '../../components/PhotoHandler.vue'
+import { io } from "socket.io-client";
+import { masterServerRoute } from '../../composables/masterServerRoutes'
+import AudioRecorder from '../../components/AudioRecorder.vue'
+import { COMPANY_ID } from '../../composables/variables'
 </script>
-
 <script>
-import { useFetch } from '@/composables/fetch';
-export default {
-  components: {
+export default defineComponent({
+  name:'MessengerChat',
+  mounted: async function () {
+    utils.loading.hide()
+    this.getUserNamePhotoById()
+    this.getStatusUserConnection()
+    this.userInfo = utils.presentUserInfo()
+  },
+  beforeUnmount () {
+    this.socket.disconnect()
   },
   data() {
     return {
-      classDetail: null,
       title: '',
       isAnsweringMessage: {
         isAnswering: false,
@@ -205,6 +232,7 @@ export default {
       isLoadingMessages: false,
       disableInfiniteScroll: true,
       noMoreMessages: false,
+  
       timeTouchMessageStart: 0,
       timeTouchMessageEnd: 0,
       socket: null,
@@ -216,17 +244,10 @@ export default {
       currentTime: 0,
       currentAudioId: null,
       audioIcon: 'play'
-    };
-  },
-  mounted () {
-    this.startView()
+    }
+
   },
   methods: {
-    startView() {
-      this.getClassDetailById()
-      this.getMessages()
-      this.userInfo = utils.presentUserInfo()
-    },
     playAudio(data, currentAudioId) {
       this.audioIcon = 'pause'
       if (this.currentAudioId !== currentAudioId) {
@@ -453,9 +474,9 @@ export default {
       if (this.noMoreMessages) return
       const opt = {
         method: 'POST',
-        route: '/mobile/parents/chat/getClassMessages',
+        route: '/mobile/messenger/getMessages',
         body: {
-          classId: this.$route.query.classId,
+          userId: this.$route.query.userId,
           firstPosix: this.messages[0] ? this.messages[0].createdAt.createdAtPosix : null,
           lastPosix: lPosix ? lPosix : null,
           fromAnswer: fromAnswer ? true : false,
@@ -481,6 +502,8 @@ export default {
       })
     },
     insertMessage (file) {
+      const userId = this.$route.query.userId
+      console.log('vamo nabaaa', userId)
       if (this.chatMessage.length < 1 && !file && !this.audioMessage) return
       let optTemMsg
       if (file.file) optTemMsg = { file: file.file }
@@ -489,9 +512,9 @@ export default {
       
       const opt = {
         method: 'POST',
-        route: '/mobile/parents/chat/insertClassMessage',
+        route: '/mobile/messenger/insertMessage',
         body: {
-          classId: this.$route.query.classId,
+          userId: userId,
 					message: this.chatMessage,
           audioMessage: this.audioMessage
         }
@@ -519,7 +542,8 @@ export default {
 			useFetch(opt).then(r => {
         this.chatMessage = ''
         this.audioMessage = null
-        this.substituteTempMessage(tempId, r.data)
+        // this.messages.push(r.data[0])
+        this.substituteTempMessage(tempId, r.data[r.data.length-1])
         this.noMoreMessages = false
         utils.loading.hide()
         this.scrollToBottom()
@@ -564,24 +588,23 @@ export default {
         this.$router.go(-1)
       })
 		},
-    getClassDetailById() {
-      const opt = {
-        route: '/mobile/parents/chat/getClassDetailById'
-      }
-      useFetch(opt).then((r) => {
-        if (!r.error) {
-          this.classDetail = r.data
-        }
-      })
-    }
+
 
   }
-}
+})
 </script>
 <style scoped>
-ion-list {
-  --background: "transparent"
-}
+/* ion-toolbar {
+  --background: #ffffff;
+  --color: rgb(112, 112, 112);
+
+  --border-color: #869bf6;
+  --border-width: 4px 0;
+  --border-style: double;
+
+  --min-height: 80px;
+  --padding-bottom: 20px;
+} */
 .chat-input {
   /* background-color: rgb(216, 216, 216) ; */
   border-radius: 0.5rem;
