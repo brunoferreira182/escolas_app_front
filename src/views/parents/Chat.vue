@@ -94,7 +94,6 @@ export default {
       })
     },
     clkConectedUser (item) {
-      console.log(item)
       const userId = item._id
       this.$router.push('/chatDetail?userId=' + userId)
     },
