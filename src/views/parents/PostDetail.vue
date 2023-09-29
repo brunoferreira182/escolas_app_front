@@ -5,13 +5,14 @@
       :backButton="true"
     />
     <ion-content>
-      <div v-if="post" style="margin-inline:10px;margin-top: -10px;">
+      <div v-if="post" style="margin-inline:10px;">
+        <div class="ion-text-right q-pb-sm">{{ post.createdAt.createdAtInFullLong }}</div>
         <div v-for="(item,i) in post.postData.detail" :key="i" >
-          <div v-if="item.type === 'text'"   class="post-title">{{ item.value }}</div>
+          <div v-if="item.type === 'text'"   :class="item.class">{{ item.value }}</div>
           <div v-if="item.type === 'image'" :class="item.class">
-            <div class="ion-text-right q-pb-sm">{{ post.createdAt.createdAtInFullLong }}</div>
             <img :class="item.class" :src="createImgURL(item)"> 
           </div>
+          <hr :class="item.class" style="background-color: #15aad8;color: #15aad8;" v-if="item.type === 'separator'"/>
         </div>
         <div>
           <div style="display: flex; align-items: center;" class="q-mb-md">
@@ -31,8 +32,7 @@
           </h4> -->
         </div>
         <ion-item
-        fill="outline"
-        lines="none"
+        class="q-mb-sm"
         >
           <ion-textarea
             placeholder="Deixe um comentário..."
@@ -49,14 +49,13 @@
             <ion-icon  slot="icon-only" :icon="send"></ion-icon>
           </ion-button>
         </ion-item>
-
-        <ion-list v-if="comments.length > 0" class="q-mx-md">
+        <ion-list v-if="comments.length > 0">
           <ion-item 
             v-for="(comment,i) in comments"
             :key="i"
             lines="none"
           >
-            <ion-label>
+            <ion-label >
               <h4>{{ comment.createdBy.name }}</h4>
               <p>
                 {{ comment.text }}
@@ -79,7 +78,6 @@
             >Ver mais</ion-button>
           </div>
         </ion-list>
-
       </div>
     </ion-content>
   </ion-page>
@@ -115,7 +113,7 @@ export default {
       postReactions: [],
       comments: [],
       commentsPage: 1,
-      commentsRowsPerPage: 10,
+      commentsRowsPerPage: 3,
       noMoreData: false
     }
   },
@@ -237,7 +235,6 @@ export default {
   margin:10px
 }
 .post-subtitle-1 {
-  color: #222222;
   font-size: 24px;
   margin:10px
 
@@ -254,7 +251,6 @@ export default {
 
 }
 .post-subtitle-2 {
-  color: #222222;
   font-size: 22px;
   margin:10px
 }
