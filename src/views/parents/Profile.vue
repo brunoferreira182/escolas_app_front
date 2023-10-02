@@ -52,7 +52,6 @@
           Adicionar Filho</ion-item>
         </div>
       </ion-list>
-      
       <ion-list :inset="true" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
         <div v-if="userInfo.familyIdObj === 'noFamily'" class="q-pa-md">
@@ -74,7 +73,7 @@
             </ion-label>
           </ion-item>
         </div>
-        <div v-if="userInfo.familyData">
+        <div v-if="userInfo">
           <ion-item 
             :button="true" 
             @click="addParent"

@@ -98,7 +98,7 @@
         </ion-list>
       </div>
     </ion-content>
-    <ion-footer>
+    <ion-footer v-if="canSendMessage">
       <form :style="footerColor">
         <ion-item v-if="isAnsweringMessage.isAnswering" lines="none" >
           <ion-avatar slot="start">
@@ -130,7 +130,6 @@
             >
               <ion-icon slot="icon-only" :icon="send"></ion-icon>
             </ion-button>
-            
             <ion-button v-else size="small" shape="circle" @click="clkRecord">
               <ion-icon style="scale: 1.3;" slot="icon-only" :icon="mic"></ion-icon>
             </ion-button>
@@ -195,6 +194,7 @@ export default {
       },
       chatMessage: '',
       audioMessage: null,
+      canSendMessage: '',
       userInfo: '',
       statusConnection: '',
       messages: [],
@@ -566,12 +566,17 @@ export default {
 		},
     getClassDetailById() {
       const opt = {
-        route: '/mobile/parents/chat/getClassDetailById'
+        route: '/mobile/parents/chat/getClassDetailById',
+        body: {
+          classId: this.$route.query.classId
+        }
       }
       useFetch(opt).then((r) => {
-        if (!r.error) {
-          this.classDetail = r.data
+        if (r.error) {
+          utils.toast('Ocorreu um problema, tente novamente mais tarde.')
         }
+        this.canSendMessage = r.data.userCanSendMessage
+        this.classDetail = r.data
       })
     }
 

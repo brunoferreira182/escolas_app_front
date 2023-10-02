@@ -1,66 +1,42 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Adicionar filho(a)"
-      :backButton="true"
+      title="Turmas"
+      :backButton="false"
     />
-    <ion-content class="ion-padding">
-      <div class="q-my-md"><strong>Adicionar filho(a)</strong></div>
-      <div>
-        <ion-button
-          expand="block"
-          class="q-mb-md"
-          fill="outline"
-          @click="startPhotoHandler = true"
-          v-if="!image.blob"
-        >Foto</ion-button>
-        <ion-row class="q-my-md" v-if="image.blob">
-          <ion-col>
-            <ion-avatar >
-              <ion-img :src="image.url" ></ion-img>
-            </ion-avatar>
-          </ion-col>
-          <ion-col>
-            <ion-button
-              @click="startPhotoHandler = true"
-              fill="outline"
-            >Trocar foto</ion-button>
-          </ion-col>
-        </ion-row>
-        <ion-input 
-          mode="md" 
-          fill="outline" 
-          label-placement="floating" 
-          label="Nome" 
-          v-model="childData.name"
-          class="q-mb-md"
-        />
-        <InputDocument
-          mode="md"
-          label-placement="floating"
-          label="CPF/CNPJ"
-          v-model="childData.document"
-          class="q-mb-sm"
-        />
-        <ion-input 
-          mode="md" 
-          fill="outline" 
-          label-placement="floating" 
-          label="Data de nascimento" 
-          type="date" 
-          v-model="childData.birthdate"
-          class="q-mb-md"
-        />
-      </div>
-      <div>
-        <ion-button 
-          expand="block"
-          class="q-pt-sm"
-          @click="addChild"
+    <ion-content color="light">
+      <ion-searchbar 
+        show-clear-button="always"
+        animated="true" 
+        placeholder="Pesquisar alunos"
+      >
+      </ion-searchbar>
+      <ion-list :inset="true" >
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
+        <!-- <ion-item 
+          v-for="child in userInfo.family.children"
+          :key="child"
+          :button="true"
+          @click="goToChildDetail(child._id)"
         >
-          Adicionar filho
-        </ion-button>
-      </div>
+          <ion-avatar aria-hidden="true" slot="start">
+            <img :src="utils.makeFileUrl(child.image)"/>
+          </ion-avatar>
+          <ion-label>
+            <h6>{{ child.name }}</h6>
+            <ion-badge v-if="child.status.status === 'inactive'" style="background-color: #eb445a;">{{ child.status.label }}</ion-badge>
+            <ion-badge v-else-if="child.status.status === 'waitingApproval'" style="background-color: #ffc409;">{{ child.status.label }}</ion-badge>
+            <ion-badge v-else >{{ child.status.label }}</ion-badge>
+          </ion-label>
+        </ion-item> -->
+        <div >
+          <ion-item 
+            :button="true" 
+            @click="addChild"
+          >
+          Adicionar Filho</ion-item>
+        </div>
+      </ion-list>
       <PhotoHandler
         v-show="startPhotoHandler"
         :start="startPhotoHandler"
@@ -84,9 +60,12 @@ import {
   IonInput,
   IonRow,
   IonItem,
+  IonSearchbar,
   IonLabel,
   IonCol,
+  IonTextarea,
   IonContent,
+  IonList,
   onIonViewWillEnter,
   IonImg,
   IonAvatar
