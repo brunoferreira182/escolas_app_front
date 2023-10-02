@@ -36,7 +36,10 @@
           @click="clkOpenDialogChildEvent(child)"
           :button="true"
         >
-          <ion-avatar aria-hidden="true" slot="start">
+          <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+            <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+          </ion-avatar>
+          <ion-avatar aria-hidden="true" slot="start" v-else="">
             <img :src="utils.makeFileUrl(child.image)"/>
           </ion-avatar>
           <ion-label>
@@ -382,7 +385,7 @@ export default {
       const opt = {
         route: '/mobile/workers/getChildrenInClassList',
         body: {
-          page: this.pagination.page,
+          page: 2,
           rowsPerPage: this.pagination.rowsPerPage
         }
       }
