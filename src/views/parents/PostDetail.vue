@@ -16,7 +16,7 @@
         </div>
         <div>
           <div style="display: flex; align-items: center;" class="q-mb-md">
-            <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart_filled.svg"></ion-icon>
+            <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart.svg"></ion-icon>
             <ion-icon id="smileIcon" size="large" @click="clkReaction(smile)" src="/assets/icons/smile.svg"></ion-icon>
             <ion-icon id="likeIcon" size="large" @click="clkReaction(icon)" src="/assets/icons/like.svg"></ion-icon>
             <div style="margin-left: 50%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
