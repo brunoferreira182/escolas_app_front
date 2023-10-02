@@ -218,7 +218,7 @@ export default {
       const opt = {
         route: '/mobile/workers/addNewUserChildEvents',
         body: {
-          childId: this.dialogInsertChildEvent.data._id,
+          childId: this.dialogInsertChildEvent.data.childId,
           childEventId: this.dialogInsertChildEvent.childEventId,
           obs: this.dialogInsertChildEvent.obs
         }
