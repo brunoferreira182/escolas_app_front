@@ -35,13 +35,18 @@
           </div>
         </ion-item>
       </ion-list> -->
-      <ion-list :inset="true" class="ion-padding">
-        <h2>Histórico:</h2>
+      <h2>Histórico:</h2>
+      <ion-list :inset="true">
         <ion-item
+          class="ion-text-wrap"
           lines="none"
           v-for="event in historic"
           :key="event"
         >
+        <div>
+          <h2> {{ event.eventName }} </h2>
+          <p> {{ event.obs }} </p>
+        </div>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -101,7 +106,7 @@ export default {
       userId: null,
       userDetail: [],
       canCreateUsers: null,
-      historic: [],
+      historic: null,
       dialogInactivateChild: {
         open: false
       },
@@ -170,7 +175,7 @@ export default {
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
-          this.historic = r.data
+          this.historic = r.data.list
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde.")
         }
