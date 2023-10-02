@@ -78,7 +78,7 @@
           <ion-item 
             :button="true" 
             @click="addParent"
-            v-if="userInfo.familyData.isFamilyAdmin === true"
+            v-if="userInfo.canCreateUsers === true"
           >
           Adicionar Familiar</ion-item>
         </div>
