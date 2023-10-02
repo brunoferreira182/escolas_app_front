@@ -83,9 +83,9 @@
         </div>
       </ion-list>
     
-      <ion-list :inset="true">
+      <ion-list :inset="true" v-if="familySolicitations.length !== 0">
         <ion-item 
-          v-if="familySolicitations.length !== 0"
+          
           :button="true"
           @click="goToSolicitationsDetail"
         >

@@ -68,7 +68,6 @@
                   color: var(--ion-color-secondary);"
               >{{ comment.createdAt.createdAtOnlyDate.substring(0,5) }}</p>
             </ion-label>
-
           </ion-item>
           <div v-if="!noMoreData">
             <ion-button
