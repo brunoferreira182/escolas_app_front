@@ -50,23 +50,28 @@
           Adicionar Filho</ion-item>
         </div>
       </ion-list>
-
-      <ion-list :inset="true">
+      
+      <ion-list :inset="true" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
-        <ion-item 
-          v-for="parent in userInfo.family.family"
-          :key="parent"
-          :button="true"
-          @click="goToParentDetail(parent._id)"
-        >
-          <ion-avatar aria-hidden="true" slot="start">
-            <img :src="utils.makeFileUrl(parent.image)"/>
-          </ion-avatar>
-          <ion-label>
-            <h6>{{ parent.name }}</h6> 
-            <ion-badge>{{ parent.status.label }}</ion-badge> 
-          </ion-label>
-        </ion-item>
+        <div v-if="userInfo.familyIdObj === 'noFamily'" class="q-pa-md">
+          Nenhuma família criada
+        </div>
+        <div v-else>
+          <ion-item 
+            v-for="parent in userInfo.family.family"
+            :key="parent"
+            :button="true"
+            @click="goToParentDetail(parent._id)"
+          >
+            <ion-avatar aria-hidden="true" slot="start">
+              <img :src="utils.makeFileUrl(parent.image)"/>
+            </ion-avatar>
+            <ion-label>
+              <h6>{{ parent.name }}</h6> 
+              <ion-badge>{{ parent.status.label }}</ion-badge> 
+            </ion-label>
+          </ion-item>
+        </div>
         <div v-if="userInfo.familyData">
           <ion-item 
             :button="true" 
@@ -76,6 +81,7 @@
           Adicionar Familiar</ion-item>
         </div>
       </ion-list>
+    
       <ion-list :inset="true">
         <ion-item 
           v-if="familySolicitations.length !== 0"
