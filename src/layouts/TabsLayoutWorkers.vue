@@ -50,7 +50,7 @@ export default {
     return {
       tabs: [
         { name: "turmas", icon: idCardOutline, to: '/tabsWorkers/class', label: "Turmas" },
-        { name: "messenger", icon: chatboxOutline, to: '/tabsWorkers/chat', label: "Chat" },
+        { name: "messenger", icon: chatboxOutline, to: '/tabsWorkers/chat', label: "Sala" },
         { name: "profile", icon: personCircleOutline, to: '/tabsWorkers/profile', label: "Perfil" },
       ],
       userProfile: [],
