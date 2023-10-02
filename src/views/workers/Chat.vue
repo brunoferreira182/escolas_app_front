@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="grupos de conversa"
+      title="Grupos de conversa"
       :backButton="false"
     />
     <ion-content >
@@ -18,9 +18,6 @@
               detail="true"
               @click="goToChatDetail(_class._id)"
             >
-              <!-- <ion-avatar>
-                <img :src="item.messages.profileImage ? utils.attachmentsAddress() + item.messages.profileImage  + '_thumbnail' : '/assets/default_avatar.svg'" />
-              </ion-avatar> -->
               <ion-label class="q-pl-md">
                 <h4>{{ _class.className }}</h4>
                 <p>	
