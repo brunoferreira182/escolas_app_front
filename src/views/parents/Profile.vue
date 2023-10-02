@@ -47,7 +47,7 @@
           <ion-item 
             :button="true" 
             @click="addChild"
-            v-if="userInfo.familyData.isFamilyAdmin === true"
+            v-if="userInfo.familyData.isFamilyAdmin === true || userInfo.familyIdObj === 'noFamily'"
           >
           Adicionar Filho</ion-item>
         </div>
