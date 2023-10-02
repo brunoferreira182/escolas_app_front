@@ -266,7 +266,7 @@ export default {
       })
     },
     goToChildDetail(childId) {
-      this.$router.push("/childDetail?userId=" + childId)
+      this.$router.push("/childDetail?userId=" + childId + "&canCreateUsers=" + this.userInfo.canCreateUsers)
     },
     goToSolicitationsDetail() {
       this.$router.push("/solicitationsDetail")
