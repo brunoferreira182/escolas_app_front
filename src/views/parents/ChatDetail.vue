@@ -3,6 +3,7 @@
     <ToolbarEscolas
       :title="classDetail ? classDetail.className : 'Carregando...'"
       :backButton="true"
+      @click="goToChatInfo"
     />
     <ion-content ref="elIonContent" color="light">
       <PhotoHandler
@@ -222,6 +223,9 @@ export default {
     this.startView()
   },
   methods: {
+    goToChatInfo() {
+      this.$router.push("/chatInfo?classId=" + this.$route.query.classId)
+    },
     startView() {
       this.getClassDetailById()
       this.getMessages()

@@ -21,7 +21,9 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 </script>
 
 <script>
-import { IonPage, IonButton, IonContent, IonImg } from '@ionic/vue';
+import { IonPage, IonButton,
+  IonContent, IonImg,
+  IonList, IonItem } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 
@@ -30,7 +32,7 @@ export default {
   components: {
     IonPage, IonButton,
     IonContent,
-    IonImg
+    IonImg, 
   },
   data() {
     return {

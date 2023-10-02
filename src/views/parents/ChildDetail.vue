@@ -18,20 +18,15 @@
             <p>{{ userDetail.userData.document }}</p>
             <p>Editar foto</p>
           </ion-label>
+          <ion-icon style="color: #eb445a;" :icon="trashOutline" @click="openDialogInactivateChild"></ion-icon>
         </ion-item>
       </ion-list>
       <ion-list lines="none">
         <ion-item>
-          <div class="ion-padding">
+          <div class="ion-padding ion-align-items-center ion-justify-content-between">
             Status: {{ userDetail.userData.status.label }}
-            <ion-button 
-              v-if="canCreateUsers === 'true'"
-              class="ion-text-right"
-              @click="inactivateChild"
-            >
-              Tirar do cadastro
-            </ion-button>
           </div>
+          
         </ion-item>
       </ion-list>
       <ion-list>
@@ -46,6 +41,26 @@
         </ion-item>
       </ion-list>
     </ion-content>
+    <ion-alert
+      :is-open="dialogInactivateChild.open"
+      header="Inativar filho?" 
+      :backdropDismiss="false"
+      animated
+      :buttons="[
+        {
+          text: 'Não',
+          handler: () => {
+            refuseInactivate()
+          }
+        },
+        {
+          text: 'Sim',
+          handler: () => {
+            inactivateChild()
+          }
+        }
+      ]"
+    />
   </ion-page>
 </template>
 
@@ -65,7 +80,9 @@ import {
   IonAvatar,
   IonContent,
   onIonViewWillEnter,
+  IonIcon
 } from '@ionic/vue';
+import { trashOutline } from 'ionicons/icons';
 import { useFetch } from '../../composables/fetch'
 import InputDocument from '../../components/InputDocument.vue'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -80,13 +97,22 @@ export default {
       userId: null,
       userDetail: [],
       canCreateUsers: null,
-      historic: []
+      historic: [],
+      dialogInactivateChild: {
+        open: false
+      }
     };
   },
   mounted(){
     this.getUserId()
   },
   methods: {
+    refuseInactivate() {
+      this.dialogInactivateChild.open = false
+    },
+    openDialogInactivateChild() {
+      this.dialogInactivateChild.open = true
+    },
     inactivateChild() {
       const opt = {
         route: '/mobile/parents/profile/inactivateChild',
