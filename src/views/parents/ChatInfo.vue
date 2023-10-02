@@ -4,8 +4,8 @@
       title="Detalhes da turma"
       :backButton="true"
     />
-    <ion-content class="ion-padding" color="light">
-      <ion-list lines="none">
+    <ion-content color="light">
+      <ion-list lines="none" :inset="true" class="ion-padding">
         <h2>Horários:</h2>
         <ion-item>
         </ion-item>

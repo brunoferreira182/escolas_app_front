@@ -219,6 +219,13 @@ export default {
       audioIcon: 'play'
     };
   },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/chatDetail') {
+        this.startView()
+      }
+    }
+  },
   mounted () {
     this.startView()
   },
