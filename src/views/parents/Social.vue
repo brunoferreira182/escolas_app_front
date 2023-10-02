@@ -4,7 +4,7 @@
       title="Social"
       :backButton="true"
     />
-    <ion-content>
+    <ion-content color="light">
       <SocialPost
         v-for="(post, i) in posts"
         :key="post._id"
