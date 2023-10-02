@@ -304,9 +304,9 @@ ion-select.never-flip::part(icon) {
   transform: none;
 }
 ion-avatar {
-  --border-radius: 4px;
-  width: 100px;
-  height: 100px
+  --border-radius: 6px;
+  width: 56px;
+  height: 56px
 }
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
