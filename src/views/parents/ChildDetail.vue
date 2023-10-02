@@ -25,11 +25,23 @@
           <div class="ion-padding">
             Status: {{ userDetail.userData.status.label }}
             <ion-button 
+              v-if="canCreateUsers === 'true'"
               class="ion-text-right"
               @click="inactivateChild"
             >
               Tirar do cadastro
             </ion-button>
+          </div>
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <h2>Histórico:</h2>
+        <ion-item
+          lines="none"
+          v-for="event in historic"
+          :key="event"
+        >
+          <div>
           </div>
         </ion-item>
       </ion-list>
@@ -66,7 +78,9 @@ export default {
   data() {
     return {
       userId: null,
-      userDetail: []
+      userDetail: [],
+      canCreateUsers: null,
+      historic: []
     };
   },
   mounted(){
@@ -93,6 +107,7 @@ export default {
     getUserId() {
       this.userId = this.$route.query.userId
       this.getUserDetail()
+      this.getUserHistoric()
     },
     getUserDetail() {
       const opt = {
@@ -107,7 +122,26 @@ export default {
           return
         }
         this.userDetail = r.data
+        this.verifyIfCanCreateUsers()
       })
+    },
+    getUserHistoric() {
+      const opt = {
+        route: '',
+        body: {
+
+        },
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this.historic = r.data
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
+    verifyIfCanCreateUsers() {
+      this.canCreateUsers = this.$route.query.canCreateUsers
     }
   }
 };
