@@ -387,7 +387,7 @@ export default {
       const opt = {
         route: '/mobile/workers/getChildrenInClassList',
         body: {
-          page: 2,
+          page: this.pagination.page,
           rowsPerPage: this.pagination.rowsPerPage
         }
       }
