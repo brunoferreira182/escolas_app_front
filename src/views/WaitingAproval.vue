@@ -54,7 +54,8 @@ export default {
   components: {
     IonPage, IonButton,
     IonContent,
-    IonImg
+    IonImg,
+    IonAlert
   },
   data() {
     return {

@@ -20,9 +20,19 @@ const useUtils = {
       return
     }
     const r = await this.getUserPermissions()
-    if (r.data.length === 0) this.$router.push("/waitingPermission")
-    else if (r.data[0].role === 'IS_PARENT') router.push("/tabsParents")
-    else if (r.data[0].role === 'WORKER') router.push("/tabsWorkers")
+    if (r.data.length === 0) {
+      this.$router.push("/waitingPermission")
+      return
+    }
+    const perms = []
+    r.data.forEach((p) => { perms.push(p.role) })
+    const currentVision = localStorage.getItem('currentVision')
+    if (!currentVision && perms.includes('IS_PARENT')) router.push("/tabsParents")
+    else if (currentVision === 'worker' && perms.includes('IS_WORKER')) router.push("/tabsWorkers")
+    else if (currentVision === 'worker' && !perms.includes('IS_WORKER') && perms.includes('IS_PARENT')) {
+      router.push("/tabsParents")
+      localStorage.removeItem('currentVision')
+    }
   },
   async getUserPermissions(){
     const opt = {
