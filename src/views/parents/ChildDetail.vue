@@ -4,7 +4,7 @@
       title="Dados pessoais"
       :backButton="true"
     />
-    <ion-content class="ion-padding" v-if="userDetail.userData">
+    <ion-content class="ion-padding" color="light" v-if="userDetail.userData">
       <ion-list :inset="true">
         <ion-item
           lines="none"
@@ -15,37 +15,56 @@
           </ion-avatar>
           <ion-label class="q-px-sm">
             <h2>{{ userDetail.userData.name }}</h2>
+            <p>Status: {{ userDetail.userData.status.label }}</p>
             <p>{{ userDetail.userData.document }}</p>
             <p>Editar foto</p>
           </ion-label>
+          <ion-icon 
+            v-if="userDetail.userData.status.status === 'active'"
+            style="color: 
+            #eb445a;" 
+            :icon="trashOutline"
+            @click="openDialogInactivateChild"
+          />
         </ion-item>
       </ion-list>
-      <ion-list lines="none">
+      <!-- <ion-list lines="none">
         <ion-item>
           <div class="ion-padding">
             Status: {{ userDetail.userData.status.label }}
-            <ion-button 
-              v-if="canCreateUsers === 'true'"
-              class="ion-text-right"
-              @click="inactivateChild"
-            >
-              Tirar do cadastro
-            </ion-button>
           </div>
         </ion-item>
-      </ion-list>
-      <ion-list>
+      </ion-list> -->
+      <ion-list :inset="true" class="ion-padding">
         <h2>Histórico:</h2>
         <ion-item
           lines="none"
           v-for="event in historic"
           :key="event"
         >
-          <div>
-          </div>
         </ion-item>
       </ion-list>
     </ion-content>
+    <ion-alert
+      :is-open="dialogInactivateChild.open"
+      header="Inativar filho?" 
+      :backdropDismiss="false"
+      animated
+      :buttons="[
+        {
+          text: 'Não',
+          handler: () => {
+            refuseInactivate()
+          }
+        },
+        {
+          text: 'Sim',
+          handler: () => {
+            inactivateChild()
+          }
+        }
+      ]"
+    />
   </ion-page>
 </template>
 
@@ -65,7 +84,9 @@ import {
   IonAvatar,
   IonContent,
   onIonViewWillEnter,
+  IonIcon
 } from '@ionic/vue';
+import { trashOutline } from 'ionicons/icons';
 import { useFetch } from '../../composables/fetch'
 import InputDocument from '../../components/InputDocument.vue'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -80,13 +101,26 @@ export default {
       userId: null,
       userDetail: [],
       canCreateUsers: null,
-      historic: []
+      historic: [],
+      dialogInactivateChild: {
+        open: false
+      },
+      pagination: {
+        page: 1,
+        rowsPerPage: 6
+      }
     };
   },
   mounted(){
     this.getUserId()
   },
   methods: {
+    refuseInactivate() {
+      this.dialogInactivateChild.open = false
+    },
+    openDialogInactivateChild() {
+      this.dialogInactivateChild.open = true
+    },
     inactivateChild() {
       const opt = {
         route: '/mobile/parents/profile/inactivateChild',
@@ -127,9 +161,11 @@ export default {
     },
     getUserHistoric() {
       const opt = {
-        route: '',
+        route: '/mobile/workers/getChildEventsByUserId',
         body: {
-
+          childId: this.$route.query.userId,
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
         },
       }
       useFetch(opt).then((r) => {

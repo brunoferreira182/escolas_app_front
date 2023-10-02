@@ -16,10 +16,6 @@
           </ion-label>
         </ion-item>
       </ion-list>
-      <ion-list>
-        <div class="ion-padding">
-        </div>
-      </ion-list>
     </ion-content>
   </ion-page>
 </template>

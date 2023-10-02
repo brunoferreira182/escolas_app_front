@@ -24,6 +24,7 @@ import workerChat from '../views/workers/Chat.vue'
 import workerProfile from '../views/workers/Profile.vue'
 import chatDetail from '../views/parents/ChatDetail.vue'
 import postReactions from '../views/parents/PostReactions.vue'
+import chatInfo from '../views/parents/ChatInfo.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -84,6 +85,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/chatDetail',
         name: 'ChatDetail',
         component: chatDetail
+      },
+      {
+        path: '/chatInfo',
+        name: 'ChatInfo',
+        component: chatInfo
       },
       {
         path: '/tabsWorkers',
