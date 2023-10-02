@@ -13,22 +13,19 @@
       </ion-searchbar>
       <ion-list :inset="true" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
-        <!-- <ion-item 
-          v-for="child in userInfo.family.children"
-          :key="child"
+        <ion-item 
+          v-for="classe in classData"
+          :key="classe"
           :button="true"
-          @click="goToChildDetail(child._id)"
         >
           <ion-avatar aria-hidden="true" slot="start">
-            <img :src="utils.makeFileUrl(child.image)"/>
+            <img :src="utils.makeFileUrl(classe.image)"/>
           </ion-avatar>
           <ion-label>
-            <h6>{{ child.name }}</h6>
-            <ion-badge v-if="child.status.status === 'inactive'" style="background-color: #eb445a;">{{ child.status.label }}</ion-badge>
-            <ion-badge v-else-if="child.status.status === 'waitingApproval'" style="background-color: #ffc409;">{{ child.status.label }}</ion-badge>
-            <ion-badge v-else >{{ child.status.label }}</ion-badge>
+            <h6>{{ classe.className }}</h6>
+            <ion-badge style="background-color: #36c499;">Função: {{ classe.functionName }}</ion-badge>
           </ion-label>
-        </ion-item> -->
+        </ion-item>
       </ion-list>
       <ion-list :inset="true" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
@@ -60,8 +57,8 @@
             <ion-title >Atividades</ion-title>
           </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
-          <div class="input-wrapper q-px-md">
+        <ion-content>
+          <div class="input-wrapper q-px-md q-mx-md">
             <ion-select 
               interface="popover" 
               class="always-flip"
@@ -78,14 +75,27 @@
               </ion-select-option>
             </ion-select>
           </div>
-          <ion-textarea
-            mode="md"
-            label="Descrição"
-            label-placement="floating"
-            fill="outline"
-            v-model="dialogInsertChildEvent.obs"
-            placeholder="Descrição da atividade"
-          ></ion-textarea>
+          <div class="input-wrapper  q-px-md q-mx-md">
+            <ion-textarea
+              label="Descrição"
+              label-placement="floating"
+              v-model="dialogInsertChildEvent.obs"
+              placeholder="Descrição da atividade"
+              :auto-grow="true"
+            ></ion-textarea>
+          </div>
+          <ion-list :inset="true" >
+            <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
+            <ion-item 
+              v-for="e in childEventsHistory"
+              :key="e"
+            >
+              <ion-label >
+                <h6>{{ e.eventName }}</h6>
+                <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
+              </ion-label>
+            </ion-item>
+          </ion-list>
         </ion-content>
         <ion-button @click="addNewUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
       </ion-modal>
@@ -134,11 +144,6 @@ export default {
   name: "Class",
   data() {
     return {
-      // childData: {
-      //   name: '',
-      //   document: '',
-      //   birthdate: '',
-      // },
       startPhotoHandler: false,
       image: {
         url: null,
@@ -241,7 +246,9 @@ export default {
           rowsPerPage: this.pagination.rowsPerPage
         }
       }
+      utils.loading.show()
       useFetch(opt).then((r) => {
+        utils.loading.hide()
         if (r.error) {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
@@ -278,7 +285,7 @@ export default {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
         }
-        this.childrenInClassList = r.data.list
+        this.classData = r.data.list
       })
     }
   }
