@@ -4,7 +4,7 @@
       title="Dados pessoais"
       :backButton="true"
     />
-    <ion-content class="ion-padding" v-if="userDetail.userData">
+    <ion-content class="ion-padding" color="light" v-if="userDetail.userData">
       <ion-list :inset="true">
         <ion-item
           lines="none"
@@ -15,29 +15,33 @@
           </ion-avatar>
           <ion-label class="q-px-sm">
             <h2>{{ userDetail.userData.name }}</h2>
+            <p>Status: {{ userDetail.userData.status.label }}</p>
             <p>{{ userDetail.userData.document }}</p>
             <p>Editar foto</p>
           </ion-label>
-          <ion-icon style="color: #eb445a;" :icon="trashOutline" @click="openDialogInactivateChild"></ion-icon>
+          <ion-icon 
+            v-if="userDetail.userData.status.status === 'active'"
+            style="color: 
+            #eb445a;" 
+            :icon="trashOutline"
+            @click="openDialogInactivateChild"
+          />
         </ion-item>
       </ion-list>
-      <ion-list lines="none">
+      <!-- <ion-list lines="none">
         <ion-item>
-          <div class="ion-padding ion-align-items-center ion-justify-content-between">
+          <div class="ion-padding">
             Status: {{ userDetail.userData.status.label }}
           </div>
-          
         </ion-item>
-      </ion-list>
-      <ion-list>
+      </ion-list> -->
+      <ion-list :inset="true" class="ion-padding">
         <h2>Histórico:</h2>
         <ion-item
           lines="none"
           v-for="event in historic"
           :key="event"
         >
-          <div>
-          </div>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -100,6 +104,10 @@ export default {
       historic: [],
       dialogInactivateChild: {
         open: false
+      },
+      pagination: {
+        page: 1,
+        rowsPerPage: 6
       }
     };
   },
@@ -153,9 +161,11 @@ export default {
     },
     getUserHistoric() {
       const opt = {
-        route: '',
+        route: '/mobile/workers/getChildEventsByUserId',
         body: {
-
+          childId: this.$route.query.userId,
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
         },
       }
       useFetch(opt).then((r) => {
