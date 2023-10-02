@@ -258,6 +258,7 @@ export default {
   },
   methods: {
     handleCheckboxChangeAll() {
+      console.log("Chamou marcar todos")
       this.selectedChildren = [];
       if (this.selectAllChildren) {
         this.selectedChildren = this.classList.map(child => child._id)
@@ -265,6 +266,7 @@ export default {
       this.selectAllChildren = !this.selectAllChildren
     },
     handleCheckboxChange(childId) {
+      console.log("Chamou marcar individual")
     const index = this.selectedChildren.indexOf(childId);
     if (index === -1) {
       this.selectedChildren.push(childId);

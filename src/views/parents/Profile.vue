@@ -43,21 +43,17 @@
             <ion-badge v-else >{{ child.status.label }}</ion-badge>
           </ion-label>
         </ion-item>
-        <div v-if="userInfo.familyData">
+        <div v-if="userInfo.canCreateUsers === true">
           <ion-item 
             :button="true" 
             @click="addChild"
-            v-if="userInfo.canCreateUsers === true"
           >
           Adicionar Filho</ion-item>
         </div>
       </ion-list>
       <ion-list :inset="true" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
-        <div v-if="userInfo.familyIdObj === 'noFamily'" class="q-pa-md">
-          Nenhuma família criada
-        </div>
-        <div v-else>
+        <div>
           <ion-item 
             v-for="parent in userInfo.family.family"
             :key="parent"
@@ -127,7 +123,7 @@
       ></ion-alert>
       <ion-alert
         :is-open="dialogUserAddFamilyName.open"
-        header="Antes de adicionar seus filhos você precisa criar uma família!"
+        header="Antes de adicionar você precisa criar uma família!"
         :backdropDismiss="false"
         animated
         :inputs="[
@@ -208,6 +204,7 @@ export default {
     $route (to, from) {
       if (to.path === '/tabsParents/profile') {
         this.startView()
+        this.getFamilySolicitationsStatusByFamily
       }
     }
   },
