@@ -17,6 +17,7 @@
           v-for="classe in classData"
           :key="classe"
           :button="true"
+          @click="clkOpenDialogClassEvent(classe)"
         >
           <ion-avatar aria-hidden="true" slot="start">
             <img :src="utils.makeFileUrl(classe.image)"/>
@@ -99,6 +100,74 @@
         </ion-content>
         <ion-button @click="addNewUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
       </ion-modal>
+      <ion-modal 
+        :is-open="dialogInsertClassEvent.open" 
+        @ionModalDidPresent="getClassChildrenById()" 
+        @willDismiss="clearModalDataClass()"
+      >
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-button @click="dialogInsertClassEvent.open = false">Fechar</ion-button>
+            </ion-buttons>
+            <ion-title >Atividades</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <div class="input-wrapper q-px-md q-mx-md">
+            <ion-select 
+              interface="popover" 
+              class="always-flip"
+              v-model="dialogInsertChildEvent.childEventId"
+              :toggle-icon="caretDownSharp"
+              label="Selecione a atividade"
+            >
+              <ion-select-option 
+                v-for="event in childEventsList"
+                :key="event"
+                :value="event._id"
+              >
+                {{ event.name }}
+              </ion-select-option>
+            </ion-select>
+          </div>
+          <div class="input-wrapper  q-px-md q-mx-md">
+            <ion-textarea
+              label="Descrição"
+              label-placement="floating"
+              v-model="dialogInsertChildEvent.obs"
+              placeholder="Descrição da atividade"
+              :auto-grow="true"
+            ></ion-textarea>
+          </div>
+          <ion-list :inset="true">
+            <ion-checkbox @change="handleCheckboxChangeAll">Marcar todas as crianças</ion-checkbox>
+            <div class="ion-text-left text-h6 q-py-sm q-pl-md">Lista de crianças</div>
+            <ion-item
+              v-for="child in classList"
+              :key="child"
+            >
+            <ion-checkbox class="q-pr-md" @change="handleCheckboxChange(child._id)"></ion-checkbox>
+              <p>
+                {{ child.childName }}
+              </p>
+            </ion-item>
+          </ion-list>
+          <ion-list :inset="true" >
+            <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
+            <ion-item 
+              v-for="e in childEventsHistory"
+              :key="e"
+            >
+              <ion-label >
+                <h6>{{ e.eventName }}</h6>
+                <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+        <ion-button @click="addNewUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
+      </ion-modal>
       <PhotoHandler
         v-show="startPhotoHandler"
         :start="startPhotoHandler"
@@ -130,6 +199,7 @@ import {
   IonTextarea,
   IonModal,
   IonList,
+  IonCheckbox,
   IonAvatar
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
@@ -156,6 +226,11 @@ export default {
         obs: '',
         childEventId: ''
       },
+      dialogInsertClassEvent: {
+        open: false,
+        data: {},
+        obs: '',
+      },
       pagination: {
         page: 1,
         rowsPerPage: 10,
@@ -166,6 +241,9 @@ export default {
       childrenInClassList: [],
       childEventsList: [],
       childEventsHistory: [],
+      classList: [],
+      selectedChildren: [],
+      selectAllChildren: false
     };
   },
   mounted(){
@@ -176,6 +254,46 @@ export default {
     this.getChildrenInClassList()
   },
   methods: {
+    handleCheckboxChangeAll() {
+      this.selectedChildren = [];
+      if (this.selectAllChildren) {
+        this.selectedChildren = this.classList.map(child => child._id)
+      }
+      this.selectAllChildren = !this.selectAllChildren
+    },
+    handleCheckboxChange(childId) {
+    const index = this.selectedChildren.indexOf(childId);
+    if (index === -1) {
+      this.selectedChildren.push(childId);
+    } else {
+      this.selectedChildren.splice(index, 1);
+    }
+    this.selectAllChildren = this.selectedChildren.length === this.classList.length;
+  },
+
+    getClassChildrenById() {
+      const opt = {
+        route: '/mobile/workers/getChildrenListByClassId',
+        body: {
+          classId: this.dialogInsertClassEvent.data.classId,
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this.classList = r.data.list
+        }
+        else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
+    clearModelDataClass() {
+      this.dialogInsertClassEvent.open = false
+      this.dialogInsertClassEvent.data = {}
+      this.dialogInsertClassEvent.obs = ''
+    },
     clearModalData(){
       this.dialogInsertChildEvent.open = false
       this.dialogInsertChildEvent.data = {}
@@ -185,6 +303,10 @@ export default {
     clkOpenDialogChildEvent(child){
       this.dialogInsertChildEvent.data = child
       this.dialogInsertChildEvent.open = true
+    },
+    clkOpenDialogClassEvent(classe){
+      this.dialogInsertClassEvent.data = classe
+      this.dialogInsertClassEvent.open = true
     },
     cancelPhotoHandler () {
       this.startPhotoHandler = false
