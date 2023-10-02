@@ -5,6 +5,8 @@ import { useFetch } from './fetch'
 // import { Geolocation } from '@capacitor/geolocation';
 // let coordinates = null
 import { calculateMasterServerAttachmentsRoute } from "./masterServerRoutes";
+import router from '../router/index.ts'
+
 
 let loadingVar = []
 let updateUserInfoOnNextRoute = false
@@ -12,6 +14,35 @@ let updateUserInfoOnNextRoute = false
 
 
 const useUtils = {
+  async verifyUserPermissions (data) {
+    if (data.status === 'waitingApproval') {
+      router.push("/waitingAproval")
+      return
+    }
+    const r = await this.getUserPermissions()
+    if (r.data.length === 0) {
+      this.$router.push("/waitingPermission")
+      return
+    }
+    const perms = []
+    r.data.forEach((p) => { perms.push(p.role) })
+    const currentVision = localStorage.getItem('currentVision')
+    if (!currentVision && perms.includes('IS_PARENT')) router.push("/tabsParents")
+    else if (currentVision === 'worker' && perms.includes('IS_WORKER')) router.push("/tabsWorkers")
+    else if (currentVision === 'worker' && !perms.includes('IS_WORKER') && perms.includes('IS_PARENT')) {
+      router.push("/tabsParents")
+      localStorage.removeItem('currentVision')
+    }
+  },
+  async getUserPermissions(){
+    const opt = {
+      route:'/mobile/auth/getUserPermissions',
+      body: {
+        permissionType: 'mobile'
+      }
+    }
+    return await useFetch(opt)
+  },
   getIuguLib () {
     console.log('antes do iugu')
     const t = document.createElement("script");

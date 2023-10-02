@@ -5,93 +5,57 @@
       :backButton="true"
     />
     <ion-content>
-      <div v-if="post" style="margin-inline:10px;margin-top: -10px;">
+      <div v-if="post" style="margin-inline:10px;">
+        <div class="ion-text-right q-pb-sm">{{ post.createdAt.createdAtInFullLong }}</div>
         <div v-for="(item,i) in post.postData.detail" :key="i" >
-          <div v-if="item.type === 'text'" :style="'color:' + item.color" :class="item.class">{{ item.value }}</div>
+          <div v-if="item.type === 'text'"   :class="item.class">{{ item.value }}</div>
           <div v-if="item.type === 'image'" :class="item.class">
-            <div class="ion-text-right q-pb-sm">{{ post.createdAt.createdAtInFullLong }}</div>
             <img :class="item.class" :src="createImgURL(item)"> 
           </div>
+          <hr :class="item.class" style="background-color: #15aad8;color: #15aad8;" v-if="item.type === 'separator'"/>
         </div>
         <div>
-          <div>
-              <ion-icon size="large" @click="clkReaction(heart)" src="/assets/icons/heart.svg"></ion-icon>
-              <ion-icon size="large" @click="clkReaction(smile)" src="/assets/icons/smile.svg"></ion-icon>
-              <ion-icon size="large" @click="clkReaction(like)" src="/assets/icons/like.svg"></ion-icon>
-            <!-- </ion-button> -->
-            <!-- <ion-popover
-              mode="md"
-              class="popover-reactions"
-              trigger="click-trigger"
-              trigger-action="click"
-              :dismiss-on-select="true"
-              side="bottom"
-              alignment="center"
-            >
-              <ion-content :scroll-y="false" style="--background: #fff">
-                <div style="display: flex;padding: 5px">
-                  <ion-button 
-                    fill="clear"
-                    color="secondary"
-                    style="--width: 20px;"
-                    dense
-                    v-for="(icon,i) in reactions"
-                    :key="i"
-                    @click="clkReaction(icon)"
-                  >
-                    <ion-icon 
-                      slot="icon-only"
-                      size="large"
-                      :src="icon"
-                    >
-                    </ion-icon>
-                  </ion-button>
-                </div>
-              </ion-content>
-            </ion-popover> -->
-          </div>
-          <!-- <div style="display: flex;align-items: center;">
-            <ion-button
-              @click="$router.push('/postReactions?postId=' + $route.query.postId)"
-              color="secondary"
-              fill="clear"
-              mode="ios"
-              style="
-                scale: 0.9;
-                font-family: Montserrat;
-                text-transform: none;
-                margin-right: auto;
-                display: flex;
-                align-items: center;
-                margin-left: -10px;
-                "
-            >
+          <div style="display: flex; align-items: center;" class="q-mb-md">
+            <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart.svg"></ion-icon>
+            <ion-icon id="smileIcon" size="large" @click="clkReaction(smile)" src="/assets/icons/smile.svg"></ion-icon>
+            <ion-icon id="likeIcon" size="large" @click="clkReaction(icon)" src="/assets/icons/like.svg"></ion-icon>
+            <div style="margin-left: 50%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
               {{post.reactions}}x Reações 
-            </ion-button>
-          </div> -->
-          <h4 
+            </div>
+          </div>
+          <!-- <h4 
             v-if="comments.length > 0" 
             style="
-              font-family: Montserrat;
-              font-weight: 400;
-              margin-top: -10px;
-              margin-bottom: 0px;
-              margin-left: 10px;
               color: var(--ion-color-primary);"
           >
               Comentários
-          </h4>
-
-
+          </h4> -->
         </div>
-
-        <ion-list v-if="comments.length > 0" class="q-mx-md">
+        <ion-item
+        class="q-mb-sm"
+        >
+          <ion-textarea
+            placeholder="Deixe um comentário..."
+            v-model="newComment"
+            :rows="1"
+            :auto-grow="true"
+            @keyup.enter="newPostComment"
+          />
+          <ion-button 
+            shape="round"
+            slot="end"
+            @click="newPostComment"
+          >
+            <ion-icon  slot="icon-only" :icon="send"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <ion-list v-if="comments.length > 0">
           <ion-item 
             v-for="(comment,i) in comments"
             :key="i"
             lines="none"
           >
-            <ion-label>
+            <ion-label >
               <h4>{{ comment.createdBy.name }}</h4>
               <p>
                 {{ comment.text }}
@@ -114,29 +78,6 @@
             >Ver mais</ion-button>
           </div>
         </ion-list>
-
-        <ion-item
-        fill="outline"
-        class="coment-box"
-        lines="none"
-        >
-          <ion-textarea
-            placeholder="Deixe um comentário..."
-            v-model="newComment"
-            :rows="1"
-            :auto-grow="true"
-            @keyup.enter="newPostComment"
-          />
-          <ion-button 
-            shape="round"
-            style="margin-right: -10px;align-self:self-end;height: 40px;width: 40px;" 
-            color="secondary" 
-            slot="end"
-            @click="newPostComment"
-          >
-            <ion-icon color="tertiary" slot="icon-only" :icon="send"></ion-icon>
-          </ion-button>
-        </ion-item>
       </div>
     </ion-content>
   </ion-page>
@@ -172,7 +113,7 @@ export default {
       postReactions: [],
       comments: [],
       commentsPage: 1,
-      commentsRowsPerPage: 10,
+      commentsRowsPerPage: 3,
       noMoreData: false
     }
   },
@@ -289,13 +230,11 @@ export default {
 }
 
 .post-title {
-  color: #222222;
   font-size: 26px;
   margin-bottom: 20px;
   margin:10px
 }
 .post-subtitle-1 {
-  color: #222222;
   font-size: 24px;
   margin:10px
 
@@ -312,7 +251,6 @@ export default {
 
 }
 .post-subtitle-2 {
-  color: #222222;
   font-size: 22px;
   margin:10px
 }
