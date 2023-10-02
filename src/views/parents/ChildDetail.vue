@@ -20,17 +20,18 @@
           </ion-label>
         </ion-item>
       </ion-list>
-      <ion-list>
-        <div class="ion-padding">
-          Status: {{ userDetail.userData.status.label }}
-        </div>
-      </ion-list>
-      <ion-list>
-        <!-- <ion-input
-          v-model="userDetail.userData."
-        >
-
-        </ion-input> -->
+      <ion-list lines="none">
+        <ion-item>
+          <div class="ion-padding">
+            Status: {{ userDetail.userData.status.label }}
+            <ion-button 
+              class="ion-text-right"
+              @click="inactivateChild"
+            >
+              Tirar do cadastro
+            </ion-button>
+          </div>
+        </ion-item>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -72,6 +73,23 @@ export default {
     this.getUserId()
   },
   methods: {
+    inactivateChild() {
+      const opt = {
+        route: '/mobile/parents/profile/inactivateChild',
+        body: {
+          childId: this.$route.query.userId
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          utils.toast("Cadastro removido com sucesso")
+          this.$router.replace('/tabsParents/profile')
+          return
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente.")
+        }
+      })
+    },
     getUserId() {
       this.userId = this.$route.query.userId
       this.getUserDetail()

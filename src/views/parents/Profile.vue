@@ -38,7 +38,9 @@
           </ion-avatar>
           <ion-label>
             <h6>{{ child.name }}</h6>
-            <ion-badge>{{ child.status.label }}</ion-badge>
+            <ion-badge v-if="child.status.status === 'inactive'" style="background-color: #eb445a;">{{ child.status.label }}</ion-badge>
+            <ion-badge v-else-if="child.status.status === 'waitingApproval'" style="background-color: #ffc409;">{{ child.status.label }}</ion-badge>
+            <ion-badge v-else >{{ child.status.label }}</ion-badge>
           </ion-label>
         </ion-item>
         <div v-if="userInfo.familyData">
