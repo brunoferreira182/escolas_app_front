@@ -30,25 +30,21 @@
       <ion-button @click="startPhotoHandler = true" fill="clear" size="default">
         Editar foto de perfil
       </ion-button>
-      <!-- <ion-list lines="none">
-        <ion-item>
-          <div class="ion-padding">
-            Status: {{ userDetail.userData.status.label }}
-          </div>
-        </ion-item>
-      </ion-list> -->
-      <h2>Histórico:</h2>
-      <ion-list :inset="true">
-        <ion-item
-          class="ion-text-wrap"
-          lines="none"
-          v-for="event in historic"
-          :key="event"
+      <h2 class="q-px-md">Histórico de atividades:</h2>
+      <ion-list :inset="true" >
+        <ion-item 
+          v-for="e in childEventsHistory"
+          :key="e"
         >
-        <div>
-          <h2> {{ event.eventName }} </h2>
-          <p> {{ event.obs }} </p>
-        </div>
+          <ion-label>
+            <ion-row class="ion-justify-content-between">
+              <ion-col size="2">
+                <h6>{{ e.eventName }}</h6>
+              </ion-col>
+              <ion-col size="5" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
+            </ion-row>
+            <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
+          </ion-label>
         </ion-item>
       </ion-list>
       <PhotoHandler
@@ -97,6 +93,7 @@ import {
   IonCol,
   IonList,
   IonAvatar,
+  IonBadge,
   IonContent,
   onIonViewWillEnter,
   IonIcon
@@ -117,7 +114,7 @@ export default {
       userId: null,
       userDetail: [],
       canCreateUsers: null,
-      historic: null,
+      childEventsHistory: [],
       dialogInactivateChild: {
         open: false
       },
@@ -180,7 +177,7 @@ export default {
     getUserId() {
       this.userId = this.$route.query.userId
       this.getUserDetail()
-      this.getUserHistoric()
+      this.getChildEventsByUserId()
     },
     getUserDetail() {
       const opt = {
@@ -198,7 +195,7 @@ export default {
         this.verifyIfCanCreateUsers()
       })
     },
-    getUserHistoric() {
+    getChildEventsByUserId() {
       const opt = {
         route: '/mobile/workers/getChildEventsByUserId',
         body: {
@@ -209,7 +206,7 @@ export default {
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
-          this.historic = r.data.list
+          this.childEventsHistory = r.data.list
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde.")
         }
