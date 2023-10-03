@@ -30,14 +30,7 @@
       <ion-button @click="startPhotoHandler = true" fill="clear" size="default">
         Editar foto de perfil
       </ion-button>
-      <!-- <ion-list lines="none">
-        <ion-item>
-          <div class="ion-padding">
-            Status: {{ userDetail.userData.status.label }}
-          </div>
-        </ion-item>
-      </ion-list> -->
-      <h2>Histórico:</h2>
+      <h2 class="q-px-md">Histórico de atividades:</h2>
       <ion-list :inset="true" >
         <ion-item 
           v-for="e in childEventsHistory"
@@ -52,19 +45,6 @@
             </ion-row>
             <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
           </ion-label>
-        </ion-item>
-      </ion-list>
-      <ion-list :inset="true">
-        <ion-item
-          class="ion-text-wrap"
-          lines="none"
-          v-for="event in childEventsHistory"
-          :key="event"
-        >
-        <div>
-          <h2> {{ event.eventName }} </h2>
-          <p> {{ event.obs }} </p>
-        </div>
         </ion-item>
       </ion-list>
       <PhotoHandler
