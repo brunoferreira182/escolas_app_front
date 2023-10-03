@@ -30,7 +30,7 @@
       <ion-button @click="startPhotoHandler = true" fill="clear" size="default">
         Editar foto de perfil
       </ion-button>
-      <h2 class="q-px-md">Histórico de atividades:</h2>
+      <h2 class="q-px-md">Histórico de atividades</h2>
       <ion-list :inset="true" >
         <ion-item 
           v-for="e in childEventsHistory"
