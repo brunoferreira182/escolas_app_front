@@ -36,6 +36,23 @@
               </ion-label>
             </ion-item>
           </ion-list>
+          <h2 class="q-px-md">Histórico de atividades:</h2>
+            <ion-list :inset="true" >
+              <ion-item 
+                v-for="e in childEventsHistory"
+                :key="e"
+              >
+                <ion-label>
+                  <ion-row class="ion-justify-content-between">
+                    <ion-col size="2">
+                      <h6>{{ e.eventName }}</h6>
+                    </ion-col>
+                    <ion-col size="5" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
+                  </ion-row>
+                  <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
+                </ion-label>
+              </ion-item>
+            </ion-list>
         </div>
       </div>
     </ion-content>
@@ -43,10 +60,20 @@
 </template>
 <script setup>
 import { 
-  IonPage, IonButton, 
-  IonContent, IonImg, 
-  IonList, IonChip, IonAvatar,
-  IonItem, IonLabel, IonNote } from '@ionic/vue';
+  IonPage, 
+  IonButton, 
+  IonContent, 
+  IonImg, 
+  IonList, 
+  IonRow,
+  IonCol,
+  IonBadge,
+  IonChip, 
+  IonAvatar,
+  IonItem, 
+  IonLabel, 
+  IonNote 
+} from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -70,6 +97,7 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
+      childEventsHistory: [],
       userProfile: []
     };
   },
@@ -86,6 +114,23 @@ export default {
   methods: {
     startView () {
       this.getChildClass()
+    },
+    getChildEventsByUserId() {
+      const opt = {
+        route: '/mobile/workers/getChildEventsByUserId',
+        body: {
+          childId: this.$route.query.userId,
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        },
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this.childEventsHistory = r.data.list
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
     },
     getChildClass() {
       const opt = {
