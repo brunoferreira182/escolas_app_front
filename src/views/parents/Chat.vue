@@ -19,7 +19,7 @@
               @click="goToChatDetail(_class.classData.id)"
             >
             <ion-avatar style="width:60px; height:auto" >
-              <img :src="utils.makeFileUrl(_class.classImage[0].filename)" class="profile-avatar">
+              <img :src="utils.makeFileUrl(_class)" class="profile-avatar">
             </ion-avatar>
               <ion-label>
                 <strong class="q-mb-md">{{ _class.classData.name }}</strong><br />
@@ -40,27 +40,27 @@
             </ion-item>
           </ion-list>
           <h2 class="q-px-md">Histórico de atividades</h2>
-            <ion-list :inset="true" >
-              <ion-item 
-                v-for="e in childEventsHistory"
-                :key="e"
-              >
-                <ion-label>
-                  <ion-row class="ion-justify-content-between">
-                    <ion-col size="6" class="ion-text-wrap">
-                      <h6 class="text-capitalize">
-                        {{ e.name }}
-                      </h6>
-                      <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
-                    </ion-col>
-                    <ion-col size="5" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
-                  </ion-row>
-                  <div>
-                    {{ e.obs }}  
-                  </div>
-                </ion-label>
-              </ion-item>
-            </ion-list>
+          <ion-list :inset="true" >
+            <ion-item 
+              v-for="e in childEventsHistory"
+              :key="e"
+            >
+              <ion-label>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="5" class="ion-text-wrap">
+                    <h6 class="text-capitalize">
+                      {{ e.name }}
+                    </h6>
+                    <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
+                  </ion-col>
+                  <ion-col size="6" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
+                </ion-row>
+                <div>
+                  {{ e.obs }}  
+                </div>
+              </ion-label>
+            </ion-item>
+          </ion-list>
         </div>
       </div>
     </ion-content>

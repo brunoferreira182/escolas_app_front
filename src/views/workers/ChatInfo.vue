@@ -10,7 +10,7 @@
           <ion-avatar style="width:60px; height:auto" aria-hidden="true" slot="start" v-if="classData">
               <img :src="utils.makeFileUrl(classData.image[0].filename)"/>
             </ion-avatar> 
-            <ion-label class="q-px-sm">
+            <ion-label class="q-px-sm" v-if="classData">
               <h2>{{ classData.className }}</h2>
           </ion-label>
         </ion-item>
@@ -41,20 +41,33 @@
             </ion-item>
             <div slot="content">
               <ion-item
-                lines="none"
+                lines="full"
                 v-for="event in eventList"
                 :key="event"
               >
-              <ion-card>
+                <ion-label>
+                  <ion-row class="ion-justify-content-between">
+                    <ion-col size="4" class="ion-text-wrap">
+                      <h6 class="text-capitalize">
+                        {{event.eventName }}
+                      </h6>
+                      <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
+                    </ion-col>
+                    <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
+                  </ion-row>
+                  <div class="ion-text-wrap">
+                    {{ event.eventDescription }}
+                  </div>
+                </ion-label>
+              <!-- <ion-card>
                 <ion-card-header>
                   <ion-card-title>{{ event.eventName }}</ion-card-title>
                   <ion-card-subtitle>{{ event.eventDate.local }}</ion-card-subtitle>
                 </ion-card-header>
-
                 <ion-card-content>
                   {{ event.eventDescription }}
                 </ion-card-content>
-              </ion-card>
+              </ion-card> -->
               </ion-item>
             </div>
           </ion-accordion>

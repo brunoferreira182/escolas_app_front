@@ -91,7 +91,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/chatDetailWorker',
-        name: 'ChatDetail',
+        name: 'ChatDetailWorker',
         component: chatDetailWorker
       },
       {
@@ -101,7 +101,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/chatInfoWorker',
-        name: 'ChatInfo',
+        name: 'ChatInfoWorker',
         component: chatInfoWorker
       },
       {

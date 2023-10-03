@@ -178,13 +178,13 @@
             ></ion-textarea>
           </div>
           <ion-list :inset="true">
-            <ion-checkbox @change="handleCheckboxChangeAll">Marcar todas as crianças</ion-checkbox>
+            <ion-checkbox @ionChange="handleCheckboxChangeAll">Marcar todas as crianças</ion-checkbox>
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">Lista de crianças</div>
             <ion-item
               v-for="child in classList"
               :key="child"
             >
-            <ion-checkbox class="q-pr-md" @change="handleCheckboxChange(child._id)"></ion-checkbox>
+            <ion-checkbox class="q-pr-md" @ionChange="handleCheckboxChange(child._id)"></ion-checkbox>
               <p>
                 {{ child.childName }}
               </p>

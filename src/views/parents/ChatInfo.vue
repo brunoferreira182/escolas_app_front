@@ -30,23 +30,22 @@
             <ion-item slot="header">  
               <ion-label>Alunos da turma</ion-label>
             </ion-item>
-
+            <div slot="content">
+              <ion-item
+                v-for="child in classData"
+                :key="child"
+              >
+                <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+                  <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+                </ion-avatar>
+                <ion-avatar aria-hidden="true" slot="start" v-else>
+                  <img :src="utils.makeFileUrl(child.image)"/>
+                </ion-avatar>
+                <p>{{ child.childName }}</p>
+              </ion-item>
+            </div>
           </ion-accordion>
-
         </ion-accordion-group>
-        <h2>Alunos da turma</h2>
-        <ion-item
-          v-for="child in classData"
-          :key="child"
-        >
-          <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-            <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-          </ion-avatar>
-          <ion-avatar aria-hidden="true" slot="start" v-else>
-            <img :src="utils.makeFileUrl(child.image)"/>
-          </ion-avatar>
-          <p>{{ child.childName }}</p>
-        </ion-item>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -57,7 +56,9 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
 import {
   IonPage, IonContent,
-  IonList, IonItem
+  IonList, IonItem,
+  IonLabel, IonAccordion,
+  IonAccordionGroup, IonAvatar
 } from '@ionic/vue'
 </script>
 
