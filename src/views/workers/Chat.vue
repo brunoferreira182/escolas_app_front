@@ -16,7 +16,7 @@
             <ion-item
               button
               detail="true"
-              @click="goToChatDetail(_class._id)"
+              @click="goToChatDetail(_class.classId)"
             >
               <ion-label class="q-pl-md">
                 <h4>{{ _class.className }}</h4>
@@ -76,7 +76,7 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsParents/chat') {
+      if (to.path === '/tabsWorkers/chat') {
         this.startView()
       }
     }
@@ -103,7 +103,7 @@ export default {
       })
     },
     goToChatDetail (classId) {
-      this.$router.push('/chatDetail?classId=' + classId)
+      this.$router.push('/chatDetailWorker?classId=' + classId)
     },
   }
 }

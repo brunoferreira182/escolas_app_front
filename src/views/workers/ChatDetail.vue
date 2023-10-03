@@ -3,6 +3,7 @@
     <ToolbarEscolas
       :title="classDetail ? classDetail.className : 'Carregando...'"
       :backButton="true"
+      @titleClicked="goToChatInfo"
     />
     <ion-content ref="elIonContent" color="light">
       <PhotoHandler
@@ -226,6 +227,9 @@ export default {
       this.getClassDetailById()
       this.getMessages()
       this.userInfo = utils.presentUserInfo()
+    },
+    goToChatInfo() {
+      this.$router.push("/chatInfoWorker?classId=" + this.$route.query.classId)
     },
     playAudio(data, currentAudioId) {
       this.audioIcon = 'pause'
@@ -566,7 +570,10 @@ export default {
 		},
     getClassDetailById() {
       const opt = {
-        route: '/mobile/parents/chat/getClassDetailById'
+        route: '/mobile/workers/getClassDetailById',
+        body: {
+          classId: this.$route.query.classId
+        }
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
