@@ -25,6 +25,15 @@
         </ion-item>
       </ion-list>
       <ion-list :inset="true" class="q-pl-sm">
+        <ion-accordion-group expand="inset">
+          <ion-accordion value="first">
+            <ion-item slot="header">  
+              <ion-label>Alunos da turma</ion-label>
+            </ion-item>
+
+          </ion-accordion>
+
+        </ion-accordion-group>
         <h2>Alunos da turma</h2>
         <ion-item
           v-for="child in classData"

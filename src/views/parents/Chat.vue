@@ -10,14 +10,17 @@
           <ion-list 
             class="q-pa-md"
             lines="full" 
-            v-for="_class in childClassInfo"
-            :key="_class"
-          >
+            >
             <ion-item
+              v-for="_class in childClassInfo"
+              :key="_class"
               button
               detail="true"
               @click="goToChatDetail(_class.classData.id)"
             >
+            <ion-avatar style="width:60px; height:auto" >
+              <img :src="utils.makeFileUrl(_class.classImage[0].filename)" class="profile-avatar">
+            </ion-avatar>
               <ion-label>
                 <strong class="q-mb-md">{{ _class.classData.name }}</strong><br />
                 <ion-note class="q-mt-md">
