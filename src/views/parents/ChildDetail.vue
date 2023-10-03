@@ -17,7 +17,6 @@
             <h2>{{ userDetail.userData.name }}</h2>
             <p>Status: {{ userDetail.userData.status.label }}</p>
             <p>{{ userDetail.userData.document }}</p>
-            <p>Editar foto</p>
           </ion-label>
           <ion-icon 
             v-if="userDetail.userData.status.status === 'active'"
@@ -28,6 +27,9 @@
           />
         </ion-item>
       </ion-list>
+      <ion-button @click="startPhotoHandler = true" fill="clear" size="default">
+        Editar foto de perfil
+      </ion-button>
       <!-- <ion-list lines="none">
         <ion-item>
           <div class="ion-padding">
@@ -49,6 +51,14 @@
         </div>
         </ion-item>
       </ion-list>
+      <PhotoHandler
+        v-show="startPhotoHandler"
+        :start="startPhotoHandler"
+        :allFiles="true"
+        :noCrop="false"
+        @captured="captured"
+        @cancel="cancelPhotoHandler"
+      />
     </ion-content>
     <ion-alert
       :is-open="dialogInactivateChild.open"
@@ -96,6 +106,7 @@ import { useFetch } from '../../composables/fetch'
 import InputDocument from '../../components/InputDocument.vue'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../composables/utils'
+import PhotoHandler from '../../components/PhotoHandler.vue'
 </script>
 <script>
 
@@ -113,13 +124,36 @@ export default {
       pagination: {
         page: 1,
         rowsPerPage: 6
-      }
+      },
+      startPhotoHandler: false
     };
   },
   mounted(){
     this.getUserId()
   },
   methods: {
+    cancelPhotoHandler () {
+      this.startPhotoHandler = false
+    },
+    captured(fileUrl, fileBlob, fileName) {
+      this.updateProfileImg(fileBlob)
+      this.startPhotoHandler = false
+    },
+    updateProfileImg(blob) {
+      const opt = {
+        route: '/mobile/parents/profile/updateUserImage',
+        body: {
+          childId: this.$route.query.userId
+        },
+        file: [ { file: blob, name: 'userPhoto' }]
+      }
+      utils.loading.show()
+      useFetch(opt).then(r => {
+        utils.loading.hide()
+        if (r.error) return
+        this.getUserId()
+      })
+    },
     refuseInactivate() {
       this.dialogInactivateChild.open = false
     },
