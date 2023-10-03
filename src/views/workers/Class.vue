@@ -21,10 +21,11 @@
             v-for="classe in classData"
             :key="classe"
             :button="true"
+            class="q-pa-sm"
             @click="clkOpenDialogClassEvent(classe)"
           >
             <ion-avatar aria-hidden="true" slot="start">
-              <img :src="utils.makeFileUrl(classe.image)"/>
+              <img :src="utils.makeFileUrl(classe.classImage[0].filename)"/>
             </ion-avatar>
             <ion-label>
               <h6>{{ classe.className }}</h6>
@@ -40,6 +41,7 @@
           :key="child"
           @click="clkOpenDialogChildEvent(child)"
           :button="true"
+          class="q-pa-sm"
         >
           <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
             <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
