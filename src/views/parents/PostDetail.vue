@@ -4,7 +4,7 @@
       title="Postagem"
       :backButton="true"
     />
-    <ion-content>
+    <ion-content >
       <div v-if="post" style="margin-inline:10px;">
         <div class="ion-text-right q-pb-sm">{{ post.createdAt.createdAtInFullLong }}</div>
         <div v-for="(item,i) in post.postData.detail" :key="i" >

@@ -88,6 +88,9 @@
               :auto-grow="true"
             ></ion-textarea>
           </div>
+          <div class="q-px-md">
+            <ion-chip>{{ dialogInsertChildEvent.data.childName }}</ion-chip>
+          </div>
           <ion-list :inset="true" >
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
             <ion-item 
@@ -202,6 +205,7 @@ import {
   IonTextarea,
   IonModal,
   IonList,
+  IonChip ,
   IonCheckbox,
   IonAvatar
 } from '@ionic/vue';

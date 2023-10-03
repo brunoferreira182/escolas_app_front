@@ -6,6 +6,7 @@
           :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img">
         <div style="padding:10px">
           <h1 class="card-title">{{post.postData.resume.title}}</h1>
+          <p>Reações: {{ post.reactions }}</p>
           <p>{{post.postData.resume.description}}</p>
           <h6
             @click="$router.push('/postDetail?postId=' + post._id)"
@@ -24,6 +25,7 @@
           :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img">
         <div style="padding:10px">
           <h1 class="card-title">{{post.postData.resume.title}}</h1>
+          <p>Reações: {{ post.reactions }}</p>
           <p>{{post.postData.resume.description}}</p>
           <h6
             @click="$router.push('/postDetail?postId=' + post._id)"
