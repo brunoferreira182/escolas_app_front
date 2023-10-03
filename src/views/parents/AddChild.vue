@@ -13,7 +13,8 @@
           fill="outline"
           @click="startPhotoHandler = true"
           v-if="!image.blob"
-        >Foto</ion-button>
+        >Foto
+        </ion-button>
         <ion-row class="q-my-md" v-if="image.blob">
           <ion-col>
             <ion-avatar >

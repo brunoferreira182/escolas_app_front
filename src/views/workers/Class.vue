@@ -88,6 +88,27 @@
               :auto-grow="true"
             ></ion-textarea>
           </div>
+          <ion-button
+            expand="block"
+            class="q-ma-md"
+            fill="clear"
+            @click="startPhotoHandler = true"
+            v-if="!image.blob"
+          >Enviar foto
+          </ion-button>
+          <ion-row class="q-ma-md" v-if="image.blob">
+            <ion-col size="2">
+              <ion-avatar >
+                <ion-img :src="image.url" ></ion-img>
+              </ion-avatar>
+            </ion-col>
+            <ion-col size="4">
+              <ion-button
+                @click="startPhotoHandler = true"
+                fill="outline"
+              >Trocar foto</ion-button>
+            </ion-col>
+          </ion-row>
           <div class="q-px-md">
             <ion-chip>{{ dialogInsertChildEvent.data.childName }}</ion-chip>
           </div>
@@ -206,7 +227,10 @@ import {
   IonModal,
   IonList,
   IonChip ,
+  IonCol,
   IonCheckbox,
+  IonImg,
+  IonRow,
   IonAvatar
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
@@ -298,7 +322,7 @@ export default {
         }
       })
     },
-    clearModelDataClass() {
+    clearModalDataClass() {
       this.dialogInsertClassEvent.open = false
       this.dialogInsertClassEvent.data = {}
       this.dialogInsertClassEvent.obs = ''
@@ -333,7 +357,7 @@ export default {
       const opt = {
         route: '/mobile/workers/getChildEventsByUserId',
         body: {
-          childId: this.dialogInsertChildEvent.data._id,
+          childId: this.dialogInsertChildEvent.data.childId,
           page: this.pagination.page,
           rowsPerPage: this.pagination.rowsPerPage
         }
@@ -357,7 +381,8 @@ export default {
           childId: this.dialogInsertChildEvent.data.childId,
           childEventId: this.dialogInsertChildEvent.childEventId,
           obs: this.dialogInsertChildEvent.obs
-        }
+        },
+        file: [{ file: this.image.blob, name: 'userPhoto' }]
       }
       useFetch(opt).then((r) => {
         if (r.error) {
@@ -435,7 +460,7 @@ ion-select.never-flip::part(icon) {
   transform: none;
 }
 ion-avatar {
-  --border-radius: 6px;
+  --border-radius: 36px;
   width: 56px;
   height: 56px
 }
