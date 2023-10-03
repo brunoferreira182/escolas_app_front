@@ -180,13 +180,13 @@
             ></ion-textarea>
           </div>
           <ion-list :inset="true">
-            <ion-checkbox @ionChange="handleCheckboxChangeAll">Marcar todas as crianças</ion-checkbox>
+            <ion-checkbox @ionChange="handleCheckboxChangeAll($event)">Marcar todas as crianças</ion-checkbox>
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">Lista de crianças</div>
             <ion-item
               v-for="child in classList"
               :key="child"
             >
-            <ion-checkbox class="q-pr-md" @ionChange="handleCheckboxChange(child._id)"></ion-checkbox>
+            <ion-checkbox :checked="child.isChecked" class="q-pr-md" @ionChange="handleCheckboxChange(child._id)"></ion-checkbox>
               <p>
                 {{ child.childName }}
               </p>
@@ -304,13 +304,22 @@ export default {
       const query = event.target.value.toLowerCase();
       this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
     },
-    handleCheckboxChangeAll() {
-      console.log("Chamou marcar todos")
-      this.selectedChildren = [];
-      if (this.selectAllChildren) {
-        this.selectedChildren = this.classList.map(child => child._id)
-      }
-      this.selectAllChildren = !this.selectAllChildren
+    
+    handleCheckboxChangeAll(e) {
+      if (e.detail.checked === true) {
+        this.selectedChildren = this.classList.map((child) => ({
+        _id: child._id,
+      }));
+      } 
+      this.selectedChildren.forEach((child) => {
+        this.classList.forEach((classList, i) => {
+          if (child._id === classList._id) {
+            this.classList.forEach((teste) => {
+              teste.isChecked = e.detail.checked
+            }) 
+          }
+        })
+      })
     },
     handleCheckboxChange(childId) {
       console.log("Chamou marcar individual")
@@ -321,6 +330,7 @@ export default {
         this.selectedChildren.splice(index, 1);
       }
       this.selectAllChildren = this.selectedChildren.length === this.classList.length;
+      console.log(this.selectedChildren, "selececec")
     },
     getClassChildrenById() {
       const opt = {
