@@ -38,12 +38,14 @@
         >
           <ion-label>
             <ion-row class="ion-justify-content-between">
-              <ion-col size="2">
-                <h6>{{ e.eventName }}</h6>
+              <ion-col size="6" class="ion-text-wrap">
+                <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
               </ion-col>
               <ion-col size="5" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
             </ion-row>
-            <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
+            <div>
+              {{ e.obs }}  
+            </div>
           </ion-label>
         </ion-item>
       </ion-list>
