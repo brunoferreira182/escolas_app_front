@@ -11,26 +11,28 @@
         placeholder="Pesquisar"
         :debounce="400"
         v-model="filterValue"
-        @ionInput="getChildrenInClassList($event)"
+        @ionInput="getChildrenInClassList()"
       >
       </ion-searchbar>
-      <ion-list :inset="true" >
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
-        <ion-item 
-          v-for="classe in classData"
-          :key="classe"
-          :button="true"
-          @click="clkOpenDialogClassEvent(classe)"
-        >
-          <ion-avatar aria-hidden="true" slot="start">
-            <img :src="utils.makeFileUrl(classe.image)"/>
-          </ion-avatar>
-          <ion-label>
-            <h6>{{ classe.className }}</h6>
-            <ion-badge style="background-color: #36c499;">Função: {{ classe.functionName }}</ion-badge>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+      <Transition name="bounce">
+        <ion-list :inset="true" v-if="show">
+          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
+          <ion-item 
+            v-for="classe in classData"
+            :key="classe"
+            :button="true"
+            @click="clkOpenDialogClassEvent(classe)"
+          >
+            <ion-avatar aria-hidden="true" slot="start">
+              <img :src="utils.makeFileUrl(classe.image)"/>
+            </ion-avatar>
+            <ion-label>
+              <h6>{{ classe.className }}</h6>
+              <ion-badge style="background-color: #36c499;">Função: {{ classe.functionName }}</ion-badge>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </Transition>
       <ion-list :inset="true" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
         <ion-item 
@@ -280,6 +282,7 @@ export default {
       childrenInClassList: [],
       childEventsList: [],
       childEventsHistory: [],
+      show: true,
       classList: [],
       selectedChildren: [],
       childrenFilter: [],
@@ -425,7 +428,10 @@ export default {
         this.childEventsList = r.data.list
       })
     },
-    getChildrenInClassList(event) {
+    getChildrenInClassList() {
+      if(this.filterValue !== ''){
+        this.show = false
+      }else{this.show = true}
       const opt = {
         route: '/mobile/workers/getChildrenInClassList',
         body: {
@@ -434,7 +440,9 @@ export default {
           searchString: this.filterValue
         }
       }
+      utils.loading.show()
       useFetch(opt).then((r) => {
+        utils.loading.hide()
         if (r.error) {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
@@ -513,5 +521,22 @@ ion-avatar {
   /* padding-left: 15px; */
   border-radius: 0.5rem;
   margin-block: 10px;
+}
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
