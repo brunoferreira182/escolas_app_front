@@ -24,62 +24,11 @@
             v-model="eventData.date"
           ></ion-input>
         </ion-item>
-        <p class="q-mt-md q-pl-md">Adicione o endereço deste evento:</p>
-        <ion-item>
-
-          <div style="display:flex;flex-direction: column; gap: 8px;margin-top: 20px;">
-          <ion-input 
-            mode="md" 
-            fill="outline" 
-            label-placement="floating" 
-            label="CEP" 
-            v-model="eventData.address.zipCode"
-            @keyup="checkCEP"
-          />
-          <ion-input 
-            mode="md" 
-            fill="outline" 
-            label-placement="floating" 
-            label="Logradouro" 
-            v-model="eventData.address.street"
-          />
-          <ion-input 
-            mode="md" 
-            fill="outline" 
-            label-placement="floating" 
-            label="Número" 
-            type="number" 
-            v-model="eventData.address.number"
-          />
-          <ion-input 
-            mode="md" 
-            fill="outline" 
-            label-placement="floating" 
-            label="Complemento (opcional)" 
-            v-model="eventData.address.complement"
-          />
-        <ion-row class="ion-justify-content-between q-pa-none">
-          <ion-col size="8" class="q-pa-none q-pr-sm">
-            <ion-input 
-              mode="md"
-              fill="outline"
-              label-placement="floating"
-              label="Cidade"
-              v-model="eventData.adress.city"
-            />
-          </ion-col>
-          <ion-col size="4" class="q-pa-none">
-            <ion-input
-              mode="md"
-              fill="outline"
-              label-placement="floating"
-              label="UF"
-              v-model="eventData.address.state"
-            />
-          </ion-col>
-        </ion-row>
-        </div>
+        <p class="q-mt-md q-pl-md">Adicione a descrição do evento:</p>
+        <ion-item lines="none">
+          <ion-textarea fill="outline" mode="md" v-model="eventData.description"></ion-textarea>
         </ion-item>
+        <ion-button expand="block" class="q-pa-sm" @click="createEvent">Criar evento</ion-button>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -90,7 +39,7 @@ import {
   IonContent, IonPage,
   IonInput, IonList,
   IonItem, IonRow,
-  IonCol
+  IonCol, IonButton, IonTextarea
 } from '@ionic/vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { useFetch } from '../../composables/fetch'
@@ -107,40 +56,38 @@ export default {
       eventData: {
         name: '',
         date: '',
-        address: {
-          zipCode: '',
-          street: '',
-          number: '',
-          complement: '',
-          city: '',
-          state: '', 
-        }
+        description: ''
       }
     };
   },
   beforeMount() {
   },
   methods: {
-    checkCEP (ev) {
-      this.addressData.zipCode = ev.target.value
-      if(this.addressData.zipCode.length === 8){
-        const opt = {
-          route: '/mobile/parents/profile/getAddressFromZipCode',
-          body: {
-            zipCode: this.addressData.zipCode
-          }
+    createEvent() {
+      if (this.eventData.name === '' ||
+        this.eventData.date === '' ||
+        this.eventData.description === '') {
+          utils.toast("Preencha todos os campos para criar o evento.")
+          return
         }
-        utils.loading.show()
-        useFetch(opt).then(r => {
-          utils.loading.hide()
-          this.addressData.street = r.data.logradouro
-          this.addressData.city = r.data.localidade
-          this.addressData.state = r.data.uf
-        })
-      } 
-      
-    },
+      const opt = {
+        route: '/mobile/workers/createClassEvents',
+        body: {
+          classId: this.$route.query.classId,
+          eventName: this.eventData.name,
+          eventDescription: this.eventData.description,
+          eventDate: this.eventData.date
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          utils.toast("Evento criado com sucesso.")
+          this.$router.replace('/chatInfoWorker?classId=' + this.$route.query.classId)
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente.")
+        }
+      })
+    }
   },
-  
 };
 </script>
