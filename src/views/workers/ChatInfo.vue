@@ -39,6 +39,7 @@
           <p>{{ child.childName }}</p>
         </ion-item>
       </ion-list>
+      <ion-button expand="block" class="ion-padding">Adicionar evento</ion-button>
     </ion-content>
   </ion-page>
 </template>
@@ -68,7 +69,7 @@ export default {
   methods: {
     getChildrenInClassByClassId() {
       const opt = {
-        route: '/mobile/parents/chat/getClassDetailById',
+        route: '/mobile/workers/getClassDetailById',
         body: {
           classId: this.$route.query.classId
         }
