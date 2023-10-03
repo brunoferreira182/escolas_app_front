@@ -3,7 +3,7 @@
     <ToolbarEscolas
       :title="classDetail ? classDetail.className : 'Carregando...'"
       :backButton="true"
-      @click="goToChatInfo"
+      @titleClicked="goToChatInfo"
     />
     <ion-content ref="elIonContent" color="light">
       <PhotoHandler
