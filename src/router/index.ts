@@ -27,6 +27,7 @@ import chatDetailWorker from '../views/workers/ChatDetail.vue'
 import postReactions from '../views/parents/PostReactions.vue'
 import chatInfo from '../views/parents/ChatInfo.vue'
 import chatInfoWorker from '../views/workers/ChatInfo.vue'
+import createEvent from '../views/workers/CreateEvent.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -102,6 +103,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/chatInfoWorker',
         name: 'ChatInfo',
         component: chatInfoWorker
+      },
+      {
+        path: '/createEvent',
+        name: 'CreateEvent',
+        component: createEvent
       },
       {
         path: '/tabsWorkers',

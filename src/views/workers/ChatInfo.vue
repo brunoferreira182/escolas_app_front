@@ -39,7 +39,7 @@
           <p>{{ child.childName }}</p>
         </ion-item>
       </ion-list>
-      <ion-button expand="block" class="ion-padding">Adicionar evento</ion-button>
+      <ion-button @click="goToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
     </ion-content>
   </ion-page>
 </template>
@@ -49,7 +49,8 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
 import {
   IonPage, IonContent,
-  IonList, IonItem
+  IonList, IonItem,
+  IonButton, IonAvatar
 } from '@ionic/vue'
 </script>
 
@@ -60,13 +61,16 @@ export default {
   },
   data() {
     return {
-      classData: null
+      classData: null,
     };
   },
   mounted () {
     this.getChildrenInClassByClassId()
   },
   methods: {
+    goToCreateEvent() {
+      this.$router.push("/createEvent?classId=" + this.$route.query.classId)
+    },
     getChildrenInClassByClassId() {
       const opt = {
         route: '/mobile/workers/getClassDetailById',
