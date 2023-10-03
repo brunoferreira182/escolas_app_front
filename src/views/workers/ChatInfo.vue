@@ -25,19 +25,54 @@
         </ion-item>
       </ion-list>
       <ion-list :inset="true" class="q-pl-sm">
-        <h2>Alunos da turma</h2>
-        <ion-item
-          v-for="child in classData"
-          :key="child"
-        >
-          <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-            <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-          </ion-avatar>
-          <ion-avatar aria-hidden="true" slot="start" v-else>
-            <img :src="utils.makeFileUrl(child.image)"/>
-          </ion-avatar>
-          <p>{{ child.childName }}</p>
-        </ion-item>
+        <ion-accordion-group expand="inset">
+          <ion-accordion value="first">
+            <ion-item slot="header" color="light">
+              <ion-label>Eventos da turma</ion-label>
+            </ion-item>
+            <div slot="content">
+              <ion-item
+                lines="none"
+                v-for="event in eventList"
+                :key="event"
+              >
+              <ion-card>
+                <ion-card-header>
+                  <ion-card-title>{{ event.eventName }}</ion-card-title>
+                  <ion-card-subtitle>{{ event.eventDate.local }}</ion-card-subtitle>
+                </ion-card-header>
+
+                <ion-card-content>
+                  {{ event.eventDescription }}
+                </ion-card-content>
+              </ion-card>
+              </ion-item>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-list>
+      <ion-list :inset="true" class="q-pl-sm">
+        <ion-accordion-group expand="inset">
+          <ion-accordion value="first">
+            <ion-item slot="header" color="light">
+              <ion-label>Alunos da turma</ion-label>
+            </ion-item>
+            <div slot="content">
+              <ion-item
+                v-for="child in classData"
+                :key="child"
+              >
+                <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+                  <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+                </ion-avatar>
+                <ion-avatar aria-hidden="true" slot="start" v-else>
+                  <img :src="utils.makeFileUrl(child.image)"/>
+                </ion-avatar>
+                <p>{{ child.childName }}</p>
+              </ion-item>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
       </ion-list>
       <ion-button @click="goToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
     </ion-content>
@@ -50,7 +85,9 @@ import utils from '../../../src/composables/utils.js';
 import {
   IonPage, IonContent,
   IonList, IonItem,
-  IonButton, IonAvatar
+  IonButton, IonAvatar,
+  IonAccordionGroup, IonAccordion,
+  IonLabel
 } from '@ionic/vue'
 </script>
 
@@ -62,12 +99,31 @@ export default {
   data() {
     return {
       classData: null,
+      eventList: null
     };
   },
   mounted () {
     this.getChildrenInClassByClassId()
+    this.getEventsByClassId()
   },
   methods: {
+    getEventsByClassId() {
+      const opt = {
+        route: '/mobile/workers/getClassEvents',
+        body: {
+          classId: this.$route.query.classId,
+          page: 1,
+          rowsPerPage: 15
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this. eventList = r.data.list
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
     goToCreateEvent() {
       this.$router.push("/createEvent?classId=" + this.$route.query.classId)
     },
