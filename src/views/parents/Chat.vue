@@ -36,7 +36,7 @@
               </ion-label>
             </ion-item>
           </ion-list>
-          <h2 class="q-px-md">Histórico de atividades:</h2>
+          <h2 class="q-px-md">Histórico de atividades</h2>
             <ion-list :inset="true" >
               <ion-item 
                 v-for="e in childEventsHistory"
