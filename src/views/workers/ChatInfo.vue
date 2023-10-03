@@ -5,21 +5,30 @@
       :backButton="true"
     />
     <ion-content color="light">
-      //Foto da turma
-      <!-- <ion-list :inset="true">
-        <ion-item
-          lines="none"
-          class="profile-item"
-        >
-          <ion-avatar style="width:60px; height:auto" >
-            <img :src="utils.makeFileUrl(userInfo.userImage)" class="profile-avatar">
-          </ion-avatar>
-          <ion-label class="q-px-sm">
-            <h2>{{ userInfo.name }}</h2>
+      <ion-list>
+        <ion-item lines="none" class="profile-item">
+          <ion-avatar style="width:60px; height:auto" aria-hidden="true" slot="start" v-if="classData">
+              <img :src="utils.makeFileUrl(classData.image[0].filename)"/>
+            </ion-avatar> 
+            <ion-label class="q-px-sm">
+              <h2>{{ classData.className }}</h2>
           </ion-label>
         </ion-item>
-      </ion-list> -->
-      <ion-list :inset="true">
+      </ion-list>
+      <!-- <ion-list :inset="true">
+        <ion-item
+        lines="none"
+        class="profile-item"
+        >
+        <ion-avatar style="width:60px; height:auto" >
+          <img :src="utils.makeFileUrl(userInfo.userImage)" class="profile-avatar">
+        </ion-avatar>
+        <ion-label class="q-px-sm">
+          <h2>{{ userInfo.name }}</h2>
+        </ion-label>
+      </ion-item>
+    </ion-list> -->
+    <ion-list :inset="true">
         <ion-item>
           <h2>Mídia</h2>
         </ion-item>
@@ -59,7 +68,7 @@
             </ion-item>
             <div slot="content">
               <ion-item
-                v-for="child in classData"
+                v-for="child in classChildrenData"
                 :key="child"
               >
                 <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
@@ -87,7 +96,8 @@ import {
   IonList, IonItem,
   IonButton, IonAvatar,
   IonAccordionGroup, IonAccordion,
-  IonLabel
+  IonLabel, IonCardTitle, IonCardSubtitle,
+  IonCardHeader, IonCardContent, IonCard
 } from '@ionic/vue'
 </script>
 
@@ -98,8 +108,9 @@ export default {
   },
   data() {
     return {
-      classData: null,
-      eventList: null
+      classChildrenData: null,
+      eventList: null,
+      classData: null
     };
   },
   mounted () {
@@ -136,7 +147,8 @@ export default {
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
-          this.classData = r.data.childrenInClass
+          this.classChildrenData = r.data.childrenInClass
+          this.classData = r.data
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde")
         }
