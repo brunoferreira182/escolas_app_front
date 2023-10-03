@@ -4,7 +4,7 @@
       title="Salas de aula"
       :backButton="false"
     />
-    <ion-content >
+    <ion-content color="light">
       <div class="q-mt-md">
         <div class="slide" v-if="childClassInfo">
           <ion-list 
@@ -44,12 +44,17 @@
               >
                 <ion-label>
                   <ion-row class="ion-justify-content-between">
-                    <ion-col size="2">
-                      <h6>{{ e.eventName }}</h6>
+                    <ion-col size="6" class="ion-text-wrap">
+                      <h6 class="text-capitalize">
+                        {{ e.name }}
+                      </h6>
+                      <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
                     </ion-col>
                     <ion-col size="5" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
                   </ion-row>
-                  <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
+                  <div>
+                    {{ e.obs }}  
+                  </div>
                 </ion-label>
               </ion-item>
             </ion-list>
@@ -114,19 +119,15 @@ export default {
   methods: {
     startView () {
       this.getChildClass()
+      this.getLastActivitiesFromUserChildren()
     },
-    getChildEventsByUserId() {
+    getLastActivitiesFromUserChildren() {
       const opt = {
-        route: '/mobile/workers/getChildEventsByUserId',
-        body: {
-          childId: this.$route.query.userId,
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        },
+        route: '/mobile/parents/chat/getLastActivitiesFromUserChildren',
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
-          this.childEventsHistory = r.data.list
+          this.childEventsHistory = r.data
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde.")
         }
