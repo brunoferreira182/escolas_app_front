@@ -215,13 +215,13 @@
             ></ion-textarea>
           </div>
           <ion-list :inset="true">
-            <ion-checkbox @ionChange="handleCheckboxChangeAll($event)">Marcar todas as crianças</ion-checkbox>
+            <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)">Marcar todas as crianças</ion-checkbox>
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">Lista de crianças</div>
             <ion-item
               v-for="child in classList"
               :key="child"
             >
-            <ion-checkbox :checked="child.isChecked" class="q-pr-md" @ionChange="handleCheckboxChange(child._id)"></ion-checkbox>
+            <ion-checkbox :checked="child.isChecked" class="q-pr-md" @ionChange="handleCheckboxChange(child._id, $event)"></ion-checkbox>
               <p>
                 {{ child.childName }}
               </p>
@@ -349,27 +349,42 @@ export default {
         this.selectedChildren = this.classList.map((child) => ({
         _id: child._id,
       }));
-      } 
+      }
       this.selectedChildren.forEach((child) => {
         this.classList.forEach((classList, i) => {
           if (child._id === classList._id) {
             this.classList.forEach((teste) => {
               teste.isChecked = e.detail.checked
+              if (teste.isChecked === false) {
+                this.selectedChildren = []
+              }
             }) 
           }
         })
       })
+      console.log(this.selectedChildren)
     },
-    handleCheckboxChange(childId) {
-      console.log("Chamou marcar individual")
-      const index = this.selectedChildren.indexOf(childId);
-      if (index === -1) {
-        this.selectedChildren.push(childId);
-      } else {
-        this.selectedChildren.splice(index, 1);
+    handleCheckboxChange(childId, e) {
+      if (e.detail.checked === true) {
+        this.selectedChildren.push({_id: childId})
+        console.log(this.selectedChildren)
+        if (this.selectedChildren.length === this.classList.length) {
+            this.selectAllChildren = true
+          }
+        return
       }
-      this.selectAllChildren = this.selectedChildren.length === this.classList.length;
-      console.log(this.selectedChildren, "selececec")
+      if (e.detail.checked === false) {
+        const initialLength = this.selectedChildren.length
+        this.selectedChildren.forEach((child, childIndex) => {
+          if (child._id === childId) {
+            this.selectedChildren.splice(childIndex, 1)
+          if (initialLength === this.classList.length && this.selectedChildren !== initialLength) {
+            this.selectAllChildren = false
+          }
+            console.log("Depois de cortar", this.selectedChildren)
+          }
+        })
+      }
     },
     startDialogViewImage(e) {
       this.dialogViewImage.open = true
