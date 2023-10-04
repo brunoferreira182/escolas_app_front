@@ -5,8 +5,8 @@
       :backButton="false"
     />
     <ion-content color="light">
-      <div class="q-mt-md">
-        <div class="slide" v-if="childClassInfo">
+      <div class="q-mt-md" v-if="childClassInfo && childClassInfo.length">
+        <div class="slide">
           <ion-list 
             class="q-pa-md"
             lines="full" 
@@ -63,6 +63,19 @@
           </ion-list>
         </div>
       </div>
+      <div 
+        class="q-mt-md"
+        v-else
+      >
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Seu filho(a) não está em nenhuma sala</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          Procure um responsável na escola para convefir de qual turma seu filho(a) faz parte.
+        </ion-card-content>
+      </ion-card>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -77,10 +90,10 @@ import {
   IonCol,
   IonBadge,
   IonChip, 
-  IonAvatar,
-  IonItem, 
-  IonLabel, 
-  IonNote 
+  IonAvatar, IonCardTitle,
+  IonItem, IonCardHeader,
+  IonLabel, IonCardContent,
+  IonNote, IonCard
 } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';

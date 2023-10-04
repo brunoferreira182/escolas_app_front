@@ -304,7 +304,6 @@ export default {
       const query = event.target.value.toLowerCase();
       this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
     },
-    
     handleCheckboxChangeAll(e) {
       if (e.detail.checked === true) {
         this.selectedChildren = this.classList.map((child) => ({

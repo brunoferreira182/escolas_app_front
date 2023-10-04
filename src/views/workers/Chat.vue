@@ -6,7 +6,7 @@
     />
     <ion-content >
       <div class="q-mt-md">
-        <div class="slide" v-if="classesInfo">
+        <div class="slide" v-if="classesInfo && classesInfo.length">
           <ion-list 
             class="q-pa-md"
             lines="full" 
@@ -34,12 +34,18 @@
               >
                 {{ child.userName }}
               </ion-chip>
-              <!-- <ion-label slot="end" class="ion-text-end">
-                <p>macaquiho</p>
-                <p>{{ item.messages.createdAt.createdAtLocale.split(' ')[1] }}</p>
-              </ion-label> -->
             </ion-item>
           </ion-list>
+        </div>
+        <div v-else>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Você não está em nenhuma sala</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              Procure um responsável na escola para convefir de qual turma você participa.
+            </ion-card-content>
+          </ion-card>
         </div>
       </div>
     </ion-content>
@@ -47,10 +53,10 @@
 </template>
 <script setup>
 import { 
-  IonPage, IonButton, 
-  IonContent, IonImg, 
-  IonList, IonChip,
-  IonItem, IonLabel,
+  IonPage, IonButton, IonCard,
+  IonContent, IonImg, IonCardHeader,
+  IonList, IonChip, IonCardTitle,
+  IonItem, IonLabel, IonCardContent,
   IonAvatar } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
