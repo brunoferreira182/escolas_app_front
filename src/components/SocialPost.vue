@@ -13,13 +13,14 @@
             Reações: {{ post.reactions }}
           </div>
           <p>{{post.postData.resume.description}}</p>
-          <h6
-            @click="$router.push('/postDetail?postId=' + post._id)"
-            style="font-weight: 500;text-align: end;"
-            class="active-change-color"
-          >
-            Ler mais
-          </h6>
+          <div class="ion-text-end">
+            <ion-button 
+              @click="$router.push('/postDetail?postId=' + post._id)"
+              fill="clear"
+            >
+              Ler mais
+            </ion-button>
+          </div>
         </div>
       </div>
     </div>
@@ -37,13 +38,14 @@
             Reações: {{ post.reactions }}
           </div>
           <p>{{post.postData.resume.description }}</p>
-          <h6
-            @click="$router.push('/postDetail?postId=' + post._id)"
-            style="font-weight: 500;text-align: end;"
-            class="active-change-color"
-          >
-            Ler mais
-          </h6>
+          <div class="ion-text-end text-black" >
+            <ion-button
+              @click="$router.push('/postDetail?postId=' + post._id)"
+              fill="clear"
+            >
+              Ler mais
+            </ion-button>
+          </div>
         </div>
       </div>
     </div>
@@ -52,7 +54,8 @@
 <script setup>
 import utils from '../composables/utils'
 import {
-  IonPage 
+  IonPage,
+  IonButton, 
 } from '@ionic/vue'
 const props = defineProps(['post', 'i'])
 </script>
@@ -76,9 +79,6 @@ const props = defineProps(['post', 'i'])
 }
 .card-img {
   border-radius: 0.4rem;
-}
-.read-more {
-
 }
 
 </style>
