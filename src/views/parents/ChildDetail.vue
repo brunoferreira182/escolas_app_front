@@ -38,12 +38,22 @@
         >
           <ion-label>
             <ion-row class="ion-justify-content-between">
-              <ion-col size="6" class="ion-text-wrap">
-                <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
+              <ion-col size="6" class="ion-text-wrap q-pa-md">
+                <ion-badge class="" style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
               </ion-col>
-              <ion-col size="5" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
+              <ion-col 
+                size="6" 
+                class="text-subtitle2 ion-text-end"
+              >
+                <div>
+                  {{ e.createdAt.createdAtLocale.split(' ')[0] }}
+                </div>
+                <div>
+                  {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+                </div>
+              </ion-col>
             </ion-row>
-            <div>
+            <div class="q-px-md">
               {{ e.obs }}  
             </div>
           </ion-label>

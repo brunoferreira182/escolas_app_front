@@ -12,24 +12,26 @@
         :debounce="400"
         v-model="filterValue"
         @ionInput="getChildrenInClassList()"
-      >
-      </ion-searchbar>
+      />
       <Transition name="bounce">
         <ion-list :inset="true" v-if="show">
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
           <ion-item 
-            v-for="classe in classData"
-            :key="classe"
+            v-for="c in classData"
+            :key="c"
             :button="true"
             class="q-pa-sm"
-            @click="clkOpenDialogClassEvent(classe)"
+            @click="clkOpenDialogClassEvent(c)"
           >
-            <ion-avatar aria-hidden="true" slot="start">
-              <img :src="utils.makeFileUrl(classe.classImage[0].filename)"/>
+            <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage">
+              <img :src="utils.makeFileUrl(c.classImage.filename)" />
+            </ion-avatar>
+            <ion-avatar aria-hidden="true" slot="start" v-else>
+              <img :src="utils.makeFileUrl(c.image)"/>
             </ion-avatar>
             <ion-label>
-              <h6>{{ classe.className }}</h6>
-              <ion-badge style="background-color: #36c499;">Função: {{ classe.functionName }}</ion-badge>
+              <h6>{{ c.className }}</h6>
+              <ion-badge style="background-color: #36c499;">Função: {{ c.functionName }}</ion-badge>
             </ion-label>
           </ion-item>
         </ion-list>
@@ -46,7 +48,7 @@
           <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
             <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
           </ion-avatar>
-          <ion-avatar aria-hidden="true" slot="start" v-else="">
+          <ion-avatar aria-hidden="true" slot="start" v-else>
             <img :src="utils.makeFileUrl(child.image)"/>
           </ion-avatar>
           <ion-label>
@@ -365,8 +367,8 @@ export default {
       this.dialogInsertChildEvent.data = child
       this.dialogInsertChildEvent.open = true
     },
-    clkOpenDialogClassEvent(classe){
-      this.dialogInsertClassEvent.data = classe
+    clkOpenDialogClassEvent(c){
+      this.dialogInsertClassEvent.data = c
       this.dialogInsertClassEvent.open = true
     },
     cancelPhotoHandler () {

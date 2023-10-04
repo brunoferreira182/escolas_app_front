@@ -18,8 +18,11 @@
               detail="true"
               @click="goToChatDetail(_class.classId)"
             >
-              <ion-avatar style="width:60px; height:auto" >
-                <img :src="utils.makeFileUrl(_class.classImage[0].filename)" class="profile-avatar">
+              <ion-avatar aria-hidden="true" slot="start" v-if="_class.childPhoto">
+                <img :src="utils.makeFileUrl(_class.childPhoto.filename)"/>
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(_class.image)"/>
               </ion-avatar>
               <ion-label class="q-pl-md">
                 <h4>{{ _class.className }}</h4>

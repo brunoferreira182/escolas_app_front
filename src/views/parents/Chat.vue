@@ -5,26 +5,29 @@
       :backButton="false"
     />
     <ion-content color="light">
-      <div class="q-mt-md">
-        <div class="slide" v-if="childClassInfo">
-          <ion-list 
-            class="q-pa-md"
-            lines="full" 
-            >
+      <div v-if="childClassInfo">
+        <ion-list 
+          class="q-ma-md"
+          style="border-radius: 1rem"
+          lines="full" 
+        >
+          <div 
+            v-for="_class in childClassInfo"
+            :key="_class"
+          >
+            <h2 class="q-px-md">{{ _class.classData.name }}</h2>
             <ion-item
-              v-for="_class in childClassInfo"
-              :key="_class"
               button
               detail="true"
               @click="goToChatDetail(_class.classData.id)"
             >
-            <ion-avatar style="width:60px; height:auto" >
-              <img :src="utils.makeFileUrl(_class)" class="profile-avatar">
-            </ion-avatar>
+              <ion-avatar style="width: 46px; height: 46px;">
+                <img :src="utils.makeFileUrl(_class)" class="profile-avatar">
+              </ion-avatar>
               <ion-label>
-                <strong class="q-mb-md">{{ _class.classData.name }}</strong><br />
                 <ion-note class="q-mt-md">
                   <div
+                    class="q-ma-sm"
                     v-for="child in _class.users"
                     :key="child"
                   >
@@ -38,30 +41,40 @@
                 </ion-note>
               </ion-label>
             </ion-item>
-          </ion-list>
-          <h2 class="q-px-md">Histórico de atividades</h2>
-          <ion-list :inset="true" >
-            <ion-item 
-              v-for="e in childEventsHistory"
-              :key="e"
-            >
-              <ion-label>
-                <ion-row class="ion-justify-content-between">
-                  <ion-col size="5" class="ion-text-wrap">
-                    <h6 class="text-capitalize">
-                      {{ e.name }}
-                    </h6>
-                    <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
-                  </ion-col>
-                  <ion-col size="6" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
-                </ion-row>
-                <div>
-                  {{ e.obs }}  
-                </div>
-              </ion-label>
-            </ion-item>
-          </ion-list>
-        </div>
+          </div>
+        </ion-list>
+        <h2 class="q-px-md">Histórico de atividades</h2>
+        <ion-list :inset="true" >
+          <ion-item 
+            v-for="e in childEventsHistory"
+            :key="e"
+          >
+            <ion-label>
+              <ion-row class="ion-justify-content-between">
+                <ion-col size="5" class="ion-text-wrap">
+                  <h6 class="text-capitalize">
+                    {{ e.name }}
+                  </h6>
+                  <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
+                </ion-col>
+                <ion-col 
+                  size="6" 
+                  class="text-subtitle2 ion-text-end"
+                >
+                  <div>
+                    {{ e.createdAt.createdAtLocale.split(' ')[0] }}
+                  </div>
+                  <div>
+                    {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+                  </div>
+                </ion-col>
+              </ion-row>
+              <div class="q-px-sm">
+                {{ e.obs }}  
+              </div>
+            </ion-label>
+          </ion-item>
+        </ion-list>
       </div>
     </ion-content>
   </ion-page>
@@ -153,20 +166,3 @@ export default {
 }
 
 </script>
-
-<style scoped>
-.q-carousel__slide {
-  padding-right: 0%;
-  padding-left: 0%;
-}
-.login-logo {
-  /* width: 12em; */
-  height: 19em;
-}
-.login-logo-letters {
-  font-weight: 600;
-  color: var(--ion-color-primary);
-  font-size: 35px;
-  translate:0 20px;
-}
-</style>
