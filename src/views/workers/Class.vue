@@ -127,12 +127,28 @@
               v-for="e in childEventsHistory"
               :key="e"
             >
+              <ion-avatar aria-hidden="true" slot="start" v-if="e.childEventImage">
+                <img :src="utils.makeFileUrl(e.childEventImage)" @click="startDialogViewImage(e)"/>
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(e.image)"/>
+              </ion-avatar>
               <ion-label>
                 <ion-row class="ion-justify-content-between">
                   <ion-col size="2">
                     <h6>{{ e.eventName }}</h6>
                   </ion-col>
-                  <ion-col size="5" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
+                  <ion-col 
+                    size="6" 
+                    class="text-subtitle2 ion-text-end"
+                  >
+                    <div>
+                      {{ e.createdAt.createdAtLocale.split(' ')[0] }}
+                    </div>
+                    <div>
+                      {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+                    </div>
+                  </ion-col>
                 </ion-row>
                 <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
               </ion-label>
@@ -140,6 +156,23 @@
           </ion-list>
         </ion-content>
         <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
+      </ion-modal>
+      <ion-modal
+        :is-open="dialogViewImage.open === true"
+      >
+        <ion-header v-if="dialogViewImage.data">
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-button @click="clearDialogViewImage">Fechar</ion-button>
+            </ion-buttons>
+            <ion-title >{{ dialogViewImage.data.eventName }}</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content v-if="dialogViewImage">
+          <div class="centered-image">
+            <img style="width: 80%;height: auto;" :src="utils.makeFileUrl(dialogViewImage.image)"/>
+          </div>
+        </ion-content>
       </ion-modal>
       <ion-modal 
         :is-open="dialogInsertClassEvent.open" 
@@ -276,6 +309,11 @@ export default {
         data: {},
         obs: '',
       },
+      dialogViewImage: {
+        open: false,
+        data: null,
+        image: null
+      },
       pagination: {
         page: 1,
         rowsPerPage: 10,
@@ -332,6 +370,16 @@ export default {
       }
       this.selectAllChildren = this.selectedChildren.length === this.classList.length;
       console.log(this.selectedChildren, "selececec")
+    },
+    startDialogViewImage(e) {
+      this.dialogViewImage.open = true
+      this.dialogViewImage.image = e.childEventImage
+      this.dialogViewImage.data = e
+    },
+    clearDialogViewImage() {
+      this.dialogViewImage.open = false
+      this.dialogViewImage.image = null
+      this.dialogViewImage.data = null
     },
     getClassChildrenById() {
       const opt = {
@@ -498,6 +546,12 @@ ion-avatar {
   --border-radius: 36px;
   width: 56px;
   height: 56px
+}
+.centered-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
