@@ -359,6 +359,9 @@ export default {
               teste.isChecked = e.detail.checked
               if (teste.isChecked === false) {
                 this.selectedChildren = []
+                this.classList.forEach((classList) => {
+                  classList.isChecked = false
+                })
               }
             }) 
           }
