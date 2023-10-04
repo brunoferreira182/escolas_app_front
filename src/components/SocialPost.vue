@@ -20,8 +20,8 @@
                   </div>
                 </ion-col>
                 <ion-col size="5">
-                  <div>
-                    <ion-icon size="large" src="/assets/icons/comment.svg"/>{{ post.comments }}
+                  <div class="q-pa-xs">
+                    <ion-icon style="width: 28px; height: 28px;" src="/assets/icons/comment.svg"/> {{ post.comments }}
                   </div>
                 </ion-col>
               </ion-row>
@@ -60,8 +60,8 @@
                   </div>
                 </ion-col>
                 <ion-col size="5">
-                  <div>
-                    <ion-icon size="large" src="/assets/icons/comment.svg"/>{{ post.comments }}
+                  <div class="q-pa-xs">
+                    <ion-icon style="width: 28px; height: 28px;" src="/assets/icons/comment.svg"/> {{ post.comments }}
                   </div>
                 </ion-col>
               </ion-row>
@@ -91,6 +91,10 @@ import {
   IonIcon,
   IonButton, 
 } from '@ionic/vue'
+import { 
+  location,
+  chatboxOutline
+} from 'ionicons/icons';
 const props = defineProps(['post', 'i'])
 </script>
 
