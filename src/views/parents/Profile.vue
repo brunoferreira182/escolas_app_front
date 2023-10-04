@@ -25,9 +25,10 @@
       <div class="ion-text-center text-h5 q-py-sm" v-if="userInfo.familyData">
         {{ userInfo.familyData.name }}
       </div>
-      <ion-list :inset="true" v-if="userInfo.family">
+      <ion-list :inset="true"  v-if="userInfo.family" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Filhos</div>
         <ion-item 
+          lines="inset"
           v-for="child in userInfo.family.children"
           :key="child"
           :button="true"
@@ -51,10 +52,10 @@
           Adicionar Filho</ion-item>
         </div>
       </ion-list>
-      <ion-list :inset="true" >
+      <ion-list :inset="true">
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
-        <div>
           <ion-item 
+            lines="inset"
             v-for="parent in userInfo.family.family"
             :key="parent"
             :button="true"
@@ -68,7 +69,6 @@
               <ion-badge>{{ parent.status.label }}</ion-badge> 
             </ion-label>
           </ion-item>
-        </div>
         <div v-if="userInfo">
           <ion-item 
             :button="true" 
@@ -88,10 +88,8 @@
           Convites para família pendentes
         </ion-item>
       </ion-list>
-      <ion-list :inset="true">
-        <ion-item 
-          v-if="isWorker === true"
-        >
+      <ion-list :inset="true" v-if="isWorker === true">
+        <ion-item>
           Área do trabalhador
           <ion-toggle
             v-model="switchWork"
@@ -204,7 +202,7 @@ export default {
     $route (to, from) {
       if (to.path === '/tabsParents/profile') {
         this.startView()
-        this.getFamilySolicitationsStatusByFamily
+        this.getFamilySolicitationsStatusByFamily()
       }
     }
   },
@@ -304,6 +302,7 @@ export default {
       if (!this.userInfo.document) {
         this.dialogUserData.open = true
       }
+      this.getFamilySolicitationsStatusByFamily()
     },
     backLogin() {
       this.$router.push('/login')

@@ -34,7 +34,7 @@ import {
   IonImg, IonAvatar, IonAlert
 } from '@ionic/vue';
 import { 
-  idCardOutline,
+  accessibility,
   chatboxOutline,
   personCircleOutline,
   ellipsisHorizontalOutline
@@ -49,8 +49,8 @@ export default {
   data() {
     return {
       tabs: [
-        { name: "turmas", icon: idCardOutline, to: '/tabsWorkers/class', label: "Turmas" },
-        { name: "messenger", icon: chatboxOutline, to: '/tabsWorkers/chat', label: "Sala" },
+        { name: "turmas", icon: accessibility, to: '/tabsWorkers/class', label: "Alunos" },
+        { name: "messenger", icon: chatboxOutline, to: '/tabsWorkers/chat', label: "Salas" },
         { name: "profile", icon: personCircleOutline, to: '/tabsWorkers/profile', label: "Perfil" },
       ],
       userProfile: [],

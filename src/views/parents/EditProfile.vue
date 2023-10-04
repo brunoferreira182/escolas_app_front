@@ -98,6 +98,7 @@ export default {
       utils.loading.show()
       useFetch(opt).then(r => {
         utils.loading.hide()
+        this.getUserProfileById()
       })
     }
   },
