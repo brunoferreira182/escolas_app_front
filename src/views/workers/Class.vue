@@ -216,17 +216,16 @@
           </div>
           <ion-list :inset="true">
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">
-              <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
               Lista de crianças
+              <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
             </div>
             <ion-item
               v-for="child in classList"
               :key="child"
             >
-            <ion-checkbox :checked="child.isChecked" class="q-pr-md" @ionChange="handleCheckboxChange(child._id, $event)"></ion-checkbox>
-              <p>
-                {{ child.childName }}
-              </p>
+              <ion-label>
+                <ion-checkbox :checked="child.isChecked"  @ionChange="handleCheckboxChange(child._id, $event)"> {{ child.childName }} </ion-checkbox>
+              </ion-label>
             </ion-item>
           </ion-list>
           <ion-list :inset="true" >

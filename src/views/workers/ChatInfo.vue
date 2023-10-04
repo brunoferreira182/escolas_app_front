@@ -110,7 +110,8 @@ import {
   IonButton, IonAvatar,
   IonAccordionGroup, IonAccordion,
   IonLabel, IonCardTitle, IonCardSubtitle,
-  IonCardHeader, IonCardContent, IonCard
+  IonCardHeader, IonCardContent, IonCard, IonRow, 
+  IonCol, IonBadge
 } from '@ionic/vue'
 </script>
 
