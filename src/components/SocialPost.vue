@@ -12,10 +12,17 @@
             <ion-col class="q-ma-sm">
               <ion-row>
                 <ion-col size="5">
-                  <ion-icon id="heartIcon" size="large" src="/assets/icons/heart.svg"></ion-icon>{{ post.comments }}
+                  <div v-if="post.userReaction">
+                    <ion-icon size="large" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
+                  </div>
+                  <div v-else-if="!post.userReaction">
+                    <ion-icon size="large" src="/assets/icons/heart.svg"/>{{ post.reactions }}
+                  </div>
                 </ion-col>
                 <ion-col size="5">
-                  <ion-icon id="smileIcon" size="large" src="/assets/icons/smile.svg"></ion-icon>{{ post.reactions }}
+                  <div>
+                    <ion-icon size="large" src="/assets/icons/comment.svg"/>{{ post.comments }}
+                  </div>
                 </ion-col>
               </ion-row>
             </ion-col>
@@ -45,10 +52,17 @@
             <ion-col class="q-ma-sm">
               <ion-row>
                 <ion-col size="5">
-                  <ion-icon id="heartIcon" size="large" src="/assets/icons/heart.svg"></ion-icon>{{ post.comments }}
+                  <div v-if="post.userReaction">
+                    <ion-icon size="large" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
+                  </div>
+                  <div v-else-if="!post.userReaction">
+                    <ion-icon size="large" src="/assets/icons/heart.svg"/>{{ post.reactions }}
+                  </div>
                 </ion-col>
                 <ion-col size="5">
-                  <ion-icon id="smileIcon" size="large" src="/assets/icons/smile.svg"></ion-icon>{{ post.reactions }}
+                  <div>
+                    <ion-icon size="large" src="/assets/icons/comment.svg"/>{{ post.comments }}
+                  </div>
                 </ion-col>
               </ion-row>
             </ion-col>
