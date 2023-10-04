@@ -215,8 +215,10 @@
             ></ion-textarea>
           </div>
           <ion-list :inset="true">
-            <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)">Marcar todas as crianças</ion-checkbox>
-            <div class="ion-text-left text-h6 q-py-sm q-pl-md">Lista de crianças</div>
+            <div class="ion-text-left text-h6 q-py-sm q-pl-md">
+              <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
+              Lista de crianças
+            </div>
             <ion-item
               v-for="child in classList"
               :key="child"
