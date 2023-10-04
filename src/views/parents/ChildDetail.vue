@@ -19,7 +19,7 @@
             <p>{{ userDetail.userData.document }}</p>
           </ion-label>
           <ion-icon 
-            v-if="userDetail.userData.status.status === 'active'"
+            v-if="userDetail.userData.status.status === 'active' && familyAdmin === true"
             style="color: 
             #eb445a;" 
             :icon="trashOutline"
@@ -27,7 +27,12 @@
           />
         </ion-item>
       </ion-list>
-      <ion-button @click="startPhotoHandler = true" fill="clear" size="default">
+      <ion-button 
+        @click="startPhotoHandler = true" 
+        fill="clear" 
+        size="default"
+        v-if="familyAdmin === true"
+      >
         Editar foto de perfil
       </ion-button>
       <h2 class="q-px-md">Histórico de atividades</h2>
@@ -124,13 +129,24 @@ export default {
         page: 1,
         rowsPerPage: 6
       },
-      startPhotoHandler: false
+      startPhotoHandler: false,
+      familyAdmin: false
     };
   },
   mounted(){
     this.getUserId()
+    this.verifyIfIsAdmin()
   },
   methods: {
+    verifyIfIsAdmin() {
+      const opt = {
+        route: '/mobile/parents/profile/getIfUserIsFamilyAdmin',
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) return
+        this.familyAdmin = r.data
+      })
+    },
     cancelPhotoHandler () {
       this.startPhotoHandler = false
     },

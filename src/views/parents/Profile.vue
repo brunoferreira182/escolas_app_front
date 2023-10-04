@@ -44,7 +44,7 @@
             <ion-badge v-else >{{ child.status.label }}</ion-badge>
           </ion-label>
         </ion-item>
-        <div v-if="userInfo.canCreateUsers === true">
+        <div v-if="familyAdmin === true">
           <ion-item 
             :button="true" 
             @click="addChild"
@@ -69,11 +69,10 @@
               <ion-badge>{{ parent.status.label }}</ion-badge> 
             </ion-label>
           </ion-item>
-        <div v-if="userInfo">
+        <div v-if="familyAdmin === true">
           <ion-item 
             :button="true" 
             @click="addParent"
-            v-if="userInfo.canCreateUsers === true"
           >
           Adicionar Familiar</ion-item>
         </div>
@@ -195,13 +194,15 @@ export default {
       permissions: [],
       isWorker: false,
       switchWork: false,
-      currentVision: null
+      currentVision: null,
+      familyAdmin: false
     };
   },
   watch: {
     $route (to, from) {
       if (to.path === '/tabsParents/profile') {
         this.startView()
+        this.verifyIfIsAdmin()
         this.getFamilySolicitationsStatusByFamily()
       }
     }
@@ -215,6 +216,15 @@ export default {
     this.getCurrentVision()
   },
   methods: {
+    verifyIfIsAdmin() {
+      const opt = {
+        route: '/mobile/parents/profile/getIfUserIsFamilyAdmin',
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) return
+        this.familyAdmin = r.data
+      })
+    },
     getCurrentVision() {
       const currentVision = localStorage.getItem("currentVision")
       if (currentVision) {
@@ -303,6 +313,7 @@ export default {
         this.dialogUserData.open = true
       }
       this.getFamilySolicitationsStatusByFamily()
+      this.verifyIfIsAdmin()
     },
     backLogin() {
       this.$router.push('/login')
