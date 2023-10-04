@@ -8,7 +8,7 @@
       <ion-list>
         <ion-item lines="none" class="profile-item">
           <ion-avatar style="width:60px; height:auto" aria-hidden="true" slot="start" v-if="classData">
-              <img :src="utils.makeFileUrl(classData.image[0].filename)"/>
+              <img :src="utils.makeFileUrl(classData.classImage)"/>
             </ion-avatar> 
             <ion-label class="q-px-sm" v-if="classData">
               <h2>{{ classData.className }}</h2>

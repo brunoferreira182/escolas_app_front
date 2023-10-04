@@ -64,7 +64,7 @@ const props = defineProps(['post', 'i'])
   overflow: hidden;
 }
 .even-card {
-  background-color: var(--ion-color-primary-light);
+  background-color: var(--ion-card-background);
 }
 
 .card-title {

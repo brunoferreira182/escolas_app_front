@@ -25,7 +25,7 @@
             @click="clkOpenDialogClassEvent(classe)"
           >
             <ion-avatar aria-hidden="true" slot="start">
-              <img :src="utils.makeFileUrl(classe.classImage[0].filename)"/>
+              <img :src="utils.makeFileUrl(classe.classImage)"/>
             </ion-avatar>
             <ion-label>
               <h6>{{ classe.className }}</h6>
