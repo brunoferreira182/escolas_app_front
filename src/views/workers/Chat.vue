@@ -19,7 +19,7 @@
               @click="goToChatDetail(_class.classId)"
             >
               <ion-avatar style="width:60px; height:auto" >
-                <img :src="utils.makeFileUrl(_class.classImage[0].filename)" class="profile-avatar">
+                <img :src="utils.makeFileUrl(_class.classImage)" class="profile-avatar">
               </ion-avatar>
               <ion-label class="q-pl-md">
                 <h4>{{ _class.className }}</h4>
