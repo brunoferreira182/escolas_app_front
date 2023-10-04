@@ -2,7 +2,7 @@
   <ion-page>
     <ToolbarEscolas
       title="Mais informações"
-      :backButton="true"
+      :backButton="false"
     />
     <ion-content >
       <ion-list>

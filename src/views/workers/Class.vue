@@ -9,25 +9,31 @@
         show-clear-button="always"
         animated="true" 
         placeholder="Pesquisar"
+        :debounce="400"
+        v-model="filterValue"
+        @ionInput="getChildrenInClassList()"
       >
       </ion-searchbar>
-      <ion-list :inset="true" >
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
-        <ion-item 
-          v-for="classe in classData"
-          :key="classe"
-          :button="true"
-          @click="clkOpenDialogClassEvent(classe)"
-        >
-          <ion-avatar aria-hidden="true" slot="start">
-            <img :src="utils.makeFileUrl(classe.image)"/>
-          </ion-avatar>
-          <ion-label>
-            <h6>{{ classe.className }}</h6>
-            <ion-badge style="background-color: #36c499;">Função: {{ classe.functionName }}</ion-badge>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+      <Transition name="bounce">
+        <ion-list :inset="true" v-if="show">
+          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
+          <ion-item 
+            v-for="classe in classData"
+            :key="classe"
+            :button="true"
+            class="q-pa-sm"
+            @click="clkOpenDialogClassEvent(classe)"
+          >
+            <ion-avatar aria-hidden="true" slot="start">
+              <img :src="utils.makeFileUrl(classe.classImage[0].filename)"/>
+            </ion-avatar>
+            <ion-label>
+              <h6>{{ classe.className }}</h6>
+              <ion-badge style="background-color: #36c499;">Função: {{ classe.functionName }}</ion-badge>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </Transition>
       <ion-list :inset="true" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
         <ion-item 
@@ -35,6 +41,7 @@
           :key="child"
           @click="clkOpenDialogChildEvent(child)"
           :button="true"
+          class="q-pa-sm"
         >
           <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
             <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
@@ -118,14 +125,19 @@
               v-for="e in childEventsHistory"
               :key="e"
             >
-              <ion-label >
-                <h6>{{ e.eventName }}</h6>
+              <ion-label>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="2">
+                    <h6>{{ e.eventName }}</h6>
+                  </ion-col>
+                  <ion-col size="5" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
+                </ion-row>
                 <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
               </ion-label>
             </ion-item>
           </ion-list>
         </ion-content>
-        <ion-button @click="addNewUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
+        <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
       </ion-modal>
       <ion-modal 
         :is-open="dialogInsertClassEvent.open" 
@@ -168,13 +180,13 @@
             ></ion-textarea>
           </div>
           <ion-list :inset="true">
-            <ion-checkbox @change="handleCheckboxChangeAll">Marcar todas as crianças</ion-checkbox>
+            <ion-checkbox @ionChange="handleCheckboxChangeAll($event)">Marcar todas as crianças</ion-checkbox>
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">Lista de crianças</div>
             <ion-item
               v-for="child in classList"
               :key="child"
             >
-            <ion-checkbox class="q-pr-md" @change="handleCheckboxChange(child._id)"></ion-checkbox>
+            <ion-checkbox :checked="child.isChecked" class="q-pr-md" @ionChange="handleCheckboxChange(child._id)"></ion-checkbox>
               <p>
                 {{ child.childName }}
               </p>
@@ -193,7 +205,7 @@
             </ion-item>
           </ion-list>
         </ion-content>
-        <ion-button @click="addNewUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
+        <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
       </ion-modal>
       <PhotoHandler
         v-show="startPhotoHandler"
@@ -272,9 +284,12 @@ export default {
       childrenInClassList: [],
       childEventsList: [],
       childEventsHistory: [],
+      show: true,
       classList: [],
       selectedChildren: [],
-      selectAllChildren: false
+      childrenFilter: [],
+      filterValue: '',
+      selectAllChildren: false,
     };
   },
   mounted(){
@@ -285,25 +300,38 @@ export default {
     this.getChildrenInClassList()
   },
   methods: {
-    handleCheckboxChangeAll() {
-      console.log("Chamou marcar todos")
-      this.selectedChildren = [];
-      if (this.selectAllChildren) {
-        this.selectedChildren = this.classList.map(child => child._id)
-      }
-      this.selectAllChildren = !this.selectAllChildren
+    filterChildren(event) {
+      const query = event.target.value.toLowerCase();
+      this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
+    },
+    
+    handleCheckboxChangeAll(e) {
+      if (e.detail.checked === true) {
+        this.selectedChildren = this.classList.map((child) => ({
+        _id: child._id,
+      }));
+      } 
+      this.selectedChildren.forEach((child) => {
+        this.classList.forEach((classList, i) => {
+          if (child._id === classList._id) {
+            this.classList.forEach((teste) => {
+              teste.isChecked = e.detail.checked
+            }) 
+          }
+        })
+      })
     },
     handleCheckboxChange(childId) {
       console.log("Chamou marcar individual")
-    const index = this.selectedChildren.indexOf(childId);
-    if (index === -1) {
-      this.selectedChildren.push(childId);
-    } else {
-      this.selectedChildren.splice(index, 1);
-    }
-    this.selectAllChildren = this.selectedChildren.length === this.classList.length;
-  },
-
+      const index = this.selectedChildren.indexOf(childId);
+      if (index === -1) {
+        this.selectedChildren.push(childId);
+      } else {
+        this.selectedChildren.splice(index, 1);
+      }
+      this.selectAllChildren = this.selectedChildren.length === this.classList.length;
+      console.log(this.selectedChildren, "selececec")
+    },
     getClassChildrenById() {
       const opt = {
         route: '/mobile/workers/getChildrenListByClassId',
@@ -370,15 +398,15 @@ export default {
         this.childEventsHistory = r.data.list
       })
     },
-    addNewUserChildEvents() {
+    createUserChildEvents() {
       if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
         utils.toast('Preencha o evento e insira uma observação para prosseguir')
         return
       }
       const opt = {
-        route: '/mobile/workers/addNewUserChildEvents',
+        route: '/mobile/workers/createUserChildEvents',
         body: {
-          childId: this.dialogInsertChildEvent.data.childId,
+          childId: [this.dialogInsertChildEvent.data.childId],
           childEventId: this.dialogInsertChildEvent.childEventId,
           obs: this.dialogInsertChildEvent.obs
         },
@@ -413,14 +441,20 @@ export default {
       })
     },
     getChildrenInClassList() {
+      if(this.filterValue !== ''){
+        this.show = false
+      }else{this.show = true}
       const opt = {
         route: '/mobile/workers/getChildrenInClassList',
         body: {
           page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
+          rowsPerPage: 100,
+          searchString: this.filterValue
         }
       }
+      utils.loading.show()
       useFetch(opt).then((r) => {
+        utils.loading.hide()
         if (r.error) {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
@@ -499,5 +533,22 @@ ion-avatar {
   /* padding-left: 15px; */
   border-radius: 0.5rem;
   margin-block: 10px;
+}
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

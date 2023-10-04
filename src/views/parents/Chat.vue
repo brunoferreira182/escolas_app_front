@@ -4,20 +4,23 @@
       title="Salas de aula"
       :backButton="false"
     />
-    <ion-content >
+    <ion-content color="light">
       <div class="q-mt-md">
         <div class="slide" v-if="childClassInfo">
           <ion-list 
             class="q-pa-md"
             lines="full" 
-            v-for="_class in childClassInfo"
-            :key="_class"
-          >
+            >
             <ion-item
+              v-for="_class in childClassInfo"
+              :key="_class"
               button
               detail="true"
               @click="goToChatDetail(_class.classData.id)"
             >
+            <ion-avatar style="width:60px; height:auto" >
+              <img :src="utils.makeFileUrl(_class)" class="profile-avatar">
+            </ion-avatar>
               <ion-label>
                 <strong class="q-mb-md">{{ _class.classData.name }}</strong><br />
                 <ion-note class="q-mt-md">
@@ -36,6 +39,28 @@
               </ion-label>
             </ion-item>
           </ion-list>
+          <h2 class="q-px-md">Histórico de atividades</h2>
+          <ion-list :inset="true" >
+            <ion-item 
+              v-for="e in childEventsHistory"
+              :key="e"
+            >
+              <ion-label>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="5" class="ion-text-wrap">
+                    <h6 class="text-capitalize">
+                      {{ e.name }}
+                    </h6>
+                    <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
+                  </ion-col>
+                  <ion-col size="6" class="text-subtitle2">{{ e.createdAt.createdAtLocale }}</ion-col>
+                </ion-row>
+                <div>
+                  {{ e.obs }}  
+                </div>
+              </ion-label>
+            </ion-item>
+          </ion-list>
         </div>
       </div>
     </ion-content>
@@ -43,10 +68,20 @@
 </template>
 <script setup>
 import { 
-  IonPage, IonButton, 
-  IonContent, IonImg, 
-  IonList, IonChip, IonAvatar,
-  IonItem, IonLabel, IonNote } from '@ionic/vue';
+  IonPage, 
+  IonButton, 
+  IonContent, 
+  IonImg, 
+  IonList, 
+  IonRow,
+  IonCol,
+  IonBadge,
+  IonChip, 
+  IonAvatar,
+  IonItem, 
+  IonLabel, 
+  IonNote 
+} from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -70,6 +105,7 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
+      childEventsHistory: [],
       userProfile: []
     };
   },
@@ -86,6 +122,19 @@ export default {
   methods: {
     startView () {
       this.getChildClass()
+      this.getLastActivitiesFromUserChildren()
+    },
+    getLastActivitiesFromUserChildren() {
+      const opt = {
+        route: '/mobile/parents/chat/getLastActivitiesFromUserChildren',
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this.childEventsHistory = r.data
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
     },
     getChildClass() {
       const opt = {

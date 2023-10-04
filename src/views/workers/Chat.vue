@@ -10,14 +10,17 @@
           <ion-list 
             class="q-pa-md"
             lines="full" 
-            v-for="_class in classesInfo"
-            :key="_class"
-          >
+            >
             <ion-item
+              v-for="_class in classesInfo"
+              :key="_class"
               button
               detail="true"
-              @click="goToChatDetail(_class._id)"
+              @click="goToChatDetail(_class.classId)"
             >
+              <ion-avatar style="width:60px; height:auto" >
+                <img :src="utils.makeFileUrl(_class.classImage[0].filename)" class="profile-avatar">
+              </ion-avatar>
               <ion-label class="q-pl-md">
                 <h4>{{ _class.className }}</h4>
                 <p>	
@@ -47,7 +50,8 @@ import {
   IonPage, IonButton, 
   IonContent, IonImg, 
   IonList, IonChip,
-  IonItem, IonLabel } from '@ionic/vue';
+  IonItem, IonLabel,
+  IonAvatar } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -76,7 +80,7 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsParents/chat') {
+      if (to.path === '/tabsWorkers/chat') {
         this.startView()
       }
     }
@@ -103,7 +107,7 @@ export default {
       })
     },
     goToChatDetail (classId) {
-      this.$router.push('/chatDetail?classId=' + classId)
+      this.$router.push('/chatDetailWorker?classId=' + classId)
     },
   }
 }

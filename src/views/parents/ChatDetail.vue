@@ -371,7 +371,7 @@ export default {
       this.startPhotoHandler = false
       this.insertMessage({
         file: imgBlob,
-        fileName
+        name: fileName
       })
     },
     cancelPhotoHandler () {
@@ -507,9 +507,8 @@ export default {
           audioMessage: this.audioMessage
         }
       }
-      if (file.file) {
-        opt.file = [ file.file ]
-        opt.filename = file.filename
+      if (file) {
+        opt.file = file
       }
       if (this.isAnsweringMessage.isAnswering) {
         opt.body.answerMessage = {
