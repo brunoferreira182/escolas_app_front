@@ -3,24 +3,33 @@
       <div class="even-card">
         <img 
           v-if="post.postData.resume.img"
-          :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img">
-        <div style="padding:10px">
+          :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img"
+        />
+        <div >
           <h1 class="card-title">{{post.postData.resume.title}}</h1>
-          <div>
-            Comentários: {{ post.comments }}
-          </div>
-          <div>
-            Reações: {{ post.reactions }}
-          </div>
-          <p>{{post.postData.resume.description}}</p>
-          <div class="ion-text-end">
-            <ion-button 
-              @click="$router.push('/postDetail?postId=' + post._id)"
-              fill="clear"
-            >
-              Ler mais
-            </ion-button>
-          </div>
+          <p class="q-px-md">{{post.postData.resume.description}}</p>
+          <ion-row>
+            <ion-col class="q-ma-sm">
+              <ion-row>
+                <ion-col size="5">
+                  <ion-icon id="heartIcon" size="large" src="/assets/icons/heart.svg"></ion-icon>{{ post.comments }}
+                </ion-col>
+                <ion-col size="5">
+                  <ion-icon id="smileIcon" size="large" src="/assets/icons/smile.svg"></ion-icon>{{ post.reactions }}
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col>
+              <div class="ion-text-end">
+                <ion-button 
+                  @click="$router.push('/postDetail?postId=' + post._id)"
+                  fill="clear"
+                >
+                  <h6>Ler mais</h6>
+                </ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
         </div>
       </div>
     </div>
@@ -28,24 +37,32 @@
       <div class="even-card">
         <img 
           v-if="post.postData.resume.img"
-          :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img">
-        <div style="padding:10px">
+          :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img"
+        />
+        <div>
           <h1 class="card-title">{{post.postData.resume.title}}</h1>
-          <div>
-            Comentários: {{ post.comments }}
-          </div>
-          <div>
-            Reações: {{ post.reactions }}
-          </div>
-          <p>{{post.postData.resume.description }}</p>
-          <div class="ion-text-end text-black" >
-            <ion-button
-              @click="$router.push('/postDetail?postId=' + post._id)"
-              fill="clear"
-            >
-              Ler mais
-            </ion-button>
-          </div>
+          <ion-row>
+            <ion-col class="q-ma-sm">
+              <ion-row>
+                <ion-col size="5">
+                  <ion-icon id="heartIcon" size="large" src="/assets/icons/heart.svg"></ion-icon>{{ post.comments }}
+                </ion-col>
+                <ion-col size="5">
+                  <ion-icon id="smileIcon" size="large" src="/assets/icons/smile.svg"></ion-icon>{{ post.reactions }}
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col>
+              <div class="ion-text-end">
+                <ion-button 
+                  @click="$router.push('/postDetail?postId=' + post._id)"
+                  fill="clear"
+                >
+                  <h6>Ler mais</h6>
+                </ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
         </div>
       </div>
     </div>
@@ -55,6 +72,9 @@
 import utils from '../composables/utils'
 import {
   IonPage,
+  IonCol,
+  IonRow,
+  IonIcon,
   IonButton, 
 } from '@ionic/vue'
 const props = defineProps(['post', 'i'])
@@ -71,14 +91,11 @@ const props = defineProps(['post', 'i'])
 }
 
 .card-title {
-  margin: 0px;
-  font-size: 24px;
-
-  margin-bottom: 10px;
+  margin: 14px;
   font-size: 24px;;
 }
 .card-img {
-  border-radius: 0.4rem;
+  border-radius: 10px 0px 0px 0px
 }
 
 </style>
