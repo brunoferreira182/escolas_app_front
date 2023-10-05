@@ -33,69 +33,65 @@
           <h2>Mídia</h2>
         </ion-item>
       </ion-list>
-      <ion-list :inset="true" class="q-pl-sm">
-        <ion-accordion-group expand="inset">
-          <ion-accordion value="first">
-            <ion-item slot="header" color="light">
-              <ion-label>Eventos da turma</ion-label>
-            </ion-item>
-            <div slot="content">
-              <ion-item
-                lines="full"
-                v-for="event in eventList"
-                :key="event"
-              >
-                <ion-label>
-                  <ion-row class="ion-justify-content-between">
-                    <ion-col size="4" class="ion-text-wrap">
-                      <h6 class="text-capitalize">
-                        {{event.eventName }}
-                      </h6>
-                      <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
-                    </ion-col>
-                    <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
-                  </ion-row>
-                  <div class="ion-text-wrap">
-                    {{ event.eventDescription }}
-                  </div>
-                </ion-label>
-              <!-- <ion-card>
-                <ion-card-header>
-                  <ion-card-title>{{ event.eventName }}</ion-card-title>
-                  <ion-card-subtitle>{{ event.eventDate.local }}</ion-card-subtitle>
-                </ion-card-header>
-                <ion-card-content>
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+          <ion-item slot="header">
+            <ion-label>Eventos da turma</ion-label>
+          </ion-item>
+          <div slot="content">
+            <ion-item
+              lines="full"
+              v-for="event in eventList"
+              :key="event"
+            >
+              <ion-label>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="4" class="ion-text-wrap">
+                    <h6 class="text-capitalize">
+                      {{event.eventName }}
+                    </h6>
+                    <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
+                  </ion-col>
+                  <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
+                </ion-row>
+                <div class="ion-text-wrap">
                   {{ event.eventDescription }}
-                </ion-card-content>
-              </ion-card> -->
-              </ion-item>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-      </ion-list>
-      <ion-list :inset="true" class="q-pl-sm">
-        <ion-accordion-group expand="inset">
-          <ion-accordion value="first">
-            <ion-item slot="header" color="light">
-              <ion-label>Alunos da turma</ion-label>
+                </div>
+              </ion-label>
+            <!-- <ion-card>
+              <ion-card-header>
+                <ion-card-title>{{ event.eventName }}</ion-card-title>
+                <ion-card-subtitle>{{ event.eventDate.local }}</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                {{ event.eventDescription }}
+              </ion-card-content>
+            </ion-card> -->
             </ion-item>
-            <div slot="content">
-              <ion-item
-                v-for="child in classChildrenData"
-                :key="child"
-              >
-                <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                  <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-                </ion-avatar>
-                <ion-avatar aria-hidden="true" slot="start" v-else>
-                  <img :src="utils.makeFileUrl(child.image)"/>
-                </ion-avatar>
-                <p>{{ child.childName }}</p>
-              </ion-item>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-      </ion-list>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+          <ion-item slot="header">
+            <ion-label>Alunos da turma</ion-label>
+          </ion-item>
+          <div slot="content">
+            <ion-item
+              v-for="child in classChildrenData"
+              :key="child"
+            >
+              <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+                <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(child.image)"/>
+              </ion-avatar>
+              <p>{{ child.childName }}</p>
+            </ion-item>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
       <ion-button @click="goToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
     </ion-content>
   </ion-page>

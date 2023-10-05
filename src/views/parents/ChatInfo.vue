@@ -20,60 +20,94 @@
           <h2>Mídia</h2>
         </ion-item>
       </ion-list>
-      <ion-list :inset="true" class="q-pl-sm">
-        <ion-accordion-group expand="inset">
-          <ion-accordion value="first">
-            <ion-item slot="header" color="light">
-              <ion-label>Eventos da turma</ion-label>
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+          <ion-item slot="header">
+            <ion-label>Eventos da turma</ion-label>
+          </ion-item>
+          <div slot="content">
+            <ion-item
+              lines="full"
+              v-for="event in classEvents"
+              :key="event"
+            >
+            <ion-label>
+              <ion-row class="ion-justify-content-between">
+                <ion-col size="4" class="ion-text-wrap">
+                  <h6 class="text-capitalize">
+                    {{event.eventName }}
+                  </h6>
+                  <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
+                </ion-col>
+                <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
+              </ion-row>
+              <div class="ion-text-wrap">
+                {{ event.eventDescription }}
+              </div>
+            </ion-label>
             </ion-item>
-            <div slot="content">
-              <ion-item
-                lines="full"
-                v-for="event in classEvents"
-                :key="event"
-              >
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+          <ion-item slot="header">  
+            <ion-label>Alunos da turma</ion-label>
+          </ion-item>
+          <div slot="content">
+            <ion-item
+              v-for="child in classChildrenData"
+              :key="child"
+            >
+              <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+                <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(child.image)"/>
+              </ion-avatar>
+              <p>{{ child.childName }}</p>
+            </ion-item>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+          <ion-item slot="header">  
+            <ion-label>Autorizações</ion-label>
+          </ion-item>
+          <div slot="content">
+            <ion-item
+              v-for="authorization in eventsRequiredPermission"
+              :key="authorization"
+            >
               <ion-label>
                 <ion-row class="ion-justify-content-between">
                   <ion-col size="4" class="ion-text-wrap">
                     <h6 class="text-capitalize">
-                      {{event.eventName }}
+                      {{authorization.eventName }}
                     </h6>
-                    <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
+                    <ion-badge  style="background-color: #eb445a;">{{ authorization.eventName }}</ion-badge>
                   </ion-col>
-                  <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
+                  <ion-col size="5" class="text-subtitle2">{{ authorization.eventDate.local }}</ion-col>
                 </ion-row>
                 <div class="ion-text-wrap">
-                  {{ event.eventDescription }}
+                  {{ authorization.eventDescription }}
+                </div>
+                <div>
+                  <ion-row class="ion-justify-content-between">
+                    <ion-col size="4">
+                      <ion-button size="default" style="color: #eb445a;" fill="flat" @click="refuseAuthorization">Recusar</ion-button>
+                    </ion-col>
+                    <ion-col size="4">
+                      <ion-button size="default" style="color:#3880ff;" fill="flat" @click="acceptAuthorization(authorization)">Aceitar</ion-button>
+                    </ion-col>
+                  </ion-row>
                 </div>
               </ion-label>
-              </ion-item>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-      </ion-list>
-      <ion-list :inset="true" class="q-pl-sm">
-        <ion-accordion-group expand="inset">
-          <ion-accordion value="first">
-            <ion-item slot="header" color="light">  
-              <ion-label>Alunos da turma</ion-label>
             </ion-item>
-            <div slot="content">
-              <ion-item
-                v-for="child in classChildrenData"
-                :key="child"
-              >
-                <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                  <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-                </ion-avatar>
-                <ion-avatar aria-hidden="true" slot="start" v-else>
-                  <img :src="utils.makeFileUrl(child.image)"/>
-                </ion-avatar>
-                <p>{{ child.childName }}</p>
-              </ion-item>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-      </ion-list>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
     </ion-content>
   </ion-page>
 </template>
@@ -83,7 +117,7 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
 import {
   IonPage, IonContent,
-  IonList, IonItem,
+  IonList, IonItem, IonButton,
   IonLabel, IonAccordion,
   IonAccordionGroup, IonAvatar,
   IonCol, IonRow, IonBadge
@@ -99,13 +133,45 @@ export default {
     return {
       classChildrenData: null,
       classData: null,
-      classEvents: null
+      classEvents: null,
+      eventsRequiredPermission: null,
+      pagination: {
+        page: 1,
+        rowsPerPage: 10
+      },
+      userChildren: null
     };
   },
   mounted () {
     this.getChildrenInClassByClassId()
+    this.getChildInClassByParentId()
   },
   methods: {
+    getChildInClassByParentId() {
+      const opt = {
+        route: '/mobile/parents/chat/getChildInClassByParentId',
+        body: {
+          classId: this.$route.query.classId ,
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) this.userChildren = r.data
+        else {utils.toast("Ocorreu um erro, tente novamente")}
+      })
+    },
+    acceptAuthorization(au) {
+      console.log(au)
+      // const opt = {
+      //   route: '/mobile/parents/chat/respondClassEventSolicitation',
+      //   body: {
+      //     eventClassId: au._id ,
+      //     childId: ,
+      //     requireParentsPermission: true
+      //   }
+      // }
+    },
     getChildrenInClassByClassId() {
       const opt = {
         route: '/mobile/parents/chat/getClassDetailById',
@@ -118,6 +184,7 @@ export default {
           this.classChildrenData = r.data.childrenInClass
           this.classData = r.data
           this.classEvents = r.data.classEvents.list
+          this.eventsRequiredPermission = this.classEvents.filter(event => event.requireParentsPermission === true);
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde")
         }
