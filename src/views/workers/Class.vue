@@ -59,7 +59,7 @@
       </ion-list>
       <ion-modal 
         :is-open="dialogInsertChildEvent.open" 
-        @ionModalDidPresent="getChildEvents() || getChildEventsByUserId()" 
+        @ionModalDidPresent="getChildEvents() && getChildEventsByUserId()" 
         @willDismiss="clearModalData()"
       >
         <ion-header>
@@ -301,7 +301,7 @@ export default {
       },
       dialogInsertChildEvent: {
         open: false,
-        data: {},
+        data: [],
         obs: '',
         childEventId: ''
       },
@@ -366,6 +366,7 @@ export default {
           }
         })
       })
+      this.dialogInsertChildEvent.data = this.selectedChildren
       console.log(this.selectedChildren)
     },
     handleCheckboxChange(childId, e) {
@@ -386,6 +387,7 @@ export default {
             this.selectAllChildren = false
           }
             console.log("Depois de cortar", this.selectedChildren)
+            this.dialogInsertChildEvent.data = this.selectedChildren
           }
         })
       }
@@ -528,6 +530,7 @@ export default {
           return
         }
         this.childrenInClassList = r.data.list
+        this.getChildEvents()
       })
     },
     getClassesByUserId() {
