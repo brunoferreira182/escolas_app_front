@@ -34,9 +34,6 @@
             <ion-label>
               <ion-row class="ion-justify-content-between">
                 <ion-col size="4" class="ion-text-wrap">
-                  <h6 class="text-capitalize">
-                    {{event.eventName }}
-                  </h6>
                   <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
                 </ion-col>
                 <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
@@ -75,17 +72,25 @@
           <ion-item slot="header">  
             <ion-label>Autorizações</ion-label>
           </ion-item>
-          <div slot="content">
+          <div slot="content" v-if="userChildren">
+            <div 
+              v-for="child in userChildren"
+              :key="child"
+            >
+              <ion-item
+                v-for="childPending in child.eventsPendingAuthorization"
+                :key="childPending"
+              >
+                {{ childPending }}
+              </ion-item>
+            </div>
             <ion-item
-              v-for="authorization in eventsRequiredPermission"
+              v-for="authorization in userChildren.eventsPendingAuthorization"
               :key="authorization"
             >
               <ion-label>
                 <ion-row class="ion-justify-content-between">
                   <ion-col size="4" class="ion-text-wrap">
-                    <h6 class="text-capitalize">
-                      {{authorization.eventName }}
-                    </h6>
                     <ion-badge  style="background-color: #eb445a;">{{ authorization.eventName }}</ion-badge>
                   </ion-col>
                   <ion-col size="5" class="text-subtitle2">{{ authorization.eventDate.local }}</ion-col>
@@ -96,7 +101,7 @@
                 <div>
                   <ion-row class="ion-justify-content-between">
                     <ion-col size="4">
-                      <ion-button size="default" style="color: #eb445a;" fill="flat" @click="refuseAuthorization">Recusar</ion-button>
+                      <ion-button size="default" style="color: #eb445a;" fill="flat" @click="refuseAuthorization(authorization)">Recusar</ion-button>
                     </ion-col>
                     <ion-col size="4">
                       <ion-button size="default" style="color:#3880ff;" fill="flat" @click="acceptAuthorization(authorization)">Aceitar</ion-button>
@@ -147,6 +152,14 @@ export default {
     this.getChildInClassByParentId()
   },
   methods: {
+    createListOfPendingAuthorizationByChild() {
+      if (this.userChildren && this.eventsRequiredPermission) {
+        this.userChildren.forEach((child, iChild) => {
+          this.userChildren[iChild].eventsPendingAuthorization = [...this.eventsRequiredPermission] 
+          console.log(child, "to ficando de pau duro")
+        })
+      }
+    },
     getChildInClassByParentId() {
       const opt = {
         route: '/mobile/parents/chat/getChildInClassByParentId',
@@ -157,8 +170,13 @@ export default {
         }
       }
       useFetch(opt).then((r) => {
-        if (!r.error) this.userChildren = r.data
-        else {utils.toast("Ocorreu um erro, tente novamente")}
+        if (!r.error) {
+          this.userChildren = r.data.children
+          this.createListOfPendingAuthorizationByChild()
+        }
+          else { 
+            utils.toast("Ocorreu um erro, tente novamente")
+          }
       })
     },
     acceptAuthorization(au) {
@@ -169,6 +187,17 @@ export default {
       //     eventClassId: au._id ,
       //     childId: ,
       //     requireParentsPermission: true
+      //   }
+      // }
+    },
+    refuseAuthorization(au) {
+      console.log(au)
+      // const opt = {
+      //   route: '/mobile/parents/chat/respondClassEventSolicitation',
+      //   body: {
+      //     eventClassId: au._id ,
+      //     childId: ,
+      //     requireParentsPermission: false
       //   }
       // }
     },
@@ -185,6 +214,7 @@ export default {
           this.classData = r.data
           this.classEvents = r.data.classEvents.list
           this.eventsRequiredPermission = this.classEvents.filter(event => event.requireParentsPermission === true);
+          this.createListOfPendingAuthorizationByChild()
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde")
         }
