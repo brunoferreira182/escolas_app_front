@@ -29,23 +29,23 @@
             <div slot="content">
               <ion-item
                 lines="full"
-                v-for="event in xerequinha"
+                v-for="event in classEvents"
                 :key="event"
               >
               <ion-label>
-                  <ion-row class="ion-justify-content-between">
-                    <ion-col size="4" class="ion-text-wrap">
-                      <h6 class="text-capitalize">
-                        {{event.eventName }}
-                      </h6>
-                      <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
-                    </ion-col>
-                    <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
-                  </ion-row>
-                  <div class="ion-text-wrap">
-                    {{ event.eventDescription }}
-                  </div>
-                </ion-label>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="4" class="ion-text-wrap">
+                    <h6 class="text-capitalize">
+                      {{event.eventName }}
+                    </h6>
+                    <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
+                  </ion-col>
+                  <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
+                </ion-row>
+                <div class="ion-text-wrap">
+                  {{ event.eventDescription }}
+                </div>
+              </ion-label>
               </ion-item>
             </div>
           </ion-accordion>
@@ -85,7 +85,8 @@ import {
   IonPage, IonContent,
   IonList, IonItem,
   IonLabel, IonAccordion,
-  IonAccordionGroup, IonAvatar
+  IonAccordionGroup, IonAvatar,
+  IonCol, IonRow, IonBadge
 } from '@ionic/vue'
 </script>
 
@@ -97,7 +98,8 @@ export default {
   data() {
     return {
       classChildrenData: null,
-      classData: null
+      classData: null,
+      classEvents: null
     };
   },
   mounted () {
@@ -115,6 +117,7 @@ export default {
         if (!r.error) {
           this.classChildrenData = r.data.childrenInClass
           this.classData = r.data
+          this.classEvents = r.data.classEvents.list
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde")
         }

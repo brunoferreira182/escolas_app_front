@@ -59,7 +59,7 @@
       </ion-list>
       <ion-modal 
         :is-open="dialogInsertChildEvent.open" 
-        @ionModalDidPresent="getChildEvents() || getChildEventsByUserId()" 
+        @ionModalDidPresent="getChildEvents() && getChildEventsByUserId()" 
         @willDismiss="clearModalData()"
       >
         <ion-header>
@@ -301,7 +301,7 @@ export default {
       },
       dialogInsertChildEvent: {
         open: false,
-        data: {},
+        data: [],
         obs: '',
         childEventId: ''
       },
@@ -345,28 +345,42 @@ export default {
       const query = event.target.value.toLowerCase();
       this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
     },
+    // handleCheckboxChangeAll(e) {
+    //   if (e.detail.checked === true) {
+    //     this.selectedChildren = this.classList.map((child) => ({
+    //     _id: child._id,
+    //   }));
+    //   } else {
+    //     this.selectedChildren = []
+    //   }
+    //   this.selectedChildren.forEach((child) => {
+    //     this.classList.forEach((classList, i) => {
+    //       if (child._id === classList._id) {
+    //         this.classList.forEach((teste) => {
+    //           teste.isChecked = e.detail.checked
+    //           if (teste.isChecked === false) {
+    //             this.selectedChildren = []
+    //             this.classList.forEach((classList) => {
+    //               classList.isChecked = false
+    //             })
+    //           }
+    //         }) 
+    //       }
+    //     })
+    //   })
+    //   this.dialogInsertChildEvent.data = this.selectedChildren
+    //   console.log(this.selectedChildren)
+    // },
     handleCheckboxChangeAll(e) {
-      if (e.detail.checked === true) {
-        this.selectedChildren = this.classList.map((child) => ({
-        _id: child._id,
-      }));
-      }
-      this.selectedChildren.forEach((child) => {
-        this.classList.forEach((classList, i) => {
-          if (child._id === classList._id) {
-            this.classList.forEach((teste) => {
-              teste.isChecked = e.detail.checked
-              if (teste.isChecked === false) {
-                this.selectedChildren = []
-                this.classList.forEach((classList) => {
-                  classList.isChecked = false
-                })
-              }
-            }) 
-          }
-        })
-      })
-      console.log(this.selectedChildren)
+      this.selectedChildren = [];
+      this.classList.forEach((classList) => {
+        classList.isChecked = e.detail.checked;
+        if (e.detail.checked) {
+          this.selectedChildren.push({ _id: classList._id });
+        }
+      });
+      this.dialogInsertChildEvent.data = this.selectedChildren;
+      console.log(this.selectedChildren);
     },
     handleCheckboxChange(childId, e) {
       if (e.detail.checked === true) {
@@ -386,6 +400,7 @@ export default {
             this.selectAllChildren = false
           }
             console.log("Depois de cortar", this.selectedChildren)
+            this.dialogInsertChildEvent.data = this.selectedChildren
           }
         })
       }
@@ -528,6 +543,7 @@ export default {
           return
         }
         this.childrenInClassList = r.data.list
+        this.getChildEvents()
       })
     },
     getClassesByUserId() {

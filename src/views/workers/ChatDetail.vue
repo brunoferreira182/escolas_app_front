@@ -36,10 +36,10 @@
                       <div v-if="message.answerMessage.message">{{ message.answerMessage.message }}</div>
                       <div v-else>Arquivo</div>
                     </ion-card>
-                    <div v-if="message.messageData.file">
+                    <div v-if="message.messageFile">
                       <img
-                        v-if="message.messageData.file.mimetype.includes('image')" style="border-radius:0.5rem;"
-                        :src="utils.attachmentsAddress() + message.messageData.file.filename"
+                        v-if="message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
+                        :src="utils.attachmentsAddress() + message.messageFile.filename"
                       >
                       <span v-else style="display:flex;align-items: center;">
                         <ion-icon size="small" :icon="attach"></ion-icon>
@@ -49,7 +49,7 @@
                     <div
                       style="width: 300px;margin-bottom: -20px;display: flex; align-items: center;"
                       id="voice-message"
-                      v-else-if="message.messageData.audio"
+                      v-else-if="message.messageAudio"
                     >
                       <div style="padding-top: 5px; padding-left: 5px;">
                         <ion-icon 
@@ -81,7 +81,7 @@
                       </div>
                     </div>
                     <div v-else>
-                      {{ message.messageData.message }}
+                      {{ message.messageText }}
                     </div>
                     <span
                       class="ion-float-right q-mt-xs text-caption q-ml-sm"

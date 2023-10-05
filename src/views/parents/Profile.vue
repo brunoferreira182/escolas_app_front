@@ -120,7 +120,7 @@
       ></ion-alert>
       <ion-alert
         :is-open="dialogUserAddFamilyName.open"
-        header="Antes de adicionar você precisa criar uma família!"
+        header="Você ainda não criou sua família! Dê um nome para ela"
         :backdropDismiss="false"
         animated
         :inputs="[
@@ -216,6 +216,14 @@ export default {
     this.getCurrentVision()
   },
   methods: {
+
+    verifyIfHasFamily() {
+      if (!this.userInfo.familyId ||
+        this.userInfo.familyIdObj === 'noFamily'
+      ) {
+        this.dialogUserAddFamilyName.open = true
+      }
+    },
     verifyIfIsAdmin() {
       const opt = {
         route: '/mobile/parents/profile/getIfUserIsFamilyAdmin',
@@ -314,6 +322,7 @@ export default {
       }
       this.getFamilySolicitationsStatusByFamily()
       this.verifyIfIsAdmin()
+      this.verifyIfHasFamily()
     },
     backLogin() {
       this.$router.push('/login')
