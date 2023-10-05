@@ -362,6 +362,9 @@ export default {
     captured(img, imgBlob, fileName) {
       this.step = 'initial'
       this.startPhotoHandler = false
+      console.log(img, 'img')
+      console.log(imgBlob, 'imgBlob')
+      console.log(fileName, 'fileName')
       this.insertMessage({
         file: imgBlob,
         fileName
@@ -490,7 +493,7 @@ export default {
       if (file.file) optTemMsg = { file: file.file }
       else optTemMsg = { message: this.chatMessage }
       const tempId = this.insertTemporaryMessage(optTemMsg)
-      
+      console.log(file, 'ODKASOPDKAOPSKD CUZINHO1')
       const opt = {
         method: 'POST',
         route: '/mobile/parents/chat/insertClassMessage',
@@ -502,6 +505,7 @@ export default {
       }
       if (file.file) {
         opt.file = [ file.file ]
+        console.log(file, 'ODKASOPDKAOPSKD CUZINHO2')
         opt.filename = file.filename
       }
       if (this.isAnsweringMessage.isAnswering) {
