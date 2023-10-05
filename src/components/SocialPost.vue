@@ -1,85 +1,85 @@
 <template>
-    <div v-if="i % 2 === 0" class="card">
-      <div class="even-card">
-        <img 
-          v-if="post.postData.resume.img"
-          :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img"
-        />
-        <div >
-          <h1 class="card-title">{{post.postData.resume.title}}</h1>
-          <p class="q-px-md">{{post.postData.resume.description}}</p>
-          <ion-row>
-            <ion-col class="q-ma-sm">
-              <ion-row>
-                <ion-col size="5">
-                  <div v-if="post.userReaction">
-                    <ion-icon size="large" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
-                  </div>
-                  <div v-else-if="!post.userReaction">
-                    <ion-icon size="large" src="/assets/icons/heart.svg"/>{{ post.reactions }}
-                  </div>
-                </ion-col>
-                <ion-col size="5">
-                  <div class="q-pa-xs">
-                    <ion-icon style="width: 28px; height: 28px;" src="/assets/icons/comment.svg"/> {{ post.comments }}
-                  </div>
-                </ion-col>
-              </ion-row>
-            </ion-col>
-            <ion-col>
-              <div class="ion-text-end">
-                <ion-button 
-                  @click="$router.push('/postDetail?postId=' + post._id)"
-                  fill="clear"
-                >
-                  <h6>Ler mais</h6>
-                </ion-button>
-              </div>
-            </ion-col>
-          </ion-row>
-        </div>
+  <div v-if="i % 2 === 0" class="card">
+    <div class="even-card">
+      <img 
+        v-if="post.postData.resume.img"
+        :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img"
+      />
+      <div >
+        <h1 class="card-title">{{post.postData.resume.title}}</h1>
+        <p class="q-px-md">{{post.postData.resume.description}}</p>
+        <ion-row>
+          <ion-col class="q-ma-sm q-pt-md">
+            <ion-row>
+              <ion-col size="5">
+                <div v-if="post.userReaction">
+                  <ion-icon size="large" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
+                </div>
+                <div v-else-if="!post.userReaction">
+                  <ion-icon size="large" src="/assets/icons/heart.svg"/>{{ post.reactions }}
+                </div>
+              </ion-col>
+              <ion-col size="5">
+                <div class="q-pa-xs">
+                  <ion-icon style="width: 28px; height: 28px;" src="/assets/icons/comment.svg"/> {{ post.comments }}
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col>
+            <div class="ion-text-end">
+              <ion-button 
+                @click="$router.push('/postDetail?postId=' + post._id)"
+                fill="clear"
+              >
+                <h6>Ler mais</h6>
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
       </div>
     </div>
-    <div v-else class="card">
-      <div class="even-card">
-        <img 
-          v-if="post.postData.resume.img"
-          :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img"
-        />
-        <div>
-          <h1 class="card-title">{{post.postData.resume.title}}</h1>
-          <ion-row>
-            <ion-col class="q-ma-sm">
-              <ion-row>
-                <ion-col size="5">
-                  <div v-if="post.userReaction">
-                    <ion-icon size="large" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
-                  </div>
-                  <div v-else-if="!post.userReaction">
-                    <ion-icon size="large" src="/assets/icons/heart.svg"/>{{ post.reactions }}
-                  </div>
-                </ion-col>
-                <ion-col size="5">
-                  <div class="q-pa-xs">
-                    <ion-icon style="width: 28px; height: 28px;" src="/assets/icons/comment.svg"/> {{ post.comments }}
-                  </div>
-                </ion-col>
-              </ion-row>
-            </ion-col>
-            <ion-col>
-              <div class="ion-text-end">
-                <ion-button 
-                  @click="$router.push('/postDetail?postId=' + post._id)"
-                  fill="clear"
-                >
-                  <h6>Ler mais</h6>
-                </ion-button>
-              </div>
-            </ion-col>
-          </ion-row>
-        </div>
+  </div>
+  <div v-else class="card">
+    <div class="even-card">
+      <img 
+        v-if="post.postData.resume.img"
+        :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img"
+      />
+      <div>
+        <h1 class="card-title">{{post.postData.resume.title}}</h1>
+        <ion-row>
+          <ion-col class="q-ma-sm q-pt-md">
+            <ion-row>
+              <ion-col size="5">
+                <div v-if="post.userReaction">
+                  <ion-icon size="large" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
+                </div>
+                <div v-else-if="!post.userReaction">
+                  <ion-icon size="large" src="/assets/icons/heart.svg"/>{{ post.reactions }}
+                </div>
+              </ion-col>
+              <ion-col size="5">
+                <div class="q-pa-xs">
+                  <ion-icon style="width: 28px; height: 28px;" src="/assets/icons/comment.svg"/> {{ post.comments }}
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col>
+            <div class="ion-text-end">
+              <ion-button 
+                @click="$router.push('/postDetail?postId=' + post._id)"
+                fill="clear"
+              >
+                <h6>Ler mais</h6>
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
