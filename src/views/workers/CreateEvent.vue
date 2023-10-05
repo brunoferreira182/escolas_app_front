@@ -28,6 +28,13 @@
         <ion-item lines="none">
           <ion-textarea fill="outline" mode="md" v-model="eventData.description"></ion-textarea>
         </ion-item>
+        <ion-item class="q-pt-sm" lines="none">
+          <ion-checkbox v-model="eventData.requireParentsPermission">
+            <p class="ion-text-wrap">
+              Este evento requer autorização dos pais?
+            </p>
+          </ion-checkbox>
+        </ion-item>
         <ion-button expand="block" class="q-pa-sm" @click="createEvent">Criar evento</ion-button>
       </ion-list>
     </ion-content>
@@ -39,7 +46,8 @@ import {
   IonContent, IonPage,
   IonInput, IonList,
   IonItem, IonRow,
-  IonCol, IonButton, IonTextarea
+  IonCol, IonButton, IonTextarea,
+  IonCheckbox
 } from '@ionic/vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { useFetch } from '../../composables/fetch'
@@ -56,7 +64,8 @@ export default {
       eventData: {
         name: '',
         date: '',
-        description: ''
+        description: '',
+        requireParentsPermission: false
       }
     };
   },
@@ -76,7 +85,8 @@ export default {
           classId: this.$route.query.classId,
           eventName: this.eventData.name,
           eventDescription: this.eventData.description,
-          eventDate: this.eventData.date
+          eventDate: this.eventData.date,
+          requireParentsPermission: this.eventData.requireParentsPermission
         }
       }
       useFetch(opt).then((r) => {
