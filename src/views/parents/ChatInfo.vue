@@ -30,6 +30,8 @@
               lines="full"
               v-for="event in classEvents"
               :key="event"
+              :button="true"
+              @click="goToEventDetail(event._id)"
             >
             <ion-label>
               <ion-row class="ion-justify-content-between">
@@ -57,78 +59,12 @@
               :key="child"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+                <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
               </ion-avatar>
               <ion-avatar aria-hidden="true" slot="start" v-else>
                 <img :src="utils.makeFileUrl(child.image)"/>
               </ion-avatar>
               <p>{{ child.childName }}</p>
-            </ion-item>
-          </div>
-        </ion-accordion>
-      </ion-accordion-group>
-      <ion-accordion-group expand="inset">
-        <ion-accordion value="first">
-          <ion-item slot="header">  
-            <ion-label>Autorizações</ion-label>
-          </ion-item>
-          <div slot="content" v-if="userChildren">
-            <div 
-              v-for="child in userChildren"
-              :key="child"
-            >
-              <ion-item
-                v-for="childPending in child.eventsPendingAuthorization"
-                :key="childPending"
-              >
-                <ion-label>
-                  <ion-row class="ion-justify-content-between">
-                    <ion-col size="4" class="ion-text-wrap">
-                      <ion-badge  style="background-color: #eb445a;">{{ authorization.eventName }}</ion-badge>
-                    </ion-col>
-                    <ion-col size="5" class="text-subtitle2">{{ authorization.eventDate.local }}</ion-col>
-                  </ion-row>
-                  <div class="ion-text-wrap">
-                    {{ authorization.eventDescription }}
-                  </div>
-                  <div>
-                    <ion-row class="ion-justify-content-between">
-                      <ion-col size="4">
-                        <ion-button size="default" style="color: #eb445a;" fill="flat" @click="refuseAuthorization(authorization)">Recusar</ion-button>
-                      </ion-col>
-                      <ion-col size="4">
-                        <ion-button size="default" style="color:#3880ff;" fill="flat" @click="acceptAuthorization(authorization)">Aceitar</ion-button>
-                      </ion-col>
-                    </ion-row>
-                  </div>
-                </ion-label>
-              </ion-item>
-            </div>
-            <ion-item
-              v-for="authorization in userChildren.eventsPendingAuthorization"
-              :key="authorization"
-            >
-              <ion-label>
-                <ion-row class="ion-justify-content-between">
-                  <ion-col size="4" class="ion-text-wrap">
-                    <ion-badge  style="background-color: #eb445a;">{{ authorization.eventName }}</ion-badge>
-                  </ion-col>
-                  <ion-col size="5" class="text-subtitle2">{{ authorization.eventDate.local }}</ion-col>
-                </ion-row>
-                <div class="ion-text-wrap">
-                  {{ authorization.eventDescription }}
-                </div>
-                <div>
-                  <ion-row class="ion-justify-content-between">
-                    <ion-col size="4">
-                      <ion-button size="default" style="color: #eb445a;" fill="flat" @click="refuseAuthorization(authorization)">Recusar</ion-button>
-                    </ion-col>
-                    <ion-col size="4">
-                      <ion-button size="default" style="color:#3880ff;" fill="flat" @click="acceptAuthorization(authorization)">Aceitar</ion-button>
-                    </ion-col>
-                  </ion-row>
-                </div>
-              </ion-label>
             </ion-item>
           </div>
         </ion-accordion>
@@ -172,6 +108,9 @@ export default {
     this.getChildInClassByParentId()
   },
   methods: {
+    goToEventDetail(i) {
+      this.$router.push("/eventDetail?eventdId=" + i)
+    },
     createListOfPendingAuthorizationByChild() {
       if (this.userChildren && this.eventsRequiredPermission) {
         this.userChildren.forEach((child, iChild) => {
@@ -192,7 +131,6 @@ export default {
       useFetch(opt).then((r) => {
         if (!r.error) {
           this.userChildren = r.data.children
-          this.createListOfPendingAuthorizationByChild()
         }
           else { 
             utils.toast("Ocorreu um erro, tente novamente")
@@ -234,7 +172,6 @@ export default {
           this.classData = r.data
           this.classEvents = r.data.classEvents.list
           this.eventsRequiredPermission = this.classEvents.filter(event => event.requireParentsPermission === true);
-          this.createListOfPendingAuthorizationByChild()
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde")
         }

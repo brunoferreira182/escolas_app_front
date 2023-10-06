@@ -37,14 +37,16 @@
                       <div v-else>Arquivo</div>
                     </ion-card>
                     <div v-if="message.messageFile">
-                      <img
-                        v-if="message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
-                        :src="utils.attachmentsAddress() + message.messageFile.filename"
-                      >
-                      <span v-else style="display:flex;align-items: center;">
-                        <ion-icon size="small" :icon="attach"></ion-icon>
-                        <span>Arquivo anexado</span>
-                      </span>
+                      <div v-if="message.messageFile.filename !== null && message.messageFile.mimetype !== null">
+                        <img
+                          v-if="message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
+                          :src="utils.attachmentsAddress() + message.messageFile.filename"
+                        >
+                        <span v-else style="display:flex;align-items: center;">
+                          <ion-icon size="small" :icon="attach"></ion-icon>
+                          <span>Arquivo anexado</span>
+                        </span>
+                      </div>
                     </div>
                     <div
                       style="width: 300px;margin-bottom: -20px;display: flex; align-items: center;"
