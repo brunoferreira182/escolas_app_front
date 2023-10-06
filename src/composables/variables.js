@@ -1,5 +1,5 @@
 //////////// VARIAVEIS DA APLICACAO //////
-const MODE_MASTER_SERVER = 'darta'
+const MODE_MASTER_SERVER = 'local'
 const COMPANY_ID = 1
 const VERSION = 0.1
 const BUILD = 1
@@ -12,7 +12,7 @@ const CRYPTOYESORNO = 0 // 1 para criptografar, 0 para nao criptografar
 const APP_NAME = 'Escolas App'
 let IUGU_ID
 let IUGU_TEST_MODE
-const MODE_SERVER = 'master'
+const MODE_SERVER = 'app'
 ///////////////////////////////////////////
 
 /*
