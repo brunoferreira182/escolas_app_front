@@ -7,20 +7,20 @@
     <ion-content color="light">
       <swiper 
         :modules="modules"
-        :slides-per-view="1.1"
+        :slides-per-view="storiesPosts.length === 1 ? 1 : 1.1"
         :spaceBetween="1"
         :autoplay="{
           delay: 2500,
-          disableOnInteraction: true,
+          disableOnInteraction: false,
         }"
         :pagination="true"
       >
         <swiper-slide  
-          v-for="(event, i) in eventPosts"
-          :key="event._id"
+          v-for="(story, i) in storiesPosts"
+          :key="story._id"
         >
-          <PostLight
-            :event="event"
+          <PostLite
+            :story="story"
             :i="i"
           />
         </swiper-slide>
@@ -49,7 +49,7 @@ import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { useFetch } from '@/composables/fetch';
-import PostLight from '../../components/PostLight.vue'
+import PostLite from '../../components/PostLite.vue'
 import SocialPost from '../../components/SocialPost.vue'
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue';
@@ -71,7 +71,7 @@ export default {
       modules: [Pagination, Autoplay],
       rowsPerPage: 10,
       posts: [],
-      eventPosts: [],
+      storiesPosts: [],
     };
   },
   mounted () {
@@ -90,12 +90,12 @@ export default {
     },
     async startView () {
       await this.getPosts()
-      await this.getEventPosts()
+      await this.getStories()
     },
-    async getEventPosts (refreshPage) {
+    async getStories (refreshPage) {
       if (refreshPage) this.page = 0
       const opt = {
-        route: '/mobile/social/getEventPosts',
+        route: '/mobile/social/getStories',
         body: {
           page: this.page,
           rowsPerPage: this.rowsPerPage
@@ -103,8 +103,8 @@ export default {
       }
       const ret = await useFetch(opt)
       // this.page++
-      if (!refreshPage) this.eventPosts = ret.data.list
-      else this.eventPosts.push(...ret.data.list)
+      if (!refreshPage) this.storiesPosts = ret.data.list
+      else this.storiesPosts.push(...ret.data.list)
       return
     },
     async getPosts (refreshPage) {
