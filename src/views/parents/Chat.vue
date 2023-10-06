@@ -22,7 +22,7 @@
               @click="goToChatDetail(_class.classData.id)"
             >
               <ion-avatar style="width: 46px; height: 46px;">
-                <img :src="utils.makeFileUrl(_class)" class="profile-avatar">
+                <img :src="utils.makeFileUrl(_class.classData.classImage)" class="profile-avatar">
               </ion-avatar>
               <ion-label>
                 <ion-note class="q-mt-md">

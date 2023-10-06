@@ -81,7 +81,27 @@
                 v-for="childPending in child.eventsPendingAuthorization"
                 :key="childPending"
               >
-                {{ childPending }}
+                <ion-label>
+                  <ion-row class="ion-justify-content-between">
+                    <ion-col size="4" class="ion-text-wrap">
+                      <ion-badge  style="background-color: #eb445a;">{{ authorization.eventName }}</ion-badge>
+                    </ion-col>
+                    <ion-col size="5" class="text-subtitle2">{{ authorization.eventDate.local }}</ion-col>
+                  </ion-row>
+                  <div class="ion-text-wrap">
+                    {{ authorization.eventDescription }}
+                  </div>
+                  <div>
+                    <ion-row class="ion-justify-content-between">
+                      <ion-col size="4">
+                        <ion-button size="default" style="color: #eb445a;" fill="flat" @click="refuseAuthorization(authorization)">Recusar</ion-button>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-button size="default" style="color:#3880ff;" fill="flat" @click="acceptAuthorization(authorization)">Aceitar</ion-button>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </ion-label>
               </ion-item>
             </div>
             <ion-item
