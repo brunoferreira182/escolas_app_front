@@ -4,7 +4,7 @@
       title="Detalhes da turma"
       :backButton="true"
     />
-    <ion-content color="light">
+    <ion-content color="light" v-if="classData">
       <ion-row class="ion-justify-content-center q-ma-lg">
         <ion-avatar style="width:108px; height:108px">
           <img :src="utils.makeFileUrl(classData.classImage)"/>
@@ -77,7 +77,7 @@
           </div>
         </ion-accordion>
       </ion-accordion-group>
-      <ion-button @click="goToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
+      <ion-button @click="clkGoToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
     </ion-content>
   </ion-page>
 </template>
@@ -109,7 +109,7 @@ export default {
     };
   },
   mounted () {
-    this.getChildrenInClassByClassId()
+    this.getClassDetailById()
     this.getEventsByClassId()
   },
   methods: {
@@ -130,10 +130,10 @@ export default {
         }
       })
     },
-    goToCreateEvent() {
+    clkGoToCreateEvent() {
       this.$router.push("/createEvent?classId=" + this.$route.query.classId)
     },
-    getChildrenInClassByClassId() {
+    getClassDetailById() {
       const opt = {
         route: '/mobile/workers/getClassDetailById',
         body: {

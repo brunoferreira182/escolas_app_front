@@ -8,7 +8,6 @@
       <p class="q-pl-md">Dê um nome para o evento:</p>
       <div class="input-wrapper">
         <ion-input
-          class="q-pl-sm"
           fill="outline"
           type="text"
           v-model="eventData.name"
@@ -17,16 +16,15 @@
         />
       </div>
       <p class="q-mt-md q-pl-md">Adicione a data em que acontecerá esse evento:</p>
-      <div class="input-wrapper">
+      <div class="input-wrapper ">
         <ion-input
-          class="q-pl-sm"
           fill="outline"
           type="date"
           v-model="eventData.date"
         />
       </div>
       <p class="q-mt-md q-pl-md">Adicione a descrição do evento:</p>
-      <div class="input-wrapper">
+      <div class="input-wrapper ">
         <ion-textarea 
           fill="outline" 
           label="Descrição do evento" 
@@ -34,9 +32,9 @@
           v-model="eventData.description"
         />
       </div>
-      <ion-button fill="outline" expand="block" @click="startNewPhotoHandler">Adicionar foto ao evento</ion-button>
+      <ion-button fill="clear" expand="block" @click="startNewPhotoHandler">Adicionar foto ao evento</ion-button>
       <ion-checkbox v-model="eventData.requireParentsPermission">
-        <p class="ion-text-wrap">
+        <p class="ion-text-wrap q-mx-sm">
           Este evento requer autorização dos pais?
         </p>
       </ion-checkbox>
@@ -142,7 +140,6 @@ export default {
 <style scoped>
 .input-wrapper {
   border: 1px solid #ebebec;
-  padding-left: 15px;
   border-radius: 0.5rem;
   margin-block: 10px;
 }

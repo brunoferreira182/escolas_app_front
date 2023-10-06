@@ -112,7 +112,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/eventDetail',
-        name: 'CreateEvent',
+        name: 'EventDetail',
         component: eventDetailParent
       },
       {

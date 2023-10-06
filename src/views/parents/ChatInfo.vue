@@ -102,13 +102,13 @@ export default {
     };
   },
   mounted () {
-    this.getChildrenInClassByClassId()
+    this.getClassDetailById()
   },
   methods: {
     goToEventDetail(i) {
       this.$router.push("/eventDetail?eventdId=" + i + "&classId=" + this.$route.query.classId)
     },
-    getChildrenInClassByClassId() {
+    getClassDetailById() {
       const opt = {
         route: '/mobile/parents/chat/getClassDetailById',
         body: {
