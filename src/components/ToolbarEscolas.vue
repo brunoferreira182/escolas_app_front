@@ -13,7 +13,12 @@
           <ion-icon slot="icon-only" :icon="chevronBack"/>
         </ion-button>
       </ion-buttons>
-      <ion-title @click="titleClicked">{{ props.title }}</ion-title>
+      <ion-title @click="titleClicked">
+        {{ props.title }}
+        <div class="text-caption" v-if="$route.path.includes('/chatDetail')">
+          Clique para ver mais
+        </div>
+      </ion-title>
       <ion-buttons slot="end" >
         <ion-toggle :checked="themeToggle" @ionChange="toggleChange($event)" justify="space-between"/>
       </ion-buttons>

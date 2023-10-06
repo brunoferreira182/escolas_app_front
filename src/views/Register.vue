@@ -24,11 +24,10 @@
             class="q-my-sm"
           ></InputEmail>
           <InputDocument
-          mode="md"
-          label-placement="floating"
-          label="Insira seu cpf"
-          v-model="userData.document"
-          class="q-mb-sm"
+            label-placement="floating"
+            label="Insira seu cpf"
+            v-model="userData.document"
+            class="q-mb-sm"
           />
           <InputTelephone
             label="Digite seu telefone"
@@ -72,8 +71,7 @@
               @ionChange="verifyUserAccepted"
               checked="false"
               v-model="userData.acceptTerms"
-            >
-            </ion-checkbox>
+            />
           </ion-item>
           <ion-button
             @click="termsAndConditions"
