@@ -21,7 +21,7 @@
               detail="true"
               @click="goToChatDetail(_class.classData.id)"
             >
-              <ion-avatar style="width: 46px; height: 46px;">
+              <ion-avatar style="width: 76px; height:74px;">
                 <img :src="utils.makeFileUrl(_class.classData.classImage)" class="profile-avatar">
               </ion-avatar>
               <ion-label>

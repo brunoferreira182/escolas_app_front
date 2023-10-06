@@ -4,17 +4,15 @@
       title="Detalhes da turma"
       :backButton="true"
     />
-    <ion-content >
-      <ion-list>
-        <ion-item lines="none" class="profile-item">
-          <ion-avatar style="width:60px; height:auto" aria-hidden="true" slot="start" v-if="classData">
-              <img :src="utils.makeFileUrl(classData.classImage)"/>
-            </ion-avatar> 
-            <ion-label class="q-px-sm" v-if="classData">
-              <h2>{{ classData.className }}</h2>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+    <ion-content color="light">
+      <ion-row class="ion-justify-content-center q-ma-lg">
+        <ion-avatar style="width:108px; height:108px">
+          <img :src="utils.makeFileUrl(classData.classImage)"/>
+        </ion-avatar> 
+      </ion-row>
+      <div class="ion-text-center">
+        <h2>{{ classData.className }}</h2>
+      </div>
       <ion-list :inset="true">
         <ion-item>
           <h2>Mídia</h2>
