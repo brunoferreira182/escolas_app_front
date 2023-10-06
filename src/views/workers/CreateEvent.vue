@@ -6,9 +6,8 @@
     />
     <ion-content class="ion-padding">
       <p class="q-pl-md">Dê um nome para o evento:</p>
-      <div class="input-wrapper">
+      <div class="input-wrapper q-px-md q-mx-md">
         <ion-input
-          fill="outline"
           type="text"
           v-model="eventData.name"
           label="Nome do evento"
@@ -16,17 +15,15 @@
         />
       </div>
       <p class="q-mt-md q-pl-md">Adicione a data em que acontecerá esse evento:</p>
-      <div class="input-wrapper ">
+      <div class="input-wrapper q-px-md q-mx-md">
         <ion-input
-          fill="outline"
           type="date"
           v-model="eventData.date"
         />
       </div>
       <p class="q-mt-md q-pl-md">Adicione a descrição do evento:</p>
-      <div class="input-wrapper ">
+      <div class="input-wrapper q-px-md q-mx-md">
         <ion-textarea 
-          fill="outline" 
           label="Descrição do evento" 
           label-placement="floating" 
           v-model="eventData.description"
@@ -141,6 +138,5 @@ export default {
 .input-wrapper {
   border: 1px solid #ebebec;
   border-radius: 0.5rem;
-  margin-block: 10px;
 }
 </style>
