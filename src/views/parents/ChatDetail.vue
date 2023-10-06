@@ -40,7 +40,7 @@
                       message.messageFile.filename !== null &&
                       message.messageFile.mimetype !== null">
                       <img
-                        v-if="message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
+                        v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
                         :src="utils.attachmentsAddress() + message.messageFile.filename"
                       >
                       <span v-else style="display:flex;align-items: center;">

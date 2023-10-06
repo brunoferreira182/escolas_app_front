@@ -39,7 +39,7 @@
                     <div v-if="message.messageFile">
                       <div v-if="message.messageFile.filename !== null && message.messageFile.mimetype !== null">
                         <img
-                          v-if="message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
+                          v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
                           :src="utils.attachmentsAddress() + message.messageFile.filename"
                         >
                         <span v-else style="display:flex;align-items: center;">
@@ -495,7 +495,6 @@ export default {
       if (file.file) optTemMsg = { file: file.file }
       else optTemMsg = { message: this.chatMessage }
       const tempId = this.insertTemporaryMessage(optTemMsg)
-      console.log(file, 'ODKASOPDKAOPSKD CUZINHO1')
       const opt = {
         method: 'POST',
         route: '/mobile/parents/chat/insertClassMessage',
@@ -507,7 +506,6 @@ export default {
       }
       if (file.file) {
         opt.file = [ file.file ]
-        console.log(file, 'ODKASOPDKAOPSKD CUZINHO2')
         opt.filename = file.filename
       }
       if (this.isAnsweringMessage.isAnswering) {
