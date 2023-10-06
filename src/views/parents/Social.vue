@@ -7,9 +7,12 @@
     <ion-content color="light">
       <swiper 
         :modules="modules"
-        :slides-per-view="1.1" 
-        :loop="true"
-        :autoplay="true"
+        :slides-per-view="1.1"
+        :spaceBetween="1"
+        :autoplay="{
+          delay: 2500,
+          disableOnInteraction: true,
+        }"
         :pagination="true"
       >
         <swiper-slide  
@@ -125,6 +128,7 @@ export default {
 </script>
 
 <style scoped>
+
 .q-carousel__slide {
   padding-right: 0%;
   padding-left: 0%;
