@@ -4,7 +4,7 @@
       title="Detalhes da turma"
       :backButton="true"
     />
-    <ion-content color="light">
+    <ion-content >
       <ion-list>
         <ion-item lines="none" class="profile-item">
           <ion-avatar style="width:60px; height:auto" aria-hidden="true" slot="start" v-if="classData">
