@@ -49,7 +49,8 @@ export default {
     };
   },
   methods: {
-    getEventDetailById() {
+    //Pegar o detalhe do evento
+    getEventDetailById() { 
       const opt = {
         route: '',
         body: {
@@ -64,6 +65,7 @@ export default {
         this.eventDetail = r.data
       })
     },
+    //Pegar o número de filhos que eu tenho e colocar os eventos em todos
     getChildInClassByParentId() {
       const opt = {
         route: '/mobile/parents/chat/getChildInClassByParentId',
@@ -82,8 +84,9 @@ export default {
           }
       })
     },
-    acceptAuthorization(au) {
-      console.log(au)
+    //Aceitar ou autorizar filho a participar do evento
+    acceptAuthorization(au) { 
+      // console.log(au)
       // const opt = {
       //   route: '/mobile/parents/chat/respondClassEventSolicitation',
       //   body: {
@@ -93,8 +96,9 @@ export default {
       //   }
       // }
     },
-    refuseAuthorization(au) {
-      console.log(au)
+    //Recusar ou não autorizar filho a participar do evento
+    refuseAuthorization(au) { 
+      // console.log(au)
       // const opt = {
       //   route: '/mobile/parents/chat/respondClassEventSolicitation',
       //   body: {
