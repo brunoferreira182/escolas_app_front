@@ -18,8 +18,8 @@
               detail="true"
               @click="goToChatDetail(_class.classId)"
             >
-              <ion-avatar aria-hidden="true" slot="start" v-if="_class.childPhoto">
-                <img :src="utils.makeFileUrl(_class.childPhoto.filename)"/>
+              <ion-avatar aria-hidden="true" slot="start" v-if="_class.classImage">
+                <img :src="utils.makeFileUrl(_class.classImage)"/>
               </ion-avatar>
               <ion-avatar aria-hidden="true" slot="start" v-else>
                 <img :src="utils.makeFileUrl(_class.image)"/>

@@ -23,7 +23,7 @@
           fill="outline"
           type="date"
           v-model="eventData.date"
-        ></ion-input>
+        />
       </div>
       <p class="q-mt-md q-pl-md">Adicione a descrição do evento:</p>
       <div class="input-wrapper">
@@ -34,6 +34,7 @@
           v-model="eventData.description"
         />
       </div>
+      <ion-button fill="outline" expand="block" @click="startNewPhotoHandler">Adicionar foto ao evento</ion-button>
       <ion-checkbox v-model="eventData.requireParentsPermission">
         <p class="ion-text-wrap">
           Este evento requer autorização dos pais?
@@ -41,6 +42,14 @@
       </ion-checkbox>
       <ion-button expand="block" class="q-pa-sm" @click="createEvent">Criar evento</ion-button>
     </ion-content>
+    <PhotoHandler
+      v-show="startPhotoHandler"
+      :start="startPhotoHandler"
+      :allFiles="true"
+      :noCrop="false"
+      @captured="captured"
+      @cancel="cancelPhotoHandler"
+    />
   </ion-page>
 </template>
 
@@ -55,6 +64,7 @@ import {
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { useFetch } from '../../composables/fetch'
 import utils from '../../composables/utils'
+import PhotoHandler from '../../components/PhotoHandler.vue'
 
 </script>
 
@@ -68,14 +78,38 @@ export default {
         name: '',
         date: '',
         description: '',
-        requireParentsPermission: false
+        eventPhoto: null,
+        requireParentsPermission: false,
+      },
+      startPhotoHandler: false,
+      image: {
+        url: null,
+        blob: null,
+        name: null
       }
     };
   },
-  beforeMount() {
-  },
   methods: {
+    startNewPhotoHandler() {
+      this.startPhotoHandler = true
+    },
+    cancelPhotoHandler () {
+      this.startPhotoHandler = false
+    },
+    captured(fileUrl, fileBlob, fileName) {
+      this.startPhotoHandler = false
+      this.image = {
+        url: fileUrl,
+        blob: fileBlob,
+        name: fileName,
+        type: 'newImage'
+      }
+      this.eventData.eventPhoto = {
+        file: fileBlob,
+      }
+    },
     createEvent() {
+      console.log(this.eventData.eventPhoto, "macaco")
       if (this.eventData.name === '' ||
         this.eventData.date === '' ||
         this.eventData.description === '') {
@@ -90,7 +124,8 @@ export default {
           eventDescription: this.eventData.description,
           eventDate: this.eventData.date,
           requireParentsPermission: this.eventData.requireParentsPermission
-        }
+        },
+        file: [ this.eventData.eventPhoto.file ]
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
