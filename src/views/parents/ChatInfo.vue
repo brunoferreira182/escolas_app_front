@@ -4,7 +4,7 @@
       title="Detalhes da turma"
       :backButton="true"
     />
-    <ion-content color="light">
+    <ion-content color="light" v-if="classData">
       <ion-row class="ion-justify-content-center q-ma-lg">
         <ion-avatar style="width:108px; height:108px">
           <img :src="utils.makeFileUrl(classData.classImage)"/>
@@ -103,59 +103,10 @@ export default {
   },
   mounted () {
     this.getChildrenInClassByClassId()
-    this.getChildInClassByParentId()
   },
   methods: {
     goToEventDetail(i) {
-      this.$router.push("/eventDetail?eventdId=" + i)
-    },
-    createListOfPendingAuthorizationByChild() {
-      if (this.userChildren && this.eventsRequiredPermission) {
-        this.userChildren.forEach((child, iChild) => {
-          this.userChildren[iChild].eventsPendingAuthorization = [...this.eventsRequiredPermission] 
-          console.log(child, "to ficando de pau duro")
-        })
-      }
-    },
-    getChildInClassByParentId() {
-      const opt = {
-        route: '/mobile/parents/chat/getChildInClassByParentId',
-        body: {
-          classId: this.$route.query.classId ,
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (!r.error) {
-          this.userChildren = r.data.children
-        }
-          else { 
-            utils.toast("Ocorreu um erro, tente novamente")
-          }
-      })
-    },
-    acceptAuthorization(au) {
-      console.log(au)
-      // const opt = {
-      //   route: '/mobile/parents/chat/respondClassEventSolicitation',
-      //   body: {
-      //     eventClassId: au._id ,
-      //     childId: ,
-      //     requireParentsPermission: true
-      //   }
-      // }
-    },
-    refuseAuthorization(au) {
-      console.log(au)
-      // const opt = {
-      //   route: '/mobile/parents/chat/respondClassEventSolicitation',
-      //   body: {
-      //     eventClassId: au._id ,
-      //     childId: ,
-      //     requireParentsPermission: false
-      //   }
-      // }
+      this.$router.push("/eventDetail?eventdId=" + i + "&classId=" + this.$route.query.classId)
     },
     getChildrenInClassByClassId() {
       const opt = {
