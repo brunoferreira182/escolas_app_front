@@ -4,39 +4,42 @@
       title="Criar evento"
       :backButton="true"
     />
-    <ion-content class="ion-padding" color="light">
-      <ion-list :inset="true">
-        <p class="q-pl-md">Dê um nome para o evento:</p>
-        <ion-item lines="none">
-          <ion-input
-            fill="outline"
-            type="text"
-            mode="md"
-            v-model="eventData.name"
-          ></ion-input>
-        </ion-item>
-        <p class="q-mt-md q-pl-md">Adicione a data em que acontecerá esse evento:</p>
-        <ion-item lines="none">
-          <ion-input
-            fill="outline"
-            type="date"
-            mode="md"
-            v-model="eventData.date"
-          ></ion-input>
-        </ion-item>
-        <p class="q-mt-md q-pl-md">Adicione a descrição do evento:</p>
-        <ion-item lines="none">
-          <ion-textarea fill="outline" mode="md" v-model="eventData.description"></ion-textarea>
-        </ion-item>
-        <ion-item class="q-pt-sm" lines="none">
-          <ion-checkbox v-model="eventData.requireParentsPermission">
-            <p class="ion-text-wrap">
-              Este evento requer autorização dos pais?
-            </p>
-          </ion-checkbox>
-        </ion-item>
-        <ion-button expand="block" class="q-pa-sm" @click="createEvent">Criar evento</ion-button>
-      </ion-list>
+    <ion-content class="ion-padding">
+      <p class="q-pl-md">Dê um nome para o evento:</p>
+      <div class="input-wrapper">
+        <ion-input
+          class="q-pl-sm"
+          fill="outline"
+          type="text"
+          v-model="eventData.name"
+          label="Nome do evento"
+          label-placement="floating"
+        />
+      </div>
+      <p class="q-mt-md q-pl-md">Adicione a data em que acontecerá esse evento:</p>
+      <div class="input-wrapper">
+        <ion-input
+          class="q-pl-sm"
+          fill="outline"
+          type="date"
+          v-model="eventData.date"
+        ></ion-input>
+      </div>
+      <p class="q-mt-md q-pl-md">Adicione a descrição do evento:</p>
+      <div class="input-wrapper">
+        <ion-textarea 
+          fill="outline" 
+          label="Descrição do evento" 
+          label-placement="floating" 
+          v-model="eventData.description"
+        />
+      </div>
+      <ion-checkbox v-model="eventData.requireParentsPermission">
+        <p class="ion-text-wrap">
+          Este evento requer autorização dos pais?
+        </p>
+      </ion-checkbox>
+      <ion-button expand="block" class="q-pa-sm" @click="createEvent">Criar evento</ion-button>
     </ion-content>
   </ion-page>
 </template>
@@ -101,3 +104,11 @@ export default {
   },
 };
 </script>
+<style scoped>
+.input-wrapper {
+  border: 1px solid #ebebec;
+  padding-left: 15px;
+  border-radius: 0.5rem;
+  margin-block: 10px;
+}
+</style>
