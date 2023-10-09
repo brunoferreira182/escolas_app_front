@@ -28,6 +28,28 @@
             </ion-item>
           </div>
         </ion-list>
+        <h2 class="q-px-md">Histórico de atividades</h2>
+        <ion-list :inset="true" >
+          <ion-item 
+            v-for="e in childEventsHistory"
+            :key="e"
+            detail="false"
+          >
+            <ion-label>
+              <strong>{{ e.name }}</strong>
+              <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge><br/>
+              <ion-note color="medium" class="ion-text-wrap">
+                {{ e.obs }}
+              </ion-note>
+            </ion-label>
+            <div class="metadata-end-wrapper" slot="end">
+              <ion-note color="medium">
+                {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
+                {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+              </ion-note>
+            </div>
+          </ion-item>
+        </ion-list>
         </div>
         <div v-else>
           <ion-card>
