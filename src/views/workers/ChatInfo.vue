@@ -13,11 +13,6 @@
       <div class="ion-text-center">
         <h2>{{ classData.className }}</h2>
       </div>
-      <ion-list :inset="true">
-        <ion-item>
-          <h2>Mídia</h2>
-        </ion-item>
-      </ion-list>
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
@@ -69,6 +64,11 @@
           </div>
         </ion-accordion>
       </ion-accordion-group>
+      <ion-list :inset="true" :button="true">
+        <ion-item :button="true" @click="goToMedia">
+          Mídia  
+        </ion-item>
+      </ion-list>
       <ion-button @click="clkGoToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
     </ion-content>
   </ion-page>
@@ -113,6 +113,9 @@ export default {
     }
   },
   methods: {
+    goToMedia() {
+      this.$router.push("/chatMediaWorker?classId=" + this.$route.query.classId)
+    },
     getEventsByClassId() {
       const opt = {
         route: '/mobile/workers/getClassEvents',

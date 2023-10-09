@@ -13,11 +13,6 @@
       <div class="ion-text-center">
         <h2>{{ classData.className }}</h2>
       </div>
-      <ion-list :inset="true">
-        <ion-item>
-          <h2>Mídia</h2>
-        </ion-item>
-      </ion-list>
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
@@ -48,27 +43,32 @@
           </div>
         </ion-accordion>
       </ion-accordion-group>
-      <ion-accordion-group expand="inset">
-        <ion-accordion value="first">
-          <ion-item slot="header">  
-            <ion-label>Alunos da turma</ion-label>
+    <ion-accordion-group expand="inset">
+      <ion-accordion value="first">
+        <ion-item slot="header">  
+          <ion-label>Alunos da turma</ion-label>
+        </ion-item>
+        <div slot="content">
+          <ion-item
+          v-for="child in classChildrenData"
+          :key="child"
+          >
+          <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+            <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+          </ion-avatar>
+          <ion-avatar aria-hidden="true" slot="start" v-else>
+            <img :src="utils.makeFileUrl(child.image)"/>
+          </ion-avatar>
+          <p>{{ child.childName }}</p>
           </ion-item>
-          <div slot="content">
-            <ion-item
-              v-for="child in classChildrenData"
-              :key="child"
-            >
-              <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-              </ion-avatar>
-              <ion-avatar aria-hidden="true" slot="start" v-else>
-                <img :src="utils.makeFileUrl(child.image)"/>
-              </ion-avatar>
-              <p>{{ child.childName }}</p>
-            </ion-item>
-          </div>
-        </ion-accordion>
-      </ion-accordion-group>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+      <ion-list :inset="true" :button="true">
+        <ion-item :button="true" @click="goToMedia">
+          Mídia  
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -107,6 +107,9 @@ export default {
     this.getClassDetailById()
   },
   methods: {
+    goToMedia() {
+      this.$router.push("/chatMedia?classId=" + this.$route.query.classId)
+    },
     goToEventDetail(i) {
       this.$router.push("/eventDetail?eventId=" + i)
     },
