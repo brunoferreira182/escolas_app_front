@@ -24,34 +24,26 @@
             <ion-label>Eventos da turma</ion-label>
           </ion-item>
           <div slot="content">
-            <ion-item
-              lines="full"
+            <ion-item 
+              :button="true" 
+              detail="false"
               v-for="event in eventList"
               :key="event"
             >
+              <div class="unread-indicator-wrapper" slot="start">
+                <div class="unread-indicator"></div>
+              </div>
               <ion-label>
-                <ion-row class="ion-justify-content-between">
-                  <ion-col size="4" class="ion-text-wrap">
-                    <h6 class="text-capitalize">
-                      {{event.eventName }}
-                    </h6>
-                    <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
-                  </ion-col>
-                  <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
-                </ion-row>
-                <div class="ion-text-wrap">
+                <strong>{{ event.eventName }}</strong>
+                <br />
+                <ion-note color="medium" class="ion-text-wrap">
                   {{ event.eventDescription }}
-                </div>
+                </ion-note>
               </ion-label>
-            <!-- <ion-card>
-              <ion-card-header>
-                <ion-card-title>{{ event.eventName }}</ion-card-title>
-                <ion-card-subtitle>{{ event.eventDate.local }}</ion-card-subtitle>
-              </ion-card-header>
-              <ion-card-content>
-                {{ event.eventDescription }}
-              </ion-card-content>
-            </ion-card> -->
+              <div class="metadata-end-wrapper" slot="end">
+                <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
+                <ion-icon color="medium" :icon="chevronForward"></ion-icon>
+              </div>
             </ion-item>
           </div>
         </ion-accordion>

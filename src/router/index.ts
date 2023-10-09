@@ -29,6 +29,7 @@ import chatInfo from '../views/parents/ChatInfo.vue'
 import chatInfoWorker from '../views/workers/ChatInfo.vue'
 import createEvent from '../views/workers/CreateEvent.vue'
 import eventDetailParent from  '../views/parents/EventDetail.vue'
+import workerMore from '../views/workers/More.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -124,6 +125,7 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsWorkers/class', component: workerClass},
           { path: '/tabsWorkers/chat', component: workerChat},
           { path: '/tabsWorkers/profile', component: workerProfile},
+          { path: '/tabsWorkers/more', component: workerMore}
         ]
       },
       {
