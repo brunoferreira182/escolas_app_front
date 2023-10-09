@@ -24,7 +24,7 @@
           <ion-col>
             <div class="ion-text-end">
               <ion-button 
-                @click="$router.push('/postDetail?postId=' + story._id)"
+                @click="$router.push('/storyDetail?storyId=' + story._id)"
                 fill="clear"
               >
                 <h6>Ler mais</h6>
