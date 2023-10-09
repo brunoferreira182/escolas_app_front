@@ -8,37 +8,26 @@
       <div class="q-mt-md">
         <div class="slide" v-if="classesInfo && classesInfo.length">
           <ion-list 
-            class="q-pa-md"
-            lines="full" 
-            >
+          class="q-ma-md"
+          style="border-radius: 1rem"
+          lines="full" 
+        >
+          <div 
+            v-for="_class in classesInfo"
+            :key="_class"
+          >
+            <h2 class="q-px-md">{{ _class.className }}</h2>
             <ion-item
-              v-for="_class in classesInfo"
-              :key="_class"
               button
               detail="true"
               @click="goToChatDetail(_class.classId)"
             >
-              <ion-avatar aria-hidden="true" slot="start" v-if="_class.classImage">
-                <img :src="utils.makeFileUrl(_class.classImage)"/>
+              <ion-avatar style="width: 76px; height:74px;" class="q-mb-sm">
+                <img :src="utils.makeFileUrl(_class.classImage)" class="profile-avatar">
               </ion-avatar>
-              <ion-avatar aria-hidden="true" slot="start" v-else>
-                <img :src="utils.makeFileUrl(_class.image)"/>
-              </ion-avatar>
-              <ion-label class="q-pl-md">
-                <h4>{{ _class.className }}</h4>
-                <p>	
-                  <span v-if="_class.functionName">Função:</span>
-                  {{ _class.functionName }} 
-                </p>
-              </ion-label>
-              <ion-chip
-                v-for="child in _class.users"
-                :key="child"
-              >
-                {{ child.userName }}
-              </ion-chip>
             </ion-item>
-          </ion-list>
+          </div>
+        </ion-list>
         </div>
         <div v-else>
           <ion-card>

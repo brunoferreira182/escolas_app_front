@@ -189,7 +189,7 @@
         </ion-header>
         <ion-content>
           <div class="input-wrapper q-px-md q-mx-md">
-            <ion-select 
+            <!-- <ion-select 
               interface="popover" 
               class="always-flip"
               v-model="dialogInsertChildEvent.childEventId"
@@ -203,7 +203,17 @@
               >
                 {{ event.name }}
               </ion-select-option>
-            </ion-select>
+            </ion-select> -->
+            <ion-button 
+              @click="openActivityAlert()" 
+              expand="block" 
+              fill="flat"
+            >
+              Selecionar Atividade
+            </ion-button>
+          </div>
+          <div class="ion-padding" v-if="dialogInsertChildEvent.childEventId !== ''">
+            <p>Atividade selecionada: {{ selectedEvent[0].name }}</p>
           </div>
           <div class="input-wrapper  q-px-md q-mx-md">
             <ion-textarea
@@ -216,15 +226,16 @@
           </div>
           <ion-list :inset="true">
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">
-              Lista de crianças
               <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
+              Lista de crianças
             </div>
             <ion-item
               v-for="child in classList"
               :key="child"
-            >
+              >
+              <ion-checkbox :checked="child.isChecked"  @ionChange="handleCheckboxChange(child._id, $event)"/>
               <ion-label>
-                <ion-checkbox :checked="child.isChecked"  @ionChange="handleCheckboxChange(child._id, $event)"> {{ child.childName }} </ion-checkbox>
+                {{ child.childName }}
               </ion-label>
             </ion-item>
           </ion-list>
@@ -252,13 +263,35 @@
         @cancel="cancelPhotoHandler"
       />
     </ion-content>
+    <ion-alert v-if="formattedChildEventList"
+      :is-open="dialogInsertActivity.open"
+      header="Escolha uma atividade"
+      :backdropDismiss="false"
+      animated
+      :inputs="formattedChildEventList"
+      :buttons="[
+        {
+          text: 'Depois',
+          handler: () => {
+            dialogInsertActivity.open = false;
+          },
+        },
+        {
+          text: 'Confirmar',
+          handler: (e) => {
+            dialogInsertActivity.open = false;
+            this.selectOptionActivity(e)
+          },
+        },
+      ]"
+    />
   </ion-page>
 </template>
 
 
 <script setup>
 import {
-  IonPage,
+  IonPage, IonAlert,
   IonButton,
   IonBadge,
   IonHeader,
@@ -315,6 +348,9 @@ export default {
         data: null,
         image: null
       },
+      dialogInsertActivity: {
+        open: false
+      },
       pagination: {
         page: 1,
         rowsPerPage: 10,
@@ -331,6 +367,8 @@ export default {
       childrenFilter: [],
       filterValue: '',
       selectAllChildren: false,
+      formattedChildEventList: null,
+      selectedEvent: null
     };
   },
   mounted(){
@@ -341,6 +379,15 @@ export default {
     this.getChildrenInClassList()
   },
   methods: {
+    selectOptionActivity(e) {
+      this.dialogInsertChildEvent.childEventId = e
+      this.selectedEvent = this.childEventsList.filter(event => event._id === e)
+      console.log(this.selectedEvent, "cuzinho i")
+      console.log(this.dialogInsertChildEvent)
+    },
+    openActivityAlert() {
+      this.dialogInsertActivity.open = true
+    },
     filterChildren(event) {
       const query = event.target.value.toLowerCase();
       this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
@@ -521,6 +568,11 @@ export default {
           return
         }
         this.childEventsList = r.data.list
+        this.formattedChildEventList = this.childEventsList.map((event) => ({
+          type: 'radio',
+          label: event.name,
+          value: event._id
+        }))
       })
     },
     getChildrenInClassList() {

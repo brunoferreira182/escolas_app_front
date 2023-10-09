@@ -462,7 +462,7 @@ export default {
       if (this.noMoreMessages) return
       const opt = {
         method: 'POST',
-        route: '/mobile/parents/chat/getClassMessages',
+        route: '/mobile/workers/chat/getClassMessages',
         body: {
           classId: this.$route.query.classId,
           firstPosix: this.messages[0] ? this.messages[0].createdAt.createdAtPosix : null,
@@ -497,16 +497,15 @@ export default {
       const tempId = this.insertTemporaryMessage(optTemMsg)
       const opt = {
         method: 'POST',
-        route: '/mobile/parents/chat/insertClassMessage',
+        route: '/mobile/workers/chat/insertClassMessage',
         body: {
           classId: this.$route.query.classId,
 					message: this.chatMessage,
           audioMessage: this.audioMessage
         }
       }
-      if (file.file) {
-        opt.file = [ file.file ]
-        opt.filename = file.filename
+      if (file) {
+        opt.file = [ file ]
       }
       if (this.isAnsweringMessage.isAnswering) {
         opt.body.answerMessage = {

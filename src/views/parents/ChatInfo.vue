@@ -24,24 +24,26 @@
             <ion-label>Eventos da turma</ion-label>
           </ion-item>
           <div slot="content">
-            <ion-item
-              lines="full"
+            <ion-item 
+              :button="true" 
+              detail="false"
               v-for="event in classEvents"
               :key="event"
-              :button="true"
               @click="goToEventDetail(event._id)"
             >
-            <ion-label>
-              <ion-row class="ion-justify-content-between">
-                <ion-col size="4" class="ion-text-wrap">
-                  <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
-                </ion-col>
-                <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
-              </ion-row>
-              <div class="ion-text-wrap">
-                {{ event.eventDescription }}
+              <div class="unread-indicator-wrapper" slot="start">
+                <div class="unread-indicator"></div>
               </div>
-            </ion-label>
+              <ion-label>
+                <strong>{{ event.eventName }}</strong>
+                <br/>
+                <ion-note color="medium" class="ion-text-wrap">
+                  {{ event.eventDescription }}
+                </ion-note>
+              </ion-label>
+              <div class="metadata-end-wrapper" slot="end">
+                <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
+              </div>
             </ion-item>
           </div>
         </ion-accordion>
@@ -79,7 +81,7 @@ import {
   IonList, IonItem, IonButton,
   IonLabel, IonAccordion,
   IonAccordionGroup, IonAvatar,
-  IonCol, IonRow, IonBadge
+  IonCol, IonRow, IonBadge, IonNote
 } from '@ionic/vue'
 </script>
 
@@ -106,7 +108,7 @@ export default {
   },
   methods: {
     goToEventDetail(i) {
-      this.$router.push("/eventDetail?eventdId=" + i + "&classId=" + this.$route.query.classId)
+      this.$router.push("/eventDetail?eventId=" + i)
     },
     getClassDetailById() {
       const opt = {

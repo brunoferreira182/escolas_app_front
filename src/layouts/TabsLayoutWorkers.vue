@@ -52,6 +52,7 @@ export default {
         { name: "turmas", icon: accessibility, to: '/tabsWorkers/class', label: "Alunos" },
         { name: "messenger", icon: chatboxOutline, to: '/tabsWorkers/chat', label: "Salas" },
         { name: "profile", icon: personCircleOutline, to: '/tabsWorkers/profile', label: "Perfil" },
+        { name: "more", icon: ellipsisHorizontalOutline, to: '/tabsWorkers/more', label: "Mais" },
       ],
       userProfile: [],
     };

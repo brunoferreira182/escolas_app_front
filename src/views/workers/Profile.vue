@@ -65,7 +65,7 @@
             }
           }
         ]"
-      ></ion-alert>
+      />
       <ion-alert
         :is-open="dialogUserAddFamilyName.open"
         header="Antes de adicionar seus filhos você precisa criar uma família!"
