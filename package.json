@@ -29,6 +29,7 @@
     "@ionic/pwa-elements": "^3.2.2",
     "@ionic/vue": "^7.0.0",
     "@ionic/vue-router": "^7.0.0",
+    "@yeger/vue-masonry-wall": "^5.0.2",
     "axios": "^1.5.0",
     "capacitor-voice-recorder": "^5.0.0",
     "cpf-cnpj-validator": "^1.0.3",

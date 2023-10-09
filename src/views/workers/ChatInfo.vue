@@ -18,6 +18,7 @@
           <ion-item slot="header">
             <ion-label>Eventos da turma</ion-label>
           </ion-item>
+          
           <div slot="content">
             <ion-item 
               :button="true" 

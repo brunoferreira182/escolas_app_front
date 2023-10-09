@@ -12,7 +12,9 @@
         <ion-item>
           Pagamentos
         </ion-item>
-        <ion-item>
+        <ion-item
+          @click="$router.push('/notesList')"
+        >
           Recados
         </ion-item>
       </ion-list>
@@ -21,22 +23,20 @@
 </template>
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+import { 
+  IonPage, 
+  IonButton,
+  IonContent, 
+  IonImg,
+  IonList,
+  IonItem 
+} from '@ionic/vue';
+import { APP_NAME, COMPANY_ID } from '../../composables/variables';
+import { defineComponent } from 'vue';
 </script>
 
 <script>
-import { IonPage, IonButton,
-  IonContent, IonImg,
-  IonList, IonItem } from '@ionic/vue';
-import { APP_NAME, COMPANY_ID } from '../../composables/variables';
-import { defineComponent } from 'vue';
-
-
 export default {
-  components: {
-    IonPage, IonButton,
-    IonContent,
-    IonImg, 
-  },
   data() {
     return {
       APP_NAME
