@@ -109,7 +109,7 @@ export default {
   },
   methods: {
     goToEventDetail(i) {
-      this.$router.push("/eventDetail?eventdId=" + i + "&classId=" + this.$route.query.classId)
+      this.$router.push("/eventDetail?eventId=" + i)
     },
     getClassDetailById() {
       const opt = {

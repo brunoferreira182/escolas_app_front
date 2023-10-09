@@ -69,7 +69,7 @@
               >{{ comment.createdAt.createdAtOnlyDate.substring(0,5) }}</p>
             </ion-label>
           </ion-item>
-          <div v-if="!noMoreData">
+          <div v-if="noMoreData === false">
             <ion-button
               fill="clear"
               color="secondary"
@@ -112,7 +112,7 @@ export default {
       postReactions: [],
       comments: [],
       commentsPage: 1,
-      commentsRowsPerPage: 3,
+      commentsRowsPerPage: 4,
       noMoreData: false
     }
   },
@@ -166,7 +166,7 @@ export default {
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
-          if (r.data.list.length === 0) {
+          if (r.data.list === 0) {
             this.noMoreData === true
           }
           this.postReactions = r.data.list
@@ -202,7 +202,7 @@ export default {
         }
       }
       useFetch(opt).then(r => {
-        if (r.data.length < 4) {
+        if (r.data.list.length < 4) {
           this.noMoreData = true
         }
         this.comments.push(...r.data.list)
