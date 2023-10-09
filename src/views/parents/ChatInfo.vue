@@ -13,11 +13,6 @@
       <div class="ion-text-center">
         <h2>{{ classData.className }}</h2>
       </div>
-      <ion-list :inset="true">
-        <ion-item>
-          <h2>Mídia</h2>
-        </ion-item>
-      </ion-list>
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
@@ -25,52 +20,61 @@
           </ion-item>
           <div slot="content">
             <ion-item 
-              :button="true" 
-              detail="false"
-              v-for="event in classEvents"
-              :key="event"
-              @click="goToEventDetail(event._id)"
+            :button="true" 
+            detail="false"
+            v-for="event in classEvents"
+            :key="event"
+            @click="goToEventDetail(event._id)"
             >
-              <div class="unread-indicator-wrapper" slot="start">
-                <div class="unread-indicator"></div>
-              </div>
-              <ion-label>
-                <strong>{{ event.eventName }}</strong>
-                <br/>
-                <ion-note color="medium" class="ion-text-wrap">
-                  {{ event.eventDescription }}
-                </ion-note>
-              </ion-label>
-              <div class="metadata-end-wrapper" slot="end">
-                <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
-              </div>
-            </ion-item>
-          </div>
-        </ion-accordion>
-      </ion-accordion-group>
-      <ion-accordion-group expand="inset">
-        <ion-accordion value="first">
-          <ion-item slot="header">  
-            <ion-label>Alunos da turma</ion-label>
+            <div class="unread-indicator-wrapper" slot="start">
+              <div class="unread-indicator"></div>
+            </div>
+            <ion-label>
+              <strong>{{ event.eventName }}</strong>
+              <br/>
+              <ion-note color="medium" class="ion-text-wrap">
+                {{ event.eventDescription }}
+              </ion-note>
+            </ion-label>
+            <div class="metadata-end-wrapper" slot="end">
+              <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
+            </div>
           </ion-item>
-          <div slot="content">
-            <ion-item
-              v-for="child in classChildrenData"
-              :key="child"
-            >
-              <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-              </ion-avatar>
-              <ion-avatar aria-hidden="true" slot="start" v-else>
-                <img :src="utils.makeFileUrl(child.image)"/>
-              </ion-avatar>
-              <p>{{ child.childName }}</p>
-            </ion-item>
-          </div>
-        </ion-accordion>
-      </ion-accordion-group>
-    </ion-content>
-  </ion-page>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+    <ion-accordion-group expand="inset">
+      <ion-accordion value="first">
+        <ion-item slot="header">  
+          <ion-label>Alunos da turma</ion-label>
+        </ion-item>
+        <div slot="content">
+          <ion-item
+          v-for="child in classChildrenData"
+          :key="child"
+          >
+          <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+            <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+          </ion-avatar>
+          <ion-avatar aria-hidden="true" slot="start" v-else>
+            <img :src="utils.makeFileUrl(child.image)"/>
+          </ion-avatar>
+          <p>{{ child.childName }}</p>
+        </ion-item>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+  <div>
+    <ion-button
+      expand="block"
+      fill="outline"
+      @click="goToMedia"
+    >
+      Mídia
+    </ion-button>
+  </div>
+</ion-content>
+</ion-page>
 </template>
 
 <script setup>
@@ -107,6 +111,9 @@ export default {
     this.getClassDetailById()
   },
   methods: {
+    goToMedia() {
+      this.$router.push("/chatMedia?classId=" + this.$route.query.classId)
+    },
     goToEventDetail(i) {
       this.$router.push("/eventDetail?eventId=" + i)
     },
