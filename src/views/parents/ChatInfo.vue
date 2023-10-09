@@ -20,29 +20,29 @@
           </ion-item>
           <div slot="content">
             <ion-item 
-            :button="true" 
-            detail="false"
-            v-for="event in classEvents"
-            :key="event"
-            @click="goToEventDetail(event._id)"
+              :button="true" 
+              detail="false"
+              v-for="event in classEvents"
+              :key="event"
+              @click="goToEventDetail(event._id)"
             >
-            <div class="unread-indicator-wrapper" slot="start">
-              <div class="unread-indicator"></div>
-            </div>
-            <ion-label>
-              <strong>{{ event.eventName }}</strong>
-              <br/>
-              <ion-note color="medium" class="ion-text-wrap">
-                {{ event.eventDescription }}
-              </ion-note>
-            </ion-label>
-            <div class="metadata-end-wrapper" slot="end">
-              <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
-            </div>
-          </ion-item>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group>
+              <div class="unread-indicator-wrapper" slot="start">
+                <div class="unread-indicator"></div>
+              </div>
+              <ion-label>
+                <strong>{{ event.eventName }}</strong>
+                <br/>
+                <ion-note color="medium" class="ion-text-wrap">
+                  {{ event.eventDescription }}
+                </ion-note>
+              </ion-label>
+              <div class="metadata-end-wrapper" slot="end">
+                <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
+              </div>
+            </ion-item>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
     <ion-accordion-group expand="inset">
       <ion-accordion value="first">
         <ion-item slot="header">  
@@ -60,21 +60,17 @@
             <img :src="utils.makeFileUrl(child.image)"/>
           </ion-avatar>
           <p>{{ child.childName }}</p>
+          </ion-item>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+      <ion-list :inset="true" :button="true">
+        <ion-item :button="true" @click="goToMedia">
+          Mídia  
         </ion-item>
-      </div>
-    </ion-accordion>
-  </ion-accordion-group>
-  <div>
-    <ion-button
-      expand="block"
-      fill="outline"
-      @click="goToMedia"
-    >
-      Mídia
-    </ion-button>
-  </div>
-</ion-content>
-</ion-page>
+      </ion-list>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script setup>

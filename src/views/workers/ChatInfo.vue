@@ -64,14 +64,11 @@
           </div>
         </ion-accordion>
       </ion-accordion-group>
-      <ion-button
-        class="ion-padding"
-        expand="block"
-        fill="outline"
-        @click="goToMedia"
-      >
-        Mídia
-      </ion-button>
+      <ion-list :inset="true" :button="true">
+        <ion-item :button="true" @click="goToMedia">
+          Mídia  
+        </ion-item>
+      </ion-list>
       <ion-button @click="clkGoToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
     </ion-content>
   </ion-page>
