@@ -510,7 +510,7 @@ export default {
         }
       }
       if (file) {
-        opt.file = file
+        opt.file = [ file ]
       }
       if (this.isAnsweringMessage.isAnswering) {
         opt.body.answerMessage = {
