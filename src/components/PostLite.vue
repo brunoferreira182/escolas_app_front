@@ -20,7 +20,6 @@
           {{ story.postData.resume.description.length > 50 ? story.postData.resume.description.slice(0, 50) + '...' : story.postData.resume.description }}
           <span v-if="story.postData.resume.description.length > 50"></span>
         </p>
-<<<<<<< HEAD
         <ion-row>
           <ion-col>
             <div class="ion-text-end">
@@ -33,16 +32,6 @@
             </div>
           </ion-col>
         </ion-row>
-=======
-        <div class="ion-text-end">
-          <ion-button 
-            @click="$router.push('/postDetail?postId=' + story._id)"
-            fill="clear"
-          >
-            <h6>Ler mais</h6>
-          </ion-button>
-        </div>
->>>>>>> 85edf83fb81fc61e35264fba03113c372ae69e6a
       </div>
     </div>
   </div>
