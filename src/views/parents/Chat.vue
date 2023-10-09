@@ -48,31 +48,21 @@
           <ion-item 
             v-for="e in childEventsHistory"
             :key="e"
+            detail="false"
           >
             <ion-label>
-              <ion-row class="ion-justify-content-between">
-                <ion-col size="5" class="ion-text-wrap">
-                  <h6 class="text-capitalize">
-                    {{ e.name }}
-                  </h6>
-                  <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
-                </ion-col>
-                <ion-col 
-                  size="6" 
-                  class="text-subtitle2 ion-text-end"
-                >
-                  <div>
-                    {{ e.createdAt.createdAtLocale.split(' ')[0] }}
-                  </div>
-                  <div>
-                    {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                  </div>
-                </ion-col>
-              </ion-row>
-              <div class="q-px-sm">
-                {{ e.obs }}  
-              </div>
+              <strong>{{ e.name }}</strong>
+              <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge><br />
+              <ion-note color="medium" class="ion-text-wrap">
+                {{ e.obs }}
+              </ion-note>
             </ion-label>
+            <div class="metadata-end-wrapper" slot="end">
+              <ion-note color="medium">
+                {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
+                {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+              </ion-note>
+            </div>
           </ion-item>
         </ion-list>
       </div>
@@ -93,7 +83,8 @@ import {
   IonAvatar,
   IonItem, 
   IonLabel, 
-  IonNote 
+  IonNote,
+  IonIcon
 } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
@@ -107,7 +98,8 @@ export default {
   components: {
     IonPage, IonButton,
     IonContent,
-    IonImg
+    IonImg,
+    IonIcon
   },
   data() {
     return {
@@ -166,3 +158,45 @@ export default {
 }
 
 </script>
+
+<style scoped>
+  .unread-indicator {
+    background: var(--ion-color-primary);
+
+    width: 10px;
+    height: 10px;
+
+    border-radius: 100%;
+
+    position: absolute;
+
+    inset-inline-start: 12px;
+    top: 12px;
+  }
+
+  .metadata-end-wrapper {
+    position: absolute;
+
+    top: 10px;
+    inset-inline-end: 10px;
+
+    font-size: 0.8rem;
+
+    display: flex;
+    align-items: center;
+  }
+
+  ion-label strong {
+    display: block;
+
+    max-width: calc(100% - 60px);
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+  }
+
+  ion-label ion-note {
+    font-size: 0.9rem;
+  }
+</style>
