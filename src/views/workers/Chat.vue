@@ -20,7 +20,7 @@
             <ion-item
               button
               detail="true"
-              @click="goToChatDetail(_class._id)"
+              @click="goToChatDetail(_class.classId)"
             >
               <ion-avatar style="width: 76px; height:74px;" class="q-mb-sm">
                 <img :src="utils.makeFileUrl(_class.classImage)" class="profile-avatar">

@@ -4,7 +4,17 @@
       title="Informações"
       :backButton="true"
     />
-    <ion-content class="ion-padding" color="light">
+    <ion-content class="ion-padding" color="light" v-if="eventDetail">
+      <ion-row class="ion-justify-content-center q-ma-lg">
+        <ion-avatar style="width:108px; height:108px">
+          <img :src="utils.makeFileUrl(eventDetail.eventImage)"/>
+        </ion-avatar> 
+      </ion-row>
+      <div class="ion-text-center">
+        <h2>{{ eventDetail.eventName }}</h2>
+        <p>{{ eventDetail.eventDescription }}</p>
+        <p>{{ eventDetail.eventDate.local }}</p>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -48,13 +58,15 @@ export default {
       }
     };
   },
+  beforeMount () {
+    this.getEventDetailById()
+  },
   methods: {
-    //Pegar o detalhe do evento
     getEventDetailById() { 
       const opt = {
-        route: '',
+        route: '/mobile/parents/chat/getEventDetailById',
         body: {
-          eventId: this.$route.query.eventId
+          classEventId: this.$route.query.eventId
         }
       }
       useFetch(opt).then((r) => {
@@ -63,25 +75,6 @@ export default {
           return
         }
         this.eventDetail = r.data
-      })
-    },
-    //Pegar o número de filhos que eu tenho e colocar os eventos em todos
-    getChildInClassByParentId() {
-      const opt = {
-        route: '/mobile/parents/chat/getChildInClassByParentId',
-        body: {
-          classId: this.$route.query.classId ,
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (!r.error) {
-          this.userChildren = r.data.children
-        }
-          else { 
-            utils.toast("Ocorreu um erro, tente novamente")
-          }
       })
     },
     //Aceitar ou autorizar filho a participar do evento

@@ -104,6 +104,14 @@ export default {
     this.getClassDetailById()
     this.getEventsByClassId()
   },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/chatInfoWorker') {
+        this.getClassDetailById()
+        this.getEventsByClassId()
+      }
+    }
+  },
   methods: {
     getEventsByClassId() {
       const opt = {
