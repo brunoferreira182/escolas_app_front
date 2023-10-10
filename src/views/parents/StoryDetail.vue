@@ -104,7 +104,7 @@ export default {
   name: "StoryDetail",
   data() {
     return {
-      post: null,
+,      post: null,
       liked: false,
       newComment: '',
       reactions: [heart, smile, like],
