@@ -493,6 +493,7 @@ export default {
       useFetch(opt).then((r) => {
         if (!r.error) {
           this.classList = r.data.list
+          console.log(this.classList, "goza vai")
         }
         else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde.")

@@ -37,10 +37,10 @@
                 detail="false"
               >
                 <ion-label>
-                  <strong>{{ e.name }}</strong>
+                  <strong>{{ e.childName }}</strong>
                   <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge><br/>
                   <ion-note color="medium" class="ion-text-wrap">
-                    {{ e.obs }}
+                    {{ e.eventObs }}
                   </ion-note>
                 </ion-label>
                 <div class="metadata-end-wrapper" slot="end">
@@ -98,7 +98,7 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
-      userProfile: []
+      userProfile: [],
     };
   },
   watch: {
@@ -114,6 +114,7 @@ export default {
   methods: {
     startView () {
       this.getClassesByUserId()
+      this.getChildEventsHistory()
     },
     getClassesByUserId() {
       const opt = {
@@ -134,16 +135,17 @@ export default {
     },
     getChildEventsHistory() {
       const opt = {
-        route: '',
+        route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
         body: {
-
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
         }
       }
       useFetch(opt).then((r) => {
         if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
-        else this.childEventsHistory = r.data
+        else this.childEventsHistory = r.data.list
       })
-    }
+    },
   }
 }
 
