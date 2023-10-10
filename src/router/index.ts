@@ -131,6 +131,11 @@ const routes: Array<RouteRecordRaw> = [
         component: notesList
       },
       {
+        path: '/createEvent',
+        name: 'CreateEvent',
+        component: createEvent
+      },
+      {
         path: '/tabsWorkers',
         name: 'TabsWorkers',
         component: tabsLayoutWorkers,

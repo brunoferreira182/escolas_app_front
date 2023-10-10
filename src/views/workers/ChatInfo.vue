@@ -18,7 +18,6 @@
           <ion-item slot="header">
             <ion-label>Eventos da turma</ion-label>
           </ion-item>
-          
           <div slot="content">
             <ion-item 
               :button="true" 
@@ -32,14 +31,13 @@
               <ion-label>
                 <strong>{{ event.eventName }}</strong>
                 <br />
+                <div class="metadata-end-wrapper" slot="end">
+                  <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
+                </div>
                 <ion-note color="medium" class="ion-text-wrap">
                   {{ event.eventDescription }}
                 </ion-note>
               </ion-label>
-              <div class="metadata-end-wrapper" slot="end">
-                <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
-                <ion-icon color="medium" :icon="chevronForward"></ion-icon>
-              </div>
             </ion-item>
           </div>
         </ion-accordion>

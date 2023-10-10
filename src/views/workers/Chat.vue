@@ -35,6 +35,7 @@
                 v-for="e in childEventsHistory"
                 :key="e"
                 detail="false"
+                @click="goToAddNewActivity(e)"
               >
                 <ion-label>
                   <strong>{{ e.childName }}</strong>
@@ -115,6 +116,10 @@ export default {
     startView () {
       this.getClassesByUserId()
       this.getChildEventsHistory()
+    },  
+    goToAddNewActivity(child) {
+      console.log(child, "cacetinho")
+      this.$router.push('/tabsWorkers/class?childId=')
     },
     getClassesByUserId() {
       const opt = {

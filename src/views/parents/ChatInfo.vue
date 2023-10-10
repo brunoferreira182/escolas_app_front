@@ -32,13 +32,13 @@
               <ion-label>
                 <strong>{{ event.eventName }}</strong>
                 <br/>
+                <div class="metadata-end-wrapper" slot="end">
+                  <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
+                </div>
                 <ion-note color="medium" class="ion-text-wrap">
                   {{ event.eventDescription }}
                 </ion-note>
               </ion-label>
-              <div class="metadata-end-wrapper" slot="end">
-                <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
-              </div>
             </ion-item>
           </div>
         </ion-accordion>

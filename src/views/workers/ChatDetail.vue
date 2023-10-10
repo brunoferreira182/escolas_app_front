@@ -526,6 +526,7 @@ export default {
         utils.loading.hide()
         this.scrollToBottom()
         this.undoAnswerMessage()
+        this.getMessages()
       })
     },
     insertTemporaryMessage (opt) {
