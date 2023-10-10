@@ -264,7 +264,8 @@ export default {
       }
       useFetch(opt).then((r) => {
         if(r.error) {
-          utils.toast('Ocorreu um erro, tente novamente')
+          utils.toast(r.errorMessage)
+          this.dialogUserAddFamilyName.open = true
         }
         this.familySolicitations = r.data
       })

@@ -159,8 +159,12 @@ export default {
       }
       const ret = await useFetch(opt)
       // this.page++
-      if (!refreshPage) this.posts = ret.data.list
-      else this.posts.push(...ret.data.list)
+      if (!refreshPage) {
+        if(ret.data.list) {
+          this.posts = ret.data.list
+        }
+      }
+        else this.posts.push(...ret.data.list)
       return
     },
   }

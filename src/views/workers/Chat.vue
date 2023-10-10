@@ -8,48 +8,50 @@
       <div class="q-mt-md">
         <div class="slide" v-if="classesInfo && classesInfo.length">
           <ion-list 
-          class="q-ma-md"
-          style="border-radius: 1rem"
-          lines="full" 
-        >
-          <div 
-            v-for="_class in classesInfo"
-            :key="_class"
+            class="q-ma-md"
+            style="border-radius: 1rem"
+            lines="full" 
           >
-            <h2 class="q-px-md">{{ _class.className }}</h2>
-            <ion-item
-              button
-              detail="true"
-              @click="goToChatDetail(_class.classId)"
+            <div 
+              v-for="_class in classesInfo"
+              :key="_class"
             >
-              <ion-avatar style="width: 76px; height:74px;" class="q-mb-sm">
-                <img :src="utils.makeFileUrl(_class.classImage)" class="profile-avatar">
-              </ion-avatar>
-            </ion-item>
-          </div>
-        </ion-list>
-        <h2 class="q-px-md">Histórico de atividades</h2>
-        <ion-list :inset="true" >
-          <ion-item 
-            v-for="e in childEventsHistory"
-            :key="e"
-            detail="false"
-          >
-            <ion-label>
-              <strong>{{ e.name }}</strong>
-              <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge><br/>
-              <ion-note color="medium" class="ion-text-wrap">
-                {{ e.obs }}
-              </ion-note>
-            </ion-label>
-            <div class="metadata-end-wrapper" slot="end">
-              <ion-note color="medium">
-                {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
-                {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-              </ion-note>
+              <h2 class="q-px-md">{{ _class.className }}</h2>
+              <ion-item
+                button
+                detail="true"
+                @click="goToChatDetail(_class.classId)"
+              >
+                <ion-avatar style="width: 76px; height:74px;" class="q-mb-sm">
+                  <img :src="utils.makeFileUrl(_class.classImage)" class="profile-avatar">
+                </ion-avatar>
+              </ion-item>
             </div>
-          </ion-item>
-        </ion-list>
+          </ion-list>
+          <div v-if="childEventsHistory">
+            <h2 class="q-px-md">Histórico de atividades</h2>
+            <ion-list :inset="true" >
+              <ion-item 
+                v-for="e in childEventsHistory"
+                :key="e"
+                detail="false"
+              >
+                <ion-label>
+                  <strong>{{ e.name }}</strong>
+                  <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge><br/>
+                  <ion-note color="medium" class="ion-text-wrap">
+                    {{ e.obs }}
+                  </ion-note>
+                </ion-label>
+                <div class="metadata-end-wrapper" slot="end">
+                  <ion-note color="medium">
+                    {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
+                    {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+                  </ion-note>
+                </div>
+              </ion-item>
+            </ion-list>
+          </div>
         </div>
         <div v-else>
           <ion-card>
@@ -69,8 +71,8 @@
 import { 
   IonPage, IonButton, IonCard,
   IonContent, IonImg, IonCardHeader,
-  IonList, IonChip, IonCardTitle,
-  IonItem, IonLabel, IonCardContent,
+  IonList, IonChip, IonCardTitle, IonBadge,
+  IonItem, IonLabel, IonCardContent, IonNote,
   IonAvatar } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
@@ -91,6 +93,7 @@ export default {
       APP_NAME,
       progressBar: false,
       classesInfo: null,
+      childEventsHistory: null,
       pagination: {
         page: 1,
         rowsPerPage: 10
@@ -129,6 +132,18 @@ export default {
     goToChatDetail (classId) {
       this.$router.push('/chatDetailWorker?classId=' + classId)
     },
+    getChildEventsHistory() {
+      const opt = {
+        route: '',
+        body: {
+
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
+        else this.childEventsHistory = r.data
+      })
+    }
   }
 }
 

@@ -80,8 +80,8 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
 import {
   IonPage, IonContent,
-  IonList, IonItem,
-  IonButton, IonAvatar,
+  IonList, IonItem, IonIcon,
+  IonButton, IonAvatar, IonNote,
   IonAccordionGroup, IonAccordion,
   IonLabel, IonCardTitle, IonCardSubtitle,
   IonCardHeader, IonCardContent, IonCard, IonRow, 
