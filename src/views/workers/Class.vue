@@ -72,7 +72,7 @@
         </ion-header>
         <ion-content>
           <div class="input-wrapper q-px-md q-mx-md">
-            <ion-select 
+            <!-- <ion-select 
               interface="popover" 
               class="always-flip"
               v-model="dialogInsertChildEvent.childEventId"
@@ -86,7 +86,17 @@
               >
                 {{ event.name }}
               </ion-select-option>
-            </ion-select>
+            </ion-select> -->
+            <ion-button 
+              @click="openActivityAlert()" 
+              expand="block" 
+              fill="flat"
+            >
+              Selecionar Atividade
+            </ion-button>
+          </div>
+          <div class="ion-padding" v-if="dialogInsertChildEvent.childEventId !== ''">
+            <p>Atividade selecionada: {{ selectedEvent[0].name }}</p>
           </div>
           <div class="input-wrapper  q-px-md q-mx-md">
             <ion-textarea
