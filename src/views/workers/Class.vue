@@ -65,7 +65,7 @@
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="start">
-              <ion-button @click="dialogInsertChildEvent.open = false">Fechar</ion-button>
+              <ion-button @click="closeDialogInserChildren">Fechar</ion-button>
             </ion-buttons>
             <ion-title >Atividades</ion-title>
           </ion-toolbar>
@@ -192,7 +192,7 @@
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="start">
-              <ion-button @click="dialogInsertClassEvent.open = false">Fechar</ion-button>
+              <ion-button @click="closeDialogClass">Fechar</ion-button>
             </ion-buttons>
             <ion-title >Atividades</ion-title>
           </ion-toolbar>
@@ -243,7 +243,7 @@
               v-for="child in classList"
               :key="child"
               >
-              <ion-checkbox :checked="child.isChecked"  @ionChange="handleCheckboxChange(child._id, $event)"/>
+              <ion-checkbox :checked="child.isChecked" @ionChange="handleCheckboxChange(child._id, $event)" :aria-label="child.childName"/>
               <ion-label>
                 {{ child.childName }}
               </ion-label>
@@ -389,11 +389,14 @@ export default {
     this.getChildrenInClassList()
   },
   methods: {
+    closeDialogClass() {
+      this.dialogInsertClassEvent.open = false,
+      this.dialogInsertClassEvent.data = {},
+      this.dialogInsertClassEvent.obs = ''
+    },
     selectOptionActivity(e) {
       this.dialogInsertChildEvent.childEventId = e
       this.selectedEvent = this.childEventsList.filter(event => event._id === e)
-      console.log(this.selectedEvent, "cuzinho i")
-      console.log(this.dialogInsertChildEvent)
     },
     openActivityAlert() {
       this.dialogInsertActivity.open = true
@@ -438,6 +441,12 @@ export default {
       });
       this.dialogInsertChildEvent.data = this.selectedChildren;
       console.log(this.selectedChildren);
+    },
+    closeDialogInserChildren() {
+      this.dialogInsertChildEvent.open = false
+      this.dialogInsertChildEvent.data = []
+      this.dialogInsertChildEvent.obs = ''
+      this.dialogInsertChildEvent.childEventId = ''
     },
     handleCheckboxChange(childId, e) {
       if (e.detail.checked === true) {
