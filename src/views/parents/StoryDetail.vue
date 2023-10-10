@@ -101,10 +101,9 @@ import like from '/assets/icons/like.svg'
 
 <script>
 export default {
-  name: "PostDetail",
+  name: "StoryDetail",
   data() {
     return {
-      // send,:
       post: null,
       liked: false,
       newComment: '',

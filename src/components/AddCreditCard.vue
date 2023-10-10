@@ -159,7 +159,6 @@ export default {
       window.Iugu.createPaymentToken(cc, (response) => {
         utils.loading.hide()
         if (response.errors) {
-          console.log(response.errors);
           if (response.errors.verification_value) {
             utils.toast('Código de segurança inválido')  
             return
@@ -169,7 +168,6 @@ export default {
           }
           utils.toast('Ops. Algo deu errado. Tente novamente.')
         } else {
-          console.log('resposta criar token iugu', response)
           this.paymentToken = response
           this.addPaymentMethod()
         }
