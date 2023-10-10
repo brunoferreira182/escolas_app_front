@@ -15,10 +15,10 @@
       >
         <ion-card @click="clkOpenNoteDetail(item)" class="my-card q-ma-none">
           <ion-card-content>
-            <ion-text>
+            <ion-label>
               <h2>{{item.noteName}}</h2>
               <p>{{item.noteDescription}}</p>
-            </ion-text>
+            </ion-label>
           </ion-card-content>
         </ion-card>
       </MasonryWall>
@@ -32,6 +32,7 @@ import {
   IonContent,
   IonCard,
   IonText,
+  IonLabel,
   IonCardContent,
   
 } from '@ionic/vue';
