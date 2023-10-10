@@ -364,9 +364,6 @@ export default {
     captured(img, imgBlob, fileName) {
       this.step = 'initial'
       this.startPhotoHandler = false
-      console.log(img, 'img')
-      console.log(imgBlob, 'imgBlob')
-      console.log(fileName, 'fileName')
       this.insertMessage({
         file: imgBlob,
         fileName
@@ -395,7 +392,6 @@ export default {
       this.socket.on('newMessage', msg => { this.pushMessage(msg) })
     },
     pushMessage (msg) {
-      console.log('dentro do pushMessage')
       if (msg.length === 0 || msg[0].createdBy.userId === this.userInfo.userId) return
       this.messages.push(...msg)
       this.scrollToBottom()
@@ -447,7 +443,6 @@ export default {
 			useFetch(opt).then(r => {
         this.statusConnection = r.data.statusConnection
         if (r.data.statusConnection === 'connected')  {
-          console.log('dentro do getStatusUserConnection se statusConnection === connected', r.data )
           this.getMessages()
           this.createRelationId()
           return

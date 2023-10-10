@@ -30,7 +30,6 @@ const getIuguId = function () {
 const setIuguTestMode = function (type) {
   
   IUGU_TEST_MODE = type === 'prod' ? false : true
-  console.log(IUGU_TEST_MODE, 'IUGU_TEST_MODE aqui nessa merdaaa')
 }
 const getIuguTestMode = function () {
   return IUGU_TEST_MODE
