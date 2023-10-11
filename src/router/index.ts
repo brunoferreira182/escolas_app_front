@@ -35,6 +35,7 @@ import chatMediaWorker from '../views/workers/ChatMedia.vue'
 import notesList from '../views/parents/NotesList.vue'
 import notesListWorker from '../views/workers/NotesList.vue'
 import calendarParent from '../views/parents/Calendar.vue'
+import calendarWorker from '../views/workers/Calendar.vue'
 import storyDetail from '../views/parents/StoryDetail.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -141,6 +142,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/calendar',
         name: 'Calendar',
         component: calendarParent
+      },
+      {
+        path: '/calendarWorker',
+        name: 'CalendarWorker',
+        component: calendarWorker
       },
       {
         path: '/createEvent',
