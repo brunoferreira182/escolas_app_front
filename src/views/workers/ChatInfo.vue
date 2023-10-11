@@ -63,11 +63,13 @@
           </div>
         </ion-accordion>
       </ion-accordion-group>
-      <ion-list :inset="true" :button="true">
-        <ion-item :button="true" @click="goToMedia">
-          Mídia  
+      <ion-accordion-group expand="inset">
+      <ion-accordion value="first" :toggle-icon="chevronForwardOutline" toggle-icon-slot="end">
+        <ion-item slot="header" @click="goToMedia">  
+          <ion-label>Mídia</ion-label>
         </ion-item>
-      </ion-list>
+      </ion-accordion>
+    </ion-accordion-group>
       <ion-button @click="clkGoToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
     </ion-content>
   </ion-page>
@@ -76,6 +78,7 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
+import {chevronForwardOutline} from 'ionicons/icons'
 import {
   IonPage, IonContent,
   IonList, IonItem, IonIcon,
