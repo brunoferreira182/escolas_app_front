@@ -38,8 +38,8 @@
                 @click="clkOpenDialogChildEvent(e)"
               >
                 <ion-label>
-                  <strong>{{ e.childName }}</strong>
-                  <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge><br/>
+                  <strong>{{ e.childName }}</strong><br/>
+                  <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge><br />
                   <ion-note color="medium" class="ion-text-wrap">
                     {{ e.eventObs }}
                   </ion-note>
@@ -333,4 +333,15 @@ export default {
   font-size: 35px;
   translate:0 20px;
 }
+.metadata-end-wrapper {
+    position: absolute;
+
+    top: 10px;
+    inset-inline-end: 10px;
+
+    font-size: 0.8rem;
+
+    display: flex;
+    align-items: center;
+  }
 </style>
