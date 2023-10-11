@@ -31,7 +31,7 @@
             </ion-avatar>
             <ion-label>
               <h6>{{ c.className }}</h6>
-              <ion-badge style="background-color: #36c499;">Função: {{ c.functionName }}</ion-badge>
+              <ion-badge color="success">Função: {{ c.functionName }}</ion-badge>
             </ion-label>
           </ion-item>
         </ion-list>
@@ -53,7 +53,7 @@
           </ion-avatar>
           <ion-label>
             <h6>{{ child.childName }}</h6>
-            <ion-badge  style="background-color: #eb445a;">{{ child.className }}</ion-badge>
+            <ion-badge  color="primary"> {{ child.className }}</ion-badge>
           </ion-label>
         </ion-item>
       </ion-list>

@@ -6,53 +6,44 @@
     />
     <ion-content color="light">
       <div v-if="childClassInfo">
-        <ion-list 
-          class="q-ma-md"
-          style="border-radius: 1rem"
-          lines="full" 
-        >
-          <div 
-            v-for="_class in childClassInfo"
-            :key="_class"
+        <ion-list :inset="true">
+          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
+          <ion-item 
+            v-for="c in childClassInfo"
+            :key="c"
+            :button="true"
+            class="q-pa-sm"
+            @click="goToChatDetail(c.classData.id)"
           >
-            <h2 class="q-px-md">{{ _class.classData.name }}</h2>
-            <ion-item
-              button
-              detail="true"
-              @click="goToChatDetail(_class.classData.id)"
-            >
-              <ion-avatar style="width: 76px; height:74px;">
-                <img :src="utils.makeFileUrl(_class.classData.classImage)" class="profile-avatar">
-              </ion-avatar>
-              <ion-label>
-                <ion-note class="q-mt-md">
-                  <div
-                    class="q-ma-sm"
-                    v-for="child in _class.users"
-                    :key="child"
-                  >
-                    <ion-chip>
-                      <ion-avatar>
-                        <img :src="utils.makeFileUrl(child.userImage)" />
-                      </ion-avatar>
-                      <ion-label>{{ child.userName }}</ion-label>
-                    </ion-chip>
-                  </div><br/>
-                </ion-note>
-              </ion-label>
-            </ion-item>
-          </div>
+            <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage">
+              <img :src="utils.makeFileUrl(c.classData.classImage)" />
+            </ion-avatar>
+            <ion-avatar aria-hidden="true" slot="start" v-else>
+              <img :src="utils.makeFileUrl(c.image)"/>
+            </ion-avatar>
+            <ion-label>
+              <h6> {{ c.classData.name }}</h6>
+              <ion-badge 
+                v-for="child in c.users"
+                :key="child"
+                color="success"
+              >
+                {{ child.userName }}
+              </ion-badge>
+            </ion-label>
+          </ion-item>
         </ion-list>
-        <h2 class="q-px-md">Histórico de atividades</h2>
         <ion-list :inset="true" >
+          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico de atividades</div>
           <ion-item 
             v-for="e in childEventsHistory"
             :key="e"
             detail="false"
+            @click="clkOpenDialogChildEvent(e)"
           >
             <ion-label>
               <strong>{{ e.name }}</strong>
-              <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge><br />
+              <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
               <ion-note color="medium" class="ion-text-wrap">
                 {{ e.obs }}
               </ion-note>

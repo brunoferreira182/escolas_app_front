@@ -4,16 +4,17 @@
       title="Mais informações"
       :backButton="false"
     />
-    <ion-content >
-      <ion-list>
-        <ion-item>
-          Agenda
+    <ion-content color="light">
+      <ion-list :inset="true">
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Outras opções</div>
+        <ion-item :button="true">
+          <ion-label>Agenda</ion-label>
         </ion-item>
-        <ion-item>
-          Pagamentos
+        <ion-item :button="true">
+          <ion-label>Pagamentos</ion-label>
         </ion-item>
-        <ion-item @click="this.$router.push('/notesListWorker')">
-          Recados
+        <ion-item :button="true" @click="this.$router.push('/notesListWorker')">
+          <ion-label>Recados</ion-label>
         </ion-item>
       </ion-list>
     </ion-content>

@@ -4,55 +4,55 @@
       title="Grupos de conversa"
       :backButton="false"
     />
-    <ion-content >
+    <ion-content color="light">
       <div class="q-mt-md">
-        <div class="slide" v-if="classesInfo && classesInfo.length">
-          <ion-list 
-            class="q-ma-md"
-            style="border-radius: 1rem"
-            lines="full" 
-          >
-            <div 
-              v-for="_class in classesInfo"
-              :key="_class"
+        <div v-if="classesInfo && classesInfo.length">
+          <ion-list :inset="true">
+            <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
+            <ion-item 
+              v-for="c in classesInfo"
+              :key="c"
+              :button="true"
+              class="q-pa-sm"
+              @click="goToChatDetail(c._classId)"
             >
-              <h2 class="q-px-md">{{ _class.className }}</h2>
-              <ion-item
-                button
-                detail="true"
-                @click="goToChatDetail(_class.classId)"
-              >
-                <ion-avatar style="width: 76px; height:74px;" class="q-mb-sm">
-                  <img :src="utils.makeFileUrl(_class.classImage)" class="profile-avatar">
-                </ion-avatar>
-              </ion-item>
-            </div>
+              <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage">
+                <img :src="utils.makeFileUrl(c.classImage)" />
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(c.image)"/>
+              </ion-avatar>
+              <ion-label>
+                <h6>{{ c.className }}</h6>
+                <ion-badge color="success">Função: {{ c.functionName }}</ion-badge>
+              </ion-label>
+            </ion-item>
           </ion-list>
-          <div v-if="childEventsHistory">
-            <h2 class="q-px-md">Histórico de atividades</h2>
-            <ion-list :inset="true" >
-              <ion-item 
-                v-for="e in childEventsHistory"
-                :key="e"
-                detail="false"
-                @click="clkOpenDialogChildEvent(e)"
-              >
-                <ion-label>
-                  <strong>{{ e.childName }}</strong><br/>
-                  <ion-badge  style="background-color: #eb445a;">{{ e.eventName }}</ion-badge><br />
-                  <ion-note color="medium" class="ion-text-wrap">
-                    {{ e.eventObs }}
-                  </ion-note>
-                </ion-label>
-                <div class="metadata-end-wrapper" slot="end">
-                  <ion-note color="medium">
-                    {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
-                    {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                  </ion-note>
-                </div>
-              </ion-item>
-            </ion-list>
-          </div>
+        </div>
+        <div v-if="childEventsHistory">
+          <ion-list :inset="true" >
+            <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico de atividades</div>
+            <ion-item 
+              v-for="e in childEventsHistory"
+              :key="e"
+              detail="false"
+              @click="clkOpenDialogChildEvent(e)"
+            >
+              <ion-label>
+                <strong>{{ e.childName }}</strong><br/>
+                <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
+                <ion-note color="medium" class="ion-text-wrap">
+                  {{ e.eventObs }}
+                </ion-note>
+              </ion-label>
+              <div class="metadata-end-wrapper" slot="end">
+                <ion-note color="medium">
+                  {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
+                  {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+                </ion-note>
+              </div>
+            </ion-item>
+          </ion-list>
         </div>
         <div v-else>
           <ion-card>
