@@ -50,25 +50,27 @@
         </ion-item>
         <div slot="content">
           <ion-item
-          v-for="child in classChildrenData"
-          :key="child"
+            v-for="child in classChildrenData"
+            :key="child"
           >
-          <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-            <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-          </ion-avatar>
-          <ion-avatar aria-hidden="true" slot="start" v-else>
-            <img :src="utils.makeFileUrl(child.image)"/>
-          </ion-avatar>
-          <p>{{ child.childName }}</p>
+            <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+              <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+            </ion-avatar>
+            <ion-avatar aria-hidden="true" slot="start" v-else>
+              <img :src="utils.makeFileUrl(child.image)"/>
+            </ion-avatar>
+            <p>{{ child.childName }}</p>
           </ion-item>
         </div>
       </ion-accordion>
     </ion-accordion-group>
-      <ion-list :inset="true" :button="true">
-        <ion-item :button="true" @click="goToMedia">
-          Mídia  
+    <ion-accordion-group expand="inset">
+      <ion-accordion value="first" :toggle-icon="chevronForwardOutline" toggle-icon-slot="end">
+        <ion-item slot="header" @click="goToMedia">  
+          <ion-label>Mídia</ion-label>
         </ion-item>
-      </ion-list>
+      </ion-accordion>
+    </ion-accordion-group>
     </ion-content>
   </ion-page>
 </template>
@@ -76,6 +78,7 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
+import {chevronForwardOutline} from 'ionicons/icons'
 import {
   IonPage, IonContent,
   IonList, IonItem, IonButton,
