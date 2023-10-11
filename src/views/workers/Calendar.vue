@@ -8,7 +8,7 @@
       <ion-grid class="ion-align-items-center ion-justify-content-center">
         <ion-row>
           <ion-col size="12">
-            <ion-datetime class="q-ml-sm"></ion-datetime>
+            <ion-datetime style="background-color: white;border-radius: 5%;" color="primary" class="q-ml-sm"></ion-datetime>
           </ion-col>
         </ion-row>
       </ion-grid>
