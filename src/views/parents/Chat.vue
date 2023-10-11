@@ -39,7 +39,6 @@
             v-for="e in childEventsHistory"
             :key="e"
             detail="false"
-            @click="clkOpenDialogChildEvent(e)"
           >
             <ion-label>
               <strong>{{ e.name }}</strong>

@@ -27,7 +27,7 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 <script>
 import { IonPage, IonButton,
   IonContent, IonImg,
-  IonList, IonIte, IonLabel } from '@ionic/vue';
+  IonList, IonItem, IonLabel } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 
