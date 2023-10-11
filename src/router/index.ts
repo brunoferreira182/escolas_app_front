@@ -33,6 +33,7 @@ import workerMore from '../views/workers/More.vue'
 import chatMedia from '../views/parents/ChatMedia.vue'
 import chatMediaWorker from '../views/workers/ChatMedia.vue'
 import notesList from '../views/parents/NotesList.vue'
+import notesListWorker from '../views/workers/NotesList.vue'
 import storyDetail from '../views/parents/StoryDetail.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -129,6 +130,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/notesList',
         name: 'NotesList',
         component: notesList
+      },
+      {
+        path: '/notesListWorker',
+        name: 'NotesListWorker',
+        component: notesListWorker
       },
       {
         path: '/createEvent',

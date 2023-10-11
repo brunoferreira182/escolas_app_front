@@ -12,7 +12,7 @@
         <ion-item>
           Pagamentos
         </ion-item>
-        <ion-item>
+        <ion-item @click="this.$router.push('/notesListWorker')">
           Recados
         </ion-item>
       </ion-list>
