@@ -35,7 +35,7 @@
                 v-for="e in childEventsHistory"
                 :key="e"
                 detail="false"
-                @click="goToAddNewActivity(e)"
+                @click="clkOpenDialogChildEvent(e)"
               >
                 <ion-label>
                   <strong>{{ e.childName }}</strong>
@@ -66,6 +66,45 @@
         </div>
       </div>
     </ion-content>
+    <ion-alert v-if="formattedChildEventList"
+      :is-open="dialogInsertActivity.open"
+      header="Escolha uma atividade"
+      :backdropDismiss="false"
+      animated
+      :inputs="formattedChildEventList"
+      :buttons="[
+        {
+          text: 'Depois',
+          handler: () => {
+            dialogInsertActivity.open = false;
+          },
+        },
+        {
+          text: 'Confirmar',
+          handler: (e) => {
+            dialogInsertActivity.open = false;
+            this.selectOptionActivity(e)
+          },
+        },
+      ]"
+    />
+    <DialogInsertChildEvent 
+      :dialogInsertChildEvent="dialogInsertChildEvent"
+      :image="image"
+      :selectedEvent="selectedEvent"
+      :childEventsHistory="childEventsHistory"
+      :pagination="pagination"
+      :startPhotoHandler="startPhotoHandler"
+      :dialogInsertActivity="dialogInsertActivity"
+    />
+    <PhotoHandler
+      v-show="startPhotoHandler"
+      :start="startPhotoHandler"
+      :allFiles="true"
+      :noCrop="false"
+      @captured="captured"
+      @cancel="cancelPhotoHandler"
+    />
   </ion-page>
 </template>
 <script setup>
@@ -74,11 +113,13 @@ import {
   IonContent, IonImg, IonCardHeader,
   IonList, IonChip, IonCardTitle, IonBadge,
   IonItem, IonLabel, IonCardContent, IonNote,
-  IonAvatar } from '@ionic/vue';
+  IonAvatar, IonAlert } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../composables/utils'
+import PhotoHandler from '../../components/PhotoHandler.vue'
+import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 </script>
 
 <script>
@@ -100,6 +141,23 @@ export default {
         rowsPerPage: 10
       },
       userProfile: [],
+      dialogInsertChildEvent: {
+        open: false,
+        data: [],
+        obs: '',
+        childEventId: ''
+      },
+      selectedEvent: null,
+      image: {
+        url: null,
+        blob: null,
+        name: null
+      },
+      dialogInsertActivity: {
+        open: false
+      },
+      formattedChildEventList: null,
+      startPhotoHandler: false
     };
   },
   watch: {
@@ -113,13 +171,113 @@ export default {
     this.startView()
   },
   methods: {
+    selectOptionActivity(e) {
+      this.dialogInsertChildEvent.childEventId = e
+      this.selectedEvent = this.childEventsList.filter(event => event._id === e)
+    },
+    captured(fileUrl, fileBlob, fileName) {
+      this.startPhotoHandler = false
+      this.image = {
+        url: fileUrl,
+        blob: fileBlob,
+        name: fileName,
+        type: 'newImage'
+      }
+    },
+    cancelPhotoHandler () {
+      this.startPhotoHandler = false
+    },
+    openActivityAlert() {
+      this.dialogInsertActivity.open = true
+    },
+    startDialogViewImage(e) {
+      this.dialogViewImage.open = true
+      this.dialogViewImage.image = e.childEventImage
+      this.dialogViewImage.data = e
+    },
+    clearModalData(){
+      this.dialogInsertChildEvent.open = false
+      this.dialogInsertChildEvent.data = {}
+      this.dialogInsertChildEvent.obs = ''
+      this.dialogInsertChildEvent.childEventId = ''
+    },
+    closeDialogInserChildren() {
+      this.dialogInsertChildEvent.open = false
+      this.dialogInsertChildEvent.data = []
+      this.dialogInsertChildEvent.obs = ''
+      this.dialogInsertChildEvent.childEventId = ''
+    },
+    getChildEvents() {
+      const opt = {
+        route: '/mobile/workers/getChildEvents',
+        body: {
+          status: 'active',
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        }
+      }
+      utils.loading.show()
+      useFetch(opt).then((r) => {
+        utils.loading.hide()
+        if (r.error) {
+          utils.toast('Ocorreu um erro. Tente novamente.')
+          return
+        }
+        this.childEventsList = r.data.list
+        this.formattedChildEventList = this.childEventsList.map((event) => ({
+          type: 'radio',
+          label: event.name,
+          value: event._id
+        }))
+      })
+    },
+    getChildEventsByUserId() {
+      const opt = {
+        route: '/mobile/workers/getChildEventsByUserId',
+        body: {
+          childId: this.dialogInsertChildEvent.data.childId,
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast('Ocorreu um erro. Tente novamente.')
+          return
+        }
+        this.childEventsHistory = r.data.list
+      })
+    },
+    createUserChildEvents() {
+      if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
+        utils.toast('Preencha o evento e insira uma observação para prosseguir')
+        return
+      }
+      const opt = {
+        route: '/mobile/workers/createUserChildEvents',
+        body: {
+          childId: [this.dialogInsertChildEvent.data.childId],
+          childEventId: this.dialogInsertChildEvent.childEventId,
+          obs: this.dialogInsertChildEvent.obs
+        },
+        file: [{ file: this.image.blob, name: 'userPhoto' }]
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast('Ocorreu um erro. Tente novamente.')
+          return
+        }
+          this.clearModalData()
+          utils.toast('Evento inserido com sucesso!')
+      })
+    },
     startView () {
       this.getClassesByUserId()
       this.getChildEventsHistory()
     },  
-    goToAddNewActivity(child) {
-      console.log(child, "cacetinho")
-      this.$router.push('/tabsWorkers/class?childId=')
+    clkOpenDialogChildEvent(child) {
+      this.dialogInsertChildEvent.data = child
+      this.dialogInsertChildEvent.open = true
     },
     getClassesByUserId() {
       const opt = {
