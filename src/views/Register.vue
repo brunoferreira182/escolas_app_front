@@ -25,7 +25,7 @@
           ></InputEmail>
           <InputDocument
             label-placement="floating"
-            label="Insira seu cpf"
+            label="Insira seu CPF"
             v-model="userData.document"
             class="q-mb-sm"
           />

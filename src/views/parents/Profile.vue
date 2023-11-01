@@ -40,9 +40,9 @@
             </ion-avatar>
             <ion-label>
               <h6>{{ child.name }}</h6>
-              <ion-badge v-if="child.status.status === 'inactive'" style="background-color: #eb445a;">{{ child.status.label }}</ion-badge>
-              <ion-badge v-else-if="child.status.status === 'waitingApproval'" style="background-color: #ffc409;">{{ child.status.label }}</ion-badge>
-              <ion-badge v-else >{{ child.status.label }}</ion-badge>
+              <ion-badge v-if="child.status && child.status.status === 'inactive'" style="background-color: #eb445a;">{{ child.status.label }}</ion-badge>
+              <ion-badge v-else-if="child.status && child.status.status === 'waitingApproval'" style="background-color: #ffc409;">{{ child.status.label }}</ion-badge>
+              <ion-badge v-else >Sem status</ion-badge>
             </ion-label>
           </ion-item>
         </div>
@@ -50,41 +50,37 @@
           Você ainda não possui filhos cadastrados
         </div>
       </ion-list>
-      <ion-list :inset="true">
+      <!-- <ion-list :inset="true">
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
-        <ion-item 
-          lines="inset"
-          v-for="parent in userInfo.family.family"
-          :key="parent"
-          :button="true"
-          @click="goToParentDetail(parent._id)"
-        >
-          <ion-avatar aria-hidden="true" slot="start">
-            <img :src="utils.makeFileUrl(parent.image)"/>
-          </ion-avatar>
-          <ion-label>
-            <h6>{{ parent.name }}</h6> 
-            <ion-badge>{{ parent.status.label }}</ion-badge> 
-          </ion-label>
-        </ion-item>
-        <div v-if="familyAdmin === true">
+        <div v-if="userInfo.family && userInfo.family.family">
           <ion-item 
-            :button="true" 
-            @click="addParent"
+            lines="inset"
+            v-for="parent in userInfo.family.family"
+            :key="parent"
+            :button="true"
+            @click="goToParentDetail(parent._id)"
           >
-          Adicionar Familiar</ion-item>
+            <ion-avatar aria-hidden="true" slot="start">
+              <img :src="utils.makeFileUrl(parent.image)"/>
+            </ion-avatar>
+            <ion-label>
+              <h6>{{ parent.name }}</h6> 
+              <ion-badge>{{ parent.status.label }}</ion-badge> 
+            </ion-label>
+          </ion-item>
+        </div>
+        <div v-else class="q-pa-md">
+          Você ainda não possui familiares
         </div>
       </ion-list>
-    
       <ion-list :inset="true" v-if="familySolicitations && familySolicitations.length !== 0">
         <ion-item 
-          
           :button="true"
           @click="goToSolicitationsDetail"
         >
           Convites para família pendentes
         </ion-item>
-      </ion-list>
+      </ion-list> -->
       <ion-list :inset="true" v-if="isWorker === true">
         <ion-item>
           Área do trabalhador
@@ -116,33 +112,6 @@
           }
         ]"
       ></ion-alert>
-      <ion-alert
-        :is-open="dialogUserAddFamilyName.open"
-        header="Você ainda não criou sua família! Dê um nome para ela"
-        :backdropDismiss="false"
-        animated
-        :inputs="[
-          {
-            type: 'text',
-            placeholder: 'Dê um nome para sua família',
-            value: familyName
-          }
-        ]"
-        :buttons="[
-          {
-            text: 'Depois',
-            handler: () => {
-              dialogUserAddFamilyName.open = false
-            }
-          },
-          {
-            text: 'Criar',
-            handler: (e) => {
-              createFamilyName(e)
-            }
-          }
-        ]"
-      />
     </ion-content>
   </ion-page>
 </template>
@@ -214,14 +183,6 @@ export default {
     this.getCurrentVision()
   },
   methods: {
-
-    verifyIfHasFamily() {
-      if (!this.userInfo.familyId ||
-        this.userInfo.familyIdObj === 'noFamily'
-      ) {
-        this.dialogUserAddFamilyName.open = true
-      }
-    },
     verifyIfIsAdmin() {
       const opt = {
         route: '/mobile/parents/profile/getIfUserIsFamilyAdmin',
@@ -320,7 +281,6 @@ export default {
       }
       this.getFamilySolicitationsStatusByFamily()
       this.verifyIfIsAdmin()
-      this.verifyIfHasFamily()
     },
     backLogin() {
       this.$router.push('/login')
