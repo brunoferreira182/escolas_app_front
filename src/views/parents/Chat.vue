@@ -22,14 +22,19 @@
               <img :src="utils.makeFileUrl(c.image)"/>
             </ion-avatar>
             <ion-label>
-              <h6> {{ c.classData.name }}</h6>
               <ion-badge 
                 v-for="child in c.users"
                 :key="child"
+                class="ion-text-capitalize"
                 color="success"
               >
                 {{ child.userName }}
               </ion-badge>
+              <h6 
+                class="ion-text-caption" 
+                v-if="!c.classData.name"> Nenhuma turma vinculada
+              </h6>
+              <h6 v-else> {{ c.classData.name }}</h6>
             </ion-label>
           </ion-item>
         </ion-list>
