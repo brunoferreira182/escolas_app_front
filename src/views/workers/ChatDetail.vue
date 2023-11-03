@@ -42,7 +42,8 @@
                           <img
                             v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
                             :src="utils.attachmentsAddress() + message.messageFile.filename"
-                          >
+                          />
+                            <!-- <img :src="utils.makeFileUrl(e.childEventImage)" @click="startDialogViewImage(e)"/> -->
                           <span v-else style="display:flex;align-items: center;">
                             <ion-icon size="small" :icon="attach"></ion-icon>
                             <span>Arquivo anexado</span>
@@ -235,7 +236,6 @@ export default {
       this.$router.push("/chatInfoWorker?classId=" + this.$route.query.classId)
     },
     playAudio(message) {
-      console.log(message)
       this.audioIcon = 'pause'
       if (this.currentAudioId !== message._id) {
         this.currentTime = 0
@@ -364,6 +364,7 @@ export default {
       this.startPhotoHandler = true
     },
     captured(img, imgBlob, fileName) {
+      console.log(imgBlob, 'console do blob')
       this.step = 'initial'
       this.startPhotoHandler = false
       this.insertMessage({
@@ -529,8 +530,6 @@ export default {
         this.scrollToBottom()
         this.undoAnswerMessage()
         // this.getMessages()
-        console.log(r.data, 'data')
-        console.log(this.messages, 'cacetinho139')
       })
     },
     insertTemporaryMessage (opt) {
