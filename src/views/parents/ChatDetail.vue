@@ -6,14 +6,7 @@
       @titleClicked="goToChatInfo"
     />
     <ion-content ref="elIonContent" color="light">
-      <PhotoHandler
-        v-show="startPhotoHandler"
-        :start="startPhotoHandler"
-        :allFiles="true"
-        :noCrop="false"
-        @captured="captured"
-        @cancel="cancelPhotoHandler"
-      />
+      
       <div >
         <ion-infinite-scroll
           position="top"
@@ -144,6 +137,14 @@
     <AudioRecorder
       :open="openAudioRecorder"
       @done="doneAudioRecorder"
+    />
+    <PhotoHandler
+      v-show="startPhotoHandler"
+      :start="startPhotoHandler"
+      :allFiles="true"
+      :noCrop="false"
+      @captured="captured"
+      @cancel="cancelPhotoHandler"
     />
 
   </ion-page>
