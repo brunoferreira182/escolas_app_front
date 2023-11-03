@@ -43,7 +43,7 @@
             :key="resp"
           >
             <ion-avatar aria-hidden="true" slot="start">
-              <img :src="utils.makeFileUrl(resp.image)"/>
+              <img :src="utils.makeFileUrl(resp.responsibleImage)"/>
             </ion-avatar>
             <ion-label>
               <h6>{{ resp.responsibleName }}</h6>
