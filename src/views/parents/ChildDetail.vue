@@ -35,6 +35,22 @@
       >
         Editar foto de perfil
       </ion-button>
+      <h2 class="q-px-md">Responsáveis</h2>
+      <ion-list :inset="true" v-if="userDetail.responsibleData">
+        <ion-item 
+            lines="inset"
+            v-for="resp in userDetail.responsibleData"
+            :key="resp"
+          >
+            <ion-avatar aria-hidden="true" slot="start">
+              <img :src="utils.makeFileUrl(resp.image)"/>
+            </ion-avatar>
+            <ion-label>
+              <h6>{{ resp.responsibleName }}</h6>
+              <ion-badge  color="success">{{ resp.responsibleLabel }}</ion-badge>
+            </ion-label>
+          </ion-item>
+      </ion-list>
       <h2 class="q-px-md">Histórico de atividades</h2>
       <ion-list :inset="true" >
         <ion-item 
@@ -44,7 +60,7 @@
           <ion-label>
             <ion-row class="ion-justify-content-between">
               <ion-col size="6" class="ion-text-wrap q-pa-md">
-                <ion-badge class="" style="background-color: #eb445a;">{{ e.eventName }}</ion-badge>
+                <ion-badge color="danger">{{ e.eventName }}</ion-badge>
               </ion-col>
               <ion-col 
                 size="6" 

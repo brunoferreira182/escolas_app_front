@@ -40,8 +40,8 @@
             </ion-avatar>
             <ion-label>
               <h6>{{ child.childName }}</h6>
-              <ion-badge v-if="child.status && child.status.status === 'inactive'" style="background-color: #eb445a;">{{ child.status.label }}</ion-badge>
-              <ion-badge v-else-if="child.status && child.status.status === 'waitingApproval'" style="background-color: #ffc409;">{{ child.status.label }}</ion-badge>
+              <ion-badge v-if="child.status && child.status.status === 'inactive'" color="danger">{{ child.status.label }}</ion-badge>
+              <ion-badge v-else-if="child.status && child.status.status === 'waitingApproval'" color="warning">{{ child.status.label }}</ion-badge>
               <ion-badge v-else >Sem status</ion-badge>
             </ion-label>
           </ion-item>
