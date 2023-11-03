@@ -11,6 +11,7 @@
           <ion-item 
             v-for="c in childClassInfo"
             :key="c"
+            :disabled="c.classData.name ? false : true"
             :button="true"
             class="q-pa-sm"
             @click="goToChatDetail(c.classData.id)"
