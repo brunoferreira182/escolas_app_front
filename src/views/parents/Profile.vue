@@ -33,16 +33,16 @@
             v-for="child in userInfo.children"
             :key="child"
             :button="true"
-            @click="goToChildDetail(child.childId)"
+            @click="goToChildDetail(child.childData._id)"
           >
             <ion-avatar aria-hidden="true" slot="start">
-              <img :src="utils.makeFileUrl(child.image)"/>
+              <img :src="utils.makeFileUrl(child.childData.childImage)"/>
             </ion-avatar>
             <ion-label>
-              <h6>{{ child.childName }}</h6>
-              <ion-badge v-if="child.status && child.status.status === 'inactive'" color="danger">{{ child.status.label }}</ion-badge>
+              <h6>{{ child.childData.childName }}</h6>
+              <!-- <ion-badge v-if="child.status && child.status.status === 'inactive'" color="danger">{{ child.status.label }}</ion-badge>
               <ion-badge v-else-if="child.status && child.status.status === 'waitingApproval'" color="warning">{{ child.status.label }}</ion-badge>
-              <ion-badge v-else >Sem status</ion-badge>
+              <ion-badge v-else >Sem status</ion-badge> -->
             </ion-label>
           </ion-item>
         </div>
@@ -138,8 +138,6 @@ export default {
     $route (to, from) {
       if (to.path === '/tabsParents/profile') {
         this.startView()
-        this.verifyIfIsAdmin()
-        this.getFamilySolicitationsStatusByFamily()
       }
     }
   },
@@ -147,20 +145,10 @@ export default {
     this.startView()
   },
   mounted () {
-    this.getFamilySolicitationsStatusByFamily()
     this.getUserPermissions()
     this.getCurrentVision()
   },
   methods: {
-    verifyIfIsAdmin() {
-      const opt = {
-        route: '/mobile/parents/profile/getIfUserIsFamilyAdmin',
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) return
-        this.familyAdmin = r.data
-      })
-    },
     getCurrentVision() {
       const currentVision = localStorage.getItem("currentVision")
       if (currentVision) {
@@ -247,8 +235,6 @@ export default {
       if (!this.userInfo.document) {
         this.dialogUserData.open = true
       }
-      this.getFamilySolicitationsStatusByFamily()
-      this.verifyIfIsAdmin()
     },
     backLogin() {
       this.$router.push('/login')
@@ -259,17 +245,6 @@ export default {
       }
       return await useFetch(opt)
     },
-    getFamilySolicitationsStatusByFamily() {
-      const opt = {
-        route: '/mobile/parents/profile/getFamiliesSolicitationsByFamilyId'
-      }
-      useFetch(opt).then((r) => {
-        if(r.error) {
-          utils.toast(r.errorMessage)
-        }
-        this.familySolicitations = r.data
-      })
-    }
   }
 }
 </script>
