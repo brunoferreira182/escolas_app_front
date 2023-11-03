@@ -12,7 +12,7 @@
           class="profile-item"
           v-if="userInfo"
         >
-          <ion-avatar style="width:60px; height:auto" >
+          <ion-avatar style="width:60px; height:auto">
             <img :src="utils.makeFileUrl(userInfo.userImage)" class="profile-avatar">
           </ion-avatar>
           <ion-label class="q-px-sm">
@@ -22,24 +22,24 @@
           </ion-label>
         </ion-item>
       </ion-list>
-      <div class="ion-text-center text-h5 q-py-sm" v-if="userInfo.familyData">
+      <!-- <div class="ion-text-center text-h5 q-py-sm" v-if="userInfo">
         {{ userInfo.familyData.name }}
-      </div>
-      <ion-list :inset="true"  v-if="userInfo.family" >
+      </div> -->
+      <ion-list :inset="true"  v-if="userInfo.children" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Filhos</div>
-        <div v-if="userInfo.family && userInfo.family.children.length">
+        <div v-if="userInfo.children">
           <ion-item 
             lines="inset"
-            v-for="child in userInfo.family.children"
+            v-for="child in userInfo.children"
             :key="child"
             :button="true"
-            @click="goToChildDetail(child._id)"
+            @click="goToChildDetail(child.childId)"
           >
             <ion-avatar aria-hidden="true" slot="start">
               <img :src="utils.makeFileUrl(child.image)"/>
             </ion-avatar>
             <ion-label>
-              <h6>{{ child.name }}</h6>
+              <h6>{{ child.childName }}</h6>
               <ion-badge v-if="child.status && child.status.status === 'inactive'" style="background-color: #eb445a;">{{ child.status.label }}</ion-badge>
               <ion-badge v-else-if="child.status && child.status.status === 'waitingApproval'" style="background-color: #ffc409;">{{ child.status.label }}</ion-badge>
               <ion-badge v-else >Sem status</ion-badge>
@@ -50,37 +50,6 @@
           Você ainda não possui filhos cadastrados
         </div>
       </ion-list>
-      <!-- <ion-list :inset="true">
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Familiares</div>
-        <div v-if="userInfo.family && userInfo.family.family">
-          <ion-item 
-            lines="inset"
-            v-for="parent in userInfo.family.family"
-            :key="parent"
-            :button="true"
-            @click="goToParentDetail(parent._id)"
-          >
-            <ion-avatar aria-hidden="true" slot="start">
-              <img :src="utils.makeFileUrl(parent.image)"/>
-            </ion-avatar>
-            <ion-label>
-              <h6>{{ parent.name }}</h6> 
-              <ion-badge>{{ parent.status.label }}</ion-badge> 
-            </ion-label>
-          </ion-item>
-        </div>
-        <div v-else class="q-pa-md">
-          Você ainda não possui familiares
-        </div>
-      </ion-list>
-      <ion-list :inset="true" v-if="familySolicitations && familySolicitations.length !== 0">
-        <ion-item 
-          :button="true"
-          @click="goToSolicitationsDetail"
-        >
-          Convites para família pendentes
-        </ion-item>
-      </ion-list> -->
       <ion-list :inset="true" v-if="isWorker === true">
         <ion-item>
           Área do trabalhador
@@ -210,7 +179,6 @@ export default {
       })
     },
     toggleChange(ev) {
-      console.log(ev.detail.checked)
       if (ev.detail.checked) {
         localStorage.setItem("currentVision", "worker")
         this.$router.replace("/tabsWorkers/profile")

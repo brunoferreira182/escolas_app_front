@@ -32,7 +32,7 @@
       >
         <ion-list :inset="true">
           <!-- <div class="ion-text-left text-h6 q-py-sm q-pl-md">Resultado</div> -->
-          <ion-item 
+          <!-- <ion-item 
             :button="true"
             @click="inviteParentToFamily"
           >
@@ -42,7 +42,7 @@
             <ion-label>
               <h6>{{ searchResult.name }}</h6>
             </ion-label>
-          </ion-item>
+          </ion-item> -->
         </ion-list>
 
       </div>

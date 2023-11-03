@@ -15,16 +15,16 @@
           </ion-avatar>
           <ion-label class="q-px-sm">
             <h2>{{ userDetail.userData.name }}</h2>
-            <p>Status: {{ userDetail.userData.status.label }}</p>
+            <!-- <p>Status: {{ userDetail.userData.status.label }}</p> -->
             <p>{{ userDetail.userData.document }}</p>
           </ion-label>
-          <ion-icon 
+          <!-- <ion-icon 
             v-if="userDetail.userData.status.status === 'active' && familyAdmin === true"
             style="color: 
             #eb445a;" 
             :icon="trashOutline"
             @click="openDialogInactivateChild"
-          />
+          /> -->
         </ion-item>
       </ion-list>
       <ion-button 
@@ -125,7 +125,7 @@ import PhotoHandler from '../../components/PhotoHandler.vue'
 <script>
 
 export default {
-  name: "UserPersonalData",
+  name: "ChildDetail",
   data() {
     return {
       userId: null,
@@ -209,7 +209,7 @@ export default {
     },
     getUserDetail() {
       const opt = {
-        route: '/mobile/parents/profile/getUserDetailById',
+        route: '/mobile/parents/profile/getChildDetailById',
         body: {
           userId: this.userId
         }
