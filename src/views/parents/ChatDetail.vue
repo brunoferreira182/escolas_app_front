@@ -54,7 +54,7 @@
                       <div style="padding-top: 5px; padding-left: 5px;">
                         <ion-icon 
                           v-if="currentAudioId !== message._id || audioIcon === 'play'" 
-                          @click="playAudio(message.messageData.audio,message._id)" 
+                          @click="playAudio(message)" 
                           size="large" 
                           color="dark" 
                           slot="start" 
@@ -62,7 +62,7 @@
                         />
                         <ion-icon 
                           v-if="currentAudioId === message._id && audioIcon === 'pause'" 
-                          @click="pauseAudio(message.messageData.audio,message._id)" 
+                          @click="pauseAudio(message)" 
                           size="large" color="dark" 
                           slot="start" 
                           :icon="pause"
@@ -73,10 +73,10 @@
                           style="margin-bottom: -20px;width: 200px;padding-right: 20px;"
                           :value="currentAudioId === message._id ? currentTime * 1000 : 0"
                           :min="0" 
-                          :max="message.messageData.audio.msDuration" 
+                          :max="message.messageAudio.msDuration" 
                         />
                         <ion-label style="font-size: 13px;margin-bottom: -4px;margin-top: 5px;margin-left: 5px;">
-                          {{ currentAudioId === message._id ? formatDuration(currentTime * 1000) : message.messageData.audio.durationFormatted }}
+                          {{ currentAudioId === message._id ? formatDuration(currentTime * 1000) : message.messageAudio.durationFormatted }}
                         </ion-label>
                       </div>
                     </div>
@@ -238,13 +238,13 @@ export default {
       this.getMessages()
       this.userInfo = utils.presentUserInfo()
     },
-    playAudio(data, currentAudioId) {
+    playAudio(message) {
       this.audioIcon = 'pause'
-      if (this.currentAudioId !== currentAudioId) {
+      if (this.currentAudioId !== message._id) {
         this.currentTime = 0
         if (this.currentAudioRef)this.currentAudioRef.pause()
-        this.currentAudioRef = new Audio(`data:${data.mimeType};base64,${data.recordDataBase64}`)
-        this.currentAudioId = currentAudioId
+        this.currentAudioRef = new Audio(`data:${message.messageAudio.mimeType};base64,${message.messageAudio.recordDataBase64}`)
+        this.currentAudioId = message._id
         this.currentAudioRef.oncanplaythrough = () => {
           this.currentAudioRef.play()
         }
@@ -253,9 +253,9 @@ export default {
         this.currentAudioRef.play()
       }
       const interval = setInterval(() => {
-        const id = currentAudioId
-        if( this.currentTime * 1000 >= data.msDuration || id !== this.currentAudioId){
-          if( this.currentTime * 1000 >= data.msDuration){
+        const id = message._id
+        if( this.currentTime * 1000 >= message.messageAudio.msDuration || id !== this.currentAudioId){
+          if( this.currentTime * 1000 >= message.messageAudio.msDuration){
             this.currentAudioId = null
             this.currentTime = 0
           }

@@ -40,10 +40,9 @@
                       <div v-if="message.messageFile && Object.keys(message.messageFile).length > 0">
                         <div v-if="message.messageFile.filename !== null && message.messageFile.mimetype !== null">
                           <img
-                            v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
+                            v-if="message.messageFile.mimetype  && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
                             :src="utils.attachmentsAddress() + message.messageFile.filename"
                           />
-                            <!-- <img :src="utils.makeFileUrl(e.childEventImage)" @click="startDialogViewImage(e)"/> -->
                           <span v-else style="display:flex;align-items: center;">
                             <ion-icon size="small" :icon="attach"></ion-icon>
                             <span>Arquivo anexado</span>
