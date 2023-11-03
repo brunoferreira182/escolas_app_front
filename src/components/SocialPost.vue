@@ -3,7 +3,8 @@
     <div class="even-card">
       <img 
         v-if="post.postData.resume.img"
-        :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img"
+        style="width: 100%; height: auto; object-fit: cover; object-position: center;"
+        :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="img-style"
       />
       <div >
         <h1 class="card-title">{{post.postData.resume.title}}</h1>
@@ -43,6 +44,7 @@
   <div v-else class="card">
     <div class="even-card">
       <img 
+        style="width: 100%; height: 150px; object-fit: cover; object-position: center;"
         v-if="post.postData.resume.img"
         :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="card-img"
       />
@@ -112,7 +114,14 @@ const props = defineProps(['post', 'i'])
   margin: 14px;
   font-size: 24px;;
 }
+.img-style {
+  object-fit: cover;
+  overflow: hidden;
+}
 .card-img {
+  width: 100%; 
+  height: 150px; 
+  object-fit: contain;
   border-radius: 10px 0px 0px 0px
 }
 

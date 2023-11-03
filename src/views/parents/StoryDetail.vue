@@ -6,6 +6,11 @@
     />
     <ion-content >
       <div v-if="post" style="margin-inline:10px;">
+        <img 
+          v-if="post.postData.resume.img"
+          style="width: 100%; height: auto; object-fit: cover; object-position: center;"
+          :src="utils.attachmentsAddress() + post.postData.resume.img.filename"
+        />
         <div class="ion-text-right q-pb-sm">{{ post.createdAt.createdAtInFullLong }}</div>
         <div v-for="(item,i) in post.postData.detail" :key="i" >
           <div v-if="item.type === 'text'"   :class="item.class">{{ item.value }}</div>
@@ -32,7 +37,7 @@
           </h4> -->
         </div>
         <ion-item
-        class="q-mb-sm"
+          class="q-mb-sm"
         >
           <ion-textarea
             placeholder="Deixe um comentário..."

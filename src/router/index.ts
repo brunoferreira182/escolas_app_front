@@ -178,6 +178,7 @@ const routes: Array<RouteRecordRaw> = [
         ]
       },
       { path: '/postDetail', component: postDetail },
+      { path: '/storyDetail', component: storyDetail },
       { path: '/editProfile', component: editProfile },
       { path: '/postReactions', component: postReactions },
     ]

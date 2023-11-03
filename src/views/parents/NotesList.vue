@@ -16,9 +16,13 @@
         <ion-card @click="clkOpenNoteDetail(item)" class="my-card q-ma-none">
           <ion-card-content>
             <ion-label>
-              <h2>{{item.noteName}}</h2>
+              <h2 class="text-capitalize">{{item.noteName}}</h2>
               <p>{{item.noteDescription}}</p>
             </ion-label>
+            <div class="text-caption">
+              {{ item.createdAt.createdAtLocale.split(' ')[0] }} às
+              {{ item.createdAt.createdAtLocale.split(' ')[1] }}
+            </div>
           </ion-card-content>
         </ion-card>
       </MasonryWall>

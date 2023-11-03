@@ -10,7 +10,7 @@
       </div>
       <swiper 
         :modules="modules"
-        :slides-per-view="notesList.length === 1 ? 1 : 2.3"
+        :slides-per-view="notesList.length === 1 ? 1 : 2"
         :spaceBetween="0.5"
         :autoplay="{
           delay: 2500,
