@@ -1,5 +1,5 @@
 //////////// VARIAVEIS DA APLICACAO //////
-const MODE_MASTER_SERVER = 'tiago'
+const MODE_MASTER_SERVER = 'darta'
 const COMPANY_ID = 1
 const VERSION = 0.1
 const BUILD = 1
@@ -30,7 +30,6 @@ const getIuguId = function () {
 const setIuguTestMode = function (type) {
   
   IUGU_TEST_MODE = type === 'prod' ? false : true
-  console.log(IUGU_TEST_MODE, 'IUGU_TEST_MODE aqui nessa merdaaa')
 }
 const getIuguTestMode = function () {
   return IUGU_TEST_MODE

@@ -13,60 +13,64 @@
       <div class="ion-text-center">
         <h2>{{ classData.className }}</h2>
       </div>
-      <ion-list :inset="true">
-        <ion-item>
-          <h2>Mídia</h2>
-        </ion-item>
-      </ion-list>
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
             <ion-label>Eventos da turma</ion-label>
           </ion-item>
           <div slot="content">
-            <ion-item
-              lines="full"
+            <ion-item 
+              :button="true" 
+              detail="false"
               v-for="event in classEvents"
               :key="event"
-              :button="true"
               @click="goToEventDetail(event._id)"
             >
-            <ion-label>
-              <ion-row class="ion-justify-content-between">
-                <ion-col size="4" class="ion-text-wrap">
-                  <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
-                </ion-col>
-                <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
-              </ion-row>
-              <div class="ion-text-wrap">
-                {{ event.eventDescription }}
+              <div class="unread-indicator-wrapper" slot="start">
+                <div class="unread-indicator"></div>
               </div>
-            </ion-label>
+              <ion-label>
+                <strong>{{ event.eventName }}</strong>
+                <br/>
+                <div class="metadata-end-wrapper" slot="end">
+                  <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
+                </div>
+                <ion-note color="medium" class="ion-text-wrap">
+                  {{ event.eventDescription }}
+                </ion-note>
+              </ion-label>
             </ion-item>
           </div>
         </ion-accordion>
       </ion-accordion-group>
-      <ion-accordion-group expand="inset">
-        <ion-accordion value="first">
-          <ion-item slot="header">  
-            <ion-label>Alunos da turma</ion-label>
+    <ion-accordion-group expand="inset">
+      <ion-accordion value="first">
+        <ion-item slot="header">  
+          <ion-label>Alunos da turma</ion-label>
+        </ion-item>
+        <div slot="content">
+          <ion-item
+            v-for="child in classChildrenData"
+            :key="child"
+          >
+            <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+              <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+            </ion-avatar>
+            <ion-avatar aria-hidden="true" slot="start" v-else>
+              <img :src="utils.makeFileUrl(child.image)"/>
+            </ion-avatar>
+            <p>{{ child.childName }}</p>
           </ion-item>
-          <div slot="content">
-            <ion-item
-              v-for="child in classChildrenData"
-              :key="child"
-            >
-              <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-              </ion-avatar>
-              <ion-avatar aria-hidden="true" slot="start" v-else>
-                <img :src="utils.makeFileUrl(child.image)"/>
-              </ion-avatar>
-              <p>{{ child.childName }}</p>
-            </ion-item>
-          </div>
-        </ion-accordion>
-      </ion-accordion-group>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+    <ion-accordion-group expand="inset">
+      <ion-accordion value="first" :toggle-icon="chevronForwardOutline" toggle-icon-slot="end">
+        <ion-item slot="header" @click="goToMedia">  
+          <ion-label>Mídia</ion-label>
+        </ion-item>
+      </ion-accordion>
+    </ion-accordion-group>
     </ion-content>
   </ion-page>
 </template>
@@ -74,12 +78,13 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
+import {chevronForwardOutline} from 'ionicons/icons'
 import {
   IonPage, IonContent,
   IonList, IonItem, IonButton,
   IonLabel, IonAccordion,
   IonAccordionGroup, IonAvatar,
-  IonCol, IonRow, IonBadge
+  IonCol, IonRow, IonBadge, IonNote
 } from '@ionic/vue'
 </script>
 
@@ -105,8 +110,11 @@ export default {
     this.getClassDetailById()
   },
   methods: {
+    goToMedia() {
+      this.$router.push("/chatMedia?classId=" + this.$route.query.classId)
+    },
     goToEventDetail(i) {
-      this.$router.push("/eventDetail?eventdId=" + i + "&classId=" + this.$route.query.classId)
+      this.$router.push("/eventDetail?eventId=" + i)
     },
     getClassDetailById() {
       const opt = {

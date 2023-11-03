@@ -11,7 +11,7 @@
           <InputDocument
             mode="md"
             label-placement="floating"
-            label="Insira o cpf do familiar"
+            label="Insira o CPF do familiar"
             v-model="searchDocument"
             class="q-mb-sm"
           />
@@ -32,7 +32,7 @@
       >
         <ion-list :inset="true">
           <!-- <div class="ion-text-left text-h6 q-py-sm q-pl-md">Resultado</div> -->
-          <ion-item 
+          <!-- <ion-item 
             :button="true"
             @click="inviteParentToFamily"
           >
@@ -42,7 +42,7 @@
             <ion-label>
               <h6>{{ searchResult.name }}</h6>
             </ion-label>
-          </ion-item>
+          </ion-item> -->
         </ion-list>
 
       </div>
@@ -114,7 +114,7 @@ export default {
     },
     searchParent () {
       if (this.searchDocument.length !== 14) {
-        utils.toast("Preencha um cpf válido")
+        utils.toast("Preencha um CPF válido")
         return
       }
       const opt = {

@@ -29,6 +29,14 @@ import chatInfo from '../views/parents/ChatInfo.vue'
 import chatInfoWorker from '../views/workers/ChatInfo.vue'
 import createEvent from '../views/workers/CreateEvent.vue'
 import eventDetailParent from  '../views/parents/EventDetail.vue'
+import workerMore from '../views/workers/More.vue'
+import chatMedia from '../views/parents/ChatMedia.vue'
+import chatMediaWorker from '../views/workers/ChatMedia.vue'
+import notesList from '../views/parents/NotesList.vue'
+import notesListWorker from '../views/workers/NotesList.vue'
+import calendarParent from '../views/parents/Calendar.vue'
+import calendarWorker from '../views/workers/Calendar.vue'
+import storyDetail from '../views/parents/StoryDetail.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -106,14 +114,44 @@ const routes: Array<RouteRecordRaw> = [
         component: chatInfoWorker
       },
       {
-        path: '/createEvent',
-        name: 'CreateEvent',
-        component: createEvent
-      },
-      {
         path: '/eventDetail',
         name: 'EventDetail',
         component: eventDetailParent
+      },
+      {
+        path: '/chatMedia',
+        name: 'ChatMedia',
+        component: chatMedia
+      },
+      {
+        path: '/chatMediaWorker',
+        name: 'ChatMediaWorker',
+        component: chatMediaWorker
+      },
+      {
+        path: '/notesList',
+        name: 'NotesList',
+        component: notesList
+      },
+      {
+        path: '/notesListWorker',
+        name: 'NotesListWorker',
+        component: notesListWorker
+      },
+      {
+        path: '/calendar',
+        name: 'Calendar',
+        component: calendarParent
+      },
+      {
+        path: '/calendarWorker',
+        name: 'CalendarWorker',
+        component: calendarWorker
+      },
+      {
+        path: '/createEvent',
+        name: 'CreateEvent',
+        component: createEvent
       },
       {
         path: '/tabsWorkers',
@@ -124,6 +162,7 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsWorkers/class', component: workerClass},
           { path: '/tabsWorkers/chat', component: workerChat},
           { path: '/tabsWorkers/profile', component: workerProfile},
+          { path: '/tabsWorkers/more', component: workerMore}
         ]
       },
       {
@@ -139,6 +178,7 @@ const routes: Array<RouteRecordRaw> = [
         ]
       },
       { path: '/postDetail', component: postDetail },
+      { path: '/storyDetail', component: storyDetail },
       { path: '/editProfile', component: editProfile },
       { path: '/postReactions', component: postReactions },
     ]

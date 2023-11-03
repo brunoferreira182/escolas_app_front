@@ -24,79 +24,81 @@
           <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>
         <ion-list ref="listAnswerMsg">
-          <div v-for="message in messages" :key="message._id" :id="message._id">
-            <ion-item-sliding>
-              <ion-item lines="none" >
-                <ion-row :slot="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" >
-                  <div
-                    :class="`chat-message ${message.tempId ? 'sent-temp-message' : message.createdBy.userId === userInfo.userId ? 'sent-message': 'received-message'} q-ma-xs q-pa-sm ${blinkMessageId === message._id ? 'blink-bg' : ''}`"
-                  >
-                    <ion-card v-if="message.answerMessage" style="margin: 0; padding: 3px;box-shadow:none" @click="clkAnswer(message)">
-                      <div>{{ message.answerMessage.createdBy.name }}:</div>
-                      <div v-if="message.answerMessage.message">{{ message.answerMessage.message }}</div>
-                      <div v-else>Arquivo</div>
-                    </ion-card>
-                    <div v-if="message.messageFile">
-                      <div v-if="message.messageFile.filename !== null && message.messageFile.mimetype !== null">
-                        <img
-                          v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
-                          :src="utils.attachmentsAddress() + message.messageFile.filename"
-                        >
-                        <span v-else style="display:flex;align-items: center;">
-                          <ion-icon size="small" :icon="attach"></ion-icon>
-                          <span>Arquivo anexado</span>
-                        </span>
-                      </div>
-                    </div>
+          <div v-if="messages && messages.length">
+            <div v-for="message in messages" :key="message._id" :id="message._id">
+              <ion-item-sliding>
+                <ion-item lines="none" >
+                  <ion-row :slot="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" >
                     <div
-                      style="width: 300px;margin-bottom: -20px;display: flex; align-items: center;"
-                      id="voice-message"
-                      v-else-if="message.messageAudio"
+                      :class="`chat-message ${message.tempId ? 'sent-temp-message' : message.createdBy.userId === userInfo.userId ? 'sent-message': 'received-message'} q-ma-xs q-pa-sm ${blinkMessageId === message._id ? 'blink-bg' : ''}`"
                     >
-                      <div style="padding-top: 5px; padding-left: 5px;">
-                        <ion-icon 
-                          v-if="currentAudioId !== message._id || audioIcon === 'play'" 
-                          @click="playAudio(message.messageData.audio,message._id)" 
-                          size="large" 
-                          color="dark" 
-                          slot="start" 
-                          :icon="play"
-                        />
-                        <ion-icon 
-                          v-if="currentAudioId === message._id && audioIcon === 'pause'" 
-                          @click="pauseAudio(message.messageData.audio,message._id)" 
-                          size="large" color="dark" 
-                          slot="start" 
-                          :icon="pause"
-                        />
+                      <ion-card v-if="message.answerMessage" style="margin: 0; padding: 3px;box-shadow:none" @click="clkAnswer(message)">
+                        <div>{{ message.answerMessage.createdBy.name }}:</div>
+                        <div v-if="message.answerMessage.message">{{ message.answerMessage.message }}</div>
+                        <div v-else>Arquivo</div>
+                      </ion-card>
+                      <div v-if="message.messageFile && Object.keys(message.messageFile).length > 0">
+                        <div v-if="message.messageFile.filename !== null && message.messageFile.mimetype !== null">
+                          <img
+                            v-if="message.messageFile.mimetype  && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
+                            :src="utils.attachmentsAddress() + message.messageFile.filename"
+                          />
+                          <span v-else style="display:flex;align-items: center;">
+                            <ion-icon size="small" :icon="attach"></ion-icon>
+                            <span>Arquivo anexado</span>
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <ion-range
-                          style="margin-bottom: -20px;width: 200px;padding-right: 20px;"
-                          :value="currentAudioId === message._id ? currentTime * 1000 : 0"
-                          :min="0" 
-                          :max="message.messageData.audio.msDuration" 
-                        />
-                        <ion-label style="font-size: 13px;margin-bottom: -4px;margin-top: 5px;margin-left: 5px;">
-                          {{ currentAudioId === message._id ? formatDuration(currentTime * 1000) : message.messageData.audio.durationFormatted }}
-                        </ion-label>
+                      <div
+                        style="width: 300px;margin-bottom: -20px;display: flex; align-items: center;"
+                        id="voice-message"
+                        v-else-if="message.messageAudio"
+                      >
+                        <div style="padding-top: 5px; padding-left: 5px;">
+                          <ion-icon 
+                            v-if="currentAudioId !== message._id || audioIcon === 'play'" 
+                            @click="playAudio(message)" 
+                            size="large" 
+                            color="dark" 
+                            slot="start" 
+                            :icon="play"
+                          />
+                          <ion-icon 
+                            v-if="currentAudioId === message._id && audioIcon === 'pause'" 
+                            @click="pauseAudio(message)" 
+                            size="large" color="dark" 
+                            slot="start" 
+                            :icon="pause"
+                          />
+                        </div>
+                        <div>
+                          <ion-range
+                            style="margin-bottom: -20px;width: 200px;padding-right: 20px;"
+                            :value="currentAudioId === message._id ? currentTime * 1000 : 0"
+                            :min="0" 
+                            :max="message.messageAudio.msDuration" 
+                          />
+                          <ion-label style="font-size: 13px;margin-bottom: -4px;margin-top: 5px;margin-left: 5px;">
+                            {{ currentAudioId === message._id ? formatDuration(currentTime * 1000) : message.messageAudio.durationFormatted }}
+                          </ion-label>
+                        </div>
                       </div>
+                      <div v-else>
+                        {{ message.messageText }}
+                      </div>
+                      <span
+                        class="ion-float-right q-mt-xs text-caption q-ml-sm"
+                        v-if="message.createdAt"
+                      >{{ message.createdAt.createdAtLocale.split(' ')[1].substring(0,5) }}</span>
                     </div>
-                    <div v-else>
-                      {{ message.messageText }}
-                    </div>
-                    <span
-                      class="ion-float-right q-mt-xs text-caption q-ml-sm"
-                      v-if="message.createdAt"
-                    >{{ message.createdAt.createdAtLocale.split(' ')[1].substring(0,5) }}</span>
-                  </div>
-                </ion-row>
-              </ion-item>
-              <ion-item-options :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'">
-                <ion-item-option style="text-transform: none" color="primary" @click="clkMessage(message)">Detalhes</ion-item-option>
-                <ion-item-option style="text-transform: none" color="secondary" @click="answerMessage(message)">Responder</ion-item-option>
-              </ion-item-options>
-            </ion-item-sliding>
+                  </ion-row>
+                </ion-item>
+                <ion-item-options :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'">
+                  <ion-item-option style="text-transform: none" color="primary" @click="clkMessage(message)">Detalhes</ion-item-option>
+                  <ion-item-option style="text-transform: none" color="secondary" @click="answerMessage(message)">Responder</ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </div>
           </div>
         </ion-list>
       </div>
@@ -112,7 +114,6 @@
           </ion-label>
           <ion-icon :icon="close" slot="end" @click="undoAnswerMessage"></ion-icon>
         </ion-item>
-        
         <ion-row class="q-mx-xs ion-align-items-end" style="padding-bottom: var(--ion-safe-area-bottom)">
           <ion-col size="10">
             <ion-item lines="none" style="border-radius: 15px;align-items: center;">
@@ -233,13 +234,13 @@ export default {
     goToChatInfo() {
       this.$router.push("/chatInfoWorker?classId=" + this.$route.query.classId)
     },
-    playAudio(data, currentAudioId) {
+    playAudio(message) {
       this.audioIcon = 'pause'
-      if (this.currentAudioId !== currentAudioId) {
+      if (this.currentAudioId !== message._id) {
         this.currentTime = 0
         if (this.currentAudioRef)this.currentAudioRef.pause()
-        this.currentAudioRef = new Audio(`data:${data.mimeType};base64,${data.recordDataBase64}`)
-        this.currentAudioId = currentAudioId
+        this.currentAudioRef = new Audio(`data:${message.messageAudio.mimeType};base64,${message.messageAudio.recordDataBase64}`)
+        this.currentAudioId = message._id
         this.currentAudioRef.oncanplaythrough = () => {
           this.currentAudioRef.play()
         }
@@ -248,9 +249,9 @@ export default {
         this.currentAudioRef.play()
       }
       const interval = setInterval(() => {
-        const id = currentAudioId
-        if( this.currentTime * 1000 >= data.msDuration || id !== this.currentAudioId){
-          if( this.currentTime * 1000 >= data.msDuration){
+        const id = message._id
+        if( this.currentTime * 1000 >= message.messageAudio.msDuration || id !== this.currentAudioId){
+          if( this.currentTime * 1000 >= message.messageAudio.msDuration){
             this.currentAudioId = null
             this.currentTime = 0
           }
@@ -362,11 +363,9 @@ export default {
       this.startPhotoHandler = true
     },
     captured(img, imgBlob, fileName) {
+      console.log(imgBlob, 'console do blob')
       this.step = 'initial'
       this.startPhotoHandler = false
-      console.log(img, 'img')
-      console.log(imgBlob, 'imgBlob')
-      console.log(fileName, 'fileName')
       this.insertMessage({
         file: imgBlob,
         fileName
@@ -395,7 +394,6 @@ export default {
       this.socket.on('newMessage', msg => { this.pushMessage(msg) })
     },
     pushMessage (msg) {
-      console.log('dentro do pushMessage')
       if (msg.length === 0 || msg[0].createdBy.userId === this.userInfo.userId) return
       this.messages.push(...msg)
       this.scrollToBottom()
@@ -447,7 +445,6 @@ export default {
 			useFetch(opt).then(r => {
         this.statusConnection = r.data.statusConnection
         if (r.data.statusConnection === 'connected')  {
-          console.log('dentro do getStatusUserConnection se statusConnection === connected', r.data )
           this.getMessages()
           this.createRelationId()
           return
@@ -462,7 +459,7 @@ export default {
       if (this.noMoreMessages) return
       const opt = {
         method: 'POST',
-        route: '/mobile/parents/chat/getClassMessages',
+        route: '/mobile/workers/chat/getClassMessages',
         body: {
           classId: this.$route.query.classId,
           firstPosix: this.messages[0] ? this.messages[0].createdAt.createdAtPosix : null,
@@ -497,14 +494,14 @@ export default {
       const tempId = this.insertTemporaryMessage(optTemMsg)
       const opt = {
         method: 'POST',
-        route: '/mobile/parents/chat/insertClassMessage',
+        route: '/mobile/workers/chat/insertClassMessage',
         body: {
           classId: this.$route.query.classId,
 					message: this.chatMessage,
           audioMessage: this.audioMessage
         }
       }
-      if (file) {
+      if (file. file) {
         opt.file = [ file ]
       }
       if (this.isAnsweringMessage.isAnswering) {
@@ -531,6 +528,7 @@ export default {
         utils.loading.hide()
         this.scrollToBottom()
         this.undoAnswerMessage()
+        // this.getMessages()
       })
     },
     insertTemporaryMessage (opt) {

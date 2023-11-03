@@ -5,6 +5,29 @@
       :backButton="false"
     />
     <ion-content color="light">
+      <div class="q-px-md text-h5" v-if="notesList.length">
+        Recados
+      </div>
+      <swiper 
+        :modules="modules"
+        :slides-per-view="notesList.length === 1 ? 1 : 2"
+        :spaceBetween="0.5"
+        :autoplay="{
+          delay: 2500,
+          disableOnInteraction: false,
+        }"
+        :pagination="true"
+      >
+        <swiper-slide  
+          v-for="(note, i) in notesList"
+          :key="note._id"
+        >
+          <PostSchoolNotes
+            :note="note"
+            :i="i"
+          />
+        </swiper-slide>
+      </swiper>
       <swiper 
         :modules="modules"
         :slides-per-view="storiesPosts.length === 1 ? 1 : 1.1"
@@ -50,6 +73,7 @@ import { defineComponent } from 'vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { useFetch } from '@/composables/fetch';
 import PostLite from '../../components/PostLite.vue'
+import PostSchoolNotes from '../../components/PostSchoolNotes.vue'
 import SocialPost from '../../components/SocialPost.vue'
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue';
@@ -71,6 +95,7 @@ export default {
       modules: [Pagination, Autoplay],
       rowsPerPage: 10,
       posts: [],
+      notesList: [],
       storiesPosts: [],
     };
   },
@@ -91,6 +116,22 @@ export default {
     async startView () {
       await this.getPosts()
       await this.getStories()
+      await this.getNotesList()
+    },
+    async getNotesList (refreshPage) {
+      if (refreshPage) this.page = 0
+      const opt = {
+        route: '/mobile/social/getNotesList',
+        body: {
+          page: this.page,
+          rowsPerPage: this.rowsPerPage
+        }
+      }
+      const ret = await useFetch(opt)
+      // this.page++
+      if (!refreshPage) this.notesList = ret.data.list
+      else this.notesList.push(...ret.data.list)
+      return
     },
     async getStories (refreshPage) {
       if (refreshPage) this.page = 0
@@ -118,8 +159,12 @@ export default {
       }
       const ret = await useFetch(opt)
       // this.page++
-      if (!refreshPage) this.posts = ret.data.list
-      else this.posts.push(...ret.data.list)
+      if (!refreshPage) {
+        if(ret.data.list) {
+          this.posts = ret.data.list
+        }
+      }
+        else this.posts.push(...ret.data.list)
       return
     },
   }

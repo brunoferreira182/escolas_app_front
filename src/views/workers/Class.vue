@@ -31,7 +31,7 @@
             </ion-avatar>
             <ion-label>
               <h6>{{ c.className }}</h6>
-              <ion-badge style="background-color: #36c499;">Função: {{ c.functionName }}</ion-badge>
+              <ion-badge color="success">Função: {{ c.functionName }}</ion-badge>
             </ion-label>
           </ion-item>
         </ion-list>
@@ -53,110 +53,10 @@
           </ion-avatar>
           <ion-label>
             <h6>{{ child.childName }}</h6>
-            <ion-badge  style="background-color: #eb445a;">{{ child.className }}</ion-badge>
+            <ion-badge  color="primary"> {{ child.className }}</ion-badge>
           </ion-label>
         </ion-item>
       </ion-list>
-      <ion-modal 
-        :is-open="dialogInsertChildEvent.open" 
-        @ionModalDidPresent="getChildEvents() && getChildEventsByUserId()" 
-        @willDismiss="clearModalData()"
-      >
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-button @click="dialogInsertChildEvent.open = false">Fechar</ion-button>
-            </ion-buttons>
-            <ion-title >Atividades</ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content>
-          <div class="input-wrapper q-px-md q-mx-md">
-            <ion-select 
-              interface="popover" 
-              class="always-flip"
-              v-model="dialogInsertChildEvent.childEventId"
-              :toggle-icon="caretDownSharp"
-              label="Selecione a atividade"
-            >
-              <ion-select-option 
-                v-for="event in childEventsList"
-                :key="event"
-                :value="event._id"
-              >
-                {{ event.name }}
-              </ion-select-option>
-            </ion-select>
-          </div>
-          <div class="input-wrapper  q-px-md q-mx-md">
-            <ion-textarea
-              label="Descrição"
-              label-placement="floating"
-              v-model="dialogInsertChildEvent.obs"
-              placeholder="Descrição da atividade"
-              :auto-grow="true"
-            ></ion-textarea>
-          </div>
-          <ion-button
-            expand="block"
-            class="q-ma-md"
-            fill="clear"
-            @click="startPhotoHandler = true"
-            v-if="!image.blob"
-          >Enviar foto
-          </ion-button>
-          <ion-row class="q-ma-md" v-if="image.blob">
-            <ion-col size="2">
-              <ion-avatar >
-                <ion-img :src="image.url" ></ion-img>
-              </ion-avatar>
-            </ion-col>
-            <ion-col size="4">
-              <ion-button
-                @click="startPhotoHandler = true"
-                fill="outline"
-              >Trocar foto</ion-button>
-            </ion-col>
-          </ion-row>
-          <div class="q-px-md">
-            <ion-chip>{{ dialogInsertChildEvent.data.childName }}</ion-chip>
-          </div>
-          <ion-list :inset="true" >
-            <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
-            <ion-item 
-              v-for="e in childEventsHistory"
-              :key="e"
-            >
-              <ion-avatar aria-hidden="true" slot="start" v-if="e.childEventImage">
-                <img :src="utils.makeFileUrl(e.childEventImage)" @click="startDialogViewImage(e)"/>
-              </ion-avatar>
-              <ion-avatar aria-hidden="true" slot="start" v-else>
-                <img :src="utils.makeFileUrl(e.image)"/>
-              </ion-avatar>
-              <ion-label>
-                <ion-row class="ion-justify-content-between">
-                  <ion-col size="2">
-                    <h6>{{ e.eventName }}</h6>
-                  </ion-col>
-                  <ion-col 
-                    size="6" 
-                    class="text-subtitle2 ion-text-end"
-                  >
-                    <div>
-                      {{ e.createdAt.createdAtLocale.split(' ')[0] }}
-                    </div>
-                    <div>
-                      {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                    </div>
-                  </ion-col>
-                </ion-row>
-                <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
-              </ion-label>
-            </ion-item>
-          </ion-list>
-        </ion-content>
-        <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
-      </ion-modal>
       <ion-modal
         :is-open="dialogViewImage.open === true"
       >
@@ -182,28 +82,23 @@
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="start">
-              <ion-button @click="dialogInsertClassEvent.open = false">Fechar</ion-button>
+              <ion-button @click="closeDialogClass">Fechar</ion-button>
             </ion-buttons>
             <ion-title >Atividades</ion-title>
           </ion-toolbar>
         </ion-header>
         <ion-content>
           <div class="input-wrapper q-px-md q-mx-md">
-            <ion-select 
-              interface="popover" 
-              class="always-flip"
-              v-model="dialogInsertChildEvent.childEventId"
-              :toggle-icon="caretDownSharp"
-              label="Selecione a atividade"
+            <ion-button 
+              @click="openActivityAlert()" 
+              expand="block" 
+              fill="flat"
             >
-              <ion-select-option 
-                v-for="event in childEventsList"
-                :key="event"
-                :value="event._id"
-              >
-                {{ event.name }}
-              </ion-select-option>
-            </ion-select>
+              Selecionar Atividade
+            </ion-button>
+          </div>
+          <div class="ion-padding" v-if="dialogInsertChildEvent.childEventId !== ''">
+            <p>Atividade selecionada: {{ selectedEvent[0].name }}</p>
           </div>
           <div class="input-wrapper  q-px-md q-mx-md">
             <ion-textarea
@@ -216,15 +111,16 @@
           </div>
           <ion-list :inset="true">
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">
-              Lista de crianças
               <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
+              Lista de crianças
             </div>
             <ion-item
               v-for="child in classList"
               :key="child"
-            >
+              >
+              <ion-checkbox :checked="child.isChecked" @ionChange="handleCheckboxChange(child._id, $event)" :aria-label="child.childName"/>
               <ion-label>
-                <ion-checkbox :checked="child.isChecked"  @ionChange="handleCheckboxChange(child._id, $event)"> {{ child.childName }} </ion-checkbox>
+                {{ child.childName }}
               </ion-label>
             </ion-item>
           </ion-list>
@@ -252,13 +148,44 @@
         @cancel="cancelPhotoHandler"
       />
     </ion-content>
+    <ion-alert v-if="formattedChildEventList"
+      :is-open="dialogInsertActivity.open"
+      header="Escolha uma atividade"
+      :backdropDismiss="false"
+      animated
+      :inputs="formattedChildEventList"
+      :buttons="[
+        {
+          text: 'Depois',
+          handler: () => {
+            dialogInsertActivity.open = false;
+          },
+        },
+        {
+          text: 'Confirmar',
+          handler: (e) => {
+            dialogInsertActivity.open = false;
+            this.selectOptionActivity(e)
+          },
+        },
+      ]"
+    />
+    <DialogInsertChildEvent
+      :dialogInsertChildEvent="dialogInsertChildEvent"
+      :image="image"
+      :selectedEvent="selectedEvent"
+      :childEventsHistory="childEventsHistory"
+      :pagination="pagination"
+      :startPhotoHandler="startPhotoHandler"
+      :dialogInsertActivity="dialogInsertActivity"
+    />
   </ion-page>
 </template>
 
 
 <script setup>
 import {
-  IonPage,
+  IonPage, IonAlert,
   IonButton,
   IonBadge,
   IonHeader,
@@ -286,6 +213,7 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { caretDownSharp } from 'ionicons/icons';
 import utils from '../../composables/utils'
 import PhotoHandler from '../../components/PhotoHandler.vue'
+import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 </script>
 <script>
 
@@ -294,16 +222,16 @@ export default {
   data() {
     return {
       startPhotoHandler: false,
-      image: {
-        url: null,
-        blob: null,
-        name: null
-      },
       dialogInsertChildEvent: {
         open: false,
         data: [],
         obs: '',
         childEventId: ''
+      },
+      image: {
+        url: null,
+        blob: null,
+        name: null
       },
       dialogInsertClassEvent: {
         open: false,
@@ -315,6 +243,9 @@ export default {
         data: null,
         image: null
       },
+      dialogInsertActivity: {
+        open: false
+      },
       pagination: {
         page: 1,
         rowsPerPage: 10,
@@ -323,54 +254,106 @@ export default {
       },
       classData: [],
       childrenInClassList: [],
-      childEventsList: [],
       childEventsHistory: [],
+      childEventsList: [],
       show: true,
+      selectedEvent: null,
       classList: [],
       selectedChildren: [],
       childrenFilter: [],
       filterValue: '',
       selectAllChildren: false,
+      formattedChildEventList: null,
     };
   },
   mounted(){
     utils.loading.hide()
   },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/tabsWorkers/class') {
+        this.getClassesByUserId()
+        this.getChildrenInClassList()
+        this.verifyIfHasChildId()
+      }
+    }
+  },
   beforeMount() {
     this.getClassesByUserId()
     this.getChildrenInClassList()
+    this.verifyIfHasChildId()
   },
   methods: {
+    verifyIfHasChildId() {
+      if (this.$route.query.childId !== undefined) {
+        this.clkOpenDialogChildEvent(this.$route.query.childId)
+        return
+      }
+    },
+    closeDialogClass() {
+      this.dialogInsertClassEvent.open = false,
+      this.dialogInsertClassEvent.data = {},
+      this.dialogInsertClassEvent.obs = ''
+    },
+    selectOptionActivity(e) {
+      this.dialogInsertChildEvent.childEventId = e
+      this.selectedEvent = this.childEventsList.filter(event => event._id === e)
+    },
+    openActivityAlert() {
+      this.dialogInsertActivity.open = true
+    },
     filterChildren(event) {
       const query = event.target.value.toLowerCase();
       this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
     },
-    // handleCheckboxChangeAll(e) {
-    //   if (e.detail.checked === true) {
-    //     this.selectedChildren = this.classList.map((child) => ({
-    //     _id: child._id,
-    //   }));
-    //   } else {
-    //     this.selectedChildren = []
-    //   }
-    //   this.selectedChildren.forEach((child) => {
-    //     this.classList.forEach((classList, i) => {
-    //       if (child._id === classList._id) {
-    //         this.classList.forEach((teste) => {
-    //           teste.isChecked = e.detail.checked
-    //           if (teste.isChecked === false) {
-    //             this.selectedChildren = []
-    //             this.classList.forEach((classList) => {
-    //               classList.isChecked = false
-    //             })
-    //           }
-    //         }) 
-    //       }
-    //     })
-    //   })
-    //   this.dialogInsertChildEvent.data = this.selectedChildren
-    //   console.log(this.selectedChildren)
-    // },
+    createUserChildEvents() {
+      if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
+        utils.toast('Preencha o evento e insira uma observação para prosseguir')
+        return
+      }
+      const opt = {
+        route: '/mobile/workers/createUserChildEvents',
+        body: {
+          childId: [this.dialogInsertChildEvent.data.childId],
+          childEventId: this.dialogInsertChildEvent.childEventId,
+          obs: this.dialogInsertChildEvent.obs
+        },
+        file: [{ file: this.image.blob, name: 'userPhoto' }]
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast('Ocorreu um erro. Tente novamente.')
+          return
+        }
+          this.clearModalData()
+          utils.toast('Evento inserido com sucesso!')
+      })
+    },
+    handleCheckboxChangeAll(e) {
+      if (e.detail.checked === true) {
+        this.selectedChildren = this.classList.map((child) => ({
+        _id: child._id,
+      }));
+      } else {
+        this.selectedChildren = []
+      }
+      this.selectedChildren.forEach((child) => {
+        this.classList.forEach((classList, i) => {
+          if (child._id === classList._id) {
+            this.classList.forEach((teste) => {
+              teste.isChecked = e.detail.checked
+              if (teste.isChecked === false) {
+                this.selectedChildren = []
+                this.classList.forEach((classList) => {
+                  classList.isChecked = false
+                })
+              }
+            }) 
+          }
+        })
+      })
+      this.dialogInsertChildEvent.data = this.selectedChildren
+    },
     handleCheckboxChangeAll(e) {
       this.selectedChildren = [];
       this.classList.forEach((classList) => {
@@ -380,12 +363,16 @@ export default {
         }
       });
       this.dialogInsertChildEvent.data = this.selectedChildren;
-      console.log(this.selectedChildren);
+    },
+    closeDialogInserChildren() {
+      this.dialogInsertChildEvent.open = false
+      this.dialogInsertChildEvent.data = []
+      this.dialogInsertChildEvent.obs = ''
+      this.dialogInsertChildEvent.childEventId = ''
     },
     handleCheckboxChange(childId, e) {
       if (e.detail.checked === true) {
         this.selectedChildren.push({_id: childId})
-        console.log(this.selectedChildren)
         if (this.selectedChildren.length === this.classList.length) {
             this.selectAllChildren = true
           }
@@ -399,7 +386,6 @@ export default {
           if (initialLength === this.classList.length && this.selectedChildren !== initialLength) {
             this.selectAllChildren = false
           }
-            console.log("Depois de cortar", this.selectedChildren)
             this.dialogInsertChildEvent.data = this.selectedChildren
           }
         })
@@ -521,6 +507,11 @@ export default {
           return
         }
         this.childEventsList = r.data.list
+        this.formattedChildEventList = this.childEventsList.map((event) => ({
+          type: 'radio',
+          label: event.name,
+          value: event._id
+        }))
       })
     },
     getChildrenInClassList() {

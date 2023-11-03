@@ -1,38 +1,24 @@
 <template>
   <div class="card" >
     <div class="even-card">
-      <ion-icon 
-        class="bounce2"
-        size="large" 
-        :src="star"
-        style="position: absolute; top: 15px; right: 20px; color: #ffd700;"
-      />
       <ion-img 
         v-if="story.postData.resume.img"
         :src="utils.attachmentsAddress() + story.postData.resume.img.filename" class="card-img"
-        style="width: 100%; height: 200px; object-fit: cover; object-position: center;"
-      >
-        
-      </ion-img>
-      <div >
-        <h1 class="card-title">{{ story.postData.resume.title }}</h1>
-        <p class="q-px-md">
-          {{ story.postData.resume.description.length > 50 ? story.postData.resume.description.slice(0, 50) + '...' : story.postData.resume.description }}
-          <span v-if="story.postData.resume.description.length > 50"></span>
-        </p>
-        <ion-row>
-          <ion-col>
-            <div class="ion-text-end">
-              <ion-button 
-                @click="$router.push('/postDetail?postId=' + story._id)"
-                fill="clear"
-              >
-                <h6>Ler mais</h6>
-              </ion-button>
-            </div>
-          </ion-col>
-        </ion-row>
-      </div>
+        style="width: 100%; height: 150px; object-fit: cover; object-position: center;"
+      />
+      <h1 class="card-title">{{ story.postData.resume.title }}</h1>
+      <p class="q-px-md">
+        {{ story.postData.resume.description.length > 20 ? story.postData.resume.description.slice(0, 20) + '...' : story.postData.resume.description }}
+        <span v-if="story.postData.resume.description.length > 20"></span>
+        <div class="ion-text-end">
+          <ion-button 
+            @click="$router.push('/storyDetail?postId=' + story._id)"
+            fill="clear"
+          >
+            <h6>Ler mais</h6>
+          </ion-button>
+        </div>
+      </p>
     </div>
   </div>
 </template>
@@ -54,21 +40,14 @@ const props = defineProps(['story', 'i'])
 </script>
 
 <style scoped>
-.bounce2 {
-  animation: bounce2 1.5s ease infinite;
-}
-@keyframes bounce2 {
-	0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-	40% {transform: translateY(-10px);}
-	60% {transform: translateY(-5px);}
-}
+
 .card {
   margin: 10px;
   border-radius: 0.4rem;
   overflow: hidden;
 }
 .even-card {
-  height: 382px;
+  height: 302px;
   background-color: var(--ion-card-background);
 }
 
@@ -78,7 +57,7 @@ const props = defineProps(['story', 'i'])
 }
 .card-img {
   width: 100%; 
-  height: 200px; 
+  height: 150px; 
   object-fit: contain;
   border-radius: 10px 0px 0px 0px
 }

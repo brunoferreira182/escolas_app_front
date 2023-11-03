@@ -37,7 +37,7 @@
           </h4> -->
         </div>
         <ion-item
-        class="q-mb-sm"
+          class="q-mb-sm"
         >
           <ion-textarea
             placeholder="Deixe um comentário..."
@@ -106,10 +106,9 @@ import like from '/assets/icons/like.svg'
 
 <script>
 export default {
-  name: "PostDetail",
+  name: "StoryDetail",
   data() {
     return {
-      // send,:
       post: null,
       liked: false,
       newComment: '',

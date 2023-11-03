@@ -65,33 +65,6 @@
             }
           }
         ]"
-      ></ion-alert>
-      <ion-alert
-        :is-open="dialogUserAddFamilyName.open"
-        header="Antes de adicionar seus filhos você precisa criar uma família!"
-        :backdropDismiss="false"
-        animated
-        :inputs="[
-          {
-            type: 'text',
-            placeholder: 'Dê um nome para sua família',
-            value: familyName
-          }
-        ]"
-        :buttons="[
-          {
-            text: 'Depois',
-            handler: () => {
-              dialogUserAddFamilyName.open = false
-            }
-          },
-          {
-            text: 'Criar',
-            handler: (e) => {
-              createFamilyName(e)
-            }
-          }
-        ]"
       />
     </ion-content>
   </ion-page>
@@ -133,7 +106,6 @@ export default {
       APP_NAME,
       userProfile: null,
       dialogUserData: {open: false},
-      dialogUserAddFamilyName: {open: false},
       dialogUserAddParent: {open: false},
       userInfo: null,
       familyName: '',
@@ -229,10 +201,10 @@ export default {
       })
     },
     addChild() {
-      if(this.userInfo.familyIdObj === 'noFamily') {
-        this.dialogUserAddFamilyName.open = true
-        return
-      }
+      // if(this.userInfo.familyIdObj === 'noFamily') {
+      //   this.dialogUserAddFamilyName.open = true
+      //   return
+      // }
       this.$router.push('/addChild')
     },
     addParent() {
@@ -264,7 +236,8 @@ export default {
       }
       useFetch(opt).then((r) => {
         if(r.error) {
-          utils.toast('Ocorreu um erro, tente novamente')
+          utils.toast(r.errorMessage)
+          this.dialogUserAddFamilyName.open = true
         }
         this.familySolicitations = r.data
       })

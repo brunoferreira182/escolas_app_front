@@ -4,31 +4,110 @@
       title="Informações"
       :backButton="true"
     />
-    <ion-content class="ion-padding" color="light">
+    <ion-content class="ion-padding" color="light" v-if="eventDetail">
+      <!-- <ion-row class="ion-justify-content-center q-ma-lg">
+        <ion-avatar style="width:108px; height:108px">
+          <img :src="utils.makeFileUrl(eventDetail.eventImage)"/>
+        </ion-avatar> 
+      </ion-row>
+      <div class="ion-text-center">
+        <h2>{{ eventDetail.eventName }}</h2>
+        <p>{{ eventDetail.eventDescription }}</p>
+        <p>{{ eventDetail.eventDate.local }}</p>
+      </div> -->
+      <ion-card>
+        <img :src="utils.makeFileUrl(eventDetail.eventImage)" />
+        <ion-card-header>
+          <ion-card-title>{{ eventDetail.eventName }}</ion-card-title>
+          <ion-card-subtitle>{{ eventDetail.eventDate.local }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          {{ eventDetail.eventDescription }}
+        </ion-card-content>
+      </ion-card>
+      <h2>Autorizações:</h2>
+      <ion-list :inset="true">
+        <ion-item 
+          v-for="child in eventDetail.children"
+          :key="child"
+        >
+          <div class="unread-indicator-wrapper" slot="start">
+            <div class="unread-indicator"></div>
+          </div>
+          <ion-label>
+            <strong >{{ child.name }}</strong><br/>
+          </ion-label> <br/>
+          <ion-button 
+            v-if="!child.classEventPermissionId"
+            fill="flat" 
+            style="color: #3880ff;" 
+            icon
+            size="default"
+            @click="acceptAuthorization(child)"
+          >
+            <ion-icon slot="end" :icon="checkmarkOutline"></ion-icon>
+            Autorizar
+          </ion-button>
+          <ion-button 
+            v-else
+            fill="flat" 
+            style="color: #2dd36f;" 
+            icon
+            size="default"
+          >
+            <ion-icon slot="start" :icon="checkmarkCircleOutline"></ion-icon>
+            Autorizado
+          </ion-button>
+        </ion-item>
+      </ion-list>
+      <h2>Acompanhantes:</h2>
+      <ion-list :inset="true">
+        <ion-item 
+          v-for="parent in eventDetail.users"
+          :key="parent"
+        >
+          <div class="unread-indicator-wrapper" slot="start">
+            <div class="unread-indicator"></div>
+          </div>
+          <ion-label>
+            <strong >{{ parent.name }}</strong><br/>
+          </ion-label> <br/>
+          <ion-button 
+            v-if="!parent.classEventPermissionId"
+            fill="flat" 
+            style="color: #3880ff;" 
+            icon
+            size="default"
+            @click="acceptAuthorization(child)"
+          >
+            <ion-icon slot="end" :icon="checkmarkOutline"></ion-icon>
+            Acompanhar
+          </ion-button>
+          <ion-button 
+            v-else
+            fill="flat" 
+            style="color: #2dd36f;" 
+            icon
+            size="default"
+          >
+            <ion-icon slot="start" :icon="checkmarkCircleOutline"></ion-icon>
+            Acompanhando
+          </ion-button>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
 import {
-  IonPage,
-  IonButton,
-  IonAlert,
-  IonGrid,
-  IonText,
-  IonInput,
-  IonRow,
-  IonItem,
-  IonLabel,
-  IonCol,
-  IonList,
-  IonAvatar,
-  IonBadge,
-  IonContent,
-  onIonViewWillEnter,
-  IonIcon
+  IonPage, IonContent, IonList,
+  IonItem, IonButton, IonIcon,
+  IonLabel, IonCard, IonCardContent,
+  IonCardHeader, IonCardSubtitle,
+  IonCardTitle
 } from '@ionic/vue';
-import { trashOutline } from 'ionicons/icons';
+import { trashOutline, checkmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useFetch } from '../../composables/fetch'
 import InputDocument from '../../components/InputDocument.vue'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -36,7 +115,6 @@ import utils from '../../composables/utils'
 import PhotoHandler from '../../components/PhotoHandler.vue'
 </script>
 <script>
-
 export default {
   name: "EventDetail",
   data() {
@@ -48,13 +126,15 @@ export default {
       }
     };
   },
+  beforeMount () {
+    this.getEventDetailById()
+  },
   methods: {
-    //Pegar o detalhe do evento
     getEventDetailById() { 
       const opt = {
-        route: '',
+        route: '/mobile/parents/chat/getEventDetailById',
         body: {
-          eventId: this.$route.query.eventId
+          classEventId: this.$route.query.eventId
         }
       }
       useFetch(opt).then((r) => {
@@ -65,36 +145,23 @@ export default {
         this.eventDetail = r.data
       })
     },
-    //Pegar o número de filhos que eu tenho e colocar os eventos em todos
-    getChildInClassByParentId() {
-      const opt = {
-        route: '/mobile/parents/chat/getChildInClassByParentId',
-        body: {
-          classId: this.$route.query.classId ,
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (!r.error) {
-          this.userChildren = r.data.children
-        }
-          else { 
-            utils.toast("Ocorreu um erro, tente novamente")
-          }
-      })
-    },
     //Aceitar ou autorizar filho a participar do evento
-    acceptAuthorization(au) { 
-      // console.log(au)
-      // const opt = {
-      //   route: '/mobile/parents/chat/respondClassEventSolicitation',
-      //   body: {
-      //     eventClassId: au._id ,
-      //     childId: ,
-      //     requireParentsPermission: true
-      //   }
-      // }
+    acceptAuthorization(child) { 
+      const opt = {
+        route: '/mobile/parents/chat/insertUserInClassEvent',
+        body: {
+          eventClassId: this.$route.query.eventId,
+          childId: child.userId,
+        }
+      } 
+      useFetch(opt).then((r) => {
+        if(r.error) {
+          utils.toast("Ocorreu um erro, tente novamente")
+        } else {
+          utils.toast("Autorização enviada com sucesso.")
+          this.getEventDetailById()
+        }
+      })
     },
     //Recusar ou não autorizar filho a participar do evento
     refuseAuthorization(au) { 
@@ -109,5 +176,5 @@ export default {
       // }
     },
   }
-};
+  }
 </script>

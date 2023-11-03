@@ -13,45 +13,31 @@
       <div class="ion-text-center">
         <h2>{{ classData.className }}</h2>
       </div>
-      <ion-list :inset="true">
-        <ion-item>
-          <h2>Mídia</h2>
-        </ion-item>
-      </ion-list>
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
             <ion-label>Eventos da turma</ion-label>
           </ion-item>
           <div slot="content">
-            <ion-item
-              lines="full"
+            <ion-item 
+              :button="true" 
+              detail="false"
               v-for="event in eventList"
               :key="event"
             >
+              <div class="unread-indicator-wrapper" slot="start">
+                <div class="unread-indicator"></div>
+              </div>
               <ion-label>
-                <ion-row class="ion-justify-content-between">
-                  <ion-col size="4" class="ion-text-wrap">
-                    <h6 class="text-capitalize">
-                      {{event.eventName }}
-                    </h6>
-                    <ion-badge  style="background-color: #eb445a;">{{ event.eventName }}</ion-badge>
-                  </ion-col>
-                  <ion-col size="5" class="text-subtitle2">{{ event.eventDate.local }}</ion-col>
-                </ion-row>
-                <div class="ion-text-wrap">
-                  {{ event.eventDescription }}
+                <strong>{{ event.eventName }}</strong>
+                <br />
+                <div class="metadata-end-wrapper" slot="end">
+                  <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
                 </div>
+                <ion-note color="medium" class="ion-text-wrap">
+                  {{ event.eventDescription }}
+                </ion-note>
               </ion-label>
-            <!-- <ion-card>
-              <ion-card-header>
-                <ion-card-title>{{ event.eventName }}</ion-card-title>
-                <ion-card-subtitle>{{ event.eventDate.local }}</ion-card-subtitle>
-              </ion-card-header>
-              <ion-card-content>
-                {{ event.eventDescription }}
-              </ion-card-content>
-            </ion-card> -->
             </ion-item>
           </div>
         </ion-accordion>
@@ -77,6 +63,13 @@
           </div>
         </ion-accordion>
       </ion-accordion-group>
+      <ion-accordion-group expand="inset">
+      <ion-accordion value="first" :toggle-icon="chevronForwardOutline" toggle-icon-slot="end">
+        <ion-item slot="header" @click="goToMedia">  
+          <ion-label>Mídia</ion-label>
+        </ion-item>
+      </ion-accordion>
+    </ion-accordion-group>
       <ion-button @click="clkGoToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
     </ion-content>
   </ion-page>
@@ -85,10 +78,11 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
+import {chevronForwardOutline} from 'ionicons/icons'
 import {
   IonPage, IonContent,
-  IonList, IonItem,
-  IonButton, IonAvatar,
+  IonList, IonItem, IonIcon,
+  IonButton, IonAvatar, IonNote,
   IonAccordionGroup, IonAccordion,
   IonLabel, IonCardTitle, IonCardSubtitle,
   IonCardHeader, IonCardContent, IonCard, IonRow, 
@@ -112,7 +106,18 @@ export default {
     this.getClassDetailById()
     this.getEventsByClassId()
   },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/chatInfoWorker') {
+        this.getClassDetailById()
+        this.getEventsByClassId()
+      }
+    }
+  },
   methods: {
+    goToMedia() {
+      this.$router.push("/chatMediaWorker?classId=" + this.$route.query.classId)
+    },
     getEventsByClassId() {
       const opt = {
         route: '/mobile/workers/getClassEvents',
