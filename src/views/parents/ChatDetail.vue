@@ -36,9 +36,7 @@
                       <div v-if="message.answerMessage.message">{{ message.answerMessage.message }}</div>
                       <div v-else>Arquivo</div>
                     </ion-card>
-                    <div v-if="message.messageFile &&
-                      message.messageFile.filename !== null &&
-                      message.messageFile.mimetype !== null">
+                    <div v-if="message.messageFile && Object.keys(message.messageFile).length > 0">
                       <img
                         v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
                         :src="utils.attachmentsAddress() + message.messageFile.filename"

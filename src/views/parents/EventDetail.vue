@@ -115,7 +115,6 @@ import utils from '../../composables/utils'
 import PhotoHandler from '../../components/PhotoHandler.vue'
 </script>
 <script>
-
 export default {
   name: "EventDetail",
   data() {

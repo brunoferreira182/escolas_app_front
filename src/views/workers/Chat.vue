@@ -14,7 +14,7 @@
               :key="c"
               :button="true"
               class="q-pa-sm"
-              @click="goToChatDetail(c._classId)"
+              @click="goToChatDetail(c.classId)"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage">
                 <img :src="utils.makeFileUrl(c.classImage)" />
