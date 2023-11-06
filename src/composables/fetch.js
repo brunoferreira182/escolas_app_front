@@ -92,7 +92,7 @@ export async function useFetch ({
       const fileName = f.name ? f.name : 'userFile.png';
       // const blob = new Blob([f.file], { type: f.type });
       const blob = new Blob([f.file]);
-      form.append('file', blob, fileName);
+      form.append('files', blob, fileName);
     });
     
     bodyToSend = form
