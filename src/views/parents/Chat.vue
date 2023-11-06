@@ -41,25 +41,34 @@
         </ion-list>
         <ion-list :inset="true" >
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico de atividades</div>
-          <ion-item 
-            v-for="e in childEventsHistory"
-            :key="e"
-            detail="false"
-          >
-            <ion-label>
-              <strong>{{ e.name }}</strong>
-              <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
-              <ion-note color="medium" class="ion-text-wrap">
-                {{ e.obs }}
-              </ion-note>
-            </ion-label>
-            <div class="metadata-end-wrapper" slot="end">
-              <ion-note color="medium">
-                {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
-                {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-              </ion-note>
-            </div>
-          </ion-item>
+          <div v-if="childEventsHistory && childEventsHistory.length">
+            <ion-item 
+              v-for="e in childEventsHistory"
+              :key="e"
+              detail="false"
+            >
+              <ion-label>
+                <strong>{{ e.name }}</strong>
+                <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
+                <ion-note color="medium" class="ion-text-wrap">
+                  {{ e.obs }}
+                </ion-note>
+              </ion-label>
+              <div class="metadata-end-wrapper" slot="end">
+                <ion-note color="medium">
+                  {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
+                  {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+                </ion-note>
+              </div>
+            </ion-item>
+          </div>
+          <div v-else>
+            <ion-item>
+              <ion-label>
+                Nenhum Histórico recente.
+              </ion-label>
+            </ion-item>
+          </div>
         </ion-list>
       </div>
     </ion-content>
