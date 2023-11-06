@@ -5,16 +5,6 @@
       :backButton="true"
     />
     <ion-content class="ion-padding" color="light" v-if="eventDetail">
-      <!-- <ion-row class="ion-justify-content-center q-ma-lg">
-        <ion-avatar style="width:108px; height:108px">
-          <img :src="utils.makeFileUrl(eventDetail.eventImage)"/>
-        </ion-avatar> 
-      </ion-row>
-      <div class="ion-text-center">
-        <h2>{{ eventDetail.eventName }}</h2>
-        <p>{{ eventDetail.eventDescription }}</p>
-        <p>{{ eventDetail.eventDate.local }}</p>
-      </div> -->
       <ion-card>
         <img :src="utils.makeFileUrl(eventDetail.eventImage)" />
         <ion-card-header>
@@ -25,20 +15,30 @@
           {{ eventDetail.eventDescription }}
         </ion-card-content>
       </ion-card>
-      <h2>Autorizações:</h2>
+      <h2 class="q-px-md">Filhos:</h2>
       <ion-list :inset="true">
         <ion-item 
-          v-for="child in eventDetail.children"
+          v-for="child in eventDetail.children.data"
           :key="child"
         >
           <div class="unread-indicator-wrapper" slot="start">
             <div class="unread-indicator"></div>
           </div>
           <ion-label>
-            <strong >{{ child.name }}</strong><br/>
+            <strong class="ion-text-capitalize">{{ child.childName }}</strong><br/>
           </ion-label> <br/>
           <ion-button 
-            v-if="!child.classEventPermissionId"
+            v-if="child.permissionsData && child.permissionsData.parentsPermission"
+            fill="flat" 
+            style="color: #2dd36f;" 
+            icon
+            size="default"
+          >
+            <ion-icon slot="start" :icon="checkmarkCircleOutline"></ion-icon>
+            Autorizado
+          </ion-button>
+          <ion-button 
+            v-else
             fill="flat" 
             style="color: #3880ff;" 
             icon
@@ -48,20 +48,11 @@
             <ion-icon slot="end" :icon="checkmarkOutline"></ion-icon>
             Autorizar
           </ion-button>
-          <ion-button 
-            v-else
-            fill="flat" 
-            style="color: #2dd36f;" 
-            icon
-            size="default"
-          >
-            <ion-icon slot="start" :icon="checkmarkCircleOutline"></ion-icon>
-            Autorizado
-          </ion-button>
+        
         </ion-item>
       </ion-list>
-      <h2>Acompanhantes:</h2>
-      <ion-list :inset="true">
+      <h2 class="q-px-md">Acompanhantes:</h2>
+      <ion-list :inset="true" v-if="eventDetail.users && eventDetail.users.length">
         <ion-item 
           v-for="parent in eventDetail.users"
           :key="parent"
@@ -95,6 +86,9 @@
           </ion-button>
         </ion-item>
       </ion-list>
+      <div class="q-px-lg text-caption">
+        Não há acompanhantes
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -109,9 +103,9 @@ import {
 } from '@ionic/vue';
 import { trashOutline, checkmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useFetch } from '../../composables/fetch'
+import utils from '../../composables/utils'
 import InputDocument from '../../components/InputDocument.vue'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import utils from '../../composables/utils'
 import PhotoHandler from '../../components/PhotoHandler.vue'
 </script>
 <script>
@@ -151,7 +145,8 @@ export default {
         route: '/mobile/parents/chat/insertUserInClassEvent',
         body: {
           eventClassId: this.$route.query.eventId,
-          childId: child.userId,
+          childId: child.childId,
+          parentsPermission: true,
         }
       } 
       useFetch(opt).then((r) => {

@@ -30,7 +30,7 @@
           <ion-col>
             <div class="ion-text-end">
               <ion-button 
-                @click="$router.push('/postDetail?postId=' + post._id)"
+                @click="$router.push(post.routeDestination)"
                 fill="clear"
               >
                 <h6>Ler mais</h6>

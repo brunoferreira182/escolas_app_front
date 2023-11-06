@@ -1,18 +1,29 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Calendário"
+      title="Agenda"
       :backButton="true"
     />
     <ion-content color="light">
       <ion-grid class="ion-align-items-center ion-justify-content-center">
         <ion-row>
           <ion-col size="12">
-            <ion-datetime style="background-color: white;border-radius: 5%;" 
-            presentation="date" 
-            value="2023-01-01" 
-            :highlighted-dates="highlightedDates"
-          />
+            <h2 class="q-px-md">Eventos:</h2>
+            <ion-list :inset="true">
+              <ion-item 
+                v-for="event in eventsList"
+                :key="event"
+                @click="$router.push()"
+              >
+                <ion-label>
+                  <div class="ion-text-capitalize text-h5">
+                    {{ event.eventName }}
+                  </div>{{ event.eventDate.local }}
+                  <br/>
+                  {{ event.eventDescription }}
+                </ion-label> <br/>
+              </ion-item>
+            </ion-list>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -21,44 +32,48 @@
 </template>
 <script setup>
 import { 
-    IonDatetime, 
-    IonPage, 
-    IonContent, 
-    IonGrid, 
-    IonCol,
-    IonRow 
-  } from '@ionic/vue';
-  import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+  IonDatetime, 
+  IonPage, 
+  IonContent, 
+  IonGrid, 
+  IonCol,
+  IonLabel,
+  IonList,
+  IonItem,
+  IonRow 
+} from '@ionic/vue';
+import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+import { useFetch } from '../../composables/fetch'
+import utils from '../../composables/utils'
 </script>
 
 <script>
   export default {
-    components: { IonDatetime },
     data() {
       return {
-        highlightedDates: [
-          {
-            date: '2023-01-05',
-            textColor: '#800080',
-            backgroundColor: '#ffc0cb',
-          },
-          {
-            date: '2023-01-10',
-            textColor: '#09721b',
-            backgroundColor: '#c8e5d0',
-          },
-          {
-            date: '2023-01-20',
-            textColor: 'var(--ion-color-secondary-contrast)',
-            backgroundColor: 'var(--ion-color-secondary)',
-          },
-          {
-            date: '2023-01-23',
-            textColor: 'rgb(68, 10, 184)',
-            backgroundColor: 'rgb(211, 200, 229)',
-          },
-        ]
+        eventsList:[],
       }
     },
+    beforeMount(){
+      this.getSchoolEvents()
+    },
+    methods: {
+      getSchoolEvents(){
+        const opt = {
+          route: '/mobile/social/getSchoolEvents',
+          body: {
+            page: 1,
+            rowsPerPage: 100
+          }
+        }
+        useFetch(opt).then((r) => {
+          if (r.error) {
+            utils.toast("Ocorreu um erro, tente novamente mais tarde")
+            return
+          }
+          this.eventsList = r.data.list
+        })
+      },
+    }
   };
 </script>
