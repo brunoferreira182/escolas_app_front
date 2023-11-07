@@ -113,8 +113,6 @@ export async function useFetch ({
   console.log('retorno fetch ' + route, ret.data)
 
   if (ret.data.error) {
-    
-
     if (
       (ret.data.errorType === 'tokenNonExistent' || ret.data.errorType === 'loginNonExistent') 
       && (route !== '/getKey')
