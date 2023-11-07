@@ -55,11 +55,11 @@
           >Trocar foto</ion-button>
         </ion-col>
       </ion-row>
-      <div class="q-px-md">
-        <ion-chip>{{ dialogInsertChildEvent.data.childName }}</ion-chip>
+      <div class="q-px-md ion-text-capitalize">
+        <ion-chip class="text-h5 ">{{ dialogInsertChildEvent.data.childName }}</ion-chip>
       </div>
-      <ion-list :inset="true" >
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
+      <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
+      <ion-list :inset="true" v-if="childEventsHistory.length">
         <ion-item 
           v-for="e in childEventsHistory"
           :key="e"
@@ -91,6 +91,9 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      <div v-else class="q-px-lg text-caption">
+        Nenhuma atividade
+      </div>
     </ion-content>
     <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
   </ion-modal>

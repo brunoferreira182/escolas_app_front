@@ -23,6 +23,7 @@
               :button="true" 
               detail="false"
               v-for="event in eventList"
+              @click="$router.push('/eventDetail?eventId=' + event._id)"
               :key="event"
             >
               <div class="unread-indicator-wrapper" slot="start">

@@ -26,7 +26,6 @@
           </div>
           <ion-label>
             <strong class="ion-text-capitalize">{{ child.childName }}</strong><br/>
-            
           </ion-label> <br/>
           <div v-if="child.permissionsData && child.permissionsData.parentsPermission">
             <ion-button 
