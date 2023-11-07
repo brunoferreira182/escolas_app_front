@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'escolas_app_front_app',
   webDir: 'dist',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'http'
   }
 };
 

@@ -91,34 +91,8 @@ export default defineComponent({
         return
       } 
       this.userInfo = r.data;
-      pushService.initPush()
+      // pushService.initPush()
       utils.verifyUserPermissions(r.data)
-
-
-      // if(r.data.status === 'waitingApproval') {
-      //   this.$router.push("/waitingAproval")
-      //   return
-      // }
-      // if(r.data.status === 'active') {
-      //   const permissions = await this.getUserPermissions()
-      //   this.userPermissions = permissions.data
-      //   if (this.userPermissions.length === 0){
-      //     this.$router.push("/waitingPermission")
-      //     return
-      //   }
-      //   const currentVision = localStorage.getItem('currentVision')
-      //   this.userPermissions.forEach((p) => {
-      //     if (currentVision === 'worker')
-      //     if (p.role === 'IS_PARENT') {
-      //       this.$router.push("/tabsParents")
-      //       return
-      //     }
-      //     else if (p.role === 'IS_WORKER') {
-      //       this.$router.push("/tabsWorkers")
-      //       return
-      //     }
-      //   })
-      // }
     },
   }
 

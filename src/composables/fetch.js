@@ -118,7 +118,7 @@ export async function useFetch ({
     if (
       (ret.data.errorType === 'tokenNonExistent' || ret.data.errorType === 'loginNonExistent') 
       && (route !== '/getKey')
-    ) console.log('nao é pra dar toast')
+    ) router.replace('/login')
     else if (ret.data.errorType === 'tokenExpired') {
       toast(ret.data.errorMessage)
       router.push('/login')
