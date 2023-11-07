@@ -15,7 +15,7 @@ import {
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useFetch } from '../composables/fetch.js';
-import { StatusBar, Style } from '@capacitor/status-bar';
+// import { StatusBar, Style } from '@capacitor/status-bar';
 import { useBackButton, useIonRouter, isPlatform } from '@ionic/vue';
 import { App } from '@capacitor/app';
 import utils from '../composables/utils'
@@ -38,6 +38,7 @@ export default defineComponent({
   },
   mounted () {
     this.startView()
+    utils.loading.hide()
     // utils.fetchIuguId()
     // utils.getIuguLib()
     this.backButtonManager()

@@ -5,28 +5,29 @@
       :backButton="true"
     />
     <ion-content color="light">
-      <ion-grid class="ion-align-items-center ion-justify-content-center">
-        <ion-row>
-          <ion-col size="12">
-            <h2 class="q-px-md">Eventos:</h2>
-            <ion-list :inset="true">
-              <ion-item 
-                v-for="event in eventsList"
-                :key="event"
-                @click="$router.push()"
-              >
-                <ion-label>
-                  <div class="ion-text-capitalize text-h5">
-                    {{ event.eventName }}
-                  </div>{{ event.eventDate.local }}
-                  <br/>
-                  {{ event.eventDescription }}
-                </ion-label> <br/>
-              </ion-item>
-            </ion-list>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <ion-list :inset="true">
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Eventos</div>
+        <ion-item 
+          v-for="event in eventsList"
+          :key="event"
+          class="q-pa-sm"
+          style="border-radius: 1rem"
+          @click="$router.push('/eventDetail?eventId=' + event._id)"
+        >
+          <div class="unread-indicator-wrapper" slot="start">
+            <div class="unread-indicator"></div>
+          </div>
+          <ion-label>
+            <ion-badge 
+              class="ion-text-capitalize "
+              color="success"
+            >
+              {{ event.eventName }}
+            </ion-badge>
+            <h6> {{ event.eventDate.local }}</h6>
+          </ion-label>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -37,6 +38,7 @@ import {
   IonContent, 
   IonGrid, 
   IonCol,
+  IonBadge,
   IonLabel,
   IonList,
   IonItem,
@@ -77,3 +79,44 @@ import utils from '../../composables/utils'
     }
   };
 </script>
+<style scoped>
+  .unread-indicator {
+    background: var(--ion-color-primary);
+
+    width: 10px;
+    height: 10px;
+
+    border-radius: 100%;
+
+    position: absolute;
+
+    inset-inline-start: 12px;
+    top: 12px;
+  }
+
+  .metadata-end-wrapper {
+    position: absolute;
+
+    top: 10px;
+    inset-inline-end: 10px;
+
+    font-size: 0.8rem;
+
+    display: flex;
+    align-items: center;
+  }
+
+  ion-label strong {
+    display: block;
+
+    max-width: calc(100% - 60px);
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+  }
+
+  ion-label ion-note {
+    font-size: 0.9rem;
+  }
+</style>
