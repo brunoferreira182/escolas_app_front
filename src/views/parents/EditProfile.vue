@@ -21,7 +21,7 @@
           >
           </ion-input>
         </div>
-        <ion-button @click="updateProfileInfo" expand="block">Salvar alterações</ion-button>
+        <ion-button @click="updateUserProfileInfo" expand="block">Salvar alterações</ion-button>
       </div>
       <PhotoHandler
         v-show="startPhotoHandler"
@@ -88,9 +88,9 @@ export default {
         this.getUserProfileById()
       })
     },
-    updateProfileInfo() {
+    updateUserProfileInfo() {
       const opt = {
-        route: '/mobile/profile/updateUserProfileInfo',
+        route: '/mobile/parents/profile/updateUserProfileInfo',
         body: {
           name: this.userInfo.name
         }

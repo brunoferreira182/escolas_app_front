@@ -1,39 +1,57 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Agenda"
+      title="Calendário"
       :backButton="true"
     />
     <ion-content color="light">
-      <ion-list :inset="true">
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Eventos</div>
+      <div class="ion-text-left text-h5 q-py-sm q-px-lg">Próximos eventos</div>
+      <ion-list :inset="true" v-if="eventsList && eventsList.length">
         <ion-item 
+          :button="true"
           v-for="event in eventsList"
           :key="event"
           class="q-pa-sm"
-          style="border-radius: 1rem"
-          @click="$router.push('/eventDetail?eventId=' + event._id)"
+          @click="$router.push('/calendarEventDetail?schoolEventId=' + event._id)"
         >
           <div class="unread-indicator-wrapper" slot="start">
             <div class="unread-indicator"></div>
           </div>
           <ion-label>
-            <ion-badge 
-              class="ion-text-capitalize "
-              color="success"
-            >
+            <div class="text-h6 ion-text-capitalize ">
               {{ event.eventName }}
-            </ion-badge>
-            <h6> {{ event.eventDate.local }}</h6>
+            </div>
+            <p>
+              {{ event.eventDate.local.split('-')[2] }}/
+              {{ event.eventDate.local.split('-')[1] }}/
+              {{ event.eventDate.local.split('-')[0] }}
+            </p>
+            <p class="text ion-no-margin">
+              {{ showFullDescription ? event.eventDescription : event.eventDescription.slice(0, 100) }}
+              <button 
+                class="more-button" 
+                v-if="event.eventDescription.length > 100" 
+                @click="showFullDescription = !showFullDescription"
+              >
+                <span v-if="!showFullDescription && event.eventDescription.length > 100">...</span>
+                {{ showFullDescription ? 'Ver menos' : 'Ver mais' }}
+              </button>
+            </p>
+            <!-- <p color="medium">{{ event.eventDescription }}</p> -->
           </ion-label>
         </ion-item>
       </ion-list>
+      <div v-else class="q-px-lg">
+        Não há eventos
+      </div>
     </ion-content>
   </ion-page>
 </template>
+
+
 <script setup>
-import { 
-  IonPage, 
+import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+import { IonPage, 
   IonContent, 
   IonGrid, 
   IonCol,
@@ -41,18 +59,18 @@ import {
   IonLabel,
   IonList,
   IonItem,
-  IonRow 
-} from '@ionic/vue';
-import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import { useFetch } from '../../composables/fetch'
-import utils from '../../composables/utils'
+  IonRow  } from '@ionic/vue';
 </script>
 
 <script>
-  export default {
+  import { defineComponent } from 'vue';
+  import { useFetch } from '../../composables/fetch'
+  import utils from '../../composables/utils'
+  export default defineComponent({
     data() {
       return {
         eventsList:[],
+        showFullDescription: false,
       }
     },
     beforeMount(){
@@ -76,10 +94,15 @@ import utils from '../../composables/utils'
         })
       },
     }
-  };
+  });
 </script>
 <style scoped>
-  .unread-indicator {
+.more-button {
+  background: none;
+  border: none;
+  color: #747474;
+}
+.unread-indicator {
     background: var(--ion-color-primary);
 
     width: 10px;

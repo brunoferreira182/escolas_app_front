@@ -37,6 +37,7 @@ import notesListWorker from '../views/workers/NotesList.vue'
 import calendarParent from '../views/parents/Calendar.vue'
 import calendarWorker from '../views/workers/Calendar.vue'
 import storyDetail from '../views/parents/StoryDetail.vue'
+import calendarEventDetail from '../views/workers/CalendarEventDetail.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -179,6 +180,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       { path: '/postDetail', component: postDetail },
       { path: '/storyDetail', component: storyDetail },
+      { path: '/calendarEventDetail', component: calendarEventDetail },
       { path: '/editProfile', component: editProfile },
       { path: '/postReactions', component: postReactions },
     ]
