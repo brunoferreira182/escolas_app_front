@@ -122,7 +122,7 @@
                 :checked="child.isChecked" 
                 @ionChange="handleCheckboxChange(child._id, $event)" 
               />
-              <ion-label>
+              <ion-label class="q-px-md">
                 {{ child.childName }}
               </ion-label>
             </ion-item>
@@ -285,6 +285,7 @@ export default {
     }
   },
   beforeMount() {
+    utils.loading.hide()
     this.getClassesByUserId()
     this.getChildrenInClassList()
     this.verifyIfHasChildId()
