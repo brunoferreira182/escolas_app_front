@@ -4,6 +4,7 @@
     rows="1"
     type="email"
     :label="label"
+    autofocus
     label-placement="floating"
     fill="outline"
     error-text="Email inválido"

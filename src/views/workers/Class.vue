@@ -171,7 +171,7 @@
           text: 'Confirmar',
           handler: (e) => {
             dialogInsertActivity.open = false;
-            this.selectOptionActivity(e)
+            selectOptionActivity(e)
           },
         },
       ]"
@@ -302,6 +302,7 @@ export default {
       this.dialogInsertClassEvent.obs = ''
     },
     selectOptionActivity(e) {
+      console.log(e, 'okasopkdas')
       this.dialogInsertChildEvent.childEventId = e
       this.selectedEvent = this.childEventsList.filter(event => event._id === e)
     },
