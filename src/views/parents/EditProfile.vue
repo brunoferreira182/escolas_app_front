@@ -98,6 +98,10 @@ export default {
       utils.loading.show()
       useFetch(opt).then(r => {
         utils.loading.hide()
+        if(r.error){
+          utils.toast(r.errorMessage)
+        } 
+        utils.toast('Dados atualizados com sucesso!')
         this.getUserProfileById()
       })
     }

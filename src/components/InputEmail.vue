@@ -9,6 +9,7 @@
     fill="outline"
     error-text="Email inválido"
     :value="value"
+    @keyup.enter="onChange($event)"
     @ionBlur="onChange($event)"
     @ionInput="onChange($event)"
     ></ion-input>

@@ -7,13 +7,13 @@
     <ion-content color="light">
       <ion-list :inset="true">
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Outras opções</div>
-        <ion-item :button="true" @click="this.$router.push('/calendar')">
+        <ion-item :button="true" @click="$router.push('/calendar')">
           <ion-label>Agenda</ion-label>
         </ion-item>
         <ion-item :button="true">
           <ion-label>Pagamentos</ion-label>
         </ion-item>
-        <ion-item :button="true" @click="this.$router.push('/notesList')">
+        <ion-item :button="true" @click="$router.push('/notesList')">
           <ion-label>Recados</ion-label>
         </ion-item>
       </ion-list>

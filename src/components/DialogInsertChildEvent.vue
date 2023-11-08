@@ -98,13 +98,13 @@
     <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
   </ion-modal>
   <PhotoHandler
-        v-show="startPhotoHandler"
-        :start="startPhotoHandler"
-        :allFiles="true"
-        :noCrop="false"
-        @captured="captured"
-        @cancel="cancelPhotoHandler"
-      />
+    v-show="startPhotoHandler"
+    :start="startPhotoHandler"
+    :allFiles="true"
+    :noCrop="false"
+    @captured="captured"
+    @cancel="cancelPhotoHandler"
+  />
 </template>
 
 <script setup>
@@ -151,6 +151,10 @@ export default {
       this.startPhotoHandler = false
     },
     createUserChildEvents() {
+      console.log(this.dialogInsertChildEvent.data.childId, 'this.dialogInsertChildEvent.data.childId')
+      console.log(this.dialogInsertChildEvent.childEventId, 'childEventId')
+      console.log(this.dialogInsertChildEvent.obs, 'obs')
+
       if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
         utils.toast('Preencha o evento e insira uma observação para prosseguir')
         return

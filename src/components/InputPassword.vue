@@ -9,6 +9,7 @@
       helper-text="Sua senha"
       :value="value"
       ref="inputPassword"
+      @keyup.enter="onChange($event)"
       @ionBlur="onChange($event)"
       @ionInput="onChange($event)"
       >

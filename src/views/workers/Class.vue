@@ -302,7 +302,6 @@ export default {
       this.dialogInsertClassEvent.obs = ''
     },
     selectOptionActivity(e) {
-      console.log(e, 'okasopkdas')
       this.dialogInsertChildEvent.childEventId = e
       this.selectedEvent = this.childEventsList.filter(event => event._id === e)
     },
@@ -533,9 +532,7 @@ export default {
           searchString: this.filterValue
         }
       }
-      utils.loading.show()
       useFetch(opt).then((r) => {
-        utils.loading.hide()
         if (r.error) {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
