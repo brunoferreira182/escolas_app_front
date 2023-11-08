@@ -88,6 +88,14 @@
           >
             Continuar
           </ion-button>
+          <ion-button
+            expand="block"
+            fill="outline"
+            class="q-gutter-md"
+            @click="$router.back()"
+          >
+            Voltar
+          </ion-button>
         </div>
 
       </div>
