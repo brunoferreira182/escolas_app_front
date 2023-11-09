@@ -30,7 +30,15 @@
           <ion-col>
             <div class="ion-text-end">
               <ion-button 
-                @click="$router.push(post.routeDestination)"
+                v-if="post.routeDestination !== '/postDetail'"
+                @click="$router.push(post.routeDestination )"
+                fill="clear"
+              >
+                <h6>Ler mais</h6>
+              </ion-button>
+              <ion-button 
+                v-else-if="post.routeDestination === '/postDetail'"
+                @click="$router.push('/postDetail?postId=' + post._id)"
                 fill="clear"
               >
                 <h6>Ler mais</h6>
@@ -71,6 +79,14 @@
           <ion-col>
             <div class="ion-text-end">
               <ion-button 
+                v-if="post.routeDestination !== '/postDetail'"
+                @click="$router.push(post.routeDestination )"
+                fill="clear"
+              >
+                <h6>Ler mais</h6>
+              </ion-button>
+              <ion-button 
+                v-else-if="post.routeDestination === '/postDetail'"
                 @click="$router.push('/postDetail?postId=' + post._id)"
                 fill="clear"
               >

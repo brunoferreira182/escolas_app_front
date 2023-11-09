@@ -12,7 +12,7 @@
         <span v-if="story.postData.resume.description.length > 20"></span>
         <div class="ion-text-end">
           <ion-button 
-            @click="$router.push('/storyDetail?postId=' + story._id)"
+            @click="$router.push('/postDetail?postId=' + story._id)"
             fill="clear"
           >
             <h6>Ler mais</h6>
