@@ -6,7 +6,6 @@
     />
     <ion-content color="light">
       <ion-card >
-        <!-- <img :src="utils.makeFileUrl(eventDetail.eventImage)" /> -->
         <ion-card-header>
           <ion-card-title class="text-capitalize">{{ eventDetail.eventName }}</ion-card-title>
           <ion-card-subtitle v-if="eventDetail && eventDetail.eventDate">         
@@ -19,6 +18,15 @@
           {{ eventDetail.eventDescription }}
         </ion-card-content>
       </ion-card>
+      <div>
+        <div style="display: flex; align-items: center;" class="q-mb-md">
+          <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart.svg"></ion-icon>
+          <ion-icon id="smileIcon" size="large" @click="clkReaction(smile)" src="/assets/icons/smile.svg"></ion-icon>
+          <ion-icon id="likeIcon" size="large" @click="clkReaction(icon)" src="/assets/icons/like.svg"></ion-icon>
+          <div style="margin-left: 50%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
+          </div>
+        </div>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -35,6 +43,9 @@ import {
   IonCardHeader,
   IonCardContent,
   } from '@ionic/vue';
+  import heart from '/assets/icons/heart.svg'
+import smile from '/assets/icons/smile.svg'
+import like from '/assets/icons/like.svg'
 </script>
 
 <script>
@@ -45,12 +56,26 @@ import {
     data() {
       return {
         eventDetail:{},
+        reactions: [heart, smile, like],
       }
     },
     beforeMount(){
       this.getCalendarEventDetail()
     },
     methods: {
+      clkReaction (icon) {
+        const opt = {
+          route: '/mobile/social/addNewPostReaction',
+          body: {
+            postId: this.$route.query.postId,
+            reaction: icon
+          }
+        }
+        useFetch(opt).then(r => {
+          this.getCalendarEventDetail()
+          this.liked = true
+        })
+      },
       getCalendarEventDetail() {
         const opt = {
           route: '/mobile/social/getCalendarEventDetail',
