@@ -19,12 +19,12 @@
           expand="block" 
           fill="flat"
         >
-          Selecionar Atividade
+          {{ dialogInsertChildEvent.childEventId !== '' ? selectedEvent[0].name : 'Selecionar Atividade'}}
         </ion-button>
       </div>
-      <div class="ion-padding" v-if="dialogInsertChildEvent.childEventId !== ''">
+      <!-- <div class="ion-padding" v-if="dialogInsertChildEvent.childEventId !== ''">
         <p>Atividade selecionada: {{ selectedEvent[0].name }}</p>
-      </div>
+      </div> -->
       <div class="input-wrapper  q-px-md q-mx-md">
         <ion-textarea
           label="Descrição"
@@ -68,7 +68,7 @@
             <img :src="utils.makeFileUrl(e.childEventImage)" @click="startDialogViewImage(e)"/>
           </ion-avatar>
           <ion-avatar aria-hidden="true" slot="start" v-else>
-            <img :src="utils.makeFileUrl(e.image)"/>
+            <img :src="utils.makeFileUrl(e.childPhoto)"/>
           </ion-avatar>
           <ion-label>
             <ion-row class="ion-justify-content-between">
@@ -125,36 +125,41 @@ import { useFetch } from '@/composables/fetch'
 export default {
   data() {
     return{
-      
+      image: {
+        url: null,
+        blob: null,
+        name: null
+      },
+      startPhotoHandler: false
     }
   },
   props: {
     dialogInsertChildEvent: Object,
-    image: Object,
     selectedEvent: Array,
     childEventsHistory: Array,
     pagination: Object,
-    startPhotoHandler: Boolean,
     dialogInsertActivity: Object
   },
   methods: {
     captured(fileUrl, fileBlob, fileName) {
-      this.$emit('update:startPhotoHandler', false);
-      this.$emit('update:image', {
+      this.startPhotoHandler = false
+      console.log(fileUrl, 'fileUrl')
+      console.log(fileBlob, 'fileBlob')
+      console.log(fileName, fileName)
+      this.image = {
         url: fileUrl,
         blob: fileBlob,
         name: fileName,
         type: 'newImage'
-      });
+      }
     },
     cancelPhotoHandler () {
       this.startPhotoHandler = false
     },
     createUserChildEvents() {
-      console.log(this.dialogInsertChildEvent.data.childId, 'this.dialogInsertChildEvent.data.childId')
-      console.log(this.dialogInsertChildEvent.childEventId, 'childEventId')
-      console.log(this.dialogInsertChildEvent.obs, 'obs')
-
+      console.log(this.image.blob, 'blozinho')
+      console.log(this.image.blob, 'blozinho')
+      const file = [{ file: this.image.blob, name: 'newImage' }]
       if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
         utils.toast('Preencha o evento e insira uma observação para prosseguir')
         return
@@ -166,7 +171,9 @@ export default {
           childEventId: this.dialogInsertChildEvent.childEventId,
           obs: this.dialogInsertChildEvent.obs
         },
-        file: [{ file: this.image.blob, name: 'userPhoto' }]
+      }
+      if(this.image.blob !== null){
+        opt.file = file
       }
       useFetch(opt).then((r) => {
         if (r.error) {

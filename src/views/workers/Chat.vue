@@ -90,20 +90,10 @@
     />
     <DialogInsertChildEvent 
       :dialogInsertChildEvent="dialogInsertChildEvent"
-      :image="image"
       :selectedEvent="selectedEvent"
       :childEventsHistory="childEventsHistory"
       :pagination="pagination"
-      :startPhotoHandler="startPhotoHandler"
       :dialogInsertActivity="dialogInsertActivity"
-    />
-    <PhotoHandler
-      v-show="startPhotoHandler"
-      :start="startPhotoHandler"
-      :allFiles="true"
-      :noCrop="false"
-      @captured="captured"
-      @cancel="cancelPhotoHandler"
     />
   </ion-page>
 </template>
@@ -246,29 +236,6 @@ export default {
           return
         }
         this.childEventsHistory = r.data.list
-      })
-    },
-    createUserChildEvents() {
-      if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
-        utils.toast('Preencha o evento e insira uma observação para prosseguir')
-        return
-      }
-      const opt = {
-        route: '/mobile/workers/createUserChildEvents',
-        body: {
-          childId: [this.dialogInsertChildEvent.data.childId],
-          childEventId: this.dialogInsertChildEvent.childEventId,
-          obs: this.dialogInsertChildEvent.obs
-        },
-        file: [{ file: this.image.blob, name: 'userPhoto' }]
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
-          return
-        }
-          this.clearModalData()
-          utils.toast('Evento inserido com sucesso!')
       })
     },
     startView () {

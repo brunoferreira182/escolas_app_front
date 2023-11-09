@@ -145,14 +145,7 @@
         </ion-content>
         <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
       </ion-modal>
-      <PhotoHandler
-        v-show="startPhotoHandler"
-        :start="startPhotoHandler"
-        :allFiles="true"
-        :noCrop="false"
-        @captured="captured"
-        @cancel="cancelPhotoHandler"
-      />
+  
     </ion-content>
     <ion-alert v-if="formattedChildEventList"
       :is-open="dialogInsertActivity.open"
@@ -176,13 +169,12 @@
         },
       ]"
     />
+ 
     <DialogInsertChildEvent
       :dialogInsertChildEvent="dialogInsertChildEvent"
-      :image="image"
       :selectedEvent="selectedEvent"
       :childEventsHistory="childEventsHistory"
       :pagination="pagination"
-      :startPhotoHandler="startPhotoHandler"
       :dialogInsertActivity="dialogInsertActivity"
     />
   </ion-page>
@@ -297,6 +289,9 @@ export default {
         return
       }
     },
+    cancelPhotoHandler () {
+      this.startPhotoHandler = false
+    },
     closeDialogClass() {
       this.dialogInsertClassEvent.open = false,
       this.dialogInsertClassEvent.data = {},
@@ -312,29 +307,6 @@ export default {
     filterChildren(event) {
       const query = event.target.value.toLowerCase();
       this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
-    },
-    createUserChildEvents() {
-      if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
-        utils.toast('Preencha o evento e insira uma observação para prosseguir')
-        return
-      }
-      const opt = {
-        route: '/mobile/workers/createUserChildEvents',
-        body: {
-          childId: [this.dialogInsertChildEvent.data.childId],
-          childEventId: this.dialogInsertChildEvent.childEventId,
-          obs: this.dialogInsertChildEvent.obs
-        },
-        file: [{ file: this.image.blob, name: 'userPhoto' }]
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
-          return
-        }
-          this.clearModalData()
-          utils.toast('Evento inserido com sucesso!')
-      })
     },
     handleCheckboxChangeAll(e) {
       if (e.detail.checked === true) {

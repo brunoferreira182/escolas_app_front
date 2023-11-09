@@ -104,7 +104,7 @@ export default {
       }
     },
     createEvent() {
-      console.log(this.eventData.eventPhoto, "macaco")
+      const file = [{ file: this.image.blob, name: 'newImage' }]
       if (this.eventData.name === '' ||
         this.eventData.date === '' ||
         this.eventData.description === '') {
@@ -120,7 +120,9 @@ export default {
           eventDate: this.eventData.date,
           requireParentsPermission: this.eventData.requireParentsPermission
         },
-        file: [ this.eventData.eventPhoto.file ]
+      }
+      if(this.image.blob !== null){
+        opt.file = file
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
