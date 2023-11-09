@@ -17,16 +17,29 @@
         <ion-card-content>
           {{ eventDetail.eventDescription }}
         </ion-card-content>
-      </ion-card>
-      <div>
-        <div style="display: flex; align-items: center;" class="q-mb-md">
-          <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart.svg"></ion-icon>
-          <ion-icon id="smileIcon" size="large" @click="clkReaction(smile)" src="/assets/icons/smile.svg"></ion-icon>
-          <ion-icon id="likeIcon" size="large" @click="clkReaction(icon)" src="/assets/icons/like.svg"></ion-icon>
-          <div style="margin-left: 50%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
+        <div 
+          style="display: flex; 
+          align-items: center;" 
+          class="q-px-md q-pb-md"
+          v-if="!eventDetail.userReaction"
+        >
+          <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart.svg" />
+          <div style="margin-left: 70%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
+            Curtidas
           </div>
         </div>
-      </div>
+        <div 
+          style="display: flex; 
+          align-items: center;" 
+          class="q-px-md q-pb-md"
+          v-if="eventDetail.userReaction"
+        >
+          <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart_filled.svg" />
+          <div style="margin-left: 70%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
+            Curtidas
+          </div>
+        </div>
+      </ion-card>
     </ion-content>
   </ion-page>
 </template>
@@ -40,6 +53,7 @@ import {
   IonCard,
   IonCardTitle,
   IonCardSubtitle,
+  IonIcon,
   IonCardHeader,
   IonCardContent,
   } from '@ionic/vue';
@@ -56,18 +70,17 @@ import like from '/assets/icons/like.svg'
     data() {
       return {
         eventDetail:{},
-        reactions: [heart, smile, like],
       }
     },
     beforeMount(){
       this.getCalendarEventDetail()
     },
     methods: {
-      clkReaction (icon) {
+      clkReaction(icon) {
         const opt = {
           route: '/mobile/social/addNewPostReaction',
           body: {
-            postId: this.$route.query.postId,
+            postId: this.$route.query.schoolEventId,
             reaction: icon
           }
         }
