@@ -9,6 +9,7 @@ function masterServerRoute () {
   else if (MODE_MASTER_SERVER === 'tiago') ret = 'http://192.168.1.10:' + port
   else if (MODE_MASTER_SERVER === 'darta') ret = 'http://192.168.1.9:' + port
   else if (MODE_MASTER_SERVER === 'bruno') ret = 'http://192.168.1.99:' + port
+  else if (MODE_MASTER_SERVER === 'leo') ret = 'http://192.168.1.24:' + port
   else if (MODE_MASTER_SERVER === 'prod') ret = 'https://api2.b3dev.dev:' + port
   return ret
 }
