@@ -5,9 +5,6 @@
       :backButton="false"
     />
     <ion-content color="light">
-      <div class="q-px-md text-h5" v-if="notesList.length">
-        Recados
-      </div>
       <swiper 
         :modules="modules"
         :slides-per-view="notesList.length === 1 ? 1 : 2"

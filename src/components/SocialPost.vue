@@ -14,14 +14,14 @@
             <ion-row>
               <ion-col size="5">
                 <div v-if="post.userReaction">
-                  <ion-icon size="large" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
+                  <ion-icon size="large" @click="clkReaction(heart, post)" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
                 </div>
-                <div v-else-if="!post.userReaction">
+                <div v-else-if="!post.userReaction" @click="clkReaction(heart, post)">
                   <ion-icon size="large" src="/assets/icons/heart.svg"/>{{ post.reactions }}
                 </div>
               </ion-col>
               <ion-col size="5">
-                <div class="q-pa-xs">
+                <div class="q-pa-xs" v-if="post.routeDestination === '/postDetail'">
                   <ion-icon style="width: 28px; height: 28px;" src="/assets/icons/comment.svg"/> {{ post.comments }}
                 </div>
               </ion-col>
@@ -63,9 +63,9 @@
             <ion-row>
               <ion-col size="5">
                 <div v-if="post.userReaction">
-                  <ion-icon size="large" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
+                  <ion-icon size="large" @click="clkReaction(heart, post)" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
                 </div>
-                <div v-else-if="!post.userReaction">
+                <div v-else-if="!post.userReaction" @click="clkReaction(heart, post)">
                   <ion-icon size="large" src="/assets/icons/heart.svg"/>{{ post.reactions }}
                 </div>
               </ion-col>
@@ -102,6 +102,7 @@
 
 <script setup>
 import utils from '../composables/utils'
+import { useFetch } from '../composables/fetch'
 import {
   IonPage,
   IonCol,
@@ -113,9 +114,36 @@ import {
   location,
   chatboxOutline
 } from 'ionicons/icons';
+import heart from '/assets/icons/heart.svg'
+import heart_filled from '/assets/icons/heart_filled.svg'
+import smile from '/assets/icons/smile.svg'
+import like from '/assets/icons/like.svg'
 const props = defineProps(['post', 'i'])
 </script>
-
+<script>
+export default {
+  name: "SocialPost",
+  data() {
+    return {
+    }
+  },
+  methods: {
+    clkReaction(icon, post) {
+      console.log(post)
+      const opt = {
+        route: '/mobile/social/addNewPostReaction',
+        body: {
+          postId: post._id,
+          reaction: icon
+        }
+      }
+      useFetch(opt).then(r => {
+        console.log(r)
+      })
+    },
+  }
+};
+</script>
 <style scoped>
 .card {
   margin: 10px;

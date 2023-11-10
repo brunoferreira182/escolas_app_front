@@ -38,6 +38,7 @@ import calendarParent from '../views/parents/Calendar.vue'
 import calendarWorker from '../views/workers/Calendar.vue'
 import storyDetail from '../views/parents/StoryDetail.vue'
 import calendarEventDetail from '../views/workers/CalendarEventDetail.vue'
+import calendarEventDetail from '../views/parents/CalendarEventDetail.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {

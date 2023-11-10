@@ -15,7 +15,7 @@
           {{ eventDetail.eventDescription }}
         </ion-card-content>
       </ion-card>
-      <h2 class="q-px-md">Filhos:</h2>
+      <h2 class="q-px-md">Crianças</h2>
       <ion-list :inset="true">
         <ion-item 
           v-for="child in eventDetail.children.data"
@@ -38,7 +38,7 @@
               <ion-icon slot="start" :icon="checkmarkCircleOutline"></ion-icon>
               Autorizado
             </ion-button>
-            <div class="q-pa-xs q-px-md text-caption text-capitalize">
+            <div class="q-pa-xs q-px-lg text-caption text-capitalize">
               Por {{ child.permissionsData.createdBy.name }}
             </div>
           </div>
