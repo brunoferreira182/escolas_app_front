@@ -49,6 +49,7 @@
         v-for="(post, i) in posts"
         :key="post._id"
         :post="post"
+        @getPosts="getPosts"
         :i="i"
       />
     </ion-content>
@@ -104,6 +105,7 @@ export default {
       if (to.path === '/tabsParents/social') {
         this.startView()
       }
+      this.getPosts()
     }
   },
   methods: {

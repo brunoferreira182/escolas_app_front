@@ -57,6 +57,7 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      
       <ion-modal
         :is-open="dialogViewImage.open === true"
       >
@@ -77,7 +78,7 @@
       <ion-modal 
         :is-open="dialogInsertClassEvent.open" 
         @ionModalDidPresent="getClassChildrenById()" 
-        @willDismiss="clearModalDataClass()"
+        @didDismiss="clearModalDataClass()"
       >
         <ion-header>
           <ion-toolbar>
@@ -130,11 +131,41 @@
               v-for="e in childEventsHistory"
               :key="e"
             >
+              <ion-avatar aria-hidden="true" slot="start" v-if="e.childEventImage">
+                <img :src="utils.makeFileUrl(e.childEventImage)" @click="startDialogViewImage(e)"/>
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(e.childPhoto)"/>
+              </ion-avatar>
+              <ion-label>
+                <ion-row class="ion-justify-content-between">
+                  <ion-col size="2">
+                    <h6>{{ e.eventName }}</h6>
+                  </ion-col>
+                  <ion-col 
+                    size="6" 
+                    class="text-subtitle2 ion-text-end"
+                  >
+                    <div>
+                      {{ e.createdAt.createdAtLocale.split(' ')[0] }}
+                    </div>
+                    <div>
+                      {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+                    </div>
+                  </ion-col>
+                </ion-row>
+                <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
+              </ion-label>
+            </ion-item>
+            <!-- <ion-item 
+              v-for="e in childEventsHistory"
+              :key="e"
+            >
               <ion-label >
                 <h6>{{ e.eventName }}</h6>
                 <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
               </ion-label>
-            </ion-item>
+            </ion-item> -->
           </ion-list>
           <div v-else class="q-px-lg text-caption">
             Nenhuma atividade
@@ -278,8 +309,24 @@ export default {
     this.getClassesByUserId()
     this.getChildrenInClassList()
     this.verifyIfHasChildId()
+    this.getChildEventsHistory()
   },
   methods: {
+    getChildEventsHistory() {
+      const opt = {
+        route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
+        body: {
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
+        else {
+          this.childEventsHistory = r.data.list
+        } 
+      })
+    },
     verifyIfHasChildId() {
       if (this.$route.query.childId !== undefined) {
         this.clkOpenDialogChildEvent(this.$route.query.childId)
@@ -292,6 +339,11 @@ export default {
     closeDialogClass() {
       this.dialogInsertClassEvent.open = false,
       this.dialogInsertClassEvent.data = {},
+      this.image = {
+        url: null,
+        blob: null,
+        name: null
+      },
       this.dialogInsertClassEvent.obs = ''
     },
     selectOptionActivity(e) {

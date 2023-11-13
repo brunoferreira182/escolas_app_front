@@ -46,6 +46,36 @@
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
+            <ion-label>Funcionários</ion-label>
+          </ion-item>
+          <div slot="content" v-if="workersClassData && workersClassData.users">
+            <ion-item
+              v-for="worker in workersClassData.users"
+              @click=""
+              :key="worker"
+            >
+              <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
+                <img :src="utils.makeFileUrl(worker.childPhoto.filename)"/>
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(worker.image)"/>
+              </ion-avatar>
+              <p class="text-capitalize">{{ worker.userName }} 
+                <div class="text-caption">{{ worker.userFunction }}</div>
+              </p>
+              <ion-button slot="end" fill="clear">
+                <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </div>
+          <div v-else class="text-caption q-px-md">
+            Não há funcionários nesta turma
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+          <ion-item slot="header">
             <ion-label>Alunos da turma</ion-label>
           </ion-item>
           <div slot="content">
@@ -71,7 +101,13 @@
         </ion-item>
       </ion-accordion>
     </ion-accordion-group>
-      <ion-button @click="clkGoToCreateEvent" expand="block" class="ion-padding">Adicionar evento</ion-button>
+      <ion-button 
+        style="position: absolute; bottom: 0; width: 98%"
+        @click="clkGoToCreateEvent" 
+        class="ion-padding"
+      >
+        Adicionar evento
+      </ion-button>
     </ion-content>
   </ion-page>
 </template>
@@ -100,6 +136,7 @@ export default {
     return {
       classChildrenData: null,
       eventList: null,
+      workersClassData: [],
       classData: null
     };
   },
@@ -112,6 +149,7 @@ export default {
       if (to.path === '/chatInfoWorker') {
         this.getClassDetailById()
         this.getEventsByClassId()
+        this.getWorkersByClassId()
       }
     }
   },
@@ -130,12 +168,28 @@ export default {
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
-          this. eventList = r.data.list
+          this.eventList = r.data.list
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde.")
         }
       })
     },
+    getWorkersByClassId() {
+      const opt = {
+        route: '/mobile/workers/getWorkersByClassId',
+        body: {
+          classId: this.$route.query.classId,
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this.workersClassData = r.data
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
+    
     clkGoToCreateEvent() {
       this.$router.push("/createEvent?classId=" + this.$route.query.classId)
     },

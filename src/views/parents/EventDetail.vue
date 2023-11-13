@@ -9,7 +9,12 @@
         <img :src="utils.makeFileUrl(eventDetail.eventImage)" />
         <ion-card-header>
           <ion-card-title>{{ eventDetail.eventName }}</ion-card-title>
-          <ion-card-subtitle>{{ eventDetail.eventDate.local }}</ion-card-subtitle>
+          <ion-card-subtitle v-if="eventDetail.eventDate.local">
+            Dia
+            {{ eventDetail.eventDate.local.split('-')[2] }}/
+            {{ eventDetail.eventDate.local.split('-')[1] }}/
+            {{ eventDetail.eventDate.local.split('-')[0] }}
+          </ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
           {{ eventDetail.eventDescription }}

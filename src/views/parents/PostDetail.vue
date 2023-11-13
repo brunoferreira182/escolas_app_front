@@ -19,22 +19,14 @@
           </div>
           <hr :class="item.class" style="background-color: #15aad8;color: #15aad8;" v-if="item.type === 'separator'"/>
         </div>
-        <div>
+        <div class="q-px-xs">
           <div style="display: flex; align-items: center;" class="q-mb-md">
-            <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart.svg"></ion-icon>
-            <ion-icon id="smileIcon" size="large" @click="clkReaction(smile)" src="/assets/icons/smile.svg"></ion-icon>
-            <ion-icon id="likeIcon" size="large" @click="clkReaction(icon)" src="/assets/icons/like.svg"></ion-icon>
-            <div style="margin-left: 50%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
-              {{post.reactions}} Reações 
+            <ion-icon v-if="post.userReaction" id="heartIcon" size="large" @click="clkRemoveReaction(post)" src="/assets/icons/heart_filled.svg"></ion-icon>
+            <ion-icon v-if="!post.userReaction" @click="clkReaction(heart, post)" size="large" src="/assets/icons/heart.svg"/>
+            <div style="margin-left: 70%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
+              {{post.reactions}}  Reações
             </div>
           </div>
-          <!-- <h4 
-            v-if="comments.length > 0" 
-            style="
-              color: var(--ion-color-primary);"
-          >
-              Comentários
-          </h4> -->
         </div>
         <ion-item
         class="q-mb-sm"
@@ -122,13 +114,25 @@ export default {
     }
   },
   mounted () {
-    this.getPostDataById()
+    this.getPostDetailById()
     this.getPostComments()
     this.getPostReactions()
   },
 
   methods: {
-    getPostDataById () {
+    clkRemoveReaction() {
+      console.log('chamou remover reaction')
+      const opt = {
+        route: '/mobile/social/removePostReaction',
+        body: {
+          postId: this.$route.query.postId,
+        }
+      }
+      useFetch(opt).then(r => {
+        this.getPostDetailById()
+      })
+    },
+    getPostDetailById () {
       const opt = {
         route: '/mobile/social/getPostDetailById',
         body: {
@@ -142,7 +146,7 @@ export default {
     createImgURL(item) {
       return utils.attachmentsAddress() + item.image.filename
     },
-    clkReaction (icon) {
+    clkReaction (icon, post) {
       const opt = {
         route: '/mobile/social/addNewPostReaction',
         body: {
@@ -151,7 +155,7 @@ export default {
         }
       }
       useFetch(opt).then(r => {
-        this.getPostDataById()
+        this.getPostDetailById()
         this.liked = true
         console.log(icon)
       })

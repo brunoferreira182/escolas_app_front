@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Detalhes da turma"
+      title="Chat"
       :backButton="true"
     />
     <ion-content color="light" v-if="classData">
@@ -43,34 +43,64 @@
           </div>
         </ion-accordion>
       </ion-accordion-group>
-    <ion-accordion-group expand="inset">
-      <ion-accordion value="first">
-        <ion-item slot="header">  
-          <ion-label>Alunos da turma</ion-label>
-        </ion-item>
-        <div slot="content">
-          <ion-item
-            v-for="child in classChildrenData"
-            :key="child"
-          >
-            <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-              <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-            </ion-avatar>
-            <ion-avatar aria-hidden="true" slot="start" v-else>
-              <img :src="utils.makeFileUrl(child.image)"/>
-            </ion-avatar>
-            <p>{{ child.childName }}</p>
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+          <ion-item slot="header">
+            <ion-label>Funcionários</ion-label>
           </ion-item>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group>
-    <ion-accordion-group expand="inset">
-      <ion-accordion value="first" :toggle-icon="chevronForwardOutline" toggle-icon-slot="end">
-        <ion-item slot="header" @click="goToMedia">  
-          <ion-label>Mídia</ion-label>
-        </ion-item>
-      </ion-accordion>
-    </ion-accordion-group>
+          <div slot="content" v-if="workersClassData && workersClassData.users">
+            <ion-item
+              v-for="worker in workersClassData.users"
+              :key="worker"
+            >
+              <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
+                <img :src="utils.makeFileUrl(worker.childPhoto.filename)"/>
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(worker.image)"/>
+              </ion-avatar>
+              <p class="text-capitalize">{{ worker.userName }} 
+                <div class="text-caption">{{ worker.userFunction }}</div>
+              </p>
+              <ion-button slot="end" fill="clear" @click="$router.push('/chatDetail?userId=' + worker.userId)">
+                <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </div>
+          <div v-else class="text-caption q-px-md">
+            Não há funcionários nesta turma
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+          <ion-item slot="header">  
+            <ion-label>Alunos da turma</ion-label>
+          </ion-item>
+          <div slot="content">
+            <ion-item
+              v-for="child in classChildrenData"
+              :key="child"
+            >
+              <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+                <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(child.image)"/>
+              </ion-avatar>
+              <p>{{ child.childName }}</p>
+            </ion-item>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first" :toggle-icon="chevronForwardOutline" toggle-icon-slot="end">
+          <ion-item slot="header" @click="goToMedia">  
+            <ion-label>Mídia</ion-label>
+          </ion-item>
+        </ion-accordion>
+      </ion-accordion-group>
     </ion-content>
   </ion-page>
 </template>
@@ -78,9 +108,13 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
-import {chevronForwardOutline} from 'ionicons/icons'
+import {
+  chevronForwardOutline,
+  chatbubble
+} from 'ionicons/icons'
 import {
   IonPage, IonContent,
+  IonIcon,
   IonList, IonItem, IonButton,
   IonLabel, IonAccordion,
   IonAccordionGroup, IonAvatar,
@@ -98,6 +132,7 @@ export default {
       classChildrenData: null,
       classData: null,
       classEvents: null,
+      workersClassData: null,
       eventsRequiredPermission: null,
       pagination: {
         page: 1,
@@ -108,8 +143,25 @@ export default {
   },
   mounted () {
     this.getClassDetailById()
+    this.getWorkersByClassId()
   },
   methods: {
+    
+    getWorkersByClassId() {
+      const opt = {
+        route: '/mobile/workers/getWorkersByClassId',
+        body: {
+          classId: this.$route.query.classId,
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this.workersClassData = r.data
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
     goToMedia() {
       this.$router.push("/chatMedia?classId=" + this.$route.query.classId)
     },

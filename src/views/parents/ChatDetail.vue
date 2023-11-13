@@ -1,12 +1,17 @@
 <template>
   <ion-page>
     <ToolbarEscolas
+      v-if="$route.query.classId"
       :title="classDetail ? classDetail.className : 'Carregando...'"
       :backButton="true"
       @titleClicked="goToChatInfo"
     />
+    <ToolbarEscolas
+      v-else
+      :title="userDetail ? userDetail.userName : 'Carregando...'"
+      :backButton="true"
+    />
     <ion-content ref="elIonContent" color="light">
-      
       <div >
         <ion-infinite-scroll
           position="top"
@@ -83,16 +88,16 @@
                   </div>
                 </ion-row>
               </ion-item>
-              <ion-item-options :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'">
+              <!-- <ion-item-options :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'">
                 <ion-item-option style="text-transform: none" color="primary" @click="clkMessage(message)">Detalhes</ion-item-option>
                 <ion-item-option style="text-transform: none" color="secondary" @click="answerMessage(message)">Responder</ion-item-option>
-              </ion-item-options>
+              </ion-item-options> -->
             </ion-item-sliding>
           </div>
         </ion-list>
       </div>
     </ion-content>
-    <ion-footer v-if="canSendMessage">
+    <ion-footer v-if="canSendMessage || $route.query.userId">
       <form :style="footerColor">
         <ion-item v-if="isAnsweringMessage.isAnswering" lines="none" >
           <ion-avatar slot="start">
@@ -167,8 +172,7 @@ import {
 <script>
 import { useFetch } from '@/composables/fetch';
 export default {
-  components: {
-  },
+  name: 'chatDetailWorker',
   data() {
     return {
       classDetail: null,
@@ -222,15 +226,65 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/chatDetail') {
+      if (to.path === '/chatDetail?classId') {
         this.startView()
       }
     }
   },
   mounted () {
-    this.startView()
+    if(this.$route.query.classId){
+      this.startView()
+    }
   },
   methods: {
+    insertMessage (file) {
+      const userId = this.$route.query.userId
+      console.log('vamo nabaaa', userId)
+      if (this.chatMessage.length < 1 && !file && !this.audioMessage) return
+      let optTemMsg
+      if (file.file) optTemMsg = { file: file.file }
+      else optTemMsg = { message: this.chatMessage }
+      const tempId = this.insertTemporaryMessage(optTemMsg)
+      
+      const opt = {
+        route: '/mobile/messenger/insertMessage',
+        body: {
+          userId: this.$route.query.userId,
+					message: this.chatMessage,
+          audioMessage: this.audioMessage
+        }
+      }
+      if (file.file) {
+        opt.file = [ file.file ]
+        opt.filename = file.filename
+      }
+      if (this.isAnsweringMessage.isAnswering) {
+        opt.body.answerMessage = {
+          messageId: this.isAnsweringMessage.message._id,
+          createdBy: {
+            userId: this.isAnsweringMessage.message.createdBy.userId,
+            name: this.isAnsweringMessage.message.createdBy.name,
+          },
+          createdAt: this.isAnsweringMessage.message.createdAt
+        }
+        if (this.isAnsweringMessage.message.messageData.file) {
+          opt.body.answerMessage.filename = this.isAnsweringMessage.message.messageData.file.filename
+          opt.body.answerMessage.mimetype = this.isAnsweringMessage.message.messageData.file.mimetype
+        }
+        else opt.body.answerMessage.message = this.isAnsweringMessage.message.messageData.message
+      }
+      this.chatMessage = ''
+			useFetch(opt).then(r => {
+        this.chatMessage = ''
+        this.audioMessage = null
+        // this.messages.push(r.data[0])
+        this.substituteTempMessage(tempId, r.data[r.data.length-1])
+        this.noMoreMessages = false
+        utils.loading.hide()
+        this.scrollToBottom()
+        this.undoAnswerMessage()
+      })
+    },
     goToChatInfo() {
       this.$router.push("/chatInfo?classId=" + this.$route.query.classId)
     },

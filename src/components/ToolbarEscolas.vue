@@ -15,7 +15,7 @@
       </ion-buttons>
       <ion-title @click="titleClicked">
         {{ props.title }}
-        <div class="text-caption" v-if="$route.path.includes('/chatDetail')">
+        <div class="text-caption" v-if="$route.path.includes('/classId')">
           Clique para ver mais
         </div>
       </ion-title>

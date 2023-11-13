@@ -93,10 +93,10 @@
                     </div>
                   </ion-row>
                 </ion-item>
-                <ion-item-options :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'">
+                <!-- <ion-item-options :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'">
                   <ion-item-option style="text-transform: none" color="primary" @click="clkMessage(message)">Detalhes</ion-item-option>
                   <ion-item-option style="text-transform: none" color="secondary" @click="answerMessage(message)">Responder</ion-item-option>
-                </ion-item-options>
+                </ion-item-options> -->
               </ion-item-sliding>
             </div>
           </div>
