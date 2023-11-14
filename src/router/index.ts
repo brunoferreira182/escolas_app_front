@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 import TabsLayoutParent from '../layouts/TabsLayoutParents.vue'
 import MainLayout from '../layouts/MainLayout.vue'
 import  Login from '../views/Login.vue';
+import  ChatUserAndWorker from '../views/ChatUserAndWorker.vue';
 import  Register from '../views/Register.vue';
 import waitingAproval from '../views/WaitingAproval.vue';
 import waitingPermission from '../views/WaitingPermission.vue';
@@ -50,6 +51,12 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Login',
         component: Login
       },
+      {
+        path: '/ChatUserAndWorker',
+        name: 'ChatUserAndWorker',
+        component: ChatUserAndWorker
+      },
+      
       {
         path: '/register',
         name: 'Register',

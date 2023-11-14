@@ -1,12 +1,12 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      :title="classDetail ? classDetail.className : 'Carregando...'"
+      class="text-capitalize"
+      :title="userDetail ? userDetail.name : 'Carregando...'"
       :backButton="true"
       @titleClicked="goToChatInfo"
     />
     <ion-content ref="elIonContent" color="light">
-      
       <div >
         <ion-infinite-scroll
           position="top"
@@ -74,7 +74,7 @@
                       </div>
                     </div>
                     <div v-else>
-                      {{ message.messageText }}
+                      {{ message.messageData ? message.messageData.message : message.messageText }}
                     </div>
                     <span
                       class="ion-float-right q-mt-xs text-caption q-ml-sm"
@@ -92,7 +92,7 @@
         </ion-list>
       </div>
     </ion-content>
-    <ion-footer v-if="canSendMessage">
+    <ion-footer >
       <form :style="footerColor">
         <ion-item v-if="isAnsweringMessage.isAnswering" lines="none" >
           <ion-avatar slot="start">
@@ -149,11 +149,11 @@
 </template>
 
 <script setup>
-import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import AudioRecorder from '../../components/AudioRecorder.vue'
-import PhotoHandler from '../../components/PhotoHandler.vue'
+import ToolbarEscolas from '../components/ToolbarEscolas.vue'
+import AudioRecorder from '../components/AudioRecorder.vue'
+import PhotoHandler from '../components/PhotoHandler.vue'
 import { send, attach, close, mic, play, pause, chevronBack } from 'ionicons/icons';
-import utils from '../../../src/composables/utils.js';
+import utils from '../../src/composables/utils.js';
 import {
   IonPage, IonContent,
   IonInfiniteScroll, IonInfiniteScrollContent,
@@ -167,11 +167,10 @@ import {
 <script>
 import { useFetch } from '@/composables/fetch';
 export default {
-  components: {
-  },
+  name: 'chatUserAndWorker',
   data() {
     return {
-      classDetail: null,
+      userDetail: null,
       title: '',
       isAnsweringMessage: {
         isAnswering: false,
@@ -222,7 +221,7 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/chatDetail') {
+      if (to.path === '/chatUserAndWorker') {
         this.startView()
       }
     }
@@ -231,11 +230,57 @@ export default {
     this.startView()
   },
   methods: {
+    insertMessage (file) {
+      if (this.chatMessage.length < 1 && !file && !this.audioMessage) return
+      let optTemMsg
+      console.log(file, 'POKDAPOS FILE FILE')
+      if (file.file) optTemMsg = { file: file.file }
+      else optTemMsg = { message: this.chatMessage }
+      const tempId = this.insertTemporaryMessage(optTemMsg)
+      
+      const opt = {
+        method: 'POST',
+        route: '/mobile/messenger/insertMessage',
+        body: {
+          userId: this.$route.query.userId,
+					message: this.chatMessage,
+          audioMessage: this.audioMessage
+        }
+      }
+      if (file) {
+        opt.file = [ file ]
+      }
+      if (this.isAnsweringMessage.isAnswering) {
+        opt.body.answerMessage = {
+          messageId: this.isAnsweringMessage.message._id,
+          createdBy: {
+            userId: this.isAnsweringMessage.message.createdBy.userId,
+            name: this.isAnsweringMessage.message.createdBy.name,
+          },
+          createdAt: this.isAnsweringMessage.message.createdAt
+        }
+        if (this.isAnsweringMessage.message.messageData.file) {
+          opt.body.answerMessage.filename = this.isAnsweringMessage.message.messageData.file.filename
+          opt.body.answerMessage.mimetype = this.isAnsweringMessage.message.messageData.file.mimetype
+        }
+        else opt.body.answerMessage.message = this.isAnsweringMessage.message.messageData.message
+      }
+      this.chatMessage = ''
+			useFetch(opt).then(r => {
+        this.chatMessage = ''
+        this.audioMessage = null
+        this.substituteTempMessage(tempId, r.data)
+        this.noMoreMessages = false
+        utils.loading.hide()
+        this.scrollToBottom()
+        this.undoAnswerMessage()
+      })
+    },
     goToChatInfo() {
       this.$router.push("/chatInfo?classId=" + this.$route.query.classId)
     },
     startView() {
-      this.getClassDetailById()
+      this.getUserChatDetailById()
       this.getMessages()
       this.userInfo = utils.presentUserInfo()
     },
@@ -367,6 +412,15 @@ export default {
       this.step = 'addAttachment'
       this.startPhotoHandler = true
     },
+    // captured(fileUrl, fileBlob, fileName) {
+    //   this.startPhotoHandler = false
+    //   this.image = {
+    //     url: fileUrl,
+    //     blob: fileBlob,
+    //     name: fileName,
+    //     type: 'newImage'
+    //   }
+    // },
     captured(img, imgBlob, fileName) {
       this.step = 'initial'
       this.startPhotoHandler = false
@@ -462,10 +516,9 @@ export default {
     getMessages (ev, lPosix, fromAnswer) {
       if (this.noMoreMessages) return
       const opt = {
-        method: 'POST',
-        route: '/mobile/parents/chat/getClassMessages',
+        route: '/mobile/messenger/getMessages',
         body: {
-          classId: this.$route.query.classId,
+          userId: this.$route.query.userId,
           firstPosix: this.messages[0] ? this.messages[0].createdAt.createdAtPosix : null,
           lastPosix: lPosix ? lPosix : null,
           fromAnswer: fromAnswer ? true : false,
@@ -490,51 +543,51 @@ export default {
         }
       })
     },
-    insertMessage (file) {
-      if (this.chatMessage.length < 1 && !file && !this.audioMessage) return
-      let optTemMsg
-      if (file.file) optTemMsg = { file: file.file }
-      else optTemMsg = { message: this.chatMessage }
-      const tempId = this.insertTemporaryMessage(optTemMsg)
+    // insertMessage (file) {
+    //   if (this.chatMessage.length < 1 && !file && !this.audioMessage) return
+    //   let optTemMsg
+    //   if (file.file) optTemMsg = { file: file.file }
+    //   else optTemMsg = { message: this.chatMessage }
+    //   const tempId = this.insertTemporaryMessage(optTemMsg)
       
-      const opt = {
-        method: 'POST',
-        route: '/mobile/parents/chat/insertClassMessage',
-        body: {
-          classId: this.$route.query.classId,
-					message: this.chatMessage,
-          audioMessage: this.audioMessage
-        }
-      }
-      if (file) {
-        opt.file = [ file ]
-      }
-      if (this.isAnsweringMessage.isAnswering) {
-        opt.body.answerMessage = {
-          messageId: this.isAnsweringMessage.message._id,
-          createdBy: {
-            userId: this.isAnsweringMessage.message.createdBy.userId,
-            name: this.isAnsweringMessage.message.createdBy.name,
-          },
-          createdAt: this.isAnsweringMessage.message.createdAt
-        }
-        if (this.isAnsweringMessage.message.messageData.file) {
-          opt.body.answerMessage.filename = this.isAnsweringMessage.message.messageData.file.filename
-          opt.body.answerMessage.mimetype = this.isAnsweringMessage.message.messageData.file.mimetype
-        }
-        else opt.body.answerMessage.message = this.isAnsweringMessage.message.messageData.message
-      }
-      this.chatMessage = ''
-			useFetch(opt).then(r => {
-        this.chatMessage = ''
-        this.audioMessage = null
-        this.substituteTempMessage(tempId, r.data)
-        this.noMoreMessages = false
-        utils.loading.hide()
-        this.scrollToBottom()
-        this.undoAnswerMessage()
-      })
-    },
+    //   const opt = {
+    //     method: 'POST',
+    //     route: '/mobile/parents/chat/insertClassMessage',
+    //     body: {
+    //       classId: this.$route.query.classId,
+		// 			message: this.chatMessage,
+    //       audioMessage: this.audioMessage
+    //     }
+    //   }
+    //   if (file) {
+    //     opt.file = [ file ]
+    //   }
+    //   if (this.isAnsweringMessage.isAnswering) {
+    //     opt.body.answerMessage = {
+    //       messageId: this.isAnsweringMessage.message._id,
+    //       createdBy: {
+    //         userId: this.isAnsweringMessage.message.createdBy.userId,
+    //         name: this.isAnsweringMessage.message.createdBy.name,
+    //       },
+    //       createdAt: this.isAnsweringMessage.message.createdAt
+    //     }
+    //     if (this.isAnsweringMessage.message.messageData.file) {
+    //       opt.body.answerMessage.filename = this.isAnsweringMessage.message.messageData.file.filename
+    //       opt.body.answerMessage.mimetype = this.isAnsweringMessage.message.messageData.file.mimetype
+    //     }
+    //     else opt.body.answerMessage.message = this.isAnsweringMessage.message.messageData.message
+    //   }
+    //   this.chatMessage = ''
+		// 	useFetch(opt).then(r => {
+    //     this.chatMessage = ''
+    //     this.audioMessage = null
+    //     this.substituteTempMessage(tempId, r.data)
+    //     this.noMoreMessages = false
+    //     utils.loading.hide()
+    //     this.scrollToBottom()
+    //     this.undoAnswerMessage()
+    //   })
+    // },
     insertTemporaryMessage (opt) {
       const now = new Date()
       const tempId = now.getTime()
@@ -573,11 +626,12 @@ export default {
         this.$router.go(-1)
       })
 		},
-    getClassDetailById() {
+    getUserChatDetailById() {
+      console.log('chamou essa merda')
       const opt = {
-        route: '/mobile/parents/chat/getClassDetailById',
+        route: '/mobile/parents/chat/getUserChatDetailById',
         body: {
-          classId: this.$route.query.classId
+          userId: this.$route.query.userId
         }
       }
       useFetch(opt).then((r) => {
@@ -585,7 +639,7 @@ export default {
           utils.toast('Ocorreu um problema, tente novamente mais tarde.')
         }
         this.canSendMessage = r.data.userCanSendMessage
-        this.classDetail = r.data
+        this.userDetail = r.data[0]
       })
     }
 
