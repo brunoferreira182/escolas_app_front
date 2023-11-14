@@ -242,7 +242,7 @@ export default {
         method: 'POST',
         route: '/mobile/messenger/insertMessage',
         body: {
-          userId: this.$route.query.userId,
+          user_id: this.$route.query.user_id,
 					message: this.chatMessage,
           audioMessage: this.audioMessage
         }
@@ -518,7 +518,7 @@ export default {
       const opt = {
         route: '/mobile/messenger/getMessages',
         body: {
-          userId: this.$route.query.userId,
+          user_id: this.$route.query.user_id,
           firstPosix: this.messages[0] ? this.messages[0].createdAt.createdAtPosix : null,
           lastPosix: lPosix ? lPosix : null,
           fromAnswer: fromAnswer ? true : false,

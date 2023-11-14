@@ -62,7 +62,7 @@
               <p class="text-capitalize">{{ worker.userName }} 
                 <div class="text-caption">{{ worker.userFunction }}</div>
               </p>
-              <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?userId=' + worker.userId)">
+              <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
                 <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
               </ion-button>
             </ion-item>
