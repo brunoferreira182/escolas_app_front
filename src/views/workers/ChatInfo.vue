@@ -115,7 +115,7 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
-import {chevronForwardOutline} from 'ionicons/icons'
+import {chevronForwardOutline, chatbubble} from 'ionicons/icons'
 import {
   IonPage, IonContent,
   IonList, IonItem, IonIcon,
