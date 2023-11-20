@@ -89,10 +89,7 @@ export async function useFetch ({
     form = new FormData();
     form.append('body', JSON.stringify(newBody))
     file.forEach(f => {
-      const fileName = f.name ? f.name : 'userFile.png';
-      // const blob = new Blob([f.file], { type: f.type });
-      const blob = new Blob([f.file]);
-      form.append('file', blob, fileName);
+      form.append('file', f.file, f.name ? f.name : 'userFile.png');
     });
     
     bodyToSend = form

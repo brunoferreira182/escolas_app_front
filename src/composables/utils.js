@@ -6,7 +6,7 @@ import { useFetch } from './fetch'
 // let coordinates = null
 import { calculateMasterServerAttachmentsRoute } from "./masterServerRoutes";
 import router from '../router/index.ts'
-
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 
 let loadingVar = []
 let updateUserInfoOnNextRoute = false
@@ -14,6 +14,37 @@ let updateUserInfoOnNextRoute = false
 
 
 const useUtils = {
+  getFilesystemAccess() {
+    return new Promise(async (resolve) => {
+      const status = await Filesystem.checkPermissions()
+      const state = status.publicStorage
+
+      if (state === 'granted') {
+        return resolve(true)
+      } else if (state === 'denied') {
+        // You make want to redirect to the main app settings.
+      } else {
+        Filesystem.requestPermissions()
+      }
+      return resolve(false)
+    })
+  },
+  async downloadFile (obj) {
+    const perm = await this.getFilesystemAccess()
+    const opt = {
+      route: '/download/' + obj.filename,
+      method: 'GET'
+    }
+    const httpResponse = await useFetch(opt)
+    const writeFile = await Filesystem.writeFile({
+      path: obj.originalname,
+      data: httpResponse,
+      directory: Directory.Documents,
+      encoding: Encoding.UTF8,
+    })
+    this.toast('Arquivo baixado na pasta Documentos')
+    return
+  },
   async verifyUserPermissions (data) {
     if (data.status === 'waitingApproval') {
       router.push("/waitingAproval")

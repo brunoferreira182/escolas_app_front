@@ -4,7 +4,7 @@
       title="Dados pessoais"
       :backButton="true"
     />
-    <ion-content class="ion-padding" color="light" v-if="userDetail.userData">
+    <ion-content color="light" v-if="userDetail.userData">
       <ion-list :inset="true">
         <ion-item
           lines="none"
@@ -15,16 +15,8 @@
           </ion-avatar>
           <ion-label class="q-px-sm">
             <h2>{{ userDetail.userData.name }}</h2>
-            <!-- <p>Status: {{ userDetail.userData.status.label }}</p> -->
             <p>{{ userDetail.userData.document }}</p>
           </ion-label>
-          <!-- <ion-icon 
-            v-if="userDetail.userData.status.status === 'active' && familyAdmin === true"
-            style="color: 
-            #eb445a;" 
-            :icon="trashOutline"
-            @click="openDialogInactivateChild"
-          /> -->
         </ion-item>
       </ion-list>
       <ion-button 
@@ -56,28 +48,21 @@
         <ion-item 
           v-for="e in childEventsHistory"
           :key="e"
+          detail="false"
         >
           <ion-label>
-            <ion-row class="ion-justify-content-between">
-              <ion-col size="6" class="ion-text-wrap q-pa-md">
-                <ion-badge color="danger">{{ e.eventName }}</ion-badge>
-              </ion-col>
-              <ion-col 
-                size="6" 
-                class="text-subtitle2 ion-text-end"
-              >
-                <div>
-                  {{ e.createdAt.createdAtLocale.split(' ')[0] }}
-                </div>
-                <div>
-                  {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                </div>
-              </ion-col>
-            </ion-row>
-            <div class="q-px-md">
-              {{ e.obs }}  
-            </div>
+            <strong>{{ e.name }}</strong>
+            <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
+            <ion-note color="medium" class="ion-text-wrap">
+              {{ e.obs }}
+            </ion-note>
           </ion-label>
+          <div class="metadata-end-wrapper" slot="end">
+            <ion-note color="medium">
+              {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
+              {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+            </ion-note>
+          </div>
         </ion-item>
       </ion-list>
       <PhotoHandler

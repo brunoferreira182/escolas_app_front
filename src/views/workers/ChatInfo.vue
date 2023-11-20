@@ -16,7 +16,7 @@
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
-            <ion-label>Eventos da turma</ion-label>
+            <ion-label>Eventos</ion-label>
           </ion-item>
           <div slot="content">
             <ion-item 
@@ -76,7 +76,7 @@
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
-            <ion-label>Alunos da turma</ion-label>
+            <ion-label>Alunos</ion-label>
           </ion-item>
           <div slot="content">
             <ion-item

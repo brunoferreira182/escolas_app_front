@@ -105,7 +105,6 @@ export default {
       if (to.path === '/tabsParents/social') {
         this.startView()
       }
-      this.getPosts()
     }
   },
   methods: {

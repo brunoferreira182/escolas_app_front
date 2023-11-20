@@ -13,6 +13,9 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
+      <div class="q-pa-md ion-text-capitalize ion-text-center">
+        {{ dialogInsertChildEvent.data.childName }}
+      </div>
       <div class="input-wrapper q-px-md q-mx-md">
         <ion-button 
           @click="openActivityAlert()" 
@@ -37,7 +40,7 @@
         fill="clear"
         @click="startPhotoHandler = true"
         v-if="!image.blob"
-      >Enviar foto
+      >Inserir foto (opcional)
       </ion-button>
       <ion-row class="q-ma-md" v-if="image.blob">
         <ion-col size="2">
@@ -52,17 +55,15 @@
           >Trocar foto</ion-button>
         </ion-col>
       </ion-row>
-      <div class="q-px-md ion-text-capitalize">
-        <ion-chip class="text-h5 ">{{ dialogInsertChildEvent.data.childName }}</ion-chip>
-      </div>
+      
       <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
       <ion-list :inset="true" v-if="childEventsHistory.length">
         <ion-item 
           v-for="e in childEventsHistory"
           :key="e"
         >
-          <ion-avatar aria-hidden="true" slot="start" v-if="e.childEventImage">
-            <img :src="utils.makeFileUrl(e.childEventImage)" @click="startDialogViewImage(e)"/>
+          <ion-avatar aria-hidden="true" slot="start" v-if="e.eventImage">
+            <img :src="utils.makeFileUrl(e.eventImage)" @click="startDialogViewImage(e)"/>
           </ion-avatar>
           <ion-avatar aria-hidden="true" slot="start" v-else>
             <img :src="utils.makeFileUrl(e.childPhoto)"/>
@@ -70,7 +71,8 @@
           <ion-label>
             <ion-row class="ion-justify-content-between">
               <ion-col size="2">
-                <h6>{{ e.eventName }}</h6>
+                <ion-badge>{{ e.eventName }}</ion-badge>
+                <p>{{ e.eventObs }}</p>
               </ion-col>
               <ion-col 
                 size="6" 
@@ -137,12 +139,10 @@ export default {
     pagination: Object,
     dialogInsertActivity: Object
   },
+  emits: ['close'],
   methods: {
     captured(fileUrl, fileBlob, fileName) {
       this.startPhotoHandler = false
-      console.log(fileUrl, 'fileUrl')
-      console.log(fileBlob, 'fileBlob')
-      console.log(fileName, fileName)
       this.image = {
         url: fileUrl,
         blob: fileBlob,
@@ -154,8 +154,6 @@ export default {
       this.startPhotoHandler = false
     },
     createUserChildEvents() {
-      console.log(this.image.blob, 'blozinho')
-      console.log(this.image.blob, 'blozinho')
       const file = [{ file: this.image.blob, name: 'newImage' }]
       if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
         utils.toast('Preencha o evento e insira uma observação para prosseguir')
@@ -217,6 +215,13 @@ export default {
       this.dialogInsertChildEvent.data = []
       this.dialogInsertChildEvent.obs = ''
       this.dialogInsertChildEvent.childEventId = ''
+      this.image = {
+        url: null,
+        blob: null,
+        name: null,
+        type: null
+      }
+      this.$emit('close')
     },
     getChildEvents() {
       const opt = {
