@@ -144,6 +144,7 @@ export default defineComponent({
           return;
         }
         this.loginStep = 'email'
+        console.log('essa merda aqui')
         this.$emit('changeStep', this.loginStep)
         this.$emit('done', r.data, this.key)
       });

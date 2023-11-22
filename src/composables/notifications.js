@@ -24,7 +24,7 @@ const addListeners = async () => {
   await PushNotifications.addListener('registration', async token => {
     console.log('Registration token: ', token.value)
     console.log('está registrado?', registered)
-    if (registered) return
+    // if (registered) return
     registered = true
     const reg = await useFetch({ route: '/notifications/registerFirebaseToken', body: { token: token.value } })
     console.log('retorno firebase token', reg)
