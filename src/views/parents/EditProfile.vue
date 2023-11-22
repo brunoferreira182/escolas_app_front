@@ -103,6 +103,7 @@ export default {
         } 
         utils.toast('Dados atualizados com sucesso!')
         this.getUserProfileById()
+        this.$router.back()
       })
     }
   },

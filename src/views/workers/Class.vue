@@ -121,9 +121,9 @@
                 :checked="child.isChecked" 
                 @ionChange="handleCheckboxChange(child._id, $event)" 
               />
-              <!-- <ion-label class="q-px-md">
+              <ion-label class="q-px-md">
                 {{ child.childName }}
-              </ion-label> -->
+              </ion-label>
             </ion-item>
           </ion-list>
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
@@ -141,7 +141,8 @@
               <ion-label>
                 <ion-row class="ion-justify-content-between">
                   <ion-col size="2">
-                    <h6>{{ e.eventName }}</h6>
+                    <strong class="text-capitalize">{{ e.childName }}</strong><br/>
+                    <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
                   </ion-col>
                   <ion-col 
                     size="6" 
@@ -190,14 +191,14 @@
       ]"
     />
  
-    <DialogInsertChildEvent
+    <!-- <DialogInsertChildEvent
       :dialogInsertChildEvent="dialogInsertChildEvent"
       :selectedEvent="selectedEvent"
       :childEventsHistory="childEventsHistory"
       :pagination="pagination"
       :dialogInsertActivity="dialogInsertActivity"
       @close="closeDialogInserChildren"
-    />
+    /> -->
   </ion-page>
 </template>
 
@@ -232,7 +233,7 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { caretDownSharp } from 'ionicons/icons';
 import utils from '../../composables/utils'
 import PhotoHandler from '../../components/PhotoHandler.vue'
-import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
+// import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 </script>
 <script>
 
@@ -370,39 +371,52 @@ export default {
     },
     handleCheckboxChangeAll(e) {
       if (e.detail.checked === true) {
-        this.selectedChildren = this.classList.map((child) => ({
-        _id: child._id,
-      }));
+        this.selectedChildren = this.classList.map((child) => ({ _id: child._id }));
       } else {
-        this.selectedChildren = []
+        this.selectedChildren = [];
       }
-      this.selectedChildren.forEach((child) => {
-        this.classList.forEach((classList, i) => {
-          if (child._id === classList._id) {
-            this.classList.forEach((teste) => {
-              teste.isChecked = e.detail.checked
-              if (teste.isChecked === false) {
-                this.selectedChildren = []
-                this.classList.forEach((classList) => {
-                  classList.isChecked = false
-                })
-              }
-            }) 
-          }
-        })
-      })
-      this.dialogInsertChildEvent.data = this.selectedChildren
-    },
-    handleCheckboxChangeAll(e) {
-      this.selectedChildren = [];
+
       this.classList.forEach((classList) => {
         classList.isChecked = e.detail.checked;
-        if (e.detail.checked) {
-          this.selectedChildren.push({ _id: classList._id });
-        }
       });
-      this.dialogInsertChildEvent.data = this.selectedChildren;
+
+      this.dialogInsertChildEvent.data = this.selectedChildren.map((child) => child._id);
     },
+    // handleCheckboxChangeAll(e) {
+    //   if (e.detail.checked === true) {
+    //     this.selectedChildren = this.classList.map((child) => ({
+    //     _id: child._id,
+    //   }));
+    //   } else {
+    //     this.selectedChildren = []
+    //   }
+    //   this.selectedChildren.forEach((child) => {
+    //     this.classList.forEach((classList, i) => {
+    //       if (child._id === classList._id) {
+    //         this.classList.forEach((teste) => {
+    //           teste.isChecked = e.detail.checked
+    //           if (teste.isChecked === false) {
+    //             this.selectedChildren = []
+    //             this.classList.forEach((classList) => {
+    //               classList.isChecked = false
+    //             })
+    //           }
+    //         }) 
+    //       }
+    //     })
+    //   })
+    //   this.dialogInsertChildEvent.data = this.selectedChildren
+    // },
+    // handleCheckboxChangeAll(e) {
+    //   this.selectedChildren = [];
+    //   this.classList.forEach((classList) => {
+    //     classList.isChecked = e.detail.checked;
+    //     if (e.detail.checked) {
+    //       this.selectedChildren.push({ _id: classList._id });
+    //     }
+    //   });
+    //   this.dialogInsertChildEvent.data = this.selectedChildren;
+    // },
     closeDialogInserChildren() {
       this.dialogInsertChildEvent.open = false
       this.dialogInsertChildEvent.data = []
@@ -550,6 +564,7 @@ export default {
       })
     },
     createUserChildEvents() {
+      const file = [{ file: this.image.blob, name: 'newImage' }]
       if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
         utils.toast('Preencha o evento e insira uma observação para prosseguir')
         return
@@ -557,11 +572,14 @@ export default {
       const opt = {
         route: '/mobile/workers/createUserChildEvents',
         body: {
-          childId: [this.dialogInsertChildEvent.data.childId],
+          childId: this.dialogInsertChildEvent.data,
           childEventId: this.dialogInsertChildEvent.childEventId,
           obs: this.dialogInsertChildEvent.obs
         },
-        file: [{ file: this.image.blob, name: 'userPhoto' }]
+        // file: this.image.blob ? [{ file: this.image.blob, name: 'userPhoto' }] : null
+      }
+      if(this.image.blob !== null){
+        opt.file = file
       }
       useFetch(opt).then((r) => {
         if (r.error) {
