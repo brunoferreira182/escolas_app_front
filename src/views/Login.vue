@@ -107,7 +107,7 @@ export default {
     async registerLogin(data, key) {
       utils.registerLogin(data, key)
       utils.loading.hide()
-      // pushService.initPush()
+      pushService.initPush()
       utils.verifyUserPermissions(data)
     },
     goToRegister() {
