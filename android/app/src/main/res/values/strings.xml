@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">escolas_app_front_app</string>
     <string name="title_activity_main">escolas_app_front_app</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="package_name">com.escolas.app.b3dev</string>
+    <string name="custom_url_scheme">com.escolas.app.b3dev</string>
 </resources>

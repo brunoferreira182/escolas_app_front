@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.escolas.app.b3dev;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -34,9 +34,9 @@
                         v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
                         :src="utils.attachmentsAddress() + message.messageFile.filename"
                       >
-                      <span v-else style="display:flex;align-items: center;">
+                      <span v-else style="display:flex;align-items: center;" @click="clkAttachment(message)">
                         <ion-icon size="small" :icon="attach"></ion-icon>
-                        <span>Arquivo anexado</span>
+                        <span>{{ message.messageFile.originalname }}</span>
                       </span>
                     </div>
                     <div
@@ -117,7 +117,7 @@
           <ion-col size="2" style="display:flex;justify-content: center;">
             <ion-button
               @mousedown="$event.preventDefault()"
-              @click="insertMessage"
+              @click="insertMessage({})"
               v-if="chatMessage !== ''"
               size="small"
               shape="circle"
@@ -196,7 +196,7 @@ export default {
       },
       chatMessage: '',
       audioMessage: null,
-      canSendMessage: '',
+      canSendMessage: false,
       userInfo: '',
       statusConnection: '',
       messages: [],
@@ -231,6 +231,15 @@ export default {
     this.startView()
   },
   methods: {
+    async clkAttachment (item) {
+      console.log(item)
+      utils.loading.show()
+      await utils.downloadFile({
+        filename: item.messageFile.filename,
+        originalname: item.messageFile.originalname
+      })
+      utils.loading.hide()
+    },
     goToChatInfo() {
       this.$router.push("/chatInfo?classId=" + this.$route.query.classId)
     },
@@ -379,14 +388,6 @@ export default {
       this.startPhotoHandler = false
       this.step = 'initial'
     },
-    createRelationId: async function () {
-      let relationId
-      if (this.userInfo.userId < this.$route.query.userId) relationId = this.userInfo.userId + '-' + this.$route.query.userId
-      else relationId = this.$route.query.userId + '-' + this.userInfo.userId
-      this.relationId = relationId
-      this.startSocket()
-      return
-    },
     startSocket: async function () {
       const opt = {
         query: {
@@ -401,9 +402,6 @@ export default {
       if (msg.length === 0 || msg[0].createdBy.userId === this.userInfo.userId) return
       this.messages.push(...msg)
       this.scrollToBottom()
-    },
-    clkAttachment (item) {
-      const url = utils.attachmentsAddress() + item.messageData.file.filename
     },
     clkAttachFile () {
       ''
@@ -435,24 +433,6 @@ export default {
         this.title = r.data.name
         this.userNameAndPhoto = r.data
 				
-      })
-		},
-    async getStatusUserConnection() {
-			const opt = {
-        method: 'POST',
-        route: '/mobile/messenger/getStatusUserConnection',
-        body: {
-					userId: this.$route.query.userId,
-          // _id: this.$route.query._idRelation
-        }
-      }
-			useFetch(opt).then(r => {
-        this.statusConnection = r.data.statusConnection
-        if (r.data.statusConnection === 'connected')  {
-          this.getMessages()
-          this.createRelationId()
-          return
-        }
       })
 		},
     moreData (ev) {
@@ -491,7 +471,7 @@ export default {
       })
     },
     insertMessage (file) {
-      if (this.chatMessage.length < 1 && !file && !this.audioMessage) return
+      if (this.chatMessage.length < 1 && !file.file && !this.audioMessage) return
       let optTemMsg
       if (file.file) optTemMsg = { file: file.file }
       else optTemMsg = { message: this.chatMessage }
@@ -506,7 +486,7 @@ export default {
           audioMessage: this.audioMessage
         }
       }
-      if (file) {
+      if (file.file) {
         opt.file = [ file ]
       }
       if (this.isAnsweringMessage.isAnswering) {
@@ -557,22 +537,6 @@ export default {
         if (m.tempId === id) this.messages[i] = msgData
       })
     },
-    newSolicitationToConnect() {
-      const opt = {
-        method: 'POST',
-        route: '/messenger/newSolicitationToConnect',
-        body: {
-          userId: this.$route.query.userId,
-        }
-      }
-      utils.loading.show()
-			useFetch(opt).then(r => {
-        utils.loading.hide()
-        utils.toast('Sua solicitação foi feita. Aguarde ser aprovada.')
-        this.newConnection = r.data
-        this.$router.go(-1)
-      })
-		},
     getClassDetailById() {
       const opt = {
         route: '/mobile/parents/chat/getClassDetailById',

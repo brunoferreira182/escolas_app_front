@@ -91,7 +91,7 @@ export default defineComponent({
         return
       } 
       this.userInfo = r.data;
-      // pushService.initPush()
+      pushService.initPush()
       utils.verifyUserPermissions(r.data)
     },
   }

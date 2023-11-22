@@ -1,5 +1,5 @@
 <template>
-  <ion-card>
+  <ion-card class="q-mx-sm">
     <ion-icon 
       class="bounce2"
       size="small" 

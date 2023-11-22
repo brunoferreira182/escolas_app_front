@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "226987192335",
+    "project_id": "escolas-app-365ba",
+    "storage_bucket": "escolas-app-365ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226987192335:android:7e95165049d844ec22b37a",
+        "android_client_info": {
+          "package_name": "com.escolas.app.b3dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGQCHV_-hYHbgio5A7LrjWrcyuOUzJwao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

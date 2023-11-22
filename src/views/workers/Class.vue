@@ -75,6 +75,7 @@
           </div>
         </ion-content>
       </ion-modal>
+
       <ion-modal 
         :is-open="dialogInsertClassEvent.open" 
         @ionModalDidPresent="getClassChildrenById()" 
@@ -95,7 +96,7 @@
               expand="block" 
               fill="flat"
             >
-              {{ dialogInsertChildEvent.childEventId !== '' ? selectedEvent[0].name : 'Selecionar Atividade'}}
+              {{ dialogInsertChildEvent.childEventId !== '' ? selectedEvent[0].name : 'Selecionar Atividade' }}
             </ion-button>
           </div>
           <div class="input-wrapper  q-px-md q-mx-md">
@@ -120,9 +121,9 @@
                 :checked="child.isChecked" 
                 @ionChange="handleCheckboxChange(child._id, $event)" 
               />
-              <ion-label class="q-px-md">
+              <!-- <ion-label class="q-px-md">
                 {{ child.childName }}
-              </ion-label>
+              </ion-label> -->
             </ion-item>
           </ion-list>
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
@@ -157,15 +158,6 @@
                 <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
               </ion-label>
             </ion-item>
-            <!-- <ion-item 
-              v-for="e in childEventsHistory"
-              :key="e"
-            >
-              <ion-label >
-                <h6>{{ e.eventName }}</h6>
-                <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
-              </ion-label>
-            </ion-item> -->
           </ion-list>
           <div v-else class="q-px-lg text-caption">
             Nenhuma atividade
@@ -204,6 +196,7 @@
       :childEventsHistory="childEventsHistory"
       :pagination="pagination"
       :dialogInsertActivity="dialogInsertActivity"
+      @close="closeDialogInserChildren"
     />
   </ion-page>
 </template>
@@ -309,10 +302,10 @@ export default {
     this.getClassesByUserId()
     this.getChildrenInClassList()
     this.verifyIfHasChildId()
-    this.getChildEventsHistory()
+    this.getChildrenEventsHistory()
   },
   methods: {
-    getChildEventsHistory() {
+    getChildrenEventsHistory() {
       const opt = {
         route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
         body: {
@@ -325,6 +318,24 @@ export default {
         else {
           this.childEventsHistory = r.data.list
         } 
+      })
+    },
+    getChildEventsHistory() {
+      const opt = {
+        route: '/mobile/workers/classes/getLastActivityFromChild',
+        body: {
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage,
+          childId: this.dialogInsertChildEvent.data.childId
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) {
+          utils.toast("Ocorreu um erro, tente novamente.")
+          return
+        }
+        this.childEventsHistory = r.data.list
+        this.pagination.page++
       })
     },
     verifyIfHasChildId() {
@@ -397,6 +408,7 @@ export default {
       this.dialogInsertChildEvent.data = []
       this.dialogInsertChildEvent.obs = ''
       this.dialogInsertChildEvent.childEventId = ''
+      this.pagination.page = 1
     },
     handleCheckboxChange(childId, e) {
       if (e.detail.checked === true) {
@@ -461,6 +473,48 @@ export default {
     clkOpenDialogChildEvent(child){
       this.dialogInsertChildEvent.data = child
       this.dialogInsertChildEvent.open = true
+      this.getChildEventsHistory()
+    },
+    // getLastChildActivities () {
+    //   const opt = {
+    //     route: '/mobile/workers/getLastChildActivities',
+    //     body: {
+    //       childId: this.dialogInsertChildEvent.data.childId,
+    //       page: this.pagination.page,
+    //       rowsPerPage: this.pagination.rowsPerPage
+    //     }
+    //   }
+    //   useFetch(opt).then((r) => {
+    //     if (r.error) {
+    //       utils.toast('Ocorreu um erro. Tente novamente.')
+    //       return
+    //     }
+    //     this.childEventsHistory = r.data.list
+    //   })
+    // },
+    getChildEvents() {
+      const opt = {
+        route: '/mobile/workers/getChildEvents',
+        body: {
+          status: 'active',
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        }
+      }
+      utils.loading.show()
+      useFetch(opt).then((r) => {
+        utils.loading.hide()
+        if (r.error) {
+          utils.toast('Ocorreu um erro. Tente novamente.')
+          return
+        }
+        this.childEventsList = r.data.list
+        this.formattedChildEventList = this.childEventsList.map((event) => ({
+          type: 'radio',
+          label: event.name,
+          value: event._id
+        }))
+      })
     },
     clkOpenDialogClassEvent(c){
       this.dialogInsertClassEvent.data = c
@@ -519,34 +573,11 @@ export default {
           utils.toast('Evento inserido com sucesso!')
       })
     },
-    getChildEvents() {
-      const opt = {
-        route: '/mobile/workers/getChildEvents',
-        body: {
-          status: 'active',
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        }
-      }
-      utils.loading.show()
-      useFetch(opt).then((r) => {
-        utils.loading.hide()
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
-          return
-        }
-        this.childEventsList = r.data.list
-        this.formattedChildEventList = this.childEventsList.map((event) => ({
-          type: 'radio',
-          label: event.name,
-          value: event._id
-        }))
-      })
-    },
+    
     getChildrenInClassList() {
-      if(this.filterValue !== ''){
+      if (this.filterValue !== '') {
         this.show = false
-      }else{this.show = true}
+      } else this.show = true
       const opt = {
         route: '/mobile/workers/getChildrenInClassList',
         body: {
