@@ -4,7 +4,6 @@
       class="text-capitalize"
       :title="userDetail ? userDetail.name : 'Carregando...'"
       :backButton="true"
-      @titleClicked="goToChatInfo"
     />
     <ion-content ref="elIonContent" color="light">
       <div >
