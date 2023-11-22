@@ -25,7 +25,7 @@
       <!-- <div class="ion-text-center text-h5 q-py-sm" v-if="userInfo">
         {{ userInfo.familyData.name }}
       </div> -->
-      <ion-list :inset="true"  v-if="userInfo.children" >
+      <ion-list :inset="true"  v-if="userInfo && userInfo.children" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Filhos</div>
         <div v-if="userInfo.children">
           <ion-item 
@@ -36,9 +36,15 @@
             @click="goToChildDetail(child.childData._id)"
           >
             <ion-avatar aria-hidden="true" slot="start">
-              <img :src="utils.makeFileUrl(child.childData.childImage)"/>
+              <img 
+                v-if="child.childData"
+              :src="utils.makeFileUrl(child.childData.childImage) "/>
+              <img 
+                v-else
+                src="/assets/default_avatar.svg"
+              />
             </ion-avatar>
-            <ion-label>
+            <ion-label v-if="child.childData">
               <h6>{{ child.childData.childName }}</h6>
               <!-- <ion-badge v-if="child.status && child.status.status === 'inactive'" color="danger">{{ child.status.label }}</ion-badge>
               <ion-badge v-else-if="child.status && child.status.status === 'waitingApproval'" color="warning">{{ child.status.label }}</ion-badge>

@@ -49,23 +49,27 @@
             <ion-label>Responsáveis</ion-label>
           </ion-item>
           <div slot="content" v-if="workersClassData && workersClassData.users">
-            <ion-item
+            <div 
               v-for="worker in workersClassData.users"
               :key="worker"
             >
-              <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
-                <img :src="utils.makeFileUrl(worker.childPhoto.filename)"/>
-              </ion-avatar>
-              <ion-avatar aria-hidden="true" slot="start" v-else>
-                <img :src="utils.makeFileUrl(worker.image)"/>
-              </ion-avatar>
-              <p class="text-capitalize">{{ worker.userName }} 
-                <div class="text-caption">{{ worker.userFunction }}</div>
-              </p>
-              <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
-                <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
-              </ion-button>
-            </ion-item>
+              <ion-item
+                v-if="worker.user_id !== userInfo.userId"
+              >
+                <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
+                  <img :src="utils.makeFileUrl(worker.childPhoto.filename)"/>
+                </ion-avatar>
+                <ion-avatar aria-hidden="true" slot="start" v-else>
+                  <img :src="utils.makeFileUrl(worker.image)"/>
+                </ion-avatar>
+                <p class="text-capitalize">{{ worker.userName }} 
+                  <div class="text-caption">{{ worker.userFunction }}</div>
+                </p>
+                <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
+                  <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </div>
           </div>
           <div v-else class="text-caption q-px-md">
             Não há funcionários nesta turma
@@ -138,7 +142,8 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
-      userChildren: null
+      userChildren: null,
+      userInfo: null,
     };
   },
   mounted () {
@@ -177,6 +182,7 @@ export default {
       }
       useFetch(opt).then((r) => {
         if (!r.error) {
+          this.userInfo = utils.presentUserInfo()
           this.classChildrenData = r.data.childrenInClass
           this.classData = r.data
           this.classEvents = r.data.classEvents.list

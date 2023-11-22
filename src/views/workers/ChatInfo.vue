@@ -19,6 +19,7 @@
             <ion-label>Eventos</ion-label>
           </ion-item>
           <div slot="content">
+            
             <ion-item 
               :button="true" 
               detail="false"
@@ -49,24 +50,27 @@
             <ion-label>Funcionários</ion-label>
           </ion-item>
           <div slot="content" v-if="workersClassData && workersClassData.users">
-            <ion-item
+            <div 
               v-for="worker in workersClassData.users"
-              @click=""
               :key="worker"
             >
-              <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
-                <img :src="utils.makeFileUrl(worker.childPhoto.filename)"/>
-              </ion-avatar>
-              <ion-avatar aria-hidden="true" slot="start" v-else>
-                <img :src="utils.makeFileUrl(worker.image)"/>
-              </ion-avatar>
-              <p class="text-capitalize">{{ worker.userName }} 
-                <div class="text-caption">{{ worker.userFunction }}</div>
-              </p>
-              <ion-button slot="end" fill="clear"  @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
-                <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
-              </ion-button>
-            </ion-item>
+              <ion-item
+                v-if="worker.user_id !== userInfo.userId"
+              >
+                <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
+                  <img :src="utils.makeFileUrl(worker.childPhoto.filename)"/>
+                </ion-avatar>
+                <ion-avatar aria-hidden="true" slot="start" v-else>
+                  <img :src="utils.makeFileUrl(worker.image)"/>
+                </ion-avatar>
+                <p class="text-capitalize">{{ worker.userName }} 
+                  <div class="text-caption">{{ worker.userFunction }}</div>
+                </p>
+                <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
+                  <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </div>
           </div>
           <div v-else class="text-caption q-px-md">
             Não há funcionários nesta turma

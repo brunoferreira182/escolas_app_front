@@ -46,7 +46,7 @@ export default defineComponent({
   },
   methods: {
     async startView () {
-      this.changeAppBar()
+      // this.changeAppBar()
       if (this.$route.path === '/login') return
       else this.checkUserAuthentication()
     },
@@ -86,10 +86,7 @@ export default defineComponent({
         return
       }
       const r = await utils.getUserInfoByToken()
-      if (r.error) {
-        this.$router.push("/login")
-        return
-      } 
+      if (r.error) { this.$router.push("/login"); return; } 
       this.userInfo = r.data;
       pushService.initPush()
       utils.verifyUserPermissions(r.data)

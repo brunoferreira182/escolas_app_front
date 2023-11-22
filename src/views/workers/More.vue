@@ -13,8 +13,11 @@
         <ion-item :button="true">
           <ion-label>Pagamentos</ion-label>
         </ion-item>
-        <ion-item :button="true" @click="$router.push('/notesListWorker')">
+        <ion-item :button="true" @click="$router.push('/notesList')">
           <ion-label>Recados</ion-label>
+        </ion-item>
+        <ion-item :button="true" @click="clkExitApp">
+          <ion-label>Sair do aplicativo</ion-label>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -30,7 +33,7 @@ import { IonPage, IonButton,
   IonList, IonItem, IonLabel } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
-
+import { useFetch } from '../../composables/fetch'
 
 export default {
   data() {
@@ -39,9 +42,17 @@ export default {
     };
   },
   methods: {
-    backLogin() {
-      this.$router.push('/login')
-    }
+    clkExitApp () {
+      const opt = {
+        route: '/disconnectFromAccount',
+        body: {
+          fbToken: localStorage.getItem('fbToken')
+        }
+      }
+      useFetch(opt).then(() => {
+        this.$router.push('/login')
+      })
+    },
   }
 }
 

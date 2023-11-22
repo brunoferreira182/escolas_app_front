@@ -115,7 +115,7 @@ export default defineComponent({
         route: '/mobile/social/insertUserInSchoolEvent',
         body: {
           schoolEventId: this.$route.query.schoolEventId,
-          childId: child.childData._id,
+          childId: child.childId,
           parentsPermission: true,
         }
       } 

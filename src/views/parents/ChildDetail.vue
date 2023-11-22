@@ -104,6 +104,7 @@ import {
   IonAlert,
   IonGrid,
   IonText,
+  IonNote,
   IonInput,
   IonRow,
   IonItem,
