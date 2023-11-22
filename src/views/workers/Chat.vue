@@ -94,6 +94,7 @@
       :childEventsHistory="childEventsHistory"
       :pagination="pagination"
       :dialogInsertActivity="dialogInsertActivity"
+      @getLastActivityFromChildrenOfClasses="getLastActivityFromChildrenOfClasses"
     />
   </ion-page>
 </template>
@@ -115,6 +116,7 @@ import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 <script>
 import { useFetch } from '@/composables/fetch';
 export default {
+  name: 'chatWorkers',
   components: {
     IonPage, IonButton,
     IonContent,
@@ -157,7 +159,8 @@ export default {
       }
     }
   },
-  beforeMount () {
+  mounted() {
+    utils.loading.hide()
     this.startView()
   },
   methods: {
@@ -206,9 +209,7 @@ export default {
           rowsPerPage: this.pagination.rowsPerPage
         }
       }
-      utils.loading.show()
       useFetch(opt).then((r) => {
-        utils.loading.hide()
         if (r.error) {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
@@ -240,7 +241,7 @@ export default {
     },
     startView () {
       this.getClassesByUserId()
-      this.getChildEventsHistory()
+      this.getLastActivityFromChildrenOfClasses()
     },  
     clkOpenDialogChildEvent(child) {
       this.dialogInsertChildEvent.data = child
@@ -263,7 +264,7 @@ export default {
     goToChatDetail (classId) {
       this.$router.push('/chatDetailWorker?classId=' + classId)
     },
-    getChildEventsHistory() {
+    getLastActivityFromChildrenOfClasses() {
       const opt = {
         route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
         body: {

@@ -137,9 +137,9 @@ export default {
     selectedEvent: Array,
     childEventsHistory: Array,
     pagination: Object,
-    dialogInsertActivity: Object
+    dialogInsertActivity: Object,
   },
-  emits: ['close'],
+  emits: ['close', 'getLastActivityFromChildrenOfClasses'],
   methods: {
     captured(fileUrl, fileBlob, fileName) {
       this.startPhotoHandler = false
@@ -176,6 +176,7 @@ export default {
           return
         }
           this.clearModalData()
+          this.$emit('getLastActivityFromChildrenOfClasses')
           utils.toast('Evento inserido com sucesso!')
       })
     },

@@ -100,6 +100,7 @@ import utils from '../../composables/utils'
 <script>
 import { useFetch } from '@/composables/fetch';
 export default {
+  name: 'chatParents',
   components: {
     IonPage, IonButton,
     IonContent,
@@ -126,7 +127,8 @@ export default {
       }
     }
   },
-  beforeMount () {
+  mounted() {
+    utils.loading.hide()
     this.startView()
   },
   methods: {
@@ -150,9 +152,7 @@ export default {
       const opt = {
         route: '/mobile/parents/chat/getClassesOfChildrenByUserId',
       }
-      utils.loading.show()
       useFetch(opt).then(r => {
-        utils.loading.hide()
         this.childClassInfo = r.data
       })
     },
