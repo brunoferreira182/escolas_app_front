@@ -78,7 +78,7 @@
 
       <ion-modal 
         :is-open="dialogInsertClassEvent.open" 
-        @ionModalDidPresent="getClassChildrenById()" 
+        @ionModalDidPresent="startModal()" 
         @didDismiss="clearModalDataClass()"
       >
         <ion-header>
@@ -119,12 +119,12 @@
               >
               <ion-checkbox 
                 :checked="child.isChecked" 
-                @ionChange="handleCheckboxChange(child._id, $event)" 
+                @ionChange="handleCheckboxChange(child.childId, $event)" 
               />
-              <ion-label class="q-px-md">
-                {{ child.childName }}
-              </ion-label>
-            </ion-item>
+                <ion-label class="q-px-md ion-text-capitalize">
+                  {{ child.childName }}
+                </ion-label>
+              </ion-item>
           </ion-list>
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
           <ion-list :inset="true" v-if="childEventsHistory.length">
@@ -191,14 +191,14 @@
       ]"
     />
  
-    <!-- <DialogInsertChildEvent
+    <DialogInsertChildEvent
       :dialogInsertChildEvent="dialogInsertChildEvent"
       :selectedEvent="selectedEvent"
       :childEventsHistory="childEventsHistory"
       :pagination="pagination"
       :dialogInsertActivity="dialogInsertActivity"
       @close="closeDialogInserChildren"
-    /> -->
+    />
   </ion-page>
 </template>
 
@@ -233,7 +233,7 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { caretDownSharp } from 'ionicons/icons';
 import utils from '../../composables/utils'
 import PhotoHandler from '../../components/PhotoHandler.vue'
-// import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
+import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 </script>
 <script>
 
@@ -295,6 +295,7 @@ export default {
         this.getClassesByUserId()
         this.getChildrenInClassList()
         this.verifyIfHasChildId()
+        this.getLastActivityFromChildrenOfClasses()
       }
     }
   },
@@ -303,15 +304,20 @@ export default {
     this.getClassesByUserId()
     this.getChildrenInClassList()
     this.verifyIfHasChildId()
-    this.getChildrenEventsHistory()
+    this.getLastActivityFromChildrenOfClasses()
   },
   methods: {
-    getChildrenEventsHistory() {
+    startModal(){
+      this.getChildrenListByClassId()
+      this.getLastActivityFromChildrenOfClasses()
+      this.getChildrenInClassList()
+    },
+    getLastActivityFromChildrenOfClasses() {
       const opt = {
         route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
         body: {
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
+          page: 1,
+          rowsPerPage: 100,
         }
       }
       useFetch(opt).then((r) => {
@@ -321,7 +327,7 @@ export default {
         } 
       })
     },
-    getChildEventsHistory() {
+    getLastActivityFromChild() {
       const opt = {
         route: '/mobile/workers/classes/getLastActivityFromChild',
         body: {
@@ -371,7 +377,7 @@ export default {
     },
     handleCheckboxChangeAll(e) {
       if (e.detail.checked === true) {
-        this.selectedChildren = this.classList.map((child) => ({ _id: child._id }));
+        this.selectedChildren = this.classList.map((child) => ({ _id: child.childId }));
       } else {
         this.selectedChildren = [];
       }
@@ -380,7 +386,7 @@ export default {
         classList.isChecked = e.detail.checked;
       });
 
-      this.dialogInsertChildEvent.data = this.selectedChildren.map((child) => child._id);
+      this.dialogInsertChildEvent.data = this.selectedChildren.map((child) => child.childId);
     },
     // handleCheckboxChangeAll(e) {
     //   if (e.detail.checked === true) {
@@ -455,13 +461,13 @@ export default {
       this.dialogViewImage.image = null
       this.dialogViewImage.data = null
     },
-    getClassChildrenById() {
+    getChildrenListByClassId() {
       const opt = {
         route: '/mobile/workers/getChildrenListByClassId',
         body: {
           classId: this.dialogInsertClassEvent.data.classId,
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
+          page: 1,
+          rowsPerPage: 100
         }
       }
       useFetch(opt).then((r) => {
@@ -487,7 +493,7 @@ export default {
     clkOpenDialogChildEvent(child){
       this.dialogInsertChildEvent.data = child
       this.dialogInsertChildEvent.open = true
-      this.getChildEventsHistory()
+      this.getLastActivityFromChild()
     },
     // getLastChildActivities () {
     //   const opt = {
@@ -546,23 +552,6 @@ export default {
         type: 'newImage'
       }
     },
-    getChildEventsByUserId() {
-      const opt = {
-        route: '/mobile/workers/getChildEventsByUserId',
-        body: {
-          childId: this.dialogInsertChildEvent.data.childId,
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
-          return
-        }
-        this.childEventsHistory = r.data.list
-      })
-    },
     createUserChildEvents() {
       const file = [{ file: this.image.blob, name: 'newImage' }]
       if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
@@ -572,7 +561,8 @@ export default {
       const opt = {
         route: '/mobile/workers/createUserChildEvents',
         body: {
-          childId: this.dialogInsertChildEvent.data,
+          // childId: this.dialogInsertChildEvent.data,
+          selectedChildren: this.selectedChildren,
           childEventId: this.dialogInsertChildEvent.childEventId,
           obs: this.dialogInsertChildEvent.obs
         },
@@ -588,6 +578,9 @@ export default {
         }
           this.clearModalData()
           this.dialogInsertClassEvent.open = false
+          this.getLastActivityFromChildrenOfClasses()
+          this.getLastActivityFromChild()
+          this.selectedEvent = null
           utils.toast('Evento inserido com sucesso!')
       })
     },
@@ -633,6 +626,15 @@ export default {
 };
 </script>
 <style scoped>
+  ion-checkbox {
+    --size: 32px;
+    --checkbox-background-checked: #6815ec;
+  }
+
+  ion-checkbox::part(container) {
+    border-radius: 6px;
+    border: 2px solid #6815ec;
+  }
 ion-select.always-flip::part(icon) {
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
