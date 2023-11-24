@@ -135,9 +135,9 @@ export default {
     },
     addChild() {
       if (this.childData.name === ''
-          || this.childData.document === ''
-          || this.childData.birthDayDate === ''
-          || !this.image.blob)
+        || this.childData.document === ''
+        || this.childData.birthDayDate === ''
+        || !this.image.blob)
       {
         utils.toast('Preencha todos os dados e insira uma foto')
         return

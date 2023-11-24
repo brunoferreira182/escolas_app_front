@@ -6,7 +6,6 @@
       @titleClicked="goToChatInfo"
     />
     <ion-content ref="elIonContent" color="light">
-      
       <div >
         <ion-infinite-scroll
           position="top"
@@ -231,12 +230,13 @@ export default {
     this.startView()
   },
   methods: {
-    async clkAttachment (item) {
-      console.log(item)
+    async clkAttachment (message) {
+      console.log(message.messageFile.originalname)
+      console.log(message)
       utils.loading.show()
       await utils.downloadFile({
-        filename: item.messageFile.filename,
-        originalname: item.messageFile.originalname
+        filename: message.messageFile.filename,
+        originalname: message.messageFile.originalname
       })
       utils.loading.hide()
     },
@@ -549,6 +549,9 @@ export default {
           utils.toast('Ocorreu um problema, tente novamente mais tarde.')
         }
         this.canSendMessage = r.data.userCanSendMessage
+        if(this.$route.path.includes('chatDetailWorker')){
+          this.canSendMessage = true
+        }
         this.classDetail = r.data
       })
     }

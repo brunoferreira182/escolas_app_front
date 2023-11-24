@@ -18,7 +18,7 @@
           <ion-item slot="header">
             <ion-label>Eventos</ion-label>
           </ion-item>
-          <div slot="content">
+          <div slot="content" v-if="classEvents.length">
             <ion-item 
               :button="true" 
               detail="false"
@@ -33,13 +33,26 @@
                 <strong>{{ event.eventName }}</strong>
                 <br/>
                 <div class="metadata-end-wrapper" slot="end">
-                  <ion-note color="medium">{{ event.eventDate.local }}</ion-note>
+                  <ion-note color="medium">
+                    {{ event.eventDate.local.split('-')[2] }}/
+                    {{ event.eventDate.local.split('-')[1] }}/
+                    {{ event.eventDate.local.split('-')[0] }}
+                  </ion-note>
                 </div>
                 <ion-note color="medium" class="ion-text-wrap">
-                  {{ event.eventDescription }}
+                  {{ event.eventDescription.length > 100 ? 
+                    event.eventDescription.slice(0, 100) + '...' : 
+                    event.eventDescription
+                  }}
+                  <ion-label class="q-py-md">
+                    Clique para saber mais
+                  </ion-label>
                 </ion-note>
               </ion-label>
             </ion-item>
+          </div>
+          <div v-else slot="content"  class="q-pa-md">
+            Não há eventos nesta turma
           </div>
         </ion-accordion>
       </ion-accordion-group>
@@ -98,13 +111,15 @@
         </ion-accordion>
       </ion-accordion-group>
       
-      <ion-accordion-group expand="inset">
-        <ion-accordion value="first" :toggle-icon="chevronForwardOutline" toggle-icon-slot="end">
-          <ion-item slot="header" @click="goToMedia">  
-            <ion-label>Mídia</ion-label>
-          </ion-item>
-        </ion-accordion>
-      </ion-accordion-group>
+      
+      <ion-item 
+        button
+        style="border-radius: 1rem; margin: 10px; margin-top: 20px;"
+        detail="true" 
+        @click="goToMedia" 
+      >
+        <ion-label>Mídias</ion-label>
+      </ion-item>
     </ion-content>
   </ion-page>
 </template>

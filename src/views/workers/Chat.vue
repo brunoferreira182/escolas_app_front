@@ -60,7 +60,7 @@
               <ion-card-title>Você não está em nenhuma sala</ion-card-title>
             </ion-card-header>
             <ion-card-content>
-              Procure um responsável na escola para convefir de qual turma você participa.
+              Procure um responsável da escola para conferir qual turma você participa.
             </ion-card-content>
           </ion-card>
         </div>

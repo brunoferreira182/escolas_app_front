@@ -33,8 +33,7 @@ import chatInfoWorker from '../views/workers/ChatInfo.vue'
 import createEvent from '../views/workers/CreateEvent.vue'
 import eventDetailParent from  '../views/parents/EventDetail.vue'
 import workerMore from '../views/workers/More.vue'
-import chatMedia from '../views/parents/ChatMedia.vue'
-import chatMediaWorker from '../views/workers/ChatMedia.vue'
+import chatMedia from '../views/ChatMedia.vue'
 import notesList from '../views/parents/NotesList.vue'
 import notesListWorker from '../views/workers/NotesList.vue'
 import calendarParent from '../views/parents/Calendar.vue'
@@ -128,16 +127,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'EventDetail',
         component: eventDetailParent
       },
-      {
-        path: '/chatMedia',
-        name: 'ChatMedia',
-        component: chatMedia
-      },
-      {
-        path: '/chatMediaWorker',
-        name: 'ChatMediaWorker',
-        component: chatMediaWorker
-      },
+ 
       {
         path: '/notesList',
         name: 'NotesList',
@@ -192,6 +182,11 @@ const routes: Array<RouteRecordRaw> = [
       { path: '/calendarEventDetail', component: calendarEventDetail },
       { path: '/editProfile', component: editProfile },
       { path: '/postReactions', component: postReactions },
+      {
+        path: '/chatMedia',
+        name: 'ChatMedia',
+        component: chatMedia
+      },
     ]
   },
 ]
