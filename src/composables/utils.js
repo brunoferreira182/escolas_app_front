@@ -11,8 +11,6 @@ import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 let loadingVar = []
 let updateUserInfoOnNextRoute = false
 
-
-
 const useUtils = {
   getFilesystemAccess() {
     return new Promise(async (resolve) => {
@@ -36,13 +34,27 @@ const useUtils = {
       method: 'GET'
     }
     const httpResponse = await useFetch(opt)
-    const writeFile = await Filesystem.writeFile({
-      path: obj.originalname,
-      data: httpResponse,
-      directory: Directory.Documents,
-      encoding: Encoding.UTF8,
-    })
-    this.toast('Arquivo baixado na pasta Documentos')
+    const originalnameSplit = obj.originalname.split('.')
+    const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
+    let nameToDownload
+    if (originalnameSplit.length === 1) nameToDownload = obj.originalname + currentDate
+    else nameToDownload = originalnameSplit[0] + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
+
+    let writeFile
+    let error = false
+    try {
+      writeFile = await Filesystem.writeFile({
+        path: nameToDownload,
+        data: httpResponse,
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      })
+    } catch (e) {
+      console.log(e, 'erro criar arquivo')
+      error = true
+    }
+    if (!error) this.toast('Arquivo baixado na pasta Documentos')
+    else this.toast('Ocorreu um erro ao baixar o arquivo')
     return
   },
   async verifyUserPermissions (data) {

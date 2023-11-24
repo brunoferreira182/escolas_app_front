@@ -27,7 +27,7 @@ const addListeners = async () => {
     // if (registered) return
     registered = true
     const reg = await useFetch({ route: '/notifications/registerFirebaseToken', body: { token: token.value } })
-    console.log('retorno firebase token', reg)
+    console.log('retorno firebase token', reg, this.$route.path)
     window.localStorage.setItem('fbToken', token.value)
   });
 

@@ -102,7 +102,7 @@ export async function useFetch ({
 
   let ret
   try {
-    ret = await axios.post(routeMasterServer, bodyToSend)
+    ret = method === 'GET' ? await axios.get(routeMasterServer, bodyToSend) : await axios.post(routeMasterServer, bodyToSend)
   }
   catch (e) {
     console.log('AQUI ERRO CATCH', e)
