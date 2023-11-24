@@ -18,11 +18,11 @@
           </span>
         </div>
         <div
-          style="width: 300px;margin-bottom: -20px;display: flex; align-items: center;"
+          style="width: 300px;margin-bottom: -4px;display: flex; align-items: center;"
           id="voice-message"
           v-if="media.messageAudio"
         >
-          <div style="padding-top: 5px; padding-left: 5px;">
+          <div style="padding-top: 4px; padding-left: 4px;">
             <ion-icon 
               v-if="currentAudioId !== media._id || audioIcon === 'play'" 
               @click="playAudio(media)" 
@@ -39,19 +39,18 @@
               :icon="pause"
             />
           </div>
-          <div>
-            <ion-range
-              style="margin-bottom: -20px;width: 200px;padding-right: 20px;"
-              :value="currentAudioId === media._id ? currentTime * 1000 : 0"
-              :min="0" 
-              :max="media.messageAudio.msDuration" 
-            />
-            <ion-label 
-              style="font-size: 13px;margin-bottom: -4px;margin-top: 5px;margin-left: 5px;"
-            >
-              {{ currentAudioId === media._id ? formatDuration(currentTime * 1000) : media.messageAudio.durationFormatted }}
-            </ion-label>
-          </div>
+          <ion-range
+            style="margin-bottom: -4px; padding-right: 20px; "
+            :value="currentAudioId === media._id ? currentTime * 1000 : 0"
+            :min="0" 
+            :max="media.messageAudio.msDuration" 
+            class="q-py-lg"
+          />
+          <ion-label 
+            style="font-size: 13px;margin-bottom: -4px;margin-top: 4px;margin-left: 4px;"
+          >
+            {{ currentAudioId === media._id ? formatDuration(currentTime * 1000) : media.messageAudio.durationFormatted }}
+          </ion-label>
         </div>
       </ion-card>
     </ion-content>
