@@ -51,7 +51,7 @@
           detail="false"
         >
           <ion-label>
-            <strong>{{ e.name }}</strong>
+            <strong class="text-capitalize">{{ e.name }}</strong>
             <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
             <ion-note color="medium" class="ion-text-wrap">
               {{ e.obs }}
