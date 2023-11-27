@@ -97,12 +97,12 @@ export default {
     this.getClassAttachments()
   },
   methods: {
-    async clkAttachment (item) {
-      console.log(item)
+    async clkAttachment (media) {
+      console.log(media)
       utils.loading.show()
       await utils.downloadFile({
-        filename: item.messageFile.filename,
-        originalname: item.messageFile.originalname
+        filename: media.messageFile.filename,
+        originalname: media.messageFile.originalname
       })
       utils.loading.hide()
     },

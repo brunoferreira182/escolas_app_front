@@ -39,7 +39,7 @@
               @click="clkOpenDialogChildEvent(e)"
             >
               <ion-label>
-                <strong>{{ e.childName }}</strong><br/>
+                <strong class="text-capitalize">{{ e.childName }}</strong><br/>
                 <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
                 <ion-note color="medium" class="ion-text-wrap">
                   {{ e.eventObs }}
