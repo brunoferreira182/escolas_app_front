@@ -20,15 +20,15 @@
             <ion-row>
               <ion-col size="5">
                 <div v-if="post.userReaction">
-                  <ion-icon size="large" @click="clkRemoveReaction(post)" src="/assets/icons/heart_filled.svg"/>{{ post.reactions }}
+                  <ion-icon size="large" @click="clkRemoveReaction(post)" :src="heart_filled"/>{{ post.reactions }}
                 </div>
                 <div v-else-if="!post.userReaction" @click="clkReaction(heart, post)">
-                  <ion-icon size="large" src="/assets/icons/heart.svg"/>{{ post.reactions }}
+                  <ion-icon size="large" :src="heart"/>{{ post.reactions }}
                 </div>
               </ion-col>
               <ion-col size="5">
                 <div class="q-pa-xs" v-if="post.routeDestination === '/postDetail'">
-                  <ion-icon style="width: 28px; height: 28px;" src="/assets/icons/comment.svg"/> {{ post.comments }}
+                  <ion-icon style="width: 28px; height: 28px;" :src="comment"/> {{ post.comments }}
                 </div>
               </ion-col>
             </ion-row>
@@ -175,10 +175,10 @@ import {
   calendarOutline,
   chatboxOutline
 } from 'ionicons/icons';
-import heart from '/assets/icons/heart.svg'
-import heart_filled from '/assets/icons/heart_filled.svg'
-import smile from '/assets/icons/smile.svg'
-import like from '/assets/icons/like.svg'
+import heart from '/src/assets/icons/heart.svg'
+import heart_filled from '/src/assets/icons/heart_filled.svg'
+import smile from '/src/assets/icons/smile.svg'
+import like from '/src/assets/icons/like.svg'
 const props = defineProps(['post', 'i'])
 </script>
 <script>
@@ -190,8 +190,6 @@ export default {
   },
   methods: {
     clkRemoveReaction(post) {
-      console.log('chamou remover reaction')
-      console.log(post)
       const opt = {
         route: '/mobile/social/removePostReaction',
         body: {
@@ -203,13 +201,11 @@ export default {
       })
     },
     clkReaction(icon, post) {
-      console.log('chamou socialPost')
-      console.log(post)
       const opt = {
         route: '/mobile/social/addNewPostReaction',
         body: {
           postId: post._id,
-          reaction: icon
+          // reaction: icon
         }
       }
       useFetch(opt).then(r => {

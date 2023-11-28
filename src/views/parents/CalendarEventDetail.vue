@@ -15,7 +15,16 @@
             {{ eventDetail.eventDate.split('-')[2] }}/
             {{ eventDetail.eventDate.split('-')[1] }}/
             {{ eventDetail.eventDate.split('-')[0] }}
+            <div class="q-py-sm" v-if="eventDetail.deadlinePayment">
+              Data final para pagamento 
+              {{ eventDetail.deadlinePayment.split('-')[2] }}/
+              {{ eventDetail.deadlinePayment.split('-')[1] }}/
+              {{ eventDetail.deadlinePayment.split('-')[0] }}
+            </div>
           </ion-card-subtitle>
+          <div class="q-py-md" v-if="eventDetail.paymentValue">
+            Contribuição de R$: {{ eventDetail.paymentValue }} reais
+          </div>
         </ion-card-header>
         <ion-card-content class="q-px-lg">
           {{ eventDetail.eventDescription }}

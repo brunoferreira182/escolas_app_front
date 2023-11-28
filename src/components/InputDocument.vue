@@ -53,7 +53,7 @@ export default defineComponent({
       else ret = `${n.slice(0, 2)}.${n.slice(2, 5)}.${n.slice(5, 8)}/${n.slice(8, 12)}-${n.slice(12, 14)}`
       const lastChar = ret[ret.length - 1]
       if (lastChar === '.' || lastChar === '-' || lastChar === '/')
-      ret = ret.slice(0, ret.length - 1)
+      ret = ret.slice(0, ret.length - 5)
       return ret
     },
     markTouched() {

@@ -36,7 +36,7 @@
             class="q-mb-sm"
             helperText="Com DDD e número."
           ></InputTelephone>
-          <div class="q-mb-md">
+          <!-- <div class="q-mb-md">
             <ion-input 
               :helperText="`Seu usuário será: @${userData.user.replace(/\s/g, '_').replace(/[.;,~^´`!@#$%¨&']/g, '').toLowerCase()}`"  
               fill="outline" 
@@ -45,7 +45,7 @@
               labelPlacement="floating"  
               label="Escolha um nome para seu perfil"
             />
-          </div>
+          </div> -->
           <ion-input 
             v-if="userData.birthdate"
             ref="item"
@@ -172,7 +172,6 @@ export default {
         phone: '',
         birthdate: null,
         name: '',
-        user: ''
       },
       passwordData: {
         password: '',
@@ -241,7 +240,6 @@ export default {
     },
     createUser () {
       const userData = {...this.userData}
-      userData.user = userData.user.replace(/\s/g, '_').replace(/[.;,~^´`!@#$%¨&']/g, '').toLowerCase()
       userData.email = userData.email.email
       const au = window.localStorage.getItem('au')
       const $k = window.localStorage.getItem('$k')
@@ -311,7 +309,6 @@ export default {
       this.userData.name = ''
       this.userData.email = ''
       this.userData.phone = ''
-      this.userData.user = ''
       this.passwordData.password = ''
       this.passwordData.confirmPassword = ''
       this.smsCode = ''

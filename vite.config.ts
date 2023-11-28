@@ -18,5 +18,5 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom'
   },
-  base: '/prod/vsp_app/app/'
+  base: '/dev/escolas_app/mobile'
 })
