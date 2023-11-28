@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Turmas"
+      title="Atividades"
       :backButton="false"
     />
     <ion-content color="light">
@@ -16,6 +16,9 @@
       <Transition name="bounce">
         <ion-list :inset="true" v-if="show">
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
+          <div class="q-px-md text-caption">
+            Selecione uma turma para inserir uma atividade para vários alunos
+          </div>
           <ion-item 
             v-for="c in classData"
             :key="c"
@@ -38,6 +41,9 @@
       </Transition>
       <ion-list :inset="true" >
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
+        <div class="q-px-md text-caption">
+          Selecione um aluno para inserir uma atividade individualmente
+        </div>
         <ion-item 
           v-for="child in childrenInClassList"
           :key="child"
