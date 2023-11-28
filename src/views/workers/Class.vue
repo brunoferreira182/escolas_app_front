@@ -335,8 +335,8 @@ export default {
       const opt = {
         route: '/mobile/workers/classes/getLastActivityFromChild',
         body: {
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage,
+          page: 1,
+          rowsPerPage: 100,
           childId: this.dialogInsertChildEvent.data.childId
         }
       }
@@ -432,7 +432,7 @@ export default {
       this.dialogInsertChildEvent.data = []
       this.dialogInsertChildEvent.obs = ''
       this.dialogInsertChildEvent.childEventId = ''
-      this.pagination.page = 1
+      // this.pagination.page = 1
     },
     handleCheckboxChange(childId, e) {
       if (e.detail.checked === true) {
@@ -617,8 +617,8 @@ export default {
       const opt = {
         route: '/mobile/workers/getClassesByUserId',
         body: {
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
+          page: 1,
+          rowsPerPage: 100
         }
       }
       useFetch(opt).then((r) => {

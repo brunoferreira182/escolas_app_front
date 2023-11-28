@@ -229,8 +229,8 @@ export default {
         route: '/mobile/workers/getChildEvents',
         body: {
           status: 'active',
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
+          page: 1,
+          rowsPerPage: 100
         }
       }
       utils.loading.show()
