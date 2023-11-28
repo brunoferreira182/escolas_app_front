@@ -152,14 +152,16 @@
                   </ion-col>
                   <ion-col 
                     size="6" 
-                    class="text-subtitle2 ion-text-end"
+                    class="text-subtitle2 ion-text-end ion-text-wrap"
                   >
                     <div>
-                      {{ e.createdAt.createdAtLocale.split(' ')[0] }}
+                      {{ e.createdAt.createdAtLocale.split('/')[1] }}/
+                      {{ e.createdAt.createdAtLocale.split('/')[0] }}/
+                      {{ e.createdAt.createdAtLocale.split('/')[2] }}
                     </div>
-                    <div>
+                    <!-- <div>
                       {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                    </div>
+                    </div> -->
                   </ion-col>
                 </ion-row>
                 <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
@@ -293,6 +295,10 @@ export default {
   },
   mounted(){
     utils.loading.hide()
+    this.getClassesByUserId()
+    this.getChildrenInClassList()
+    this.verifyIfHasChildId()
+    this.getLastActivityFromChildrenOfClasses()
   },
   watch: {
     $route (to, from) {
@@ -303,13 +309,6 @@ export default {
         this.getLastActivityFromChildrenOfClasses()
       }
     }
-  },
-  beforeMount() {
-    utils.loading.hide()
-    this.getClassesByUserId()
-    this.getChildrenInClassList()
-    this.verifyIfHasChildId()
-    this.getLastActivityFromChildrenOfClasses()
   },
   methods: {
     startModal(){
@@ -488,6 +487,8 @@ export default {
       this.dialogInsertClassEvent.open = false
       this.dialogInsertClassEvent.data = {}
       this.dialogInsertClassEvent.obs = ''
+      this.getLastActivityFromChildrenOfClasses()
+      // this.getChildrenInClassList()
     },
     clearModalData(){
       this.dialogInsertChildEvent.open = false
@@ -522,13 +523,12 @@ export default {
         route: '/mobile/workers/getChildEvents',
         body: {
           status: 'active',
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
+          page: 1,
+          rowsPerPage: 100
         }
       }
-      utils.loading.show()
       useFetch(opt).then((r) => {
-        utils.loading.hide()
+    
         if (r.error) {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
@@ -576,7 +576,9 @@ export default {
       if(this.image.blob !== null){
         opt.file = file
       }
+      utils.loading.show()
       useFetch(opt).then((r) => {
+        utils.loading.hide()
         if (r.error) {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
@@ -597,7 +599,7 @@ export default {
       const opt = {
         route: '/mobile/workers/getChildrenInClassList',
         body: {
-          page: this.pagination.page,
+          page: 1,
           rowsPerPage: 100,
           searchString: this.filterValue
         }
