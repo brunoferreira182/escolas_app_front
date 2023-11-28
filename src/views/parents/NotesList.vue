@@ -20,7 +20,10 @@
               <p>{{item.noteDescription}}</p>
             </ion-label>
             <div class="text-caption">
-              {{ item.createdAt.createdAtLocale.split(' ')[0] }} às
+              {{ item.createdAt.createdAtOnlyDate.split('/')[1] }}/
+              {{ item.createdAt.createdAtOnlyDate.split('/')[0] }}/
+              {{ item.createdAt.createdAtOnlyDate.split('/')[2] }}
+              às
               {{ item.createdAt.createdAtLocale.split(' ')[1] }}
             </div>
           </ion-card-content>

@@ -196,7 +196,6 @@
         },
       ]"
     />
- 
     <DialogInsertChildEvent
       :dialogInsertChildEvent="dialogInsertChildEvent"
       :selectedEvent="selectedEvent"

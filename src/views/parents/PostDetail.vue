@@ -103,7 +103,6 @@ export default {
     return {
       // send,:
       post: null,
-      liked: false,
       newComment: '',
       reactions: [heart, smile, like],
       postReactions: [],
@@ -151,13 +150,11 @@ export default {
         route: '/mobile/social/addNewPostReaction',
         body: {
           postId: this.$route.query.postId,
-          reaction: icon
+          // reaction: icon
         }
       }
       useFetch(opt).then(r => {
         this.getPostDetailById()
-        this.liked = true
-        console.log(icon)
       })
     },
     clkLoadMore () {

@@ -6,9 +6,10 @@
     />
     <ion-content class="ion-padding" color="light" v-if="eventDetail">
       <ion-card>
-        <img :src="utils.makeFileUrl(eventDetail.eventImage)" />
+        <img v-if="eventDetail.images && eventDetail.images.filename" :src="utils.makeFileUrl(eventDetail.images.filename)" />
+        <img v-else :src="utils.makeFileUrl(eventDetail.eventImage)" />
+
         <ion-card-header>
-          
           <ion-card-title>{{ eventDetail.eventName }}</ion-card-title>
           <ion-card-subtitle v-if="eventDetail.eventDate">
             Dia
