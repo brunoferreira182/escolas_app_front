@@ -11,19 +11,19 @@
           
           <ion-card-title>{{ eventDetail.eventName }}</ion-card-title>
           <ion-card-subtitle v-if="eventDetail.eventDate">
-            Dia
+            Dia:
             {{ eventDetail.eventDate.split('-')[2] }}/
             {{ eventDetail.eventDate.split('-')[1] }}/
             {{ eventDetail.eventDate.split('-')[0] }}
             <div class="q-py-sm" v-if="eventDetail.deadlinePayment">
-              Data final para pagamento 
+              Data final para pagamento:
               {{ eventDetail.deadlinePayment.split('-')[2] }}/
               {{ eventDetail.deadlinePayment.split('-')[1] }}/
               {{ eventDetail.deadlinePayment.split('-')[0] }}
             </div>
           </ion-card-subtitle>
           <div class="q-py-md" v-if="eventDetail.paymentValue">
-            Contribuição de R$: {{ eventDetail.paymentValue }} reais
+            Contribuição de R$: {{ eventDetail.paymentValue }} 
           </div>
         </ion-card-header>
         <ion-card-content class="q-px-lg">
@@ -71,7 +71,6 @@
                 <ion-icon slot="end" :icon="checkmarkOutline"></ion-icon>
                 Autorizar
               </ion-button>
-            
             </ion-item>
           </div>
         </ion-list>
@@ -117,8 +116,29 @@ export default defineComponent({
   beforeMount(){
     this.getCalendarEventDetail()
     this.getParentChildrenByUserId()
+    // this.getChildrenByEventId()
   },
   methods: {
+    // getChildrenByEventId(){
+    //   const opt = {
+    //     route:"/mobile/social/getChildrenByEventId",
+    //     body:{
+    //     page : 1,
+    //     rowsPerPage : 50,
+    //     schoolEventId: this.$route.query.schoolEventId
+    //     },
+    //   };
+    //   this.$q.loading.show();
+    //   useFetch(opt).then((r) => {
+    //     this.$q.loading.hide()
+    //     if(r.error){
+    //       this.$q.notify('Ocorreu um erro, tente novamente mais tarde.')
+    //       return
+    //     } else {
+    //       this.childsList = r.data
+    //     }
+    //   });
+    // }
     acceptAuthorization(child) { 
       const opt = {
         route: '/mobile/social/insertUserInSchoolEvent',
@@ -173,22 +193,6 @@ export default defineComponent({
         this.eventDetail = r.data
       })
     },
-    // getSchoolEvents(){
-    //   const opt = {
-    //     route: '/mobile/social/getSchoolEvents',
-    //     body: {
-    //       page: 1,
-    //       rowsPerPage: 100
-    //     }
-    //   }
-    //   useFetch(opt).then((r) => {
-    //     if (r.error) {
-    //       utils.toast("Ocorreu um erro, tente novamente mais tarde")
-    //       return
-    //     }
-    //     this.eventsList = r.data.list
-    //   })
-    // },
   }
 });
 </script>
