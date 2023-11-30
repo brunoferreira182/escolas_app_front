@@ -23,7 +23,7 @@
             </div>
           </ion-card-subtitle>
           <div class="q-py-md" v-if="eventDetail.paymentValue">
-            Contribuição de R$: {{ eventDetail.paymentValue }} 
+            Contribuição de R$ {{ eventDetail.paymentValue }} 
           </div>
         </ion-card-header>
         <ion-card-content class="q-px-lg">

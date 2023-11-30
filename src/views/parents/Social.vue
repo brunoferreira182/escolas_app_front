@@ -4,6 +4,7 @@
       title="Social"
       :backButton="false"
     />
+
     <ion-content color="light">
       <swiper 
         :modules="modules"
@@ -52,6 +53,7 @@
         @getPosts="getPosts"
         :i="i"
       />
+
     </ion-content>
   </ion-page>
 </template>
@@ -60,6 +62,7 @@
 import {
   IonPage,
   IonButton,
+  IonIcon,
   IonContent,
   IonImg,
   IonHeader,
@@ -77,6 +80,7 @@ import 'swiper/css/pagination';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue';
 import { Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
+import { heartOutline, heart} from 'ionicons/icons';
 </script>
 
 <script>
@@ -111,6 +115,7 @@ export default {
     backLogin() {
       this.$router.push('/login')
     },
+   
     async startView () {
       await this.getPosts()
       await this.getStories()
@@ -171,6 +176,10 @@ export default {
 </script>
 
 <style scoped>
+
+
+
+
 
 .q-carousel__slide {
   padding-right: 0%;
