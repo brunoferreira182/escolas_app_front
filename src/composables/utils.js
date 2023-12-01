@@ -70,10 +70,10 @@ const useUtils = {
     const perms = []
     r.data.forEach((p) => { perms.push(p.role) })
     const currentVision = localStorage.getItem('currentVision')
-    if (!currentVision && perms.includes('IS_PARENT')) router.push("/tabsParents")
-    else if (currentVision === 'worker' && perms.includes('IS_WORKER')) router.push("/tabsWorkers")
+    if (!currentVision && perms.includes('IS_PARENT')) router.push("/tabsParents/social")
+    else if (currentVision === 'worker' && perms.includes('IS_WORKER')) router.push("/tabsWorkers/class")
     else if (currentVision === 'worker' && !perms.includes('IS_WORKER') && perms.includes('IS_PARENT')) {
-      router.push("/tabsParents")
+      router.push("/tabsParents/social")
       localStorage.removeItem('currentVision')
     }
   },

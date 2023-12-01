@@ -91,7 +91,6 @@ export default defineComponent({
           return
         }
         this.makeLogin()
-        this.$router.push('/mobile/tabsParents/social')
       }
     },
     async checkEmail () {
