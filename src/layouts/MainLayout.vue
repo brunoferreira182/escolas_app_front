@@ -63,7 +63,7 @@ export default defineComponent({
       const ionRouter = useIonRouter();
       useBackButton(10, () => {
         const path = this.$route.path
-        console.log('deu back button', path)
+        // console.log('deu back button', path)
         if (!ionRouter.canGoBack()) App.exitApp()
         else if (path === '/tabs/home' || path === '/login' || path === '/newAccount')
           App.exitApp()
