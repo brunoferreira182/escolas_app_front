@@ -64,7 +64,7 @@
               <ion-button 
                 v-else
                 fill="flat" 
-                style="color: #3880ff;" 
+                color="primary"
                 icon
                 size="default"
                 @click="acceptAuthorization(child)"

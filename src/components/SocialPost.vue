@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="even-card">
+    <div class="even-card" color="secondary">
       <img 
         v-if="post.postData.resume.img"
         style="width: 100%; height: auto; object-fit: cover; object-position: center;"
@@ -268,7 +268,7 @@ $sparkle-r: .5*$sparkle-d;
 	&:before, &:after {
 		position: absolute;
 		z-index: 1;
-		top: 50%; left: 50%;
+		top: 20%; left: 25%;
     transform: translateX(10px);
 		border-radius: 50%;
 		content: '';
