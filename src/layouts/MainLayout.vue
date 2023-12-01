@@ -77,11 +77,9 @@ export default defineComponent({
         route: '/mobile/auth/getCompanyColors',
       }
       useFetch(opt).then(r => {
-        console.log(document.documentElement ,'document.documentElement ')
-        console.log(document.documentElement.style ,'document.documentElementsyle ')
-        document.documentElement.style.setProperty('--ion-color-primary', r.data.primary, 'important');
-        document.documentElement.style.setProperty('--ion-color-secondary', r.data.secondary, 'important');
-        document.documentElement.style.setProperty('--ion-color-accent', r.data.accent, 'important');
+        document.documentElement.style.setProperty('--ion-color-primary', r.data.primary);
+        document.documentElement.style.setProperty('--ion-color-secondary', r.data.secondary);
+        document.documentElement.style.setProperty('--ion-color-accent', r.data.accent);
       })
     },
     changeAppBar () {
