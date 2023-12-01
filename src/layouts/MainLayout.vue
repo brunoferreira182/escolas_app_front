@@ -15,7 +15,7 @@ import {
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useFetch } from '../composables/fetch.js';
-// import { StatusBar, Style } from '@capacitor/status-bar';
+import { StatusBar, Style } from '@capacitor/status-bar';
 import { useBackButton, useIonRouter, isPlatform } from '@ionic/vue';
 import { App } from '@capacitor/app';
 import utils from '../composables/utils'
@@ -43,12 +43,14 @@ export default defineComponent({
     // utils.getIuguLib()
     this.backButtonManager()
     defineCustomElements(window)
+    this.getCompanyColors()
   },
   methods: {
     async startView () {
-      // this.changeAppBar()
+      this.changeAppBar()
       if (this.$route.path === '/login') return
       else this.checkUserAuthentication()
+      
     },
     async getUserPermissions(){
       const opt = {
@@ -69,6 +71,18 @@ export default defineComponent({
           App.exitApp()
         else this.$router.back()
       });
+    },
+    getCompanyColors () {
+      const opt = {
+        route: '/mobile/auth/getCompanyColors',
+      }
+      useFetch(opt).then(r => {
+        console.log(document.documentElement ,'document.documentElement ')
+        console.log(document.documentElement.style ,'document.documentElementsyle ')
+        document.documentElement.style.setProperty('--ion-color-primary', r.data.primary, 'important');
+        document.documentElement.style.setProperty('--ion-color-secondary', r.data.secondary, 'important');
+        document.documentElement.style.setProperty('--ion-color-accent', r.data.accent, 'important');
+      })
     },
     changeAppBar () {
       if (isPlatform('android')) {

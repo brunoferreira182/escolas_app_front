@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="even-card">
+    <div class="even-card" color="secondary">
       <img 
         v-if="post.postData.resume.img"
         style="width: 100%; height: auto; object-fit: cover; object-position: center;"
