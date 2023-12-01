@@ -243,6 +243,10 @@ export default {
       userData.email = userData.email.email
       const au = window.localStorage.getItem('au')
       const $k = window.localStorage.getItem('$k')
+      if(this.userData.document.length < 14){
+        utils.toast('Preencha corretamente o CPF')
+        return
+      }
       let route = '/mobile/auth/createUser'
       if (this.userData.acceptTerms === 'false') {
         utils.toast('Aceite os termos para prosseguir')

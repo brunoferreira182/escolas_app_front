@@ -251,6 +251,7 @@ export default {
       }) 
     },
     checkDocument () {
+      
       const n = this.document.replace(/\D/g, "").trim()
       const len = n.length
       if (len === 11) return cpf.isValid(n)
