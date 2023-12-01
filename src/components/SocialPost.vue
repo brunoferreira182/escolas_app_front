@@ -19,60 +19,25 @@
 
           <ion-col class="q-ma-sm q-pt-md">
             <ion-row>
-              <!-- <input class="animation-head" id="toggle-heart" type="checkbox"/>
-                <label class="toggle-animation" for="toggle-heart">❤</label> -->
-                <ion-col size="5">
-                  <div @click="toggleReaction(post)" :disabled="post.isButtonDisabled">
-                    <input
-                      class="animation-head"
-                      type="checkbox"
-                      :id="'toggle-heart-' + i"
-                      :checked="post.userReaction"
-                    />
-                    <label
-                      class="toggle-animation"
-                      :for="'toggle-heart-' + i"
-                    >
-                      <ion-icon
-                        size="large"
-                        :src="post.userReaction ? heart_filled : heart"
-                      />
-                    </label>
-                    {{ post.reactions }}
-                  </div>
-                  <!-- <div @click="toggleReaction(post)">
-                    <input
-                      class="animation-head"
-                      type="checkbox"
-                      :id="'toggle-heart-' + i"
-                      v-model="post.userReaction"
-                    />
-                    <label
-                      class="toggle-animation"
-                      :for="'toggle-heart-' + i"
-                    >
-                      <ion-icon
-                        size="large"
-                        :src="post.userReaction ? heart_filled : heart"
-                      />
-                    </label>
-                    {{ post.reactions }}
-                  </div> -->
-                <!-- <div @click="toggleReaction(post)">
+              <ion-col size="5">
+                <div @click="toggleReaction(post)" :class="{ 'heart-animation': post.userReaction }" :disabled="post.isButtonDisabled">
                   <input
-            class="animation-head"
-            type="checkbox"
-            :id="'toggle-heart-' + i"
-            v-model="post.checked"
-          />
-          <label
-            class="toggle-animation"
-            :for="'toggle-heart-' + i"
-          >
-            ❤
-          </label>
+                    class="animation-head"
+                    type="checkbox"
+                    :id="'toggle-heart-' + i"
+                    :checked="post.userReaction"
+                  />
+                  <label
+                    class="toggle-animation"
+                    :for="'toggle-heart-' + i"
+                  >
+                    <ion-icon
+                      size="large"
+                      :src="post.userReaction ? heart_filled : heart"
+                    />
+                  </label>
                   {{ post.reactions }}
-                </div> -->
+                </div>
                 <!-- <div v-if="post.userReaction">
                   <ion-icon size="large"  @click="clkRemoveReaction(post)" :src="heart_filled"/>{{ post.reactions }}
                 </div>
@@ -142,25 +107,49 @@ export default {
     }
   },
   methods: {
-    toggleReaction(post) {
-      console.log(post, 'OPDKASOPDK POST')
+    // toggleReaction(post) {
+    //   console.log(post, 'OPDKASOPDK POST')
+    //   if (post.isButtonDisabled) {
+    //     return; // Evitar a execução múltipla se o botão estiver desativado
+    //   }
+    //   post.isButtonDisabled = true;
+    //   if (post.userReaction) {
+    //     this.clkRemoveReaction(post).finally(() => {
+    //       // Reativar o botão após a execução do método
+    //       post.isButtonDisabled = false;
+    //     });
+    //   } else {
+    //     this.clkReaction(post).finally(() => {
+    //       // Reativar o botão após a execução do método
+    //   ;
+    //       post.isButtonDisabled = false;
+    //     });
+    //   }
+    //   post.userReaction = !post.userReaction;
+    // },
+    async toggleReaction(post) {
       if (post.isButtonDisabled) {
-        return; // Evitar a execução múltipla se o botão estiver desativado
+        return;
       }
+
       post.isButtonDisabled = true;
-      if (post.userReaction) {
-        this.clkRemoveReaction(post).finally(() => {
-          // Reativar o botão após a execução do método
+
+      try {
+        if (post.userReaction) {
+          console.log('chamou? if')
+          await this.clkRemoveReaction(post);
+        } else {
+          await this.clkReaction(post);
+          console.log('chamou? else')
+        }
+
+        setTimeout(() => {
+          post.userReaction = !post.userReaction;
           post.isButtonDisabled = false;
-        });
-      } else {
-        this.clkReaction(post).finally(() => {
-          // Reativar o botão após a execução do método
-      ;
-          post.isButtonDisabled = false;
-        });
+        }, 1000);
+      } catch (error) {
+        post.isButtonDisabled = false;
       }
-      post.userReaction = !post.userReaction;
     },
     clkRemoveReaction(post) {
       const opt = {
@@ -169,7 +158,7 @@ export default {
           postId: post._id,
         }
       }
-      useFetch(opt).then(() => {
+      return useFetch(opt).then(() => {
         this.$emit('getPosts');
       });
     },
@@ -181,7 +170,7 @@ export default {
           // reaction: icon
         }
       }
-      useFetch(opt).then(() => {
+      return useFetch(opt).then(() => {
         this.$emit('getPosts');
       });
     },
@@ -298,6 +287,9 @@ $sparkle-r: .5*$sparkle-d;
 		width: $sparkle-d; height: $sparkle-d;
 		@include sparkles(1);
 	}
+  &.heart-animation {
+    animation: heart 1s cubic-bezier(.17, .89, .32, 1.49);
+  }
 }
 
 @keyframes heart {

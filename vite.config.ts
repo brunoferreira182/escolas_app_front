@@ -18,5 +18,5 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom'
   },
-  base: '/dev/escolas_app/mobile'
+  // base: '/dev/escolas_app/mobile'
 })
