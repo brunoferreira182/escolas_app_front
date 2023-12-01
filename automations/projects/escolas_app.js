@@ -1,5 +1,5 @@
 export default {
-  defaultDir: '/Users/tiago/Desktop/B3Dev/Codigos/bem_cuidar/b3dev_cuidadores_app',
+  defaultDir: '/Users/tiago/Desktop/B3Dev/Codigos/app_escolas/b3dev_escolas_app_front_app',
   defaultDirFilesToCopy: '/Users/tiago/Desktop/B3Dev/Codigos/___Icons - Splash - more/bem_cuidar',
   actions: [
     // {
