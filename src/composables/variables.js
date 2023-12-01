@@ -1,6 +1,6 @@
 //////////// VARIAVEIS DA APLICACAO //////
-const MODE_MASTER_SERVER = 'prod'
-const COMPANY_ID = 10
+const MODE_MASTER_SERVER = 'dev'
+const COMPANY_ID = 2
 const VERSION = 0.1
 const BUILD = 1
 //////////// NAO MUDAR //////
