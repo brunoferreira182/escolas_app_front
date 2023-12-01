@@ -115,7 +115,6 @@ export default {
     backLogin() {
       this.$router.push('/login')
     },
-   
     async startView () {
       await this.getPosts()
       await this.getStories()
