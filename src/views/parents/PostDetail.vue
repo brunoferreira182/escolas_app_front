@@ -143,7 +143,7 @@ export default {
       })
     },
     createImgURL(item) {
-      return utils.attachmentsAddress() + item.image.filename
+      return utils.attachmentsAddress() + item.image
     },
     clkReaction (icon, post) {
       const opt = {
