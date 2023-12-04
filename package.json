@@ -38,6 +38,7 @@
     "crypto-js": "^4.1.1",
     "ionicons": "^7.0.0",
     "pinia": "^2.1.6",
+    "replace-in-file": "^7.0.2",
     "socket.io-client": "^4.7.2",
     "swiper": "^10.3.1",
     "vue": "^3.2.45",

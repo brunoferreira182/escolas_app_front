@@ -2,10 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+
+	<key>NSCameraUsageDescription</key>
+	<string>Tirar foto para messenger e foto de perfil</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Escolher foto para messenger e foto de perfil</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Escolher as fotos do dispositivo para compartilhar e perfil</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Para mandar mensagens de voz</string>
+
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<string>YES</string>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>escolas_app_front_app</string>
+        <string>EduLink</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
