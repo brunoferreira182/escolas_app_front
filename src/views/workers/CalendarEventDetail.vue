@@ -77,44 +77,22 @@
           </div>
         </ion-list>
       </div>
+      <div>
+        <h2 class="q-px-lg"> Autorizados </h2>
+        <ion-list class="justify-between" :inset="true">
+          <ion-item>
+            <ion-label v-for="child in childsList.list"
+              :key="child"> 
+                {{ child.name }}
+              </ion-label>
+            <ion-label v-for="child in childsList.list"
+              :key="child"> 
+                {{ child.document }}
+              </ion-label>
+          </ion-item>
+        </ion-list>
+        </div>
     </ion-content>
-    <!-- <ion-content color="light">
-      <ion-card >
-        <ion-card-header>
-          <ion-card-title class="text-capitalize">{{ eventDetail.eventName }}</ion-card-title>
-          <ion-card-subtitle v-if="eventDetail && eventDetail.eventDate">         
-            {{ eventDetail.eventDate.split('-')[2] }}/
-            {{ eventDetail.eventDate.split('-')[1] }}/
-            {{ eventDetail.eventDate.split('-')[0] }}
-          </ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          {{ eventDetail.eventDescription }}
-        </ion-card-content>
-        <div 
-          style="display: flex; 
-          align-items: center;" 
-          class="q-px-md q-pb-md"
-          v-if="!eventDetail.userReaction"
-        >
-          <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart.svg" />
-          <div style="margin-left: 70%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
-            Curtidas
-          </div>
-        </div>
-        <div 
-          style="display: flex; 
-          align-items: center;" 
-          class="q-px-md q-pb-md"
-          v-if="eventDetail.userReaction"
-        >
-          <ion-icon id="heartIcon" size="large" @click="clkReaction(heart)" src="/assets/icons/heart_filled.svg" />
-          <div style="margin-left: 70%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
-            Curtidas
-          </div>
-        </div>
-      </ion-card>
-    </ion-content> -->
   </ion-page>
 </template>
 
@@ -142,7 +120,7 @@ import like from '/assets/icons/like.svg'
 </script>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 import { useFetch } from '../../composables/fetch'
 import utils from '../../composables/utils'
 export default defineComponent({
@@ -150,14 +128,35 @@ export default defineComponent({
     return {
       eventDetail:{},
       childrenData:[],
+      childsList:[]
     }
   },
-  beforeMount(){
+  mounted(){
+    this.getChildrenByEventId()
     this.getCalendarEventDetail()
     this.getParentChildrenByUserId()
   },
   methods: {
-    
+    getChildrenByEventId (){
+      const opt = {
+        route:"/mobile/workers/getChildrenByEventId",
+        body:{
+        page: 1,
+        rowsPerPage: 50,
+        schoolEventId: this.$route.query.schoolEventId
+        },
+      };
+      utils.loading.show();
+      useFetch(opt).then((r) => {
+        utils.loading.hide()
+        if(r.error){
+          utils.toast('Ocorreu um erro, tente novamente mais tarde.')
+          return
+        } else {
+          this.childsList = r.data
+        }
+      });
+    },    
     acceptAuthorization(child) { 
       console.log(child, 'posdkfpodsfpofkgpoafrdgpofdpoijhpoijg')
       const opt = {
