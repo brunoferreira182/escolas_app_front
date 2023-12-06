@@ -7,6 +7,7 @@ import { useFetch } from './fetch'
 import { calculateMasterServerAttachmentsRoute } from "./masterServerRoutes";
 import router from '../router/index.ts'
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { FileOpener } from '@capawesome-team/capacitor-file-opener';
 
 let loadingVar = []
 let updateUserInfoOnNextRoute = false
@@ -54,7 +55,14 @@ const useUtils = {
       error = true
     }
     if (!error) this.toast('Arquivo baixado na pasta Documentos')
-    else this.toast('Ocorreu um erro ao baixar o arquivo')
+    else {
+      this.toast('Ocorreu um erro ao baixar o arquivo')
+      return
+    }
+    console.log(writeFile, 'writeFile')
+    await FileOpener.openFile({
+      path: writeFile.uri,
+    })
     return
   },
   async verifyUserPermissions (data) {

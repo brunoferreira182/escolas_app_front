@@ -231,13 +231,12 @@ export default {
   },
   methods: {
     async clkAttachment (message) {
-      console.log(message.messageFile.originalname)
-      console.log(message)
       utils.loading.show()
-      await utils.downloadFile({
+      const retDownload = await utils.downloadFile({
         filename: message.messageFile.filename,
         originalname: message.messageFile.originalname
       })
+      console.log(retDownload, 'retDownload aqui')
       utils.loading.hide()
     },
     goToChatInfo() {

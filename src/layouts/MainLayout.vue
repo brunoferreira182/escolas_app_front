@@ -47,7 +47,7 @@ export default defineComponent({
   },
   methods: {
     async startView () {
-      this.changeAppBar()
+      // this.changeAppBar()
       if (this.$route.path === '/login') return
       else this.checkUserAuthentication()
       
@@ -86,15 +86,14 @@ export default defineComponent({
         }
       })
     },
-    changeAppBar () {
-      if (isPlatform('android')) {
-        const styles = getComputedStyle(document.body);
-        StatusBar.setStyle({ style: Style.Light });
-        const color = styles.getPropertyValue('--ion-color-background-secondary').trim()
-        // StatusBar.setOverlaysWebView( { overlay: true } )
-        StatusBar.setBackgroundColor({ color })
-      }
-    },
+    // changeAppBar () {
+    //   if (isPlatform('android')) {
+    //     const styles = getComputedStyle(document.body);
+    //     StatusBar.setStyle({ style: Style.Light });
+    //     const color = styles.getPropertyValue('--ion-color-background-secondary').trim()
+    //     StatusBar.setBackgroundColor({ color })
+    //   }
+    // },
     async checkUserAuthentication () {
       const ui = utils.presentUserInfo();
       if (!ui || !ui.token) { 
