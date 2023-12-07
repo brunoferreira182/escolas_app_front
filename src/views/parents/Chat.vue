@@ -16,11 +16,11 @@
             class="q-pa-sm"
             @click="goToChatDetail(c.classData.id)"
           >
-            <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage">
+            <ion-avatar aria-hidden="true" slot="start" v-if="c.classData.classImage">
               <img :src="utils.makeFileUrl(c.classData.classImage)" />
             </ion-avatar>
             <ion-avatar aria-hidden="true" slot="start" v-else>
-              <img :src="utils.makeFileUrl(c.image)"/>
+              <img :src="utils.makeFileUrl('default-avatar.svg')"/>
             </ion-avatar>
             <ion-label>
               <ion-badge 
