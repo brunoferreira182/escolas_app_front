@@ -66,9 +66,7 @@
               v-for="worker in workersClassData.users"
               :key="worker"
             >
-              <ion-item
-                v-if="worker.user_id !== userInfo.userId"
-              >
+              <ion-item>
                 <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
                   <img :src="utils.makeFileUrl(worker.childPhoto.filename)"/>
                 </ion-avatar>
@@ -166,7 +164,6 @@ export default {
     this.getWorkersByClassId()
   },
   methods: {
-    
     getWorkersByClassId() {
       const opt = {
         route: '/mobile/workers/getWorkersByClassId',
