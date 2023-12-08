@@ -16,10 +16,10 @@
               class="q-pa-sm"
               @click="goToChatDetail(c.classId)"
             >
-              <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage">
+              <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage" style="height: 60px; width: 60px">
                 <img :src="utils.makeFileUrl(c.classImage)" />
               </ion-avatar>
-              <ion-avatar aria-hidden="true" slot="start" v-else>
+              <ion-avatar aria-hidden="true" slot="start" v-else style="height: 60px; width: 60px">
                 <img :src="utils.makeFileUrl(c.image)"/>
               </ion-avatar>
               <ion-label>
@@ -38,8 +38,20 @@
               detail="false"
               @click="clkOpenDialogChildEvent(e)"
             >
+              <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
+                <img :src="utils.makeFileUrl(e.eventImage)" v-if="e.eventImage"/>
+                <img :src="utils.makeFileUrl(null)" v-else/>
+              </ion-avatar>
+              <ion-avatar
+                aria-hidden="true"
+                slot="start"
+                style="margin-left: -30px; margin-top: 30px; height: 35px; width: auto; border: 2px solid white !important;"
+              >
+                <img :src="utils.makeFileUrl(e.childPhoto)" v-if="e.childPhoto"/>
+                <img :src="utils.makeFileUrl(null)" v-else/>
+              </ion-avatar>
               <ion-label>
-                <strong class="text-capitalize">{{ e.childName }}</strong><br/>
+                <h6 class="text-capitalize">{{ e.childName }}</h6>
                 <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
                 <ion-note color="medium" class="ion-text-wrap">
                   {{ e.eventObs }}

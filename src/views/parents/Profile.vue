@@ -35,10 +35,10 @@
             :button="true"
             @click="goToChildDetail(child.childData._id)"
           >
-            <ion-avatar aria-hidden="true" slot="start">
+            <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px">
               <img 
                 v-if="child.childData"
-              :src="utils.makeFileUrl(child.childData.childImage) "/>
+                :src="utils.makeFileUrl(child.childData.childImage) "/>
               <img 
                 v-else
                 src="/assets/default_avatar.svg"

@@ -19,34 +19,18 @@
             <ion-avatar
               aria-hidden="true"
               slot="start"
-              v-if="c.classImage"
-              style="height: 60px; width: 60px"
+              style="height: 60px; width: 60px;"
             >
-              <img :src="utils.makeFileUrl(c.classImage)" />
+              <img :src="utils.makeFileUrl(c.classImage)" v-if="c.classImage"/>
+              <img :src="utils.makeFileUrl('default-avatar.svg')" v-else/>
             </ion-avatar>
             <ion-avatar
               aria-hidden="true"
               slot="start"
-              v-else
-              style="height: 60px; width: 60px"
+              style="margin-left: -40px; height: 60px; width: 60px; border: 2px solid white !important;"
             >
-              <img :src="utils.makeFileUrl('default-avatar.svg')"/>
-            </ion-avatar>
-            <ion-avatar
-              aria-hidden="true"
-              slot="start"
-              v-if="c.userImage"
-              style="margin-left: -40px; height: 60px; width: 60px"
-            >
-              <img :src="utils.makeFileUrl(c.userImage)" />
-            </ion-avatar>
-            <ion-avatar
-              aria-hidden="true"
-              slot="start"
-              v-else
-              style="margin-left: -40px; height: 60px; width: 60px"
-            >
-              <img :src="utils.makeFileUrl('default-avatar.svg')"/>
+              <img :src="utils.makeFileUrl(c.userImage)" v-if="c.userImage"/>
+              <img :src="utils.makeFileUrl('default-avatar.svg')" v-else/>
             </ion-avatar>
             <ion-label>
               <ion-badge 

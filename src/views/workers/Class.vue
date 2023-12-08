@@ -40,28 +40,79 @@
         </ion-list>
       </Transition>
       <ion-list :inset="true" >
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
-        <div class="q-px-md text-caption">
-          Selecione um aluno para inserir uma atividade individualmente
-        </div>
-        <ion-item 
-          v-for="child in childrenInClassList"
-          :key="child"
-          @click="clkOpenDialogChildEvent(child)"
-          :button="true"
-          class="q-pa-sm"
-        >
-          <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-            <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-          </ion-avatar>
-          <ion-avatar aria-hidden="true" slot="start" v-else>
-            <img :src="utils.makeFileUrl(child.image)"/>
-          </ion-avatar>
-          <ion-label>
-            <h6>{{ child.childName }}</h6>
-            <ion-badge  color="primary"> {{ child.className }}</ion-badge>
-          </ion-label>
-        </ion-item>
+        <ion-accordion-group>
+          <ion-accordion value="alunos">
+            <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
+            <div slot="content">
+              <div class="q-px-md text-caption">
+                Selecione um aluno para inserir uma atividade individualmente
+              </div>
+              <ion-item 
+                v-for="child in childrenInClassList"
+                :key="child"
+                @click="clkOpenDialogChildEvent(child)"
+                :button="true"
+                class="q-pa-sm"
+              >
+                <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
+                  <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+                </ion-avatar>
+                <ion-avatar aria-hidden="true" slot="start" v-else>
+                  <img :src="utils.makeFileUrl(child.image)"/>
+                </ion-avatar>
+                <ion-label>
+                  <h6>{{ child.childName }}</h6>
+                  <ion-badge  color="primary"> {{ child.className }}</ion-badge>
+                </ion-label>
+              </ion-item>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-list>
+
+      <ion-list :inset="true" >
+        <ion-accordion-group>
+          <ion-accordion value="atividades">
+            <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
+            <div slot="content">
+              <!-- <div class="q-px-md text-caption">
+                Selecione um aluno para inserir uma atividade individualmente
+              </div> -->
+              <ion-item 
+                v-for="e in childEventsHistory"
+                :key="e"
+                detail="false"
+                @click="clkOpenDialogChildEvent(e)"
+              >
+                <ion-avatar aria-hidden="true" slot="start" >
+                  <img :src="utils.makeFileUrl(e.eventImage)" v-if="e.eventImage"/>
+                  <img :src="utils.makeFileUrl(null)" v-else/>
+                </ion-avatar>
+                <ion-avatar
+                  aria-hidden="true"
+                  slot="start"
+                  style="margin-left: -30px; margin-top: 30px; height: 35px; width: auto; border: 2px solid white !important;"
+                >
+                  <img :src="utils.makeFileUrl(e.childPhoto)" v-if="e.childPhoto"/>
+                  <img :src="utils.makeFileUrl(null)" v-else/>
+                </ion-avatar>
+                <ion-label>
+                  <h6 class="text-capitalize">{{ e.childName }}</h6>
+                  <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
+                  <ion-note color="medium" class="ion-text-wrap">
+                    {{ e.eventObs }}
+                  </ion-note>
+                </ion-label>
+                <div class="metadata-end-wrapper" slot="end">
+                  <ion-note color="medium">
+                    {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
+                    {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+                  </ion-note>
+                </div>
+              </ion-item>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
       </ion-list>
       
       <ion-modal
@@ -233,7 +284,9 @@ import {
   IonCheckbox,
   IonImg,
   IonRow,
-  IonAvatar
+  IonAvatar,
+  IonAccordion, IonAccordionGroup,
+  IonNote
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -291,6 +344,7 @@ export default {
       filterValue: '',
       selectAllChildren: false,
       formattedChildEventList: null,
+      childEventsHistory: []
     };
   },
   mounted(){
@@ -299,6 +353,7 @@ export default {
     this.getChildrenInClassList()
     this.verifyIfHasChildId()
     this.getLastActivityFromChildrenOfClasses()
+    // this.getChildEventsByUserId()
   },
   watch: {
     $route (to, from) {
@@ -307,10 +362,26 @@ export default {
         this.getChildrenInClassList()
         this.verifyIfHasChildId()
         this.getLastActivityFromChildrenOfClasses()
+        // this.getChildEventsByUserId()
       }
     }
   },
   methods: {
+    // getLastActivityFromChildrenOfClasses() {
+    //   const opt = {
+    //     route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
+    //     body: {
+    //       page: this.pagination.page,
+    //       rowsPerPage: this.pagination.rowsPerPage
+    //     }
+    //   }
+    //   useFetch(opt).then((r) => {
+    //     if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
+    //     else {
+    //       this.childEventsHistory = r.data.list
+    //     } 
+    //   })
+    // },
     startModal(){
       this.getChildrenListByClassId()
       this.getLastActivityFromChildrenOfClasses(this.dialogInsertClassEvent.data.classId)
