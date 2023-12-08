@@ -69,16 +69,18 @@
             <img :src="utils.makeFileUrl(e.childPhoto)"/>
           </ion-avatar>
           <ion-label>
-            <ion-row class="ion-justify-content-between">
-              <ion-col size="2">
-                <ion-badge>{{ e.eventName }}</ion-badge>
-                <p>{{ e.eventObs }}</p>
+            <ion-row class="ion-justify-content-between ">
+              <ion-col size="8">
+                <div  class="ion-text-wrap">
+                  <ion-badge>{{ e.eventName }}</ion-badge>
+                  <p>{{ e.eventObs }}</p>
+                </div>
               </ion-col>
               <ion-col 
-                size="6" 
+                size="4" 
                 class="text-subtitle2 ion-text-end"
               >
-                <div>
+                <div class="">
                   {{ e.createdAt.createdAtLocale.split(' ')[0] }}
                 </div>
                 <div>

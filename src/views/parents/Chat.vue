@@ -53,6 +53,7 @@
             <ion-item 
               v-for="e in childEventsHistory"
               :key="e"
+              @click="openChildEventModal(e)"
               detail="false"
             >
               <ion-label>
@@ -69,6 +70,23 @@
                 </ion-note>
               </div>
             </ion-item>
+            <ion-modal 
+              class="modalTeste"
+              :is-open="openImageModalProfile.open" 
+              @didDismiss="dismissImageModalProfile()"
+            >
+              <ion-content v-if="openImageModalProfile.imageData && openImageModalProfile.imageData.filename">
+                <img :src="utils.makeFileUrl(openImageModalProfile.imageData.filename)" style="width: 100%;">
+                <div class="ion-text-center">
+                  <div class="text-h4 text-capitalize">
+                    {{ openImageModalProfile.data.name }}
+                  </div>
+                  <ion-chip color="primary" class="text-h5">
+                    {{ openImageModalProfile.data.eventName }}
+                  </ion-chip>
+                </div>
+              </ion-content>
+            </ion-modal>
           </div>
           <div v-else>
             <ion-item>
@@ -94,6 +112,7 @@ import {
   IonBadge,
   IonChip, 
   IonAvatar,
+  IonModal,
   IonItem, 
   IonLabel, 
   IonNote,
@@ -125,7 +144,12 @@ export default {
         rowsPerPage: 10
       },
       childEventsHistory: [],
-      userProfile: []
+      userProfile: [],
+      openImageModalProfile:{
+        open: false,
+        data: {},
+        imageData: null,
+      },
     };
   },
   watch: {
@@ -140,6 +164,15 @@ export default {
     this.startView()
   },
   methods: {
+    openChildEventModal(e){
+      this.openImageModalProfile.open = true
+      this.openImageModalProfile.data = e
+      this.openImageModalProfile.imageData = e.image
+    },
+    dismissImageModalProfile(){
+      this.openImageModalProfile.open = false
+      this.openImageModalProfile.imageData = null
+    },
     startView () {
       this.getChildClass()
       this.getLastActivitiesFromUserChildren()
@@ -173,6 +206,21 @@ export default {
 </script>
 
 <style scoped>
+  .modalTeste {
+    --height: 51%;
+    --border-radius: 16px;
+    --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+
+  .modalTeste ion-modal::part(backdrop) {
+    background: rgba(209, 213, 219);
+    opacity: 1;
+  }
+
+  .modalTeste ion-toolbar {
+    --background: rgb(14 116 144);
+    --color: white;
+  }
   .unread-indicator {
     background: var(--ion-color-primary);
 
