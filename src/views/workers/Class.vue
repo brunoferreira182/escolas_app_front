@@ -27,7 +27,7 @@
             @click="clkOpenDialogClassEvent(c)"
           >
             <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage">
-              <img :src="utils.makeFileUrl(c.classImage.filename)" />
+              <img :src="utils.makeFileUrl(c.classImage)" />
             </ion-avatar>
             <ion-avatar aria-hidden="true" slot="start" v-else>
               <img :src="utils.makeFileUrl(c.image)"/>

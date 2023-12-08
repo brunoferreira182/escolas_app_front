@@ -6,7 +6,7 @@
     />
     <ion-content color="light" v-if="classData">
       <ion-row class="ion-justify-content-center q-ma-lg">
-        <ion-avatar style="width:108px; height:108px">
+        <ion-avatar style="width:150px; height:150px">
           <img :src="utils.makeFileUrl(classData.classImage)"/>
         </ion-avatar> 
       </ion-row>
@@ -207,3 +207,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+  ion-avatar {
+    --border-radius: 4px;
+  }
+</style>

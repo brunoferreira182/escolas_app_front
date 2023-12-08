@@ -11,31 +11,55 @@
           <ion-item 
             v-for="c in childClassInfo"
             :key="c"
-            :disabled="c.classData.name ? false : true"
+            :disabled="c.className ? false : true"
             :button="true"
             class="q-pa-sm"
-            @click="goToChatDetail(c.classData.id)"
+            @click="goToChatDetail(c.classId)"
           >
-            <ion-avatar aria-hidden="true" slot="start" v-if="c.classData.classImage">
-              <img :src="utils.makeFileUrl(c.classData.classImage)" />
+            <ion-avatar
+              aria-hidden="true"
+              slot="start"
+              v-if="c.classImage"
+              style="height: 60px; width: 60px"
+            >
+              <img :src="utils.makeFileUrl(c.classImage)" />
             </ion-avatar>
-            <ion-avatar aria-hidden="true" slot="start" v-else>
+            <ion-avatar
+              aria-hidden="true"
+              slot="start"
+              v-else
+              style="height: 60px; width: 60px"
+            >
+              <img :src="utils.makeFileUrl('default-avatar.svg')"/>
+            </ion-avatar>
+            <ion-avatar
+              aria-hidden="true"
+              slot="start"
+              v-if="c.userImage"
+              style="margin-left: -40px; height: 60px; width: 60px"
+            >
+              <img :src="utils.makeFileUrl(c.userImage)" />
+            </ion-avatar>
+            <ion-avatar
+              aria-hidden="true"
+              slot="start"
+              v-else
+              style="margin-left: -40px; height: 60px; width: 60px"
+            >
               <img :src="utils.makeFileUrl('default-avatar.svg')"/>
             </ion-avatar>
             <ion-label>
               <ion-badge 
-                v-for="child in c.users"
-                :key="child"
                 class="ion-text-capitalize"
                 color="success"
               >
-                {{ child.userName }}
+                {{ c.userName }}
               </ion-badge>
               <h6 
                 class="ion-text-caption" 
-                v-if="!c.classData.name"> Nenhuma turma vinculada
+                v-if="!c.className"> Nenhuma turma vinculada
               </h6>
-              <h6 v-else> {{ c.classData.name }}</h6>
+              <h6 v-else> {{ c.className }}</h6>
             </ion-label>
           </ion-item>
         </ion-list>
