@@ -313,10 +313,10 @@ export default {
   methods: {
     startModal(){
       this.getChildrenListByClassId()
-      this.getLastActivityFromChildrenOfClasses()
+      this.getLastActivityFromChildrenOfClasses(this.dialogInsertClassEvent.data.classId)
       this.getChildrenInClassList()
     },
-    getLastActivityFromChildrenOfClasses() {
+    getLastActivityFromChildrenOfClasses(classId) {
       const opt = {
         route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
         body: {
@@ -324,6 +324,7 @@ export default {
           rowsPerPage: 100,
         }
       }
+      if (classId) opt.body.classId = classId
       useFetch(opt).then((r) => {
         if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
         else {
