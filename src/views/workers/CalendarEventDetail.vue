@@ -80,15 +80,18 @@
       <div>
         <h2 class="q-px-lg"> Autorizados </h2>
         <ion-list class="justify-between" :inset="true">
-          <ion-item>
-            <ion-label v-for="child in childsList.list"
-              :key="child"> 
+          <ion-item
+            v-for="child in childList.list"
+            :key="child"
+          >
+            <ion-label> 
+              <strong class="text-capitalize">
                 {{ child.name }}
-              </ion-label>
-            <ion-label v-for="child in childsList.list"
-              :key="child"> 
+              </strong>
+              <div>
                 {{ child.document }}
-              </ion-label>
+              </div>
+            </ion-label>
           </ion-item>
         </ion-list>
         </div>
@@ -128,7 +131,7 @@ export default defineComponent({
     return {
       eventDetail:{},
       childrenData:[],
-      childsList:[]
+      childList:[]
     }
   },
   mounted(){
@@ -153,7 +156,7 @@ export default defineComponent({
           utils.toast('Ocorreu um erro, tente novamente mais tarde.')
           return
         } else {
-          this.childsList = r.data
+          this.childList = r.data
         }
       });
     },    
