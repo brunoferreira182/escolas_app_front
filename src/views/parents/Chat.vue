@@ -76,7 +76,10 @@
               @didDismiss="dismissImageModalProfile()"
             >
               <ion-content v-if="openImageModalProfile.imageData && openImageModalProfile.imageData.filename">
-                <img :src="utils.makeFileUrl(openImageModalProfile.imageData.filename)" style="width: 100%;">
+                <img 
+                  :src="utils.makeFileUrl(openImageModalProfile.imageData.filename)" 
+                  style="width: 100%"
+                >
                 <div class="ion-text-center">
                   <div class="text-h4 text-capitalize">
                     {{ openImageModalProfile.data.name }}
@@ -207,7 +210,7 @@ export default {
 
 <style scoped>
   .modalTeste {
-    --height: 51%;
+    --height: 61%;
     --border-radius: 16px;
     --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   }

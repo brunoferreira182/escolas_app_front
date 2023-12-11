@@ -1,24 +1,26 @@
 <template>
-  <div class="q-mx-sm" style="border: 2px solid grey !important; border-radius: 10px;">
-    <ion-icon 
-      class="bounce2"
-      size="small" 
-      :src="star"
-      style="position: fixed; top: 15px; right: 15px;color: #ffd700;"
-    />
-    <ion-card-header >
-      <div class="ion-text-wrap">{{ note.noteName }}</div>
-    </ion-card-header>
-    <ion-card-content class="ion-no-padding">
-      <div class="ion-text-end">
-        <ion-button 
-          @click="$router.push('/notesList')"
-          fill="clear"
-        >
-          <h6>Ler recados</h6>
-        </ion-button>
-      </div>
-    </ion-card-content>
+  <div color="light">
+    <div class="q-mx-sm" style="border: 2px solid grey !important; border-radius: 10px;">
+      <ion-icon 
+        class="bounce2"
+        size="small" 
+        :src="star"
+        style="position: fixed; top: 15px; right: 15px;color: #ffd700;"
+      />
+      <ion-card-header >
+        <div class="ion-text-wrap">{{ note.noteName }}</div>
+      </ion-card-header>
+      <ion-card-content class="ion-no-padding">
+        <div class="ion-text-end">
+          <ion-button 
+            @click="$router.push('/notesList')"
+            fill="clear"
+          >
+            <h6>Ler recados</h6>
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </div>
   </div>
 </template>
 
