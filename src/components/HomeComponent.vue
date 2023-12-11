@@ -1,7 +1,7 @@
 <template>
   <ion-content style="">
     
-    <div 
+    <!-- <div 
       id="main-menu" 
       style="
       display: flex; 
@@ -33,8 +33,8 @@
       <ion-button fill="clear" @click="toggleSearch">
         <ion-icon style="scale: 1.2;;" src="/assets/search.svg" />
       </ion-button>
-    </div>
-    <ion-row style="margin-top: -10px;">
+    </div> -->
+    <!-- <ion-row style="margin-top: -10px;">
       <ion-col>
         <ion-button
           class="q-mx-sm announce-button"
@@ -46,7 +46,7 @@
     <hr class="separator">
     <ion-refresher slot="fixed" @ionRefresh="refreshAds($event, true)">
       <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
+    </ion-refresher> -->
     
 
     <div v-if="selectedCategory">

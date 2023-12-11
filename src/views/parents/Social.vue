@@ -7,6 +7,7 @@
 
     <ion-content color="light">
       <swiper 
+        class="q-my-md"
         :modules="modules"
         :slides-per-view="notesList.length === 1 ? 1 : 2"
         :spaceBetween="0.5"

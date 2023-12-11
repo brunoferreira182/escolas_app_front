@@ -1,5 +1,5 @@
 <template>
-  <ion-card class="q-mx-sm">
+  <div class="q-mx-sm" style="border: 2px solid grey !important; border-radius: 10px;">
     <ion-icon 
       class="bounce2"
       size="small" 
@@ -19,7 +19,7 @@
         </ion-button>
       </div>
     </ion-card-content>
-  </ion-card>
+  </div>
 </template>
 
 <script setup>
@@ -53,10 +53,10 @@ const props = defineProps(['note', 'i'])
   border-radius: 0.4rem;
   overflow: hidden;
 }
-.even-card {
+/* .even-card {
   height: 100px;
   background-color: var(--ion-card-background);
-}
+} */
 
 .card-title {
   margin: 14px;

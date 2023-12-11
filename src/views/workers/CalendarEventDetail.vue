@@ -4,7 +4,7 @@
       title="Detalhe do evento"
       :backButton="true"
     />
-    <ion-content class="ion-padding" color="light" v-if="eventDetail">
+    <ion-content color="light" v-if="eventDetail">
       <ion-card>
         <img v-if="eventDetail.images && eventDetail.images.filename" :src="utils.makeFileUrl(eventDetail.images.filename)" />
         <img v-else :src="utils.makeFileUrl(eventDetail.eventImage)" />
@@ -41,9 +41,9 @@
             <ion-item 
               v-if="child.isResponsibleAdmin"
             >
-              <div class="unread-indicator-wrapper" slot="start">
+              <!-- <div class="unread-indicator-wrapper" slot="start">
                 <div class="unread-indicator"></div>
-              </div>
+              </div> -->
               <ion-label >
                 <strong class="ion-text-capitalize">{{ child.childName }}</strong><br/>
               </ion-label> <br/>
@@ -57,9 +57,9 @@
                   <ion-icon slot="start" :icon="checkmarkCircleOutline"></ion-icon>
                   Autorizado
                 </ion-button>
-                <div class="q-pa-xs q-px-md text-caption text-capitalize">
+                <!-- <div class="q-pa-xs q-px-md text-caption text-capitalize">
                   Por {{ child.responsibleLabel }}
-                </div>
+                </div> -->
               </div>
               <ion-button 
                 v-else
@@ -88,9 +88,9 @@
               <strong class="text-capitalize">
                 {{ child.name }}
               </strong>
-              <div>
+              <!-- <div>
                 {{ child.document }}
-              </div>
+              </div> -->
             </ion-label>
           </ion-item>
         </ion-list>

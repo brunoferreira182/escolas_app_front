@@ -26,11 +26,9 @@
             class="q-pa-sm"
             @click="clkOpenDialogClassEvent(c)"
           >
-            <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage">
-              <img :src="utils.makeFileUrl(c.classImage)" />
-            </ion-avatar>
-            <ion-avatar aria-hidden="true" slot="start" v-else>
-              <img :src="utils.makeFileUrl(c.image)"/>
+            <ion-avatar aria-hidden="true" slot="start" >
+              <img :src="utils.makeFileUrl(c.classImage)" v-if="c.classImage"/>
+              <img :src="utils.makeFileUrl(c.image)" v-else/>
             </ion-avatar>
             <ion-label>
               <h6>{{ c.className }}</h6>
@@ -79,7 +77,7 @@
                 Selecione um aluno para inserir uma atividade individualmente
               </div> -->
               <ion-item 
-                v-for="e in childEventsHistory"
+                v-for="e in classEventsHistory"
                 :key="e"
                 detail="false"
                 @click="clkOpenDialogChildEvent(e)"
@@ -166,10 +164,12 @@
             ></ion-textarea>
           </div>
           <ion-list :inset="true">
-            <div class="ion-text-left text-h6 q-py-sm q-pl-md">
+            <ion-item class="ion-text-left text-h6">
               <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
-              Lista de crianças
-            </div>
+              <ion-label class="q-px-md ion-text-capitalize">
+                Crianças
+              </ion-label>
+            </ion-item>
             <ion-item
               v-for="child in classList"
               :key="child"
@@ -178,9 +178,9 @@
                 :checked="child.isChecked" 
                 @ionChange="handleCheckboxChange(child.childId, $event)" 
               />
-                <ion-label class="q-px-md ion-text-capitalize">
-                  {{ child.childName }}
-                </ion-label>
+              <ion-label class="q-px-md ion-text-capitalize">
+                {{ child.childName }}
+              </ion-label>
               </ion-item>
           </ion-list>
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
@@ -336,6 +336,7 @@ export default {
       childrenInClassList: [],
       childEventsHistory: [],
       childEventsList: [],
+      classEventsHistory: [],
       show: true,
       selectedEvent: null,
       classList: [],
@@ -399,7 +400,7 @@ export default {
       useFetch(opt).then((r) => {
         if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
         else {
-          this.childEventsHistory = r.data.list
+          this.classEventsHistory = r.data.list
         } 
       })
     },
@@ -705,15 +706,7 @@ export default {
 };
 </script>
 <style scoped>
-  ion-checkbox {
-    --size: 32px;
-    --checkbox-background-checked: #6815ec;
-  }
-
-  ion-checkbox::part(container) {
-    border-radius: 6px;
-    border: 2px solid #6815ec;
-  }
+ 
 ion-select.always-flip::part(icon) {
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
