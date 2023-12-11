@@ -1,26 +1,24 @@
 <template>
-  <div color="light">
-    <div class="q-mx-sm" style="border: 2px solid grey !important; border-radius: 10px;">
-      <ion-icon 
-        class="bounce2"
-        size="small" 
-        :src="star"
-        style="position: fixed; top: 15px; right: 15px;color: #ffd700;"
-      />
-      <ion-card-header >
-        <div class="ion-text-wrap">{{ note.noteName }}</div>
-      </ion-card-header>
-      <ion-card-content class="ion-no-padding">
-        <div class="ion-text-end">
-          <ion-button 
-            @click="$router.push('/notesList')"
-            fill="clear"
-          >
-            <h6>Ler recados</h6>
-          </ion-button>
-        </div>
-      </ion-card-content>
-    </div>
+  <div class="q-mx-sm even-card" style="border: 2px solid grey !important; border-radius: 10px;">
+    <ion-icon 
+      class="bounce2"
+      size="small" 
+      :src="star"
+      style="position: fixed; top: 15px; right: 15px;color: #ffd700;"
+    />
+    <ion-card-header >
+      <div class="ion-text-wrap">{{ note.noteName }}</div>
+    </ion-card-header>
+    <ion-card-content class="ion-no-padding">
+      <div class="ion-text-end">
+        <ion-button 
+          @click="$router.push('/notesList')"
+          fill="clear"
+        >
+          <h6>Ler recados</h6>
+        </ion-button>
+      </div>
+    </ion-card-content>
   </div>
 </template>
 
@@ -55,13 +53,12 @@ const props = defineProps(['note', 'i'])
   border-radius: 0.4rem;
   overflow: hidden;
 }
-/* .even-card {
-  height: 100px;
-  background-color: var(--ion-card-background);
-} */
 
 .card-title {
   margin: 14px;
+}
+.even-card {
+  background-color: var(--ion-card-background);
 }
 .card-img {
   width: 100%; 
