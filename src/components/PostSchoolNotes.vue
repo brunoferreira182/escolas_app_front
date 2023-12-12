@@ -1,5 +1,5 @@
 <template>
-  <div class="q-mx-sm even-card" style="border: 2px solid grey !important; border-radius: 10px;">
+  <div class="q-mx-xs even-card" style="border-radius: 10px;">
     <ion-icon 
       class="bounce2"
       size="small" 
