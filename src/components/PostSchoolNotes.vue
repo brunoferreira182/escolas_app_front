@@ -1,5 +1,5 @@
 <template>
-  <div class="q-mx-sm" style="border: 2px solid grey !important; border-radius: 10px;">
+  <div class="q-mx-sm" style="border: 1px solid grey !important; border-radius: 10px;">
     <ion-icon 
       class="bounce2"
       size="small" 
