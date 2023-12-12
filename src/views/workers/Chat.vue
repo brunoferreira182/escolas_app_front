@@ -39,7 +39,7 @@
               @click="clkOpenDialogChildEvent(e)"
             >
               <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
-                <img :src="utils.makeFileUrl(e.eventImage)" v-if="e.eventImage"/>
+                <img :src="utils.makeFileUrl(e.childEventPhoto.filename)" v-if="e.childEventPhoto"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
               </ion-avatar>
               <ion-avatar

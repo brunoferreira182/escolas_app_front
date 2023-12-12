@@ -17,7 +17,7 @@
           <ion-card-content>
             <ion-label>
               <h2 class="text-capitalize">{{item.noteName}}</h2>
-              <p>{{item.noteDescription}}</p>
+              <p class="q-py-sm">{{item.noteDescription}}</p>
             </ion-label>
             <div class="text-caption">
               {{ item.createdAt.createdAtOnlyDate.split('/')[1] }}/

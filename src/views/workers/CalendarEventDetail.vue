@@ -57,9 +57,9 @@
                   <ion-icon slot="start" :icon="checkmarkCircleOutline"></ion-icon>
                   Autorizado
                 </ion-button>
-                <!-- <div class="q-pa-xs q-px-md text-caption text-capitalize">
+                <div class="q-px-lg text-caption text-capitalize">
                   Por {{ child.responsibleLabel }}
-                </div> -->
+                </div>
               </div>
               <ion-button 
                 v-else
@@ -88,9 +88,9 @@
               <strong class="text-capitalize">
                 {{ child.name }}
               </strong>
-              <!-- <div>
+              <div class="text-caption">
                 {{ child.document }}
-              </div> -->
+              </div>
             </ion-label>
           </ion-item>
         </ion-list>
