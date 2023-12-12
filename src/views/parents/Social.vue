@@ -24,6 +24,7 @@
           <PostSchoolNotes
             :note="note"
             :i="i"
+            
           />
         </swiper-slide>
       </swiper>
