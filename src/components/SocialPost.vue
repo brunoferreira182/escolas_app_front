@@ -47,7 +47,13 @@
               </ion-col>
               <ion-col size="5">
                 <div class="q-pa-xs" v-if="post.routeDestination === '/postDetail'">
-                  <ion-icon style="width: 28px; height: 28px;" :src="comment"/> {{ post.comments }}
+                  <ion-icon
+                    style="width: 28px;
+                    color:rgb(165, 164, 164); 
+                    height: 28px;" 
+                    :src="comment"
+                  />
+                  {{ post.comments }}
                 </div>
               </ion-col>
             </ion-row>
@@ -97,6 +103,7 @@ import heart from '/src/assets/icons/heart.svg'
 import heart_filled from '/src/assets/icons/heart_filled.svg'
 import smile from '/src/assets/icons/smile.svg'
 import like from '/src/assets/icons/like.svg'
+import comment from '/src/assets/icons/comment.svg'
 const props = defineProps(['post', 'i'])
 </script>
 <script>
