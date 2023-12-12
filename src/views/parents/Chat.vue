@@ -16,6 +16,7 @@
             class="q-pa-sm"
             @click="goToChatDetail(c.classId)"
           >
+          
             <ion-avatar
               aria-hidden="true"
               slot="start"
@@ -56,6 +57,18 @@
               @click="openChildEventModal(e)"
               detail="false"
             >
+              <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
+                <img :src="utils.makeFileUrl(e.image.filename)" v-if="e.image"/>
+                <img :src="utils.makeFileUrl(null)" v-else/>
+              </ion-avatar>
+              <ion-avatar
+                aria-hidden="true"
+                slot="start"
+                style="margin-left: -30px; margin-top: 30px; height: 35px; width: auto; border: 2px solid white !important;"
+              >
+                <img :src="utils.makeFileUrl(e.childPhoto.filename)" v-if="e.childPhoto"/>
+                <img :src="utils.makeFileUrl(null)" v-else/>
+              </ion-avatar>
               <ion-label>
                 <strong class="text-capitalize">{{ e.name }}</strong>
                 <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />

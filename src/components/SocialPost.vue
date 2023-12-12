@@ -299,10 +299,10 @@ $sparkle-r: .5*$sparkle-d;
   }
 }
 
-@keyframes heart {
-	0%, 17.5% { font-size: 0; };
+// @keyframes heart {
+// 	0%, 17.5% { font-size: 0; };
   
-}
+// }
 
 @keyframes bubble {
 	15% { @include bubble($bubble-r); }
