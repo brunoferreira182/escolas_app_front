@@ -73,9 +73,9 @@
           <ion-accordion value="atividades">
             <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
             <div slot="content">
-              <!-- <div class="q-px-md text-caption">
+              <div class="q-px-md text-caption">
                 Selecione um aluno para inserir uma atividade individualmente
-              </div> -->
+              </div>
               <ion-item 
                 v-for="e in classEventsHistory"
                 :key="e"
