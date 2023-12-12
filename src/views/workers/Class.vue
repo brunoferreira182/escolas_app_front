@@ -89,7 +89,7 @@
                 <ion-avatar
                   aria-hidden="true"
                   slot="start"
-                  style="margin-left: -30px; margin-top: 30px; height: 35px; width: auto; border: 2px solid white !important;"
+                  style="margin-left: -30px; margin-top: 30px; height: 36px; width: 36px; border: 2px solid white !important;"
                 >
                   <img :src="utils.makeFileUrl(e.childPhoto)" v-if="e.childPhoto"/>
                   <img :src="utils.makeFileUrl(null)" v-else/>
@@ -173,7 +173,7 @@
             <ion-item
               v-for="child in classList"
               :key="child"
-              >
+            >
               <ion-checkbox 
                 :checked="child.isChecked" 
                 @ionChange="handleCheckboxChange(child.childId, $event)" 
@@ -181,7 +181,7 @@
               <ion-label class="q-px-md ion-text-capitalize">
                 {{ child.childName }}
               </ion-label>
-              </ion-item>
+            </ion-item>
           </ion-list>
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
           <ion-list :inset="true" v-if="childEventsHistory.length">
