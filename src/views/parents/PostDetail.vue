@@ -245,8 +245,8 @@ export default {
         }
         useFetch(opt).then(r => {
           this.newComment = ''
-          this.commentsPage = 1
-          this.getPostComments()
+          this.commentsPage++
+          this.getPostDetailById()
         })
       }
     },

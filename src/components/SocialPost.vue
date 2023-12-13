@@ -103,8 +103,10 @@ import heart from '/src/assets/icons/heart.svg'
 import heart_filled from '/src/assets/icons/heart_filled.svg'
 import smile from '/src/assets/icons/smile.svg'
 import like from '/src/assets/icons/like.svg'
+import bubblesound from '/src/assets/sounds/bubblesound.wav'
 import comment from '/src/assets/icons/comment.svg'
 import { Haptics } from '@capacitor/haptics';
+import {Capacitor} from '@capacitor/core'
 const props = defineProps(['post', 'i'])
 </script>
 <script>
@@ -116,16 +118,17 @@ export default {
   },
   methods: {
     async toggleReaction(post) {
+      
       if (post.isButtonDisabled) {
         return;
       }
 
       post.isButtonDisabled = true;
 
-      const vibrate = async () => {
-        await Haptics.vibrate({ duration: 100 });
-      };
+      const vibrate = () => Haptics.vibrate({ duration: 100 });
 
+        const audio = new Audio()
+        audio.src = bubblesound
       try {
         if (post.userReaction) {
           await this.clkRemoveReaction(post);
@@ -134,14 +137,15 @@ export default {
         }
 
         vibrate();
-        setTimeout(() => {
-          post.userReaction = !post.userReaction;
-          post.isButtonDisabled = false;
-        }, 1000);
+        audio.play()
+
+        post.userReaction = !post.userReaction;
+        post.isButtonDisabled = false;
       } catch (error) {
         post.isButtonDisabled = false;
       }
     },
+  
     clkRemoveReaction(post) {
       const opt = {
         route: '/mobile/social/removePostReaction',
