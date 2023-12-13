@@ -23,12 +23,13 @@
           <ion-row>
             <ion-col>
               <div 
-                @click="toggleReaction(post)" 
+                @click.prevent="toggleReaction(post)" 
                 :class="{ 'heart-animation': post.userReaction }" 
                 :disabled="post.isButtonDisabled"
               >
-                <ion-button
+                <input
                   class="animation-head"
+                  type="checkbox"
                   :id="'toggle-heart-' + i"
                   :checked="post.userReaction"
                 />
@@ -104,8 +105,6 @@
 import {
   IonPage,
   IonRow, IonGrid,
-  IonCheckbox,
-  IonCol,
   IonContent, IonAvatar, IonButton, IonItem, IonList, IonLabel,IonTextarea,
   IonIcon, IonChip,
   IonPopover
