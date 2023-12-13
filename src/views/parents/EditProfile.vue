@@ -112,7 +112,7 @@ export default {
 <style scoped>
 .profile-avatar {
   height: 100px;
-  width: auto;
+  width: 100px;
   border-radius: 5rem;
 }
 .input-wrapper {

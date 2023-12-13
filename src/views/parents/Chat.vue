@@ -64,7 +64,7 @@
               <ion-avatar
                 aria-hidden="true"
                 slot="start"
-                style="margin-left: -30px; margin-top: 30px; height: 35px; width: auto; border: 2px solid white !important;"
+                style="margin-left: -30px; margin-top: 30px; height: 35px; width: 35px; border: 2px solid white !important;"
               >
                 <img :src="utils.makeFileUrl(e.childPhoto.filename)" v-if="e.childPhoto"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
