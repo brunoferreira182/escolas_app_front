@@ -260,9 +260,7 @@ export default {
           rowsPerPage: this.commentsRowsPerPage
         }
       }
-      utils.loading.show()
       useFetch(opt).then(r => {
-        utils.loading.hide()
         if (r.data.list.length < 4) {
           this.noMoreData = true
         }
