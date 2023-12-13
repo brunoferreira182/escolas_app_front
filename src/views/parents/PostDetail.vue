@@ -20,13 +20,34 @@
           <hr :class="item.class" style="background-color: #15aad8;color: #15aad8;" v-if="item.type === 'separator'"/>
         </div>
         <div class="q-px-xs">
-          <div style="display: flex; align-items: center;" class="q-mb-md">
-            <ion-icon v-if="post.userReaction" id="heartIcon" size="large" @click="clkRemoveReaction(post)" src="/assets/icons/heart_filled.svg"></ion-icon>
-            <ion-icon v-if="!post.userReaction" @click="clkReaction(heart, post)" size="large" src="/assets/icons/heart.svg"/>
-            <div style="margin-left: 70%;"  @click="$router.push('/postReactions?postId=' + $route.query.postId)">
-              {{post.reactions}}  Reações
-            </div>
-          </div>
+          <ion-row>
+            <ion-col>
+              <div 
+                @click="toggleReaction(post)" 
+                :class="{ 'heart-animation': post.userReaction }" 
+                :disabled="post.isButtonDisabled"
+              >
+                <ion-button
+                  class="animation-head"
+                  :id="'toggle-heart-' + i"
+                  :checked="post.userReaction"
+                />
+                <label
+                  class="toggle-animation"
+                  :for="'toggle-heart-' + i"
+                >
+                  <ion-icon
+                    size="large"
+                    :src="post.userReaction ? heart_filled : heart"
+                  />
+                </label>
+              </div>
+            </ion-col>
+            <ion-col class="ion-text-end">
+              {{ post.reactions }}
+              reações
+            </ion-col>
+          </ion-row>
         </div>
         <ion-item
         class="q-mb-sm"
@@ -83,6 +104,8 @@
 import {
   IonPage,
   IonRow, IonGrid,
+  IonCheckbox,
+  IonCol,
   IonContent, IonAvatar, IonButton, IonItem, IonList, IonLabel,IonTextarea,
   IonIcon, IonChip,
   IonPopover
@@ -91,9 +114,11 @@ import { send } from 'ionicons/icons';
 import { useFetch } from '../../composables/fetch'
 import utils from '../../composables/utils'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import heart from '/assets/icons/heart.svg'
-import smile from '/assets/icons/smile.svg'
-import like from '/assets/icons/like.svg'
+import heart from '/src/assets/icons/heart.svg'
+import heart_filled from '/src/assets/icons/heart_filled.svg'
+import smile from '/src/assets/icons/smile.svg'
+import like from '/src/assets/icons/like.svg'
+import { Haptics } from '@capacitor/haptics';
 </script>
 
 <script>
@@ -119,8 +144,34 @@ export default {
   },
 
   methods: {
+    async toggleReaction(post) {
+      if (post.isButtonDisabled) {
+        return;
+      }
+
+      post.isButtonDisabled = true;
+
+      const vibrate = async () => {
+        await Haptics.vibrate({ duration: 100 });
+      };
+
+      try {
+        if (post.userReaction) {
+          await this.clkRemoveReaction(post);
+        } else {
+          await this.clkReaction(post);
+        }
+
+        vibrate();
+        setTimeout(() => {
+          post.userReaction = !post.userReaction;
+          post.isButtonDisabled = false;
+        }, 1000);
+      } catch (error) {
+        post.isButtonDisabled = false;
+      }
+    },
     clkRemoveReaction() {
-      console.log('chamou remover reaction')
       const opt = {
         route: '/mobile/social/removePostReaction',
         body: {
@@ -217,8 +268,138 @@ export default {
   }
 };
 </script>
-<style>
+<style lang="scss">
+$bubble-d: 4.5rem; // bubble diameter
+$bubble-r: .5*$bubble-d; // bubble-radius
+$sparkle-d: .375rem;
+$sparkle-r: .5*$sparkle-d;
 
+@mixin sparkles($k) {
+	$shadow-list: ();
+	$n-groups: 7;
+	$group-base-angle: 360deg/$n-groups;
+	$group-distr-r: (1 + $k*.25)*$bubble-r;
+	$n-sparkles: 2;
+	$sparkle-base-angle: 360deg/$n-sparkles;
+	$sparkle-off-angle: 60deg; // offset angle from radius
+	$spread-r: -$k*$sparkle-r;
+	
+	@for $i from 0 to $n-groups {
+		$group-curr-angle: $i*$group-base-angle - 90deg;
+		$xg: $group-distr-r*cos($group-curr-angle);
+		$yg: $group-distr-r*sin($group-curr-angle);
+		
+		@for $j from 0 to $n-sparkles {
+			$sparkle-curr-angle: $group-curr-angle + 
+				$sparkle-off-angle + $j*$sparkle-base-angle;
+			$xs: $xg + $sparkle-d*cos($sparkle-curr-angle);
+			$ys: $yg + $sparkle-d*sin($sparkle-curr-angle);
+			
+			$shadow-list: $shadow-list, $xs $ys 0 $spread-r 
+				hsl(($i + $j)*$group-base-angle, 100%, 75%);
+		}
+	}
+	
+	box-shadow: $shadow-list;
+}
+
+@mixin bubble($ext) {
+	transform: scale(1);
+	border-color: #cc8ef5;
+  transform: translateX(10px);
+	border-width: $ext;
+}
+
+.animation-head {
+  position: absolute;
+  transform: translateX(10px);
+  left: -100vw;
+	
+	&:checked + label {
+		color: #e2264d;
+		filter: none;
+		will-change: font-size;
+    transform: translateX(10px);
+		animation: heart 1s cubic-bezier(.17, .89, .32, 1.49);
+		
+		&:before, &:after {
+			animation: inherit;
+			animation-timing-function: ease-out;
+		}
+		
+		&:before {
+			will-change: transform, border-width, border-color;
+			animation-name: bubble;
+		}
+		
+		&:after {
+			will-change: opacity, box-shadow;
+			animation-name: sparkles;
+		}
+	}
+	
+	&:focus + label {
+		text-shadow: 0 0 3px white, 
+			0 1px 1px white, 0 -1px 1px white, 
+			1px 0 1px white, -1px 0 1px white;
+	}
+}
+
+.toggle-animation {
+	align-self: center;
+	position: relative;
+	color: #888;
+	font-size: 2em;
+  transform: translateX(10px);
+	filter: grayscale(1);
+
+	user-select: none;
+	cursor: pointer;
+	
+	&:before, &:after {
+		position: absolute;
+		z-index: 1;
+		top: 20%; left: 25%;
+    transform: translateX(10px);
+		border-radius: 50%;
+		content: '';
+	}
+	
+	&:before {
+		box-sizing: border-box;
+		margin: -$bubble-r;
+		border: solid $bubble-r #e2264d;
+		width: $bubble-d; height: $bubble-d;
+		transform: scale(0);
+	}
+	
+	&:after {
+		margin: -$sparkle-r;
+		width: $sparkle-d; height: $sparkle-d;
+		@include sparkles(1);
+	}
+  &.heart-animation {
+    animation: heart 1s cubic-bezier(.17, .89, .32, 1.49);
+  }
+}
+
+// @keyframes heart {
+// 	0%, 17.5% { font-size: 0; };
+  
+// }
+
+@keyframes bubble {
+	15% { @include bubble($bubble-r); }
+	30%, 100% { @include bubble(0); }
+}
+
+@keyframes sparkles {
+	0%, 20% { opacity: 0; }
+	25% {
+		opacity: 1;
+		@include sparkles(0);
+	}
+}
 .coment-box {
   margin: 10px;
   --border-color:  transparent;

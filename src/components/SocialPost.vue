@@ -20,7 +20,7 @@
           <ion-col class="q-ma-sm q-pt-md">
             <ion-row>
               <ion-col size="5">
-                <div @click="toggleReaction(post)" :class="{ 'heart-animation': post.userReaction }" :disabled="post.isButtonDisabled">
+                <div @click.prevent="toggleReaction(post)" :class="{ 'heart-animation': post.userReaction }" :disabled="post.isButtonDisabled">
                   <input
                     class="animation-head"
                     type="checkbox"
@@ -104,6 +104,7 @@ import heart_filled from '/src/assets/icons/heart_filled.svg'
 import smile from '/src/assets/icons/smile.svg'
 import like from '/src/assets/icons/like.svg'
 import comment from '/src/assets/icons/comment.svg'
+import { Haptics } from '@capacitor/haptics';
 const props = defineProps(['post', 'i'])
 </script>
 <script>
@@ -114,26 +115,6 @@ export default {
     }
   },
   methods: {
-    // toggleReaction(post) {
-    //   console.log(post, 'OPDKASOPDK POST')
-    //   if (post.isButtonDisabled) {
-    //     return; // Evitar a execução múltipla se o botão estiver desativado
-    //   }
-    //   post.isButtonDisabled = true;
-    //   if (post.userReaction) {
-    //     this.clkRemoveReaction(post).finally(() => {
-    //       // Reativar o botão após a execução do método
-    //       post.isButtonDisabled = false;
-    //     });
-    //   } else {
-    //     this.clkReaction(post).finally(() => {
-    //       // Reativar o botão após a execução do método
-    //   ;
-    //       post.isButtonDisabled = false;
-    //     });
-    //   }
-    //   post.userReaction = !post.userReaction;
-    // },
     async toggleReaction(post) {
       if (post.isButtonDisabled) {
         return;
@@ -141,15 +122,18 @@ export default {
 
       post.isButtonDisabled = true;
 
+      const vibrate = async () => {
+        await Haptics.vibrate({ duration: 100 });
+      };
+
       try {
         if (post.userReaction) {
-          console.log('chamou? if')
           await this.clkRemoveReaction(post);
         } else {
           await this.clkReaction(post);
-          console.log('chamou? else')
         }
 
+        vibrate();
         setTimeout(() => {
           post.userReaction = !post.userReaction;
           post.isButtonDisabled = false;
@@ -298,11 +282,6 @@ $sparkle-r: .5*$sparkle-d;
     animation: heart 1s cubic-bezier(.17, .89, .32, 1.49);
   }
 }
-
-// @keyframes heart {
-// 	0%, 17.5% { font-size: 0; };
-  
-// }
 
 @keyframes bubble {
 	15% { @include bubble($bubble-r); }
