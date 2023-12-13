@@ -44,16 +44,18 @@
                 </label>
               </div>
             </ion-col>
-            <ion-col class="ion-text-end">
+            <ion-col class="ion-text-end ion-align-self-center">
               {{ post.reactions }}
               reações
             </ion-col>
           </ion-row>
         </div>
         <ion-item
-        class="q-mb-sm"
+          style="border-radius: 0.5rem"
+          class="q-mb-sm"
         >
           <ion-textarea
+            
             placeholder="Deixe um comentário..."
             v-model="newComment"
             :rows="1"
@@ -65,10 +67,10 @@
             slot="end"
             @click="newPostComment"
           >
-            <ion-icon  slot="icon-only" :icon="send"></ion-icon>
+            <ion-icon slot="icon-only" :icon="send"></ion-icon>
           </ion-button>
         </ion-item>
-        <ion-list v-if="comments.length > 0">
+        <ion-list v-if="comments.length > 0" class="q-py-md" style="border-radius: 0.5rem">
           <ion-item 
             v-for="(comment,i) in comments"
             :key="i"
@@ -105,6 +107,7 @@
 import {
   IonPage,
   IonRow, IonGrid,
+  IonCol,
   IonContent, IonAvatar, IonButton, IonItem, IonList, IonLabel,IonTextarea,
   IonIcon, IonChip,
   IonPopover
@@ -248,7 +251,7 @@ export default {
       }
     },
     getPostComments () {
-      this.comments = []
+      // this.comments = []
       const opt = {
         route: '/mobile/social/getCommentsByPostId',
         body: {
@@ -257,7 +260,9 @@ export default {
           rowsPerPage: this.commentsRowsPerPage
         }
       }
+      utils.loading.show()
       useFetch(opt).then(r => {
+        utils.loading.hide()
         if (r.data.list.length < 4) {
           this.noMoreData = true
         }
