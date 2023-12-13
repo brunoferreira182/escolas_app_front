@@ -2,14 +2,14 @@
 const MODE_MASTER_SERVER = 'dev'
 const COMPANY_ID = 2
 const VERSION = 1.1
-const BUILD = 5
+const BUILD = 7
 //////////// NAO MUDAR //////
 const MODE_AUTH_SERVER = 'local'
 const MODE_APP_SERVER = 'local'
 const PROJECT_NAME = 'escolas_app'
 const DEFAULT_SERVER_NAME = 'application'
 const CRYPTOYESORNO = 0 // 1 para criptografar, 0 para nao criptografar
-const APP_NAME = 'Escolas App'
+const APP_NAME = 'EduLink'
 let IUGU_ID
 let IUGU_TEST_MODE
 const MODE_SERVER = 'app'

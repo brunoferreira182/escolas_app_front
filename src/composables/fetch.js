@@ -65,14 +65,12 @@ export async function useFetch ({
   if (token) {
     axios.defaults.headers.common['Authorization'] = token
     axios.defaults.headers.common['cryn'] = CRYPTOYESORNO
-    // console.log('body aqui pra tentar,', body)
     // criptografa o body
     if (CRYPTOYESORNO === 1 && body) {
       newBody.body = CryptoJS.AES.encrypt(JSON.stringify(body), token).toString()
     } else if (CRYPTOYESORNO === 0 && body) {
       newBody.body = body
     }
-    // console.log(newBody.body, 'aqui vai ser ubnd')
     // if (body) newBody.body = CryptoJS.AES.encrypt(JSON.stringify(body), token).toString()
   } else {
     if (body) newBody.body = body
@@ -107,7 +105,7 @@ export async function useFetch ({
   catch (e) {
     console.log('AQUI ERRO CATCH', e)
   }
-  console.log('retorno fetch ' + route, ret.data)
+  // console.log('retorno fetch ' + route, ret.data)
 
   if (ret.data.error) {
     if (

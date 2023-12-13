@@ -4,7 +4,7 @@
       <img 
         v-if="post.postData.resume.img"
         style="width: 100%; height: auto; object-fit: cover; object-position: center;"
-        :src="utils.attachmentsAddress() + post.postData.resume.img.filename" class="img-style"
+        :src="utils.makeFileUrl(post.postData.resume.img.filename)" class="img-style"
       />
       <div >
         <p class="q-px-md text-caption" v-if="post.routeDestination.split('?')[0] === '/calendarEventDetail'">
