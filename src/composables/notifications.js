@@ -40,6 +40,7 @@ const addListeners = async () => {
   });
 
   await PushNotifications.addListener('pushNotificationActionPerformed', notification => {
+    console.log('mas que merda')
     console.log('Push notification action performed', notification, notification.actionId, notification.inputValue);
   });
 }
