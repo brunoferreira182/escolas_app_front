@@ -36,6 +36,12 @@ export default defineComponent({
       // subscriptionDataStore: useSubscriptionDataStore()
     };
   },
+  beforeMount () {
+    App.addListener('appUrlOpen', (event) => {
+      console.log(event, 'console event')
+      console.log(event.url, 'console event url')
+    })
+  },
   mounted () {
     this.startView()
     utils.loading.hide()

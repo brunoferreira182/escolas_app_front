@@ -5,7 +5,7 @@
       <div class="ion-padding">
         <div class="ion-text-center ">
           <ion-img
-            src="/assets/logo_login_custom_2.png"
+            :src="logo"
             class="login-logo"
           />
           <div class="login-logo-letters q-mb-md">{{ APP_NAME }}</div>
@@ -50,6 +50,7 @@ import utils from '../composables/utils'
 import { APP_NAME, COMPANY_ID } from '../composables/variables'
 import { useFetch } from '../composables/fetch';
 import pushService from '../composables/notifications'
+import logo from '/src/assets/logo_login_custom_2.png'
 
 export default {
   components: {
@@ -60,6 +61,7 @@ export default {
   },
   data() {
     return {
+      logo,
       loginStep: "email",
       key: "",
       appVersion: "",
