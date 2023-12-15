@@ -120,6 +120,8 @@ import heart from '/src/assets/icons/heart.svg'
 import heart_filled from '/src/assets/icons/heart_filled.svg'
 import smile from '/src/assets/icons/smile.svg'
 import like from '/src/assets/icons/like.svg'
+import bubblesound from '/src/assets/sounds/bubblesound.wav'
+
 import { Haptics } from '@capacitor/haptics';
 </script>
 
@@ -152,7 +154,8 @@ export default {
       }
 
       post.isButtonDisabled = true;
-
+      const audio = new Audio()
+      audio.src = bubblesound
       const vibrate = async () => {
         await Haptics.vibrate({ duration: 100 });
       };
@@ -165,6 +168,7 @@ export default {
         }
 
         vibrate();
+        audio.play()
         setTimeout(() => {
           post.userReaction = !post.userReaction;
           post.isButtonDisabled = false;
