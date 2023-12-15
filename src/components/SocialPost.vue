@@ -106,7 +106,6 @@ import like from '/src/assets/icons/like.svg'
 import bubblesound from '/src/assets/sounds/bubblesound.wav'
 import comment from '/src/assets/icons/comment.svg'
 import { Haptics } from '@capacitor/haptics';
-import {Capacitor} from '@capacitor/core'
 const props = defineProps(['post', 'i'])
 </script>
 <script>
@@ -127,8 +126,8 @@ export default {
 
       const vibrate = () => Haptics.vibrate({ duration: 100 });
 
-        const audio = new Audio()
-        audio.src = bubblesound
+      const audio = new Audio()
+      audio.src = bubblesound
       try {
         if (post.userReaction) {
           await this.clkRemoveReaction(post);
