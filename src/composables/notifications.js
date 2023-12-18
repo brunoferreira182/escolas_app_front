@@ -1,6 +1,7 @@
 import { PushNotifications } from '@capacitor/push-notifications';
 import {Capacitor} from '@capacitor/core';
 import { useFetch } from '../composables/fetch'
+import router from '../router/index.ts';
 let registered = false
 
 const initPush = async () => {
@@ -40,8 +41,12 @@ const addListeners = async () => {
   });
 
   await PushNotifications.addListener('pushNotificationActionPerformed', notification => {
-    console.log('mas que merda')
-    console.log('Push notification action performed', notification, notification.actionId, notification.inputValue);
+    // console.log('mas que merda')
+    console.log('Push notification action performed', notification, notification.notification, notification.notification.data);
+    if (notification.notification
+        && notification.notification.data
+        && notification.notification.data.route) router.push(notification.notification.data.route)
+
   });
 }
 
