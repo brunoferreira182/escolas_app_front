@@ -41,6 +41,8 @@ import calendarWorker from '../views/workers/Calendar.vue'
 import storyDetail from '../views/parents/StoryDetail.vue'
 import calendarEventDetail from '../views/workers/CalendarEventDetail.vue'
 import Messenger from '../views/Messenger.vue';
+import ChildrenAttendanceCalendar from '../views/ChildrenAttendanceCalendar.vue';
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -61,6 +63,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/messenger',
         name: 'Messenger',
         component: Messenger
+      },
+      {
+        path: '/childrenAttendanceCalendar',
+        name: 'ChildrenAttendanceCalendar',
+        component: ChildrenAttendanceCalendar
       },
       {
         path: '/register',
