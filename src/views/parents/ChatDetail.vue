@@ -91,8 +91,8 @@
         </ion-list>
       </div>
     </ion-content>
-    <ion-footer v-if="canSendMessage">
-      <form :style="footerColor">
+    <ion-footer v-if="canSendMessage" style="background-color: var(--ion-color-step-50, #f7f7f7);">
+      <form >
         <ion-item v-if="isAnsweringMessage.isAnswering" lines="none" >
           <ion-avatar slot="start">
             <img />
@@ -103,10 +103,18 @@
           <ion-icon :icon="close" slot="end" @click="undoAnswerMessage"></ion-icon>
         </ion-item>
         
-        <ion-row class="q-mx-xs ion-align-items-end" style="padding-bottom: var(--ion-safe-area-bottom)">
+        <ion-row
+          class="q-mx-xs ion-align-items-end"
+          style="padding-bottom: var(--ion-safe-area-bottom)"
+        >
           <ion-col size="10">
             <ion-item lines="none" style="border-radius: 15px;align-items: center;">
-              <ion-textarea @ionFocus="scrollToBottom"  v-model="chatMessage" auto-grow rows="1"  class="chat-input q-mb-xs">
+              <ion-textarea
+                @ionFocus="scrollToBottom"
+                v-model="chatMessage"
+                auto-grow rows="1"
+                class="chat-input q-mb-xs"
+              >
               </ion-textarea>
               <ion-button mode="ios" class="q-mr-xs" fill="clear" size="small" style="scale: 1.3;" v-if="chatMessage === ''" shape="circle" @click="clkAddAttachment">
                 <ion-icon slot="icon-only" :icon="attach"></ion-icon>
@@ -577,17 +585,17 @@ ion-list {
   background-color: var(--ion-color-light);
 } */
 .sent-message {
-  background-color: lightgreen;
+  background-color: var(--ion-color-primary);
 }
 .sent-temp-message {
   border-width: 2px;
   border-style: solid;
-  border-color: lightgreen
+  border-color: var(--ion-color-primary)
 }
 
 .received-message {
   margin-left: -10px;
-  background-color: lightskyblue;
+  background-color: var(--ion-color-secondary);
 }
 .blink-bg {
   animation: blinkingBackground 2s infinite;

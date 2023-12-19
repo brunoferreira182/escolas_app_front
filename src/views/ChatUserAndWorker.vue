@@ -87,8 +87,8 @@
         </ion-list>
       </div>
     </ion-content>
-    <ion-footer >
-      <form :style="footerColor">
+    <ion-footer style="background-color: var(--ion-color-step-50, #f7f7f7);">
+      <form>
         <ion-item v-if="isAnsweringMessage.isAnswering" lines="none" >
           <ion-avatar slot="start">
             <img />
@@ -569,17 +569,17 @@ ion-list {
   background-color: var(--ion-color-light);
 } */
 .sent-message {
-  background-color: lightgreen;
+  background-color: var(--ion-color-primary);
 }
 .sent-temp-message {
   border-width: 2px;
   border-style: solid;
-  border-color: lightgreen
+  border-color: var(--ion-color-primary)
 }
 
 .received-message {
   margin-left: -10px;
-  background-color: lightskyblue;
+  background-color: var(--ion-color-secondary);
 }
 .blink-bg {
   animation: blinkingBackground 2s infinite;

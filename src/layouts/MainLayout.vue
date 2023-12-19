@@ -84,6 +84,7 @@ export default defineComponent({
       }
       useFetch(opt).then(r => {
         if(!r.error){
+          console.log(document.documentElement.style.getPropertyValue('--ion-color-primary'), 'document.documentElement.style')
           document.documentElement.style.setProperty('--ion-color-primary', r.data.primary);
           document.documentElement.style.setProperty('--ion-color-secondary', r.data.secondary);
           document.documentElement.style.setProperty('--ion-color-accent', r.data.accent);
