@@ -18,27 +18,42 @@
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
           <div class="q-px-md text-caption">
             Selecione uma turma para inserir uma atividade para vários alunos
+            ou marcar presença
           </div>
           <ion-item 
             v-for="c in classData"
             :key="c"
-            :button="true"
             class="q-pa-sm"
-            @click="clkOpenDialogClassEvent(c)"
           >
             <ion-avatar aria-hidden="true" slot="start" >
               <img :src="utils.makeFileUrl(c.classImage)" v-if="c.classImage"/>
               <img :src="utils.makeFileUrl(c.image)" v-else/>
             </ion-avatar>
             <ion-label>
-              <h6>{{ c.className }}</h6>
+              <div class="text-h6">{{ c.className }}</div>
               <ion-badge color="success">Função: {{ c.functionName }}</ion-badge>
+              <div>
+                <ion-button 
+                  slot="end" 
+                  color="warning"
+                  @click="clkOpenDialogClassEvent(c)"
+                >
+                  Atividades
+                </ion-button>
+                <ion-button 
+                  color="tertiary" 
+                  slot="end"
+                  @click="clkOpenModalAttendance(c)"
+                > 
+                  Presença 
+                </ion-button>
+              </div>
             </ion-label>
           </ion-item>
         </ion-list>
       </Transition>
-      <ion-list :inset="true" >
-        <ion-accordion-group>
+      <ion-list :inset="true" color="light">
+        <ion-accordion-group >
           <ion-accordion value="alunos">
             <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
             <div slot="content">
@@ -68,14 +83,11 @@
         </ion-accordion-group>
       </ion-list>
 
-      <ion-list :inset="true" >
+      <ion-list :inset="true" color="light">
         <ion-accordion-group>
           <ion-accordion value="atividades">
             <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
             <div slot="content">
-              <div class="q-px-md text-caption">
-                Selecione um aluno para inserir uma atividade individualmente
-              </div>
               <ion-item 
                 v-for="e in classEventsHistory"
                 :key="e"
@@ -102,8 +114,8 @@
                   </ion-note>
                 </ion-label>
                 <div class="metadata-end-wrapper" slot="end">
-                  <ion-note color="medium">
-                    {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
+                  <ion-note color="medium text-caption">
+                    {{ e.createdAt.createdAtInFullShort }}<br>
                     {{ e.createdAt.createdAtLocale.split(' ')[1] }}
                   </ion-note>
                 </div>
@@ -130,7 +142,7 @@
           </div>
         </ion-content>
       </ion-modal>
-
+      
       <ion-modal 
         :is-open="dialogInsertClassEvent.open" 
         @ionModalDidPresent="startModal()" 
@@ -167,7 +179,7 @@
             <ion-item class="ion-text-left text-h6">
               <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
               <ion-label class="q-px-md ion-text-capitalize">
-                Crianças
+                Todas crianças
               </ion-label>
             </ion-item>
             <ion-item
@@ -210,9 +222,6 @@
                       {{ e.createdAt.createdAtLocale.split('/')[0] }}/
                       {{ e.createdAt.createdAtLocale.split('/')[2] }}
                     </div>
-                    <!-- <div>
-                      {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                    </div> -->
                   </ion-col>
                 </ion-row>
                 <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
@@ -224,6 +233,88 @@
           </div>
         </ion-content>
         <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
+      </ion-modal>
+
+      <ion-modal 
+        :is-open="dialogAttendance.open" 
+        @ionModalDidPresent="startModalAttendance()" 
+        @didDismiss="clearModalAttendanceData()"
+      >
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-button @click="clearModalAttendanceData">Fechar</ion-button>
+            </ion-buttons>
+            <ion-title >Comparecimento</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <div class="ion-text-center q-pa-md">
+            <ion-row>
+              <ion-col>
+                <div class="modal-attendance">
+                  <div class="q-ma-sm text-h6">
+                    Presença
+                  </div>
+                  <ion-checkbox 
+                    v-model="dialogAttendance.isAttendanceChecked"
+                    @ionChange="handleCheckboxAttendanceChange('attendance')"
+                  />
+                </div>
+              </ion-col>
+              <ion-col>
+                <div class="modal-absent">
+                  <div class="q-ma-sm text-h6">
+                    Falta
+                  </div>
+                  <ion-checkbox 
+                    v-model="dialogAttendance.isAbsentChecked"
+                    @ionChange="handleCheckboxAttendanceChange('absent')"
+                  />
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div class="input-wrapper  q-px-md q-mx-md">
+            <ion-textarea
+              label="Descrição (opcional)"
+              label-placement="floating"
+              v-model="dialogAttendance.obs"
+              placeholder="Descrição da sobre o comparecimento"
+              :auto-grow="true"
+            ></ion-textarea>
+          </div>
+          <ion-list :inset="true">
+            <ion-item class="ion-text-left text-h6">
+              <div
+                :class="`${dialogAttendance.isAttendanceChecked ? 'modal-attendance' : 'modal-absent'}`"
+              >
+                <ion-checkbox 
+                  v-model="selectAllChildren" 
+                  @ionChange="handleCheckboxChangeAll($event)"
+                />
+              </div>
+              <ion-label class="q-px-md ion-text-capitalize">
+                Todas crianças
+              </ion-label>
+            </ion-item>
+            <ion-item
+              v-for="child in classList"
+              :key="child"
+            >
+              <div :class="`${dialogAttendance.isAttendanceChecked ? 'modal-attendance' : 'modal-absent'}`">
+                <ion-checkbox 
+                  :checked="child.isChecked" 
+                  @ionChange="handleCheckboxAttendance(child.childId, $event)" 
+                />
+              </div>
+              <ion-label class="q-px-md ion-text-capitalize">
+                {{ child.childName }}
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+        <ion-button @click="createUserChildAttendance" class="q-pa-md" expand="block">Salvar</ion-button>
       </ion-modal>
   
     </ion-content>
@@ -313,6 +404,13 @@ export default {
         blob: null,
         name: null
       },
+      dialogAttendance: {
+        data:{},
+        open: false,
+        isAttendanceChecked: true,
+        isAbsentChecked: false,
+        obs: '',
+      },
       dialogInsertClassEvent: {
         open: false,
         data: {},
@@ -368,24 +466,13 @@ export default {
     }
   },
   methods: {
-    // getLastActivityFromChildrenOfClasses() {
-    //   const opt = {
-    //     route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
-    //     body: {
-    //       page: this.pagination.page,
-    //       rowsPerPage: this.pagination.rowsPerPage
-    //     }
-    //   }
-    //   useFetch(opt).then((r) => {
-    //     if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
-    //     else {
-    //       this.childEventsHistory = r.data.list
-    //     } 
-    //   })
-    // },
     startModal(){
       this.getChildrenListByClassId()
       this.getLastActivityFromChildrenOfClasses(this.dialogInsertClassEvent.data.classId)
+      this.getChildrenInClassList()
+    },
+    startModalAttendance(){
+      this.getChildrenListByClassId()
       this.getChildrenInClassList()
     },
     getLastActivityFromChildrenOfClasses(classId) {
@@ -465,47 +552,68 @@ export default {
 
       this.dialogInsertChildEvent.data = this.selectedChildren.map((child) => child.childId);
     },
-    // handleCheckboxChangeAll(e) {
-    //   if (e.detail.checked === true) {
-    //     this.selectedChildren = this.classList.map((child) => ({
-    //     _id: child._id,
-    //   }));
-    //   } else {
-    //     this.selectedChildren = []
-    //   }
-    //   this.selectedChildren.forEach((child) => {
-    //     this.classList.forEach((classList, i) => {
-    //       if (child._id === classList._id) {
-    //         this.classList.forEach((teste) => {
-    //           teste.isChecked = e.detail.checked
-    //           if (teste.isChecked === false) {
-    //             this.selectedChildren = []
-    //             this.classList.forEach((classList) => {
-    //               classList.isChecked = false
-    //             })
-    //           }
-    //         }) 
-    //       }
-    //     })
-    //   })
-    //   this.dialogInsertChildEvent.data = this.selectedChildren
-    // },
-    // handleCheckboxChangeAll(e) {
-    //   this.selectedChildren = [];
-    //   this.classList.forEach((classList) => {
-    //     classList.isChecked = e.detail.checked;
-    //     if (e.detail.checked) {
-    //       this.selectedChildren.push({ _id: classList._id });
-    //     }
-    //   });
-    //   this.dialogInsertChildEvent.data = this.selectedChildren;
-    // },
     closeDialogInserChildren() {
       this.dialogInsertChildEvent.open = false
       this.dialogInsertChildEvent.data = []
       this.dialogInsertChildEvent.obs = ''
       this.dialogInsertChildEvent.childEventId = ''
       // this.pagination.page = 1
+    },
+    handleCheckboxAttendanceChange(type) {
+      if (type === 'attendance' && this.dialogAttendance.isAttendanceChecked) {
+        this.dialogAttendance.isAbsentChecked = false;
+        this.dialogAttendance.attendance = 'presence'
+      } else if (type === 'absent' && this.dialogAttendance.isAbsentChecked) {
+        this.dialogAttendance.isAttendanceChecked = false;
+        this.dialogAttendance.attendance = 'absent'
+      }
+    },
+    handleCheckboxAttendance(childId, e) {
+      if (e.detail.checked === true) {
+        this.selectedChildren.push({_id: childId})
+        if (this.selectedChildren.length === this.classList.length) {
+            this.selectAllChildren = true
+          }
+        return
+      }
+      if (e.detail.checked === false) {
+        const initialLength = this.selectedChildren.length
+        this.selectedChildren.forEach((child, childIndex) => {
+          if (child._id === childId) {
+            this.selectedChildren.splice(childIndex, 1)
+          if (initialLength === this.classList.length && this.selectedChildren !== initialLength) {
+            this.selectAllChildren = false
+          }
+            this.dialogInsertChildEvent.data = this.selectedChildren
+          }
+        })
+      }
+    },
+    createUserChildAttendance() {
+      if(this.selectedChildren.length === 0){
+        utils.toast('Preencha o comparecimento para prosseguir')
+        return
+      }
+      const opt = {
+        route: '/mobile/workers/createUserChildAttendance',
+        body: {
+          selectedChildren: this.selectedChildren,
+          childAttendanceType: this.dialogAttendance.isAttendanceChecked ? 'present' : 'absent',
+          obs: this.dialogAttendance.obs,
+          classId: this.dialogAttendance.data.classId
+        },
+      }
+      utils.loading.show()
+      useFetch(opt).then((r) => {
+        utils.loading.hide()
+        if (r.error) {
+          utils.toast('Ocorreu um erro. Tente novamente.')
+          return
+        }
+          this.clearModalData()
+          this.dialogAttendance.open = false
+          utils.toast('Comparecimento preenchido com sucesso!')
+      })
     },
     handleCheckboxChange(childId, e) {
       if (e.detail.checked === true) {
@@ -555,6 +663,11 @@ export default {
           utils.toast("Ocorreu um erro, tente novamente mais tarde.")
         }
       })
+    },
+    clearModalAttendanceData(){
+      this.dialogAttendance.open = false
+      this.dialogAttendance.data = {}
+      this.dialogAttendance.obs = ''
     },
     clearModalDataClass() {
       this.dialogInsertClassEvent.open = false
@@ -614,6 +727,10 @@ export default {
         }))
       })
     },
+    clkOpenModalAttendance(c){
+      this.dialogAttendance.data = c
+      this.dialogAttendance.open = true
+    },
     clkOpenDialogClassEvent(c){
       this.dialogInsertClassEvent.data = c
       this.dialogInsertClassEvent.open = true
@@ -630,6 +747,7 @@ export default {
         type: 'newImage'
       }
     },
+
     createUserChildEvents() {
       const file = [{ file: this.image.blob, name: 'newImage' }]
       if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
@@ -706,6 +824,24 @@ export default {
 };
 </script>
 <style scoped>
+.modal-absent ion-checkbox {
+  --size: 32px;
+  --checkbox-background-checked: #9b0d0d;
+}
+
+.modal-absent ion-checkbox::part(container) {
+  border-radius: 6px;
+  border: 2px solid #9b0d0d;
+}
+.modal-attendance ion-checkbox {
+  --size: 32px;
+  --checkbox-background-checked: #1d9b0d;
+}
+
+.modal-attendance ion-checkbox::part(container) {
+  border-radius: 6px;
+  border: 2px solid #1d9b0d;
+}
  
 ion-select.always-flip::part(icon) {
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
