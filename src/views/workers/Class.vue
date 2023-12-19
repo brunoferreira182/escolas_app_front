@@ -217,11 +217,10 @@
                     size="6" 
                     class="text-subtitle2 ion-text-end ion-text-wrap"
                   >
-                    <div>
-                      {{ e.createdAt.createdAtLocale.split('/')[1] }}/
-                      {{ e.createdAt.createdAtLocale.split('/')[0] }}/
-                      {{ e.createdAt.createdAtLocale.split('/')[2] }}
-                    </div>
+                    <ion-note color="medium text-caption">
+                      {{ e.createdAt.createdAtInFullShort }}<br>
+                      {{ e.createdAt.createdAtLocale.split(' ')[1] }}
+                    </ion-note>
                   </ion-col>
                 </ion-row>
                 <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
@@ -666,6 +665,7 @@ export default {
     },
     clearModalAttendanceData(){
       this.dialogAttendance.open = false
+      this.selectedChildren = []
       this.dialogAttendance.data = {}
       this.dialogAttendance.obs = ''
     },
@@ -824,6 +824,7 @@ export default {
 };
 </script>
 <style scoped>
+
 .modal-absent ion-checkbox {
   --size: 32px;
   --checkbox-background-checked: #9b0d0d;
