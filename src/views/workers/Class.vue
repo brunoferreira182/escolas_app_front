@@ -409,6 +409,7 @@ export default {
         isAttendanceChecked: true,
         isAbsentChecked: false,
         obs: '',
+        attendance: ''
       },
       dialogInsertClassEvent: {
         open: false,
@@ -666,8 +667,11 @@ export default {
     clearModalAttendanceData(){
       this.dialogAttendance.open = false
       this.selectedChildren = []
+      this.dialogAttendance.isAbsentChecked = false
+      this.dialogAttendance.isAttendanceChecked = false
       this.dialogAttendance.data = {}
       this.dialogAttendance.obs = ''
+      this.dialogAttendance.attendance = ''
     },
     clearModalDataClass() {
       this.dialogInsertClassEvent.open = false

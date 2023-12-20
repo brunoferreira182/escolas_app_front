@@ -27,11 +27,11 @@
             v-for="c in childAttendance"
             :key="c"
           >
-            <div class="">
+            <!-- <div class="">
               <ion-avatar aria-hidden="true" slot="center" style="width: 46px; height: 46px;">
                 <img :src="utils.makeFileUrl(c.childPhoto ? c.childPhoto : null)"/>
               </ion-avatar>
-            </div>
+            </div> -->
             <ion-label class="q-ma-md">
               <strong class="text-capitalize text-h5">{{ c.name }}</strong><br/>
             </ion-label>
@@ -39,9 +39,20 @@
               presentation="date" 
               class="q-ma-md"
               :preferWheel="false"
-              style="border-radius: .5rem;"
+              
               :highlighted-dates="highlightedDates"
             />
+            <!-- <ion-datetime 
+              presentation="date" 
+              class="q-ma-md"
+              :preferWheel="false"
+              style="border-radius: .5rem;"
+              :highlighted-dates="[{
+                date: this.formatTimestamp(c.createdAt.createdAt),
+                textColor: '#FFFFFF',
+                backgroundColor: c.childAttendanceType === 'present' ? '#1d9b0d' : '#9b0d0d',
+              }]"
+            /> -->
           </ion-card>
         </div>
         <div v-else>
@@ -74,6 +85,18 @@ export default defineComponent({
       utils,
       childAttendance: [],
       highlightedDates: [],
+      // highlightedDates: [
+      //   {
+      //     date: '2023-12-19',
+      //     textColor: '#800080',
+      //     backgroundColor: '#ffc0cb',
+      //   },
+      //   {
+      //     date: '2023-12-20',
+      //     textColor: '#09721b',
+      //     backgroundColor: '#c8e5d0',
+      //   },
+      // ]
     }
   },
   mounted () {
@@ -95,24 +118,60 @@ export default defineComponent({
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     },
-    getChildAttendanceByDate(){
+    getChildAttendanceByDate() {
       const opt = {
         route: '/mobile/workers/getChildAttendanceByDate',
-      }
+      };
+
       useFetch(opt).then((r) => {
         if (r.error) {
-          utils.toast("Ocorreu um erro ao exibir o calendário. Tente novamente mais tarde")
-          return
+          utils.toast("Ocorreu um erro ao exibir o calendário. Tente novamente mais tarde");
+          return;
         }
-        console.log(r)
-        this.childAttendance = r.data
-        this.highlightedDates = r.data.map((item) => ({
-          date: this.formatTimestamp(item.createdAt.createdAt),
-          textColor: '#FFFFFF',
-          backgroundColor: item.childAttendanceType === 'present' ? '#1d9b0d' : '#9b0d0d',
-        }));
-      })
+
+        console.log(r);
+
+        this.childAttendance = r.data;
+        this.highlightedDates = [];
+
+        this.childAttendance.forEach((child) => {
+          child.childAttendanceData.forEach((attendance) => {
+            const date = this.formatTimestamp(attendance.createdAt.createdAt);
+            const textColor = '#FFFFFF';
+            const backgroundColor = attendance.childAttendanceType.color[attendance.childAttendanceType.color.length - 1];
+
+            this.highlightedDates.push({
+              date,
+              textColor,
+              backgroundColor,
+            });
+          });
+        });
+
+        console.log(this.highlightedDates, 'OPDKASOPKDO');
+      });
     },
+    // getChildAttendanceByDate(){
+    //   const opt = {
+    //     route: '/mobile/workers/getChildAttendanceByDate',
+    //   }
+    //   useFetch(opt).then((r) => {
+    //     if (r.error) {
+    //       utils.toast("Ocorreu um erro ao exibir o calendário. Tente novamente mais tarde")
+    //       return
+    //     }
+    //     console.log(r)
+    //     this.childAttendance = r.data
+    //     this.highlightedDates = this.childAttendance.flatMap((child) =>
+    //       child.childAttendanceData.map((attendance) => ({
+    //         date: this.formatTimestamp(attendance.createdAt.createdAt),
+    //         textColor: '#FFFFFF',
+    //         backgroundColor: attendance.color
+    //       }))
+    //     );
+    //     console.log(this.highlightedDates, 'OPDKASOPKDO')
+    //   })
+    // },
   }
 });
 </script>
