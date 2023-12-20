@@ -65,7 +65,7 @@
                 :key="child"
                 @click="clkOpenDialogChildEvent(child)"
                 :button="true"
-                class="q-pa-sm"
+                detail="false"
               >
                 <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
                   <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>

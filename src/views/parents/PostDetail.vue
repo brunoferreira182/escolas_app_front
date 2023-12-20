@@ -30,12 +30,12 @@
                 <input
                   class="animation-head"
                   type="checkbox"
-                  :id="'toggle-heart-' + i"
+                  id="toggle-heart"
                   :checked="post.userReaction"
                 />
                 <label
                   class="toggle-animation"
-                  :for="'toggle-heart-' + i"
+                  for="toggle-heart"
                 >
                   <ion-icon
                     size="large"
@@ -63,38 +63,34 @@
             @keyup.enter="newPostComment"
           />
           <ion-button 
-            shape="round"
-            slot="end"
+            shape="circle"
             @click="newPostComment"
           >
             <ion-icon slot="icon-only" :icon="send"></ion-icon>
           </ion-button>
         </ion-item>
-        <ion-list v-if="comments.length > 0" class="q-py-md" style="border-radius: 0.5rem">
+        <ion-list v-if="comments.length > 0">
           <ion-item 
             v-for="(comment,i) in comments"
             :key="i"
-            lines="none"
           >
+            <ion-avatar aria-hidden="true" slot="start">
+              <img :src="utils.makeFileUrl(comment.profileImage)"/>
+            </ion-avatar>
             <ion-label >
-              <h4>{{ comment.createdBy.name }}</h4>
-              <p>
-                {{ comment.text }}
-              </p>
+              <ion-text>{{ comment.text }}</ion-text><br />
+              <ion-note color="medium">{{ comment.createdBy.name }}</ion-note>
             </ion-label>
-            <ion-label slot="end">
-              <p 
-                style="
-                  font-size: small; 
-                  color: var(--ion-color-secondary);"
-              >{{ comment.createdAt.createdAtOnlyDate.substring(0,5) }}</p>
-            </ion-label>
+            <div class="metadata-end-wrapper" slot="end">
+              <ion-note color="medium">{{ comment.createdAt.createdAtOnlyDate.substring(0,5) }}</ion-note>
+            </div>
           </ion-item>
           <div v-if="noMoreData === false">
             <ion-button
               fill="clear"
-              color="secondary"
+              color="primary"
               @click="clkLoadMore"
+              expand="block"
             >Ver mais</ion-button>
           </div>
         </ion-list>
@@ -110,7 +106,8 @@ import {
   IonCol,
   IonContent, IonAvatar, IonButton, IonItem, IonList, IonLabel,IonTextarea,
   IonIcon, IonChip,
-  IonPopover
+  IonPopover,
+  IonNote, IonText
 } from '@ionic/vue';
 import { send } from 'ionicons/icons';
 import { useFetch } from '../../composables/fetch'
