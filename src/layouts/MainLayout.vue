@@ -31,9 +31,6 @@ export default defineComponent({
   data() {
     return {
       userPermissions: [],
-      appVersion: "",
-      mainClass: 'main-white',
-      // subscriptionDataStore: useSubscriptionDataStore()
     };
   },
   beforeMount () {
@@ -84,11 +81,13 @@ export default defineComponent({
       }
       useFetch(opt).then(r => {
         if(!r.error){
-          console.log(document.documentElement.style.getPropertyValue('--ion-color-primary'), 'document.documentElement.style')
           document.documentElement.style.setProperty('--ion-color-primary', r.data.primary);
           document.documentElement.style.setProperty('--ion-color-secondary', r.data.secondary);
           document.documentElement.style.setProperty('--ion-color-accent', r.data.accent);
-        }else if(r.error){
+
+          // document.documentElement.style.setProperty('--ion-color-primary-dark', r.data.primary);
+
+        } else if (r.error) {
           utils.toast(r.errorMessage)
         }
       })
@@ -118,11 +117,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.main-white {
-  background-color: white;
-}
-.main-gradient {
-  background-image: radial-gradient(ellipse at left, #3733b6, #c078fc,#869bf6)
+<style>
+body.dark {
+  --ion-color-primary: #fd44fd;
 }
 </style>
