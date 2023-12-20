@@ -6,7 +6,7 @@
     />
     <ion-content color="light" >
       <div class="ion-text-center q-px-md">
-        <div class="q-ma-md ">
+        <div class="q-ma-md " v-if="childAttendance.length">
           <ion-badge 
             class="text-subtitle1 q-mx-md" 
             style="background-color: #1d9b0d;" 
@@ -22,26 +22,31 @@
             Falta
           </ion-badge>
         </div>
-        <ion-card
-          v-for="c in childAttendance"
-          :key="c"
-        >
-          <div class="">
-            <ion-avatar aria-hidden="true" slot="center" style="width: 46px; height: 46px;">
-              <img :src="utils.makeFileUrl(c.childPhoto ? c.childPhoto : null)"/>
-            </ion-avatar>
-          </div>
-          <ion-label class="q-ma-md">
-            <strong class="text-capitalize text-h5">{{ c.name }}</strong><br/>
-          </ion-label>
-          <ion-datetime 
-            presentation="date" 
-            class="q-ma-md"
-            :preferWheel="false"
-            style="border-radius: .5rem;"
-            :highlighted-dates="highlightedDates"
-          />
-        </ion-card>
+        <div v-if="childAttendance.length">
+          <ion-card
+            v-for="c in childAttendance"
+            :key="c"
+          >
+            <div class="">
+              <ion-avatar aria-hidden="true" slot="center" style="width: 46px; height: 46px;">
+                <img :src="utils.makeFileUrl(c.childPhoto ? c.childPhoto : null)"/>
+              </ion-avatar>
+            </div>
+            <ion-label class="q-ma-md">
+              <strong class="text-capitalize text-h5">{{ c.name }}</strong><br/>
+            </ion-label>
+            <ion-datetime 
+              presentation="date" 
+              class="q-ma-md"
+              :preferWheel="false"
+              style="border-radius: .5rem;"
+              :highlighted-dates="highlightedDates"
+            />
+          </ion-card>
+        </div>
+        <div v-else>
+          Nenhum dado de comparecimento
+        </div>
       </div>
     </ion-content>
   </ion-page>
@@ -68,18 +73,7 @@ export default defineComponent({
     return {
       utils,
       childAttendance: [],
-      highlightedDates: [
-        // {
-        //   date: '2023-12-19',
-        //   textColor: '#09721b',
-        //   backgroundColor: '#c8e5d0',
-        // },
-        // {
-        //   date: '2023-12-18',
-        //   textColor: 'var(--ion-color-secondary-contrast)',
-        //   backgroundColor: 'var(--ion-color-secondary)',
-        // },
-      ],
+      highlightedDates: [],
     }
   },
   mounted () {
@@ -113,9 +107,9 @@ export default defineComponent({
         console.log(r)
         this.childAttendance = r.data
         this.highlightedDates = r.data.map((item) => ({
-          date: this.formatTimestamp(item.createdAt.createdAt), // Altere para a propriedade correta em seu objeto de dados
-          textColor: '#FFFFFF', // Cor do text
-          backgroundColor: item.childAttendanceType === 'present' ? '#1d9b0d' : '#9b0d0d', // Cor de fundo
+          date: this.formatTimestamp(item.createdAt.createdAt),
+          textColor: '#FFFFFF',
+          backgroundColor: item.childAttendanceType === 'present' ? '#1d9b0d' : '#9b0d0d',
         }));
       })
     },
