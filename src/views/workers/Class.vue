@@ -406,9 +406,10 @@ export default {
       dialogAttendance: {
         data:{},
         open: false,
-        isAttendanceChecked: true,
+        isAttendanceChecked: false,
         isAbsentChecked: false,
         obs: '',
+        attendance: ''
       },
       dialogInsertClassEvent: {
         open: false,
@@ -589,8 +590,8 @@ export default {
       }
     },
     createUserChildAttendance() {
-      if(this.selectedChildren.length === 0){
-        utils.toast('Preencha o comparecimento para prosseguir')
+      if(this.selectedChildren.length === 0 || this.dialogAttendance.attendance === ''){
+        utils.toast('Preencha o comparecimento e selecione um aluno para prosseguir')
         return
       }
       const opt = {
@@ -609,7 +610,7 @@ export default {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
         }
-          this.clearModalData()
+          this.clearModalAttendanceData()
           this.dialogAttendance.open = false
           utils.toast('Comparecimento preenchido com sucesso!')
       })
@@ -666,8 +667,11 @@ export default {
     clearModalAttendanceData(){
       this.dialogAttendance.open = false
       this.selectedChildren = []
+      this.dialogAttendance.isAbsentChecked = false
+      this.dialogAttendance.isAttendanceChecked = false
       this.dialogAttendance.data = {}
       this.dialogAttendance.obs = ''
+      this.dialogAttendance.attendance = ''
     },
     clearModalDataClass() {
       this.dialogInsertClassEvent.open = false
