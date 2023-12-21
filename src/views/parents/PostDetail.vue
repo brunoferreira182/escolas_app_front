@@ -75,7 +75,7 @@
             :key="i"
           >
             <ion-avatar aria-hidden="true" slot="start">
-              <img :src="utils.makeFileUrl(comment.profileImage)"/>
+              <img :src="utils.makeFileUrl(comment.profileImage, 'thumbnail')"/>
             </ion-avatar>
             <ion-label >
               <ion-text>{{ comment.text }}</ion-text><br />

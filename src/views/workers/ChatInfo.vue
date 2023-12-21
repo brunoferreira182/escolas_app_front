@@ -70,10 +70,10 @@
                 v-if="worker.user_id !== userInfo.userId"
               >
                 <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
-                  <img :src="utils.makeFileUrl(worker.childPhoto.filename)"/>
+                  <img :src="utils.makeFileUrl(worker.childPhoto.filename, 'thumbnail')"/>
                 </ion-avatar>
                 <ion-avatar aria-hidden="true" slot="start" v-else>
-                  <img :src="utils.makeFileUrl(worker.image)"/>
+                  <img :src="utils.makeFileUrl(worker.image, 'thumbnail')"/>
                 </ion-avatar>
                 <p class="text-capitalize">{{ worker.userName }} 
                   <div class="text-caption">{{ worker.userFunction }}</div>
@@ -100,10 +100,10 @@
               :key="child"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+                <img :src="utils.makeFileUrl(child.childPhoto.filename, 'thumbnail')"/>
               </ion-avatar>
               <ion-avatar aria-hidden="true" slot="start" v-else>
-                <img :src="utils.makeFileUrl(child.image)"/>
+                <img :src="utils.makeFileUrl(child.image, 'thumbnail')"/>
               </ion-avatar>
               <p>{{ child.childName }}</p>
             </ion-item>

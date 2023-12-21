@@ -66,7 +66,7 @@
             <img :src="utils.makeFileUrl(e.eventImage)" @click="startDialogViewImage(e)"/>
           </ion-avatar>
           <ion-avatar aria-hidden="true" slot="start" v-else>
-            <img :src="utils.makeFileUrl(e.childPhoto)"/>
+            <img :src="utils.makeFileUrl(e.childPhoto, 'thumbnail')"/>
           </ion-avatar>
           <ion-label>
             <ion-row class="ion-justify-content-between ">

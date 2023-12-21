@@ -27,7 +27,7 @@
           >
             <ion-avatar aria-hidden="true" slot="start" >
               <img :src="utils.makeFileUrl(c.classImage)" v-if="c.classImage"/>
-              <img :src="utils.makeFileUrl(c.image)" v-else/>
+              <img :src="utils.makeFileUrl(c.image, 'thumbnail')" v-else/>
             </ion-avatar>
             <ion-label>
               <div class="text-h6">{{ c.className }}</div>
@@ -68,10 +68,10 @@
                 detail="false"
               >
                 <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                  <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+                  <img :src="utils.makeFileUrl(child.childPhoto.filename, 'thumbnail')"/>
                 </ion-avatar>
                 <ion-avatar aria-hidden="true" slot="start" v-else>
-                  <img :src="utils.makeFileUrl(child.image)"/>
+                  <img :src="utils.makeFileUrl(child.image, 'thumbnail')"/>
                 </ion-avatar>
                 <ion-label>
                   <h6>{{ child.childName }}</h6>
@@ -95,7 +95,7 @@
                 @click="clkOpenDialogChildEvent(e)"
               >
                 <ion-avatar aria-hidden="true" slot="start" >
-                  <img :src="utils.makeFileUrl(e.eventImage)" v-if="e.eventImage"/>
+                  <img :src="utils.makeFileUrl(e.eventImage, 'thumbnail')" v-if="e.eventImage"/>
                   <img :src="utils.makeFileUrl(null)" v-else/>
                 </ion-avatar>
                 <ion-avatar
@@ -103,7 +103,7 @@
                   slot="start"
                   style="margin-left: -30px; margin-top: 30px; height: 36px; width: 36px; border: 2px solid white !important;"
                 >
-                  <img :src="utils.makeFileUrl(e.childPhoto)" v-if="e.childPhoto"/>
+                  <img :src="utils.makeFileUrl(e.childPhoto, 'thumbnail')" v-if="e.childPhoto"/>
                   <img :src="utils.makeFileUrl(null)" v-else/>
                 </ion-avatar>
                 <ion-label>
