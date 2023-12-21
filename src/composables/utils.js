@@ -129,8 +129,9 @@ const useUtils = {
     const userInfo = this.presentUserInfo();
     return this.attachmentsAddress() + userInfo.profilePhoto + '?' + new Date().getTime()
   },
-  makeFileUrl (filename) {
+  makeFileUrl (filename, type) {
     if (!filename) return '/assets/default_avatar.svg'
+    filename = type === 'thumbnail' ? filename + '_thumbnail' : filename;
     return this.attachmentsAddress() + filename + '?' + new Date().getTime()
   },
   localStorage: {

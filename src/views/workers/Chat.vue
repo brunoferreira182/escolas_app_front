@@ -17,10 +17,10 @@
               @click="goToChatDetail(c.classId)"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage" style="height: 60px; width: 60px">
-                <img :src="utils.makeFileUrl(c.classImage)" />
+                <img :src="utils.makeFileUrl(c.classImage, 'thumbnail')" />
               </ion-avatar>
               <ion-avatar aria-hidden="true" slot="start" v-else style="height: 60px; width: 60px">
-                <img :src="utils.makeFileUrl(c.image)"/>
+                <img :src="utils.makeFileUrl(c.image, 'thumbnail')"/>
               </ion-avatar>
               <ion-label>
                 <h6>{{ c.className }}</h6>
@@ -39,7 +39,7 @@
               @click="clkOpenDialogChildEvent(e)"
             >
               <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
-                <img :src="utils.makeFileUrl(e.childEventPhoto.filename)" v-if="e.childEventPhoto"/>
+                <img :src="utils.makeFileUrl(e.childEventPhoto.filename, 'thumbnail')" v-if="e.childEventPhoto"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
               </ion-avatar>
               <ion-avatar
@@ -47,7 +47,7 @@
                 slot="start"
                 style="margin-left: -30px; margin-top: 30px; height: 35px; width: 35px; border: 2px solid white !important;"
               >
-                <img :src="utils.makeFileUrl(e.childPhoto)" v-if="e.childPhoto"/>
+                <img :src="utils.makeFileUrl(e.childPhoto, 'thumbnail')" v-if="e.childPhoto"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
               </ion-avatar>
               <ion-label>

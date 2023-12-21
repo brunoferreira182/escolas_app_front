@@ -75,7 +75,7 @@
             :key="i"
           >
             <ion-avatar aria-hidden="true" slot="start">
-              <img :src="utils.makeFileUrl(comment.profileImage)"/>
+              <img :src="utils.makeFileUrl(comment.profileImage, 'thumbnail')"/>
             </ion-avatar>
             <ion-label >
               <ion-text>{{ comment.text }}</ion-text><br />
@@ -134,7 +134,7 @@ export default {
       postReactions: [],
       comments: [],
       commentsPage: 1,
-      commentsRowsPerPage: 4,
+      commentsRowsPerPage: 10,
       noMoreData: false
     }
   },
@@ -247,12 +247,16 @@ export default {
         useFetch(opt).then(r => {
           this.newComment = ''
           this.commentsPage++
-          this.getPostDetailById()
+          this.getPostComments(true)
         })
       }
     },
-    getPostComments () {
+    getPostComments (fromStart) {
       // this.comments = []
+      if (fromStart) {
+        this.comments = []
+        this.commentsPage = 1
+      }
       const opt = {
         route: '/mobile/social/getCommentsByPostId',
         body: {
@@ -265,6 +269,7 @@ export default {
         if (r.data.list.length < 4) {
           this.noMoreData = true
         }
+        
         this.comments.push(...r.data.list)
       })
     },

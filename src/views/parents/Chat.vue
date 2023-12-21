@@ -22,7 +22,7 @@
               slot="start"
               style="height: 60px; width: 60px;"
             >
-              <img :src="utils.makeFileUrl(c.classImage)" v-if="c.classImage"/>
+              <img :src="utils.makeFileUrl(c.classImage, 'thumbnail')" v-if="c.classImage"/>
               <img :src="utils.makeFileUrl('default-avatar.svg')" v-else/>
             </ion-avatar>
             <ion-avatar
@@ -30,7 +30,7 @@
               slot="start"
               style="margin-left: -40px; height: 60px; width: 60px; border: 2px solid white !important;"
             >
-              <img :src="utils.makeFileUrl(c.userImage)" v-if="c.userImage"/>
+              <img :src="utils.makeFileUrl(c.userImage, 'thumbnail')" v-if="c.userImage"/>
               <img :src="utils.makeFileUrl('default-avatar.svg')" v-else/>
             </ion-avatar>
             <ion-label>
@@ -58,7 +58,7 @@
               detail="false"
             >
               <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
-                <img :src="utils.makeFileUrl(e.image.filename)" v-if="e.image"/>
+                <img :src="utils.makeFileUrl(e.image.filename, 'thumbnail')" v-if="e.image"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
               </ion-avatar>
               <ion-avatar
@@ -66,7 +66,7 @@
                 slot="start"
                 style="margin-left: -30px; margin-top: 30px; height: 35px; width: 35px; border: 2px solid white !important;"
               >
-                <img :src="utils.makeFileUrl(e.childPhoto.filename)" v-if="e.childPhoto"/>
+                <img :src="utils.makeFileUrl(e.childPhoto.filename, 'thumbnail')" v-if="e.childPhoto"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
               </ion-avatar>
               <ion-label>

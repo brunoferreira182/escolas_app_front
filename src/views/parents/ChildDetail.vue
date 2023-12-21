@@ -10,7 +10,7 @@
           lines="none"
           class="profile-item"
         >
-          <ion-avatar style="width:60px; height:auto" >
+          <ion-avatar style="width:60px; height: 60px;" >
             <img :src="utils.makeFileUrl(userDetail.userData.image)" class="profile-avatar">
           </ion-avatar>
           <ion-label class="q-px-sm">
