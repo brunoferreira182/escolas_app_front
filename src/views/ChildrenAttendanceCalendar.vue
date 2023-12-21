@@ -39,7 +39,7 @@
               presentation="date" 
               class="q-ma-md"
               :preferWheel="false"
-              :highlighted-dates="c.childAttendanceData"
+              :highlighted-dates="c.highlightedDates"
             />
             <!-- <ion-datetime 
               presentation="date" 

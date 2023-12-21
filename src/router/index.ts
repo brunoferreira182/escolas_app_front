@@ -22,6 +22,7 @@ import solicitationsDetail from '../views/parents/SolicitationsDetail.vue'
 import tabsLayoutWorkers from '../layouts/TabsLayoutWorkers.vue'
 import workerClass from '../views/workers/Class.vue'
 import workerChat from '../views/workers/Chat.vue'
+import workerAttendance from '../views/workers/Attendance.vue'
 import workerProfile from '../views/workers/Profile.vue'
 import chatDetail from '../views/parents/ChatDetail.vue'
 
@@ -170,7 +171,8 @@ const routes: Array<RouteRecordRaw> = [
         name: 'TabsWorkers',
         component: tabsLayoutWorkers,
         children: [
-          { path: '/', redirect: '/tabsWorkers/class'},
+          { path: '/', redirect: '/tabsWorkers/attendance'},
+          { path: '/tabsWorkers/attendance', component: workerAttendance},
           { path: '/tabsWorkers/class', component: workerClass},
           { path: '/tabsWorkers/chat', component: workerChat},
           { path: '/tabsWorkers/profile', component: workerProfile},
