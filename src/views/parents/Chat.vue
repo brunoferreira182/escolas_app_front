@@ -49,7 +49,7 @@
           </ion-item>
         </ion-list>
         <ion-list :inset="true" >
-          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico de atividades</div>
+          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Atividades de hoje</div>
           <div v-if="childEventsHistory && childEventsHistory.length">
             <ion-item 
               v-for="e in childEventsHistory"

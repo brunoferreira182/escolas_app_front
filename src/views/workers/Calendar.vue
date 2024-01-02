@@ -14,17 +14,15 @@
           class="q-pa-sm"
           @click="$router.push('/calendarEventDetail?schoolEventId=' + event._id)"
         >
-          <div class="unread-indicator-wrapper" slot="start">
-            <div class="unread-indicator"></div>
-          </div>
+          <ion-avatar aria-hidden="true" slot="start">
+            <img :src="utils.makeFileUrl(event.eventImage, 'thumbnail')" />
+          </ion-avatar>
           <ion-label>
             <div class="text-h6 ion-text-capitalize ">
               {{ event.eventName }}
             </div>
             <p>
-              {{ event.eventDate.local.split('-')[2] }}/
-              {{ event.eventDate.local.split('-')[1] }}/
-              {{ event.eventDate.local.split('-')[0] }}
+              {{ event.eventDate.local.split('-')[2] }}/{{ event.eventDate.local.split('-')[1] }}/{{ event.eventDate.local.split('-')[0] }}
             </p>
             <p class="text ion-no-margin">
               {{ showFullDescription ? event.eventDescription : event.eventDescription.slice(0, 100) }}
@@ -59,7 +57,9 @@ import { IonPage,
   IonLabel,
   IonList,
   IonItem,
-  IonRow  } from '@ionic/vue';
+  IonRow,
+  IonAvatar
+} from '@ionic/vue';
 </script>
 
 <script>
@@ -97,6 +97,11 @@ import { IonPage,
   });
 </script>
 <style scoped>
+ion-avatar {
+  --border-radius: 4px;
+  width: 60px;
+  height: 60px;
+}
 .more-button {
   background: none;
   border: none;
