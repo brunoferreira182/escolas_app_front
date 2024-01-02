@@ -32,26 +32,15 @@
                 <img :src="utils.makeFileUrl(c.childPhoto ? c.childPhoto : null)"/>
               </ion-avatar>
             </div> -->
-            <ion-label class="q-ma-md">
+            <ion-label class="">
               <strong class="text-capitalize text-h5">{{ c.name }}</strong><br/>
             </ion-label>
             <ion-datetime 
               presentation="date" 
-              class="q-ma-md"
+              class=""
               :preferWheel="false"
               :highlighted-dates="c.highlightedDates"
             />
-            <!-- <ion-datetime 
-              presentation="date" 
-              class="q-ma-md"
-              :preferWheel="false"
-              style="border-radius: .5rem;"
-              :highlighted-dates="[{
-                date: this.formatTimestamp(c.createdAt.createdAt),
-                textColor: '#FFFFFF',
-                backgroundColor: c.childAttendanceType === 'present' ? '#1d9b0d' : '#9b0d0d',
-              }]"
-            /> -->
           </ion-card>
         </div>
         <div v-else>

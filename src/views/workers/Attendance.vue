@@ -30,10 +30,10 @@
             </ion-avatar>
             <ion-label>
               <div class="text-h6">{{ c.className }}</div>
-              <ion-badge color="success">Função: {{ c.functionName }}</ion-badge>
+              <ion-badge color="primary">Função: {{ c.functionName }}</ion-badge>
               <div>
                 <ion-button 
-                  color="tertiary" 
+                  color="success" 
                   slot="end"
                   @click="clkOpenModalAttendance(c)"
                 > 
@@ -50,12 +50,11 @@
             <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
             <div slot="content">
               <div class="q-px-md text-caption">
-                Selecione um aluno para inserir uma atividade individualmente
+                Selecione um aluno para inserir uma presença individualmente
               </div>
               <ion-item 
                 v-for="child in childrenInClassList"
                 :key="child"
-                @click="clkOpenDialogChildEvent(child)"
                 :button="true"
                 detail="false"
               >
@@ -69,55 +68,32 @@
                   <h6>{{ child.childName }}</h6>
                   <ion-badge  color="primary"> {{ child.className }}</ion-badge>
                 </ion-label>
+                <!-- <ion-label slot="end"> -->
+                  <ion-button 
+                    color="success"
+                    shape="round"
+                    slot="end"
+                    @click="clkAddPresenceToChild(child)"
+                  > 
+                    <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
+                  </ion-button>
+                  <ion-button 
+                    color="danger"
+                    shape="round"
+                    slot="end"
+                  > 
+                    <ion-icon slot="icon-only" :icon="close"></ion-icon>
+                  </ion-button>
+                <!-- </ion-label> -->
               </ion-item>
             </div>
           </ion-accordion>
         </ion-accordion-group>
       </ion-list>
 
-      <ion-list :inset="true" color="light">
-        <ion-accordion-group>
-          <ion-accordion value="atividades">
-            <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas presenças</div>
-            <div slot="content">
-              <ion-item 
-                v-for="e in classEventsHistory"
-                :key="e"
-                detail="false"
-              >
-                <ion-avatar aria-hidden="true" slot="start" >
-                  <img :src="utils.makeFileUrl(e.eventImage)" v-if="e.eventImage"/>
-                  <img :src="utils.makeFileUrl(null)" v-else/>
-                </ion-avatar>
-                <ion-avatar
-                  aria-hidden="true"
-                  slot="start"
-                  style="margin-left: -30px; margin-top: 30px; height: 36px; width: 36px; border: 2px solid white !important;"
-                >
-                  <img :src="utils.makeFileUrl(e.childPhoto)" v-if="e.childPhoto"/>
-                  <img :src="utils.makeFileUrl(null)" v-else/>
-                </ion-avatar>
-                <ion-label>
-                  <h6 class="text-capitalize">{{ e.childName }}</h6>
-                  <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
-                  <ion-note color="medium" class="ion-text-wrap">
-                    {{ e.eventObs }}
-                  </ion-note>
-                </ion-label>
-                <div class="metadata-end-wrapper" slot="end">
-                  <ion-note color="medium text-caption">
-                    {{ e.createdAt.createdAtInFullShort }}<br>
-                    {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                  </ion-note>
-                </div>
-              </ion-item>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-      </ion-list>
-      
-      
-      <ion-modal 
+    </ion-content>
+
+    <ion-modal 
         :is-open="dialogAttendance.open" 
         @ionModalDidPresent="startModalAttendance()" 
         @didDismiss="clearModalAttendanceData()"
@@ -198,38 +174,7 @@
         </ion-content>
         <ion-button @click="createUserChildAttendance" class="q-pa-md" expand="block">Salvar</ion-button>
       </ion-modal>
-  
-    </ion-content>
-    <ion-alert v-if="formattedChildEventList"
-      :is-open="dialogInsertActivity.open"
-      header="Escolha uma atividade"
-      :backdropDismiss="false"
-      animated
-      :inputs="formattedChildEventList"
-      :buttons="[
-        {
-          text: 'Depois',
-          handler: () => {
-            dialogInsertActivity.open = false;
-          },
-        },
-        {
-          text: 'Confirmar',
-          handler: (e) => {
-            dialogInsertActivity.open = false;
-            selectOptionActivity(e)
-          },
-        },
-      ]"
-    />
-    <DialogInsertChildEvent
-      :dialogInsertChildEvent="dialogInsertChildEvent"
-      :selectedEvent="selectedEvent"
-      :childEventsHistory="childEventsHistory"
-      :pagination="pagination"
-      :dialogInsertActivity="dialogInsertActivity"
-      @close="closeDialogInserChildren"
-    />
+    
   </ion-page>
 </template>
 
@@ -259,14 +204,19 @@ import {
   IonRow,
   IonAvatar,
   IonAccordion, IonAccordionGroup,
-  IonNote
+  IonNote,
+  IonIcon
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import { caretDownSharp } from 'ionicons/icons';
+import {
+  caretDownSharp,
+  checkmark,
+  close
+} from 'ionicons/icons';
 import utils from '../../composables/utils'
 import PhotoHandler from '../../components/PhotoHandler.vue'
-import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
+// import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 </script>
 <script>
 
@@ -328,8 +278,7 @@ export default {
     utils.loading.hide()
     this.getClassesByUserId()
     this.getChildrenInClassList()
-    this.verifyIfHasChildId()
-    this.getLastAttendanceFromChildrenOfClasses()
+    // this.getLastAttendanceFromChildrenOfClasses()
     // this.getChildEventsByUserId()
   },
   watch: {
@@ -337,61 +286,15 @@ export default {
       if (to.path === '/tabsWorkers/class') {
         this.getClassesByUserId()
         this.getChildrenInClassList()
-        this.verifyIfHasChildId()
-        this.getLastAttendanceFromChildrenOfClasses()
+        // this.getLastAttendanceFromChildrenOfClasses()
         // this.getChildEventsByUserId()
       }
     }
   },
   methods: {
-    startModal(){
-      this.getChildrenListByClassId()
-      this.getLastAttendanceFromChildrenOfClasses(this.dialogInsertClassEvent.data.classId)
-      this.getChildrenInClassList()
-    },
     startModalAttendance(){
       this.getChildrenListByClassId()
       this.getChildrenInClassList()
-    },
-    getLastAttendanceFromChildrenOfClasses(classId) {
-      const opt = {
-        route: '/mobile/workers/classes/getLastAttendanceFromChildrenOfClasses',
-        body: {
-          page: 1,
-          rowsPerPage: 100,
-        }
-      }
-      if (classId) opt.body.classId = classId
-      useFetch(opt).then((r) => {
-        if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
-        else {
-          this.classEventsHistory = r.data.list
-        } 
-      })
-    },
-    getLastActivityFromChild() {
-      const opt = {
-        route: '/mobile/workers/classes/getLastActivityFromChild',
-        body: {
-          page: 1,
-          rowsPerPage: 100,
-          childId: this.dialogInsertChildEvent.data.childId
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast("Ocorreu um erro, tente novamente.")
-          return
-        }
-        this.childEventsHistory = r.data.list
-        this.pagination.page++
-      })
-    },
-    verifyIfHasChildId() {
-      if (this.$route.query.childId !== undefined) {
-        this.clkOpenDialogChildEvent(this.$route.query.childId)
-        return
-      }
     },
     cancelPhotoHandler () {
       this.startPhotoHandler = false
@@ -405,17 +308,6 @@ export default {
         name: null
       },
       this.dialogInsertClassEvent.obs = ''
-    },
-    selectOptionActivity(e) {
-      this.dialogInsertChildEvent.childEventId = e
-      this.selectedEvent = this.childEventsList.filter(event => event._id === e)
-    },
-    openActivityAlert() {
-      this.dialogInsertActivity.open = true
-    },
-    filterChildren(event) {
-      const query = event.target.value.toLowerCase();
-      this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
     },
     handleCheckboxChangeAll(e) {
       if (e.detail.checked === true) {
@@ -553,11 +445,11 @@ export default {
       this.dialogInsertChildEvent.obs = ''
       this.dialogInsertChildEvent.childEventId = ''
     },
-    clkOpenDialogChildEvent(child){
-      this.dialogInsertChildEvent.data = child
-      this.dialogInsertChildEvent.open = true
-      this.getLastActivityFromChild()
-    },
+    // clkOpenDialogChildEvent(child){
+    //   this.dialogInsertChildEvent.data = child
+    //   this.dialogInsertChildEvent.open = true
+    //   this.getLastActivityFromChild()
+    // },
     getChildEvents() {
       const opt = {
         route: '/mobile/workers/getChildEvents',
