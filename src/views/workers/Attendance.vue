@@ -5,14 +5,17 @@
       :backButton="false"
     />
     <ion-content color="light">
-      <ion-searchbar 
+      <!-- <ion-searchbar 
         show-clear-button="always"
         animated="true" 
         placeholder="Pesquisar"
         :debounce="400"
         v-model="filterValue"
         @ionInput="getChildrenInClassList()"
-      />
+      /> -->
+      <div>
+        <ion-datetime presentation="month-year"></ion-datetime>
+      </div>
       <Transition name="bounce">
         <ion-list :inset="true" v-if="show">
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
@@ -66,25 +69,32 @@
                 </ion-avatar>
                 <ion-label>
                   <h6>{{ child.childName }}</h6>
-                  <ion-badge  color="primary"> {{ child.className }}</ion-badge>
+                  <ion-badge  color="primary"> {{ child.className }}</ion-badge><br>
+                  
                 </ion-label>
-                <!-- <ion-label slot="end"> -->
+                <ion-label slot="end">
                   <ion-button 
                     color="success"
                     shape="round"
-                    slot="end"
-                    @click="clkAddPresenceToChild(child)"
+                    @click="clkAddPresenceToChild(child, 'presença')"
                   > 
                     <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
                   </ion-button>
                   <ion-button 
                     color="danger"
                     shape="round"
-                    slot="end"
+                    @click="clkAddPresenceToChild(child, 'falta')"
                   > 
                     <ion-icon slot="icon-only" :icon="close"></ion-icon>
-                  </ion-button>
-                <!-- </ion-label> -->
+                  </ion-button><br>
+                  <ion-chip
+                    v-if="child.attendanceData"
+                    :outline="true"
+                    :color="child.attendanceData.childAttendanceType === 'present' ? 'success' : 'danger'"
+                  >
+                    {{ child.attendanceData.childAttendanceType === 'present' ? 'Presente' : 'Ausente' }}
+                  </ion-chip>
+                </ion-label>
               </ion-item>
             </div>
           </ion-accordion>
@@ -177,6 +187,14 @@
       </ion-content>
       <ion-button @click="createUserChildAttendance" class="q-pa-md" expand="block">Salvar</ion-button>
     </ion-modal>
+
+    <ion-alert
+      :isOpen="dialogConfirmPresence.open"
+      :header="`Confirma ${dialogConfirmPresence.action} para ${dialogConfirmPresence.childName}?`"
+      :buttons="dialogConfirmPresence.alertButtons"
+      @didDismiss="dialogConfirmPresence.open = false"
+      
+    ></ion-alert>
     
   </ion-page>
 </template>
@@ -208,7 +226,8 @@ import {
   IonAvatar,
   IonAccordion, IonAccordionGroup,
   IonNote,
-  IonIcon
+  IonIcon,
+  IonDatetime
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -219,7 +238,6 @@ import {
 } from 'ionicons/icons';
 import utils from '../../composables/utils'
 import PhotoHandler from '../../components/PhotoHandler.vue'
-// import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 </script>
 <script>
 
@@ -227,6 +245,13 @@ export default {
   name: "Attendance",
   data() {
     return {
+      dialogConfirmPresence: {
+        open: false,
+        action: '',
+        childName: '',
+        childId: '',
+        alertButtons: null
+      },
       startPhotoHandler: false,
       dialogInsertChildEvent: {
         open: false,
@@ -281,6 +306,17 @@ export default {
     utils.loading.hide()
     this.getClassesByUserId()
     this.getChildrenInClassList()
+    this.dialogConfirmPresence.alertButtons = [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+        handler: () => { this.dialogConfirmPresence.open = false }
+      },
+      {
+        text: 'Confirmar',
+        handler: () => { this.createUserChildAttendanceOneChild() }
+      }
+    ]
   },
   watch: {
     $route (to, from) {
@@ -291,6 +327,35 @@ export default {
     }
   },
   methods: {
+    createUserChildAttendanceOneChild() {
+      const opt = {
+        route: '/mobile/workers/createUserChildAttendance',
+        body: {
+          selectedChildren: [{_id: this.dialogConfirmPresence.childId}],
+          childAttendanceType: this.dialogConfirmPresence.action === 'presença' ? 'present' : 'absent',
+          obs: '',
+          classId: this.dialogConfirmPresence.classId
+        },
+      }
+      utils.loading.show()
+      useFetch(opt).then((r) => {
+        utils.loading.hide()
+        if (r.error) {
+          utils.toast('Ocorreu um erro. Tente novamente.')
+          return
+        }
+        this.dialogConfirmPresence.open = false
+        utils.toast('Comparecimento preenchido com sucesso!')
+        this.getChildrenInClassList()
+      })
+    },
+    clkAddPresenceToChild (child, action) {
+      this.dialogConfirmPresence.action = action
+      this.dialogConfirmPresence.childName = child.childName
+      this.dialogConfirmPresence.childId = child.childId
+      this.dialogConfirmPresence.classId = child.classId
+      this.dialogConfirmPresence.open = true
+    },
     clkOpenModalAttendance(c){
       this.dialogAttendance.data = c
       this.dialogAttendance.open = true
@@ -401,6 +466,7 @@ export default {
           this.clearModalAttendanceData()
           this.dialogAttendance.open = false
           utils.toast('Comparecimento preenchido com sucesso!')
+          this.getChildrenInClassList()
       })
     },
     handleCheckboxChange(childId, e) {

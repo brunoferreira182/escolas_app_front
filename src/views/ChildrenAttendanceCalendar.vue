@@ -28,7 +28,7 @@
           >
             <!-- <div class="">
               <ion-avatar aria-hidden="true" slot="center" style="width: 46px; height: 46px;">
-                <img :src="utils.makeFileUrl(c.childPhoto ? c.childPhoto : null)"/>
+                <img :src="utils.makeFileUrl(c.childPhoto)"/>
               </ion-avatar>
             </div> -->
             <ion-label class="">
@@ -39,6 +39,7 @@
               class=""
               :preferWheel="false"
               :highlighted-dates="c.highlightedDates"
+              @ionChange="onChangeDate($event, c)"
             />
           </ion-card>
         </div>
@@ -71,19 +72,6 @@ export default defineComponent({
     return {
       utils,
       childAttendance: [],
-      // highlightedDates: [],
-      // highlightedDates: [
-      //   {
-      //     date: '2023-12-19',
-      //     textColor: '#800080',
-      //     backgroundColor: '#ffc0cb',
-      //   },
-      //   {
-      //     date: '2023-12-20',
-      //     textColor: '#09721b',
-      //     backgroundColor: '#c8e5d0',
-      //   },
-      // ]
     }
   },
   mounted () {
@@ -98,6 +86,12 @@ export default defineComponent({
     }
   },
   methods: {
+    onChangeDate($event, c) {
+      console.log($event.detail.value, c)
+      const splitDate = $event.detail.value.split('T')
+      const monthYear = splitDate[0].substring(0, 7)
+      this.getChildAttendanceByDate(monthYear)
+    },
     formatTimestamp(timestamp) {
       const date = new Date(timestamp);
       const year = date.getFullYear();
@@ -105,43 +99,14 @@ export default defineComponent({
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     },
-//     getChildAttendanceByDate() {
-//   const opt = {
-//     route: '/mobile/workers/getChildAttendanceByDate',
-//   };
-
-//   useFetch(opt).then((r) => {
-//     if (r.error) {
-//       utils.toast("Ocorreu um erro ao exibir o calendário. Tente novamente mais tarde");
-//       return;
-//     }
-
-//     console.log(r);
-
-//     this.childAttendance = r.data;
-//     this.highlightedDates = [];
-
-//     this.childAttendance.forEach((child) => {
-//       child.childAttendanceData.forEach((attendance) => {
-//         const date = this.formatTimestamp(attendance.createdAt.createdAt);
-//         const textColor = '#FFFFFF';
-//         const backgroundColor = attendance.color || (attendance.childAttendanceType === 'present' ? '#1d9b0d' : '#9b0d0d');
-
-//         this.highlightedDates.push({
-//           date,
-//           textColor,
-//           backgroundColor,
-//         });
-//       });
-//     });
-
-//     console.log(this.highlightedDates, 'OPDKASOPKDO');
-//   });
-// },
-
-    getChildAttendanceByDate(){
+    getChildAttendanceByDate(monthYear){
       const opt = {
         route: '/mobile/workers/getChildAttendanceByDate',
+      }
+      if (monthYear) {
+        opt.body = {
+          monthYear,
+        }
       }
       useFetch(opt).then((r) => {
         if (r.error) {
@@ -150,14 +115,6 @@ export default defineComponent({
         }
         console.log(r)
         this.childAttendance = r.data
-        // this.highlightedDates = this.childAttendance.flatMap((child) =>
-        //   child.childAttendanceData.map((attendance) => ({
-        //     date: this.formatTimestamp(attendance.createdAt.createdAt),
-        //     textColor: '#FFFFFF',
-        //     backgroundColor: attendance.color
-        //   }))
-        // );
-        // console.log(this.highlightedDates, 'OPDKASOPKDO')
       })
     },
   }
