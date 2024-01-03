@@ -2,7 +2,6 @@
   <ion-page>
     <ToolbarEscolas
       title="Comparecimento"
-      :backButton="true"
     />
     <ion-content color="light" >
       <div class="ion-text-center q-px-md">

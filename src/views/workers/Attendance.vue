@@ -33,11 +33,11 @@
               <ion-badge color="primary">Função: {{ c.functionName }}</ion-badge>
               <div>
                 <ion-button 
-                  color="success" 
+                  color="secondary" 
                   slot="end"
                   @click="clkOpenModalAttendance(c)"
                 > 
-                  Marcar presença
+                  Marcar presença/falta
                 </ion-button>
               </div>
             </ion-label>
@@ -94,86 +94,89 @@
     </ion-content>
 
     <ion-modal 
-        :is-open="dialogAttendance.open" 
-        @ionModalDidPresent="startModalAttendance()" 
-        @didDismiss="clearModalAttendanceData()"
-      >
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-button @click="clearModalAttendanceData">Fechar</ion-button>
-            </ion-buttons>
-            <ion-title >Comparecimento</ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content>
-          <div class="ion-text-center q-pa-md">
-            <ion-row>
-              <ion-col>
-                <div class="modal-attendance">
-                  <div class="q-ma-sm text-h6">
-                    Presença
-                  </div>
-                  <ion-checkbox 
-                    v-model="dialogAttendance.isAttendanceChecked"
-                    @ionChange="handleCheckboxAttendanceChange('attendance')"
-                  />
+      :is-open="dialogAttendance.open" 
+      @didDismiss="clearModalAttendanceData()"
+    >
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button @click="clearModalAttendanceData">Fechar</ion-button>
+          </ion-buttons>
+          <ion-title >Comparecimento</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="ion-text-center q-pa-md">
+          <ion-row>
+            <ion-col>
+              <div class="modal-attendance">
+                <div class="q-ma-sm text-h6">
+                  Presença
                 </div>
-              </ion-col>
-              <ion-col>
-                <div class="modal-absent">
-                  <div class="q-ma-sm text-h6">
-                    Falta
-                  </div>
-                  <ion-checkbox 
-                    v-model="dialogAttendance.isAbsentChecked"
-                    @ionChange="handleCheckboxAttendanceChange('absent')"
-                  />
-                </div>
-              </ion-col>
-            </ion-row>
-          </div>
-          <div class="input-wrapper  q-px-md q-mx-md">
-            <ion-textarea
-              label="Descrição (opcional)"
-              label-placement="floating"
-              v-model="dialogAttendance.obs"
-              placeholder="Descrição da sobre o comparecimento"
-              :auto-grow="true"
-            ></ion-textarea>
-          </div>
-          <ion-list :inset="true">
-            <ion-item class="ion-text-left text-h6">
-              <div
-                :class="`${dialogAttendance.isAttendanceChecked ? 'modal-attendance' : 'modal-absent'}`"
-              >
                 <ion-checkbox 
-                  v-model="selectAllChildren" 
-                  @ionChange="handleCheckboxChangeAll($event)"
-                />
+                  v-model="dialogAttendance.isAttendanceChecked"
+                  @ionChange="handleCheckboxAttendanceChange('attendance')"
+                  aria-label=""
+                ></ion-checkbox>
               </div>
-              <ion-label class="q-px-md ion-text-capitalize">
-                Todas crianças
-              </ion-label>
-            </ion-item>
-            <ion-item
-              v-for="child in classList"
-              :key="child"
+            </ion-col>
+            <ion-col>
+              <div class="modal-absent">
+                <div class="q-ma-sm text-h6">
+                  Falta
+                </div>
+                <ion-checkbox 
+                  v-model="dialogAttendance.isAbsentChecked"
+                  @ionChange="handleCheckboxAttendanceChange('absent')"
+                  aria-label=""
+                ></ion-checkbox>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+        <div class="input-wrapper  q-px-md q-mx-md">
+          <ion-textarea
+            label="Descrição (opcional)"
+            label-placement="floating"
+            v-model="dialogAttendance.obs"
+            placeholder="Descrição da sobre o comparecimento"
+            :auto-grow="true"
+          ></ion-textarea>
+        </div>
+        <ion-list :inset="true">
+          <ion-item class="ion-text-left text-h6">
+            <div
+              :class="`${dialogAttendance.isAttendanceChecked ? 'modal-attendance' : 'modal-absent'}`"
             >
-              <div :class="`${dialogAttendance.isAttendanceChecked ? 'modal-attendance' : 'modal-absent'}`">
-                <ion-checkbox 
-                  :checked="child.isChecked" 
-                  @ionChange="handleCheckboxAttendance(child.childId, $event)" 
-                />
-              </div>
-              <ion-label class="q-px-md ion-text-capitalize">
-                {{ child.childName }}
-              </ion-label>
-            </ion-item>
-          </ion-list>
-        </ion-content>
-        <ion-button @click="createUserChildAttendance" class="q-pa-md" expand="block">Salvar</ion-button>
-      </ion-modal>
+              <ion-checkbox 
+                v-model="selectAllChildren" 
+                @ionChange="handleCheckboxChangeAll($event)"
+                aria-label=""
+              ></ion-checkbox>
+            </div>
+            <ion-label class="q-px-md ion-text-capitalize">
+              Todas crianças
+            </ion-label>
+          </ion-item>
+          <ion-item
+            v-for="child in classList"
+            :key="child"
+          >
+            <div :class="`${dialogAttendance.isAttendanceChecked ? 'modal-attendance' : 'modal-absent'}`">
+              <ion-checkbox 
+                :checked="child.isChecked" 
+                @ionChange="handleCheckboxAttendance(child.childId, $event)"
+                aria-label=""
+              ></ion-checkbox>
+            </div>
+            <ion-label class="q-px-md ion-text-capitalize">
+              {{ child.childName }}
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+      <ion-button @click="createUserChildAttendance" class="q-pa-md" expand="block">Salvar</ion-button>
+    </ion-modal>
     
   </ion-page>
 </template>
@@ -278,23 +281,38 @@ export default {
     utils.loading.hide()
     this.getClassesByUserId()
     this.getChildrenInClassList()
-    // this.getLastAttendanceFromChildrenOfClasses()
-    // this.getChildEventsByUserId()
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsWorkers/class') {
+      if (to.path === '/tabsWorkers/attendance') {
         this.getClassesByUserId()
         this.getChildrenInClassList()
-        // this.getLastAttendanceFromChildrenOfClasses()
-        // this.getChildEventsByUserId()
       }
     }
   },
   methods: {
-    startModalAttendance(){
-      this.getChildrenListByClassId()
-      this.getChildrenInClassList()
+    clkOpenModalAttendance(c){
+      this.dialogAttendance.data = c
+      this.dialogAttendance.open = true
+      this.getChildrenListByClassId(c.classId)
+    },
+    getChildrenListByClassId(classId) {
+      const opt = {
+        route: '/mobile/workers/getChildrenListByClassId',
+        body: {
+          classId,
+          page: 1,
+          rowsPerPage: 100
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this.classList = r.data.list
+        }
+        else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
     },
     cancelPhotoHandler () {
       this.startPhotoHandler = false
@@ -406,24 +424,7 @@ export default {
         })
       }
     },
-    getChildrenListByClassId() {
-      const opt = {
-        route: '/mobile/workers/getChildrenListByClassId',
-        body: {
-          classId: this.dialogInsertClassEvent.data.classId,
-          page: 1,
-          rowsPerPage: 100
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (!r.error) {
-          this.classList = r.data.list
-        }
-        else {
-          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
-        }
-      })
-    },
+    
     clearModalAttendanceData(){
       this.dialogAttendance.open = false
       this.selectedChildren = []
@@ -473,10 +474,7 @@ export default {
         }))
       })
     },
-    clkOpenModalAttendance(c){
-      this.dialogAttendance.data = c
-      this.dialogAttendance.open = true
-    },
+    
     getChildrenInClassList() {
       if (this.filterValue !== '') {
         this.show = false

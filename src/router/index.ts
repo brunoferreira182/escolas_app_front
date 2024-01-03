@@ -65,11 +65,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Messenger',
         component: Messenger
       },
-      {
-        path: '/childrenAttendanceCalendar',
-        name: 'ChildrenAttendanceCalendar',
-        component: ChildrenAttendanceCalendar
-      },
+      // {
+      //   path: '/childrenAttendanceCalendar',
+      //   name: 'ChildrenAttendanceCalendar',
+      //   component: ChildrenAttendanceCalendar
+      // },
       {
         path: '/register',
         name: 'Register',
@@ -189,6 +189,11 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsParents/chat', component: parentsChat },
           { path: '/tabsParents/profile', component: parentsProfile },
           { path: '/tabsParents/more', component: parentsMore },
+          {
+            path: '/childrenAttendanceCalendar',
+            name: 'ChildrenAttendanceCalendar',
+            component: ChildrenAttendanceCalendar
+          },
         ]
       },
       { path: '/postDetail', component: postDetail },
