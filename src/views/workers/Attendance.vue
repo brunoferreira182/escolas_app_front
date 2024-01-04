@@ -13,8 +13,8 @@
         v-model="filterValue"
         @ionInput="getChildrenInClassList()"
       /> -->
-      <div>
-        <ion-datetime presentation="month-year"></ion-datetime>
+      <div class="q-mt-md">
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
       </div>
       <Transition name="bounce">
         <ion-list :inset="true" v-if="show">
@@ -188,6 +188,14 @@
       <ion-button @click="createUserChildAttendance" class="q-pa-md" expand="block">Salvar</ion-button>
     </ion-modal>
 
+    <ion-modal :keep-contents-mounted="true">
+      <ion-datetime
+        id="datetime"
+        presentation="date"
+        @ionChange="onChangeDate($event, c)"
+      ></ion-datetime>
+    </ion-modal>
+
     <ion-alert
       :isOpen="dialogConfirmPresence.open"
       :header="`Confirma ${dialogConfirmPresence.action} para ${dialogConfirmPresence.childName}?`"
@@ -227,7 +235,9 @@ import {
   IonAccordion, IonAccordionGroup,
   IonNote,
   IonIcon,
-  IonDatetime
+  IonDatetime,
+  IonGrid,
+  IonDatetimeButton
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -245,6 +255,10 @@ export default {
   name: "Attendance",
   data() {
     return {
+      modalChangeDate: {
+        open: false,
+        date: ''
+      },
       dialogConfirmPresence: {
         open: false,
         action: '',
@@ -299,7 +313,8 @@ export default {
       filterValue: '',
       selectAllChildren: false,
       formattedChildEventList: null,
-      childEventsHistory: []
+      childEventsHistory: [],
+      dateAttendance: null
     };
   },
   mounted(){
@@ -317,6 +332,7 @@ export default {
         handler: () => { this.createUserChildAttendanceOneChild() }
       }
     ]
+    console.log(document.getElementById('time-button'), 'consoloooo')
   },
   watch: {
     $route (to, from) {
@@ -327,6 +343,28 @@ export default {
     }
   },
   methods: {
+    onChangeDate($event, c) {
+      this.dateAttendance = $event.detail.value.split('T')[0]
+      this.getChildrenInClassList()
+
+      // 
+      
+      // const opt = {
+      //   route: '/mobile/workers/getChildAttendanceByDate',
+      //   body: {
+      //     childId: c.childId,
+      //     monthYear
+      //   }
+      // }
+      // useFetch(opt).then((r) => {
+      //   if (r.error) {
+      //     utils.toast('Ocorreu um erro. Tente novamente.')
+      //     return
+      //   }
+      //   c.highlightedDates = r.data.list.map((date) => date.date)
+      // })
+    
+    },
     createUserChildAttendanceOneChild() {
       const opt = {
         route: '/mobile/workers/createUserChildAttendance',
@@ -334,7 +372,8 @@ export default {
           selectedChildren: [{_id: this.dialogConfirmPresence.childId}],
           childAttendanceType: this.dialogConfirmPresence.action === 'presença' ? 'present' : 'absent',
           obs: '',
-          classId: this.dialogConfirmPresence.classId
+          classId: this.dialogConfirmPresence.classId,
+          dateAttendance: this.dateAttendance
         },
       }
       utils.loading.show()
@@ -367,7 +406,8 @@ export default {
         body: {
           classId,
           page: 1,
-          rowsPerPage: 100
+          rowsPerPage: 100,
+          dateAttendance: this.dateAttendance
         }
       }
       useFetch(opt).then((r) => {
@@ -550,7 +590,8 @@ export default {
         body: {
           page: 1,
           rowsPerPage: 100,
-          searchString: this.filterValue
+          searchString: this.filterValue,
+          dateAttendance: this.dateAttendance
         }
       }
       useFetch(opt).then((r) => {
@@ -582,7 +623,9 @@ export default {
 };
 </script>
 <style scoped>
-
+#time-button {
+  display: none;
+}
 .modal-absent ion-checkbox {
   --size: 32px;
   --checkbox-background-checked: #9b0d0d;
