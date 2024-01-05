@@ -103,17 +103,12 @@ export default defineComponent({
       const opt = {
         route: '/mobile/workers/getChildAttendanceByDate',
       }
-      if (monthYear) {
-        opt.body = {
-          monthYear,
-        }
-      }
+      if (monthYear) opt.body = { monthYear }
       useFetch(opt).then((r) => {
         if (r.error) {
           utils.toast("Ocorreu um erro ao exibir o calendário. Tente novamente mais tarde")
           return
         }
-        console.log(r)
         this.childAttendance = r.data
       })
     },

@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Grupos de conversa"
+      title="Salas"
       :backButton="false"
     />
     <ion-content color="light">
@@ -29,7 +29,17 @@
             </ion-item>
           </ion-list>
         </div>
-        <div v-if="childEventsHistory">
+        <div v-else>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Você não está em nenhuma sala</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              Procure um responsável da escola para conferir qual turma você participa.
+            </ion-card-content>
+          </ion-card>
+        </div>
+        <!-- <div v-if="childEventsHistory">
           <ion-list :inset="true" >
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico de atividades</div>
             <ion-item 
@@ -65,17 +75,8 @@
               </div>
             </ion-item>
           </ion-list>
-        </div>
-        <div v-else>
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Você não está em nenhuma sala</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Procure um responsável da escola para conferir qual turma você participa.
-            </ion-card-content>
-          </ion-card>
-        </div>
+        </div> -->
+        
       </div>
     </ion-content>
     <ion-alert v-if="formattedChildEventList"
@@ -253,7 +254,7 @@ export default {
     },
     startView () {
       this.getClassesByUserId()
-      this.getLastActivityFromChildrenOfClasses()
+      // this.getLastActivityFromChildrenOfClasses()
     },  
     clkOpenDialogChildEvent(child) {
       this.dialogInsertChildEvent.data = child

@@ -43,6 +43,7 @@ import storyDetail from '../views/parents/StoryDetail.vue'
 import calendarEventDetail from '../views/workers/CalendarEventDetail.vue'
 import Messenger from '../views/Messenger.vue';
 import ChildrenAttendanceCalendar from '../views/ChildrenAttendanceCalendar.vue';
+import MealMenu from '../views/MealMenu.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -206,6 +207,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'ChatMedia',
         component: chatMedia
       },
+      { path: '/mealMenu', component: MealMenu },
     ]
   },
 ]

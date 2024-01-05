@@ -34,7 +34,7 @@
             v-for="resp in userDetail.responsibleData"
             :key="resp"
           >
-            <ion-avatar aria-hidden="true" slot="start">
+            <ion-avatar aria-hidden="true" slot="start" style="width:60px; height: 60px;">
               <img :src="utils.makeFileUrl(resp.responsibleImage)"/>
             </ion-avatar>
             <ion-label>
@@ -43,6 +43,38 @@
             </ion-label>
           </ion-item>
       </ion-list>
+      <div class="q-mt-md">
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+      </div>
+
+      <h2 class="q-px-md">Comparecimento</h2>
+      <ion-list :inset="true" >
+        <ion-item 
+          v-for="e in childAttendance"
+          :key="e"
+          detail="false"
+        >
+          <ion-label>
+            <ion-badge
+              v-if="e.childAttendanceType === 'present'"
+              color="success">Presença
+            </ion-badge>
+            <ion-badge
+              v-else-if="e.childAttendanceType === 'absent'"
+              color="danger">Ausência
+            </ion-badge><br />
+            <ion-note color="medium" class="ion-text-wrap">
+              {{ e.obs }}
+            </ion-note>
+          </ion-label>
+          <div class="metadata-end-wrapper" slot="end">
+            <ion-note color="medium">
+              {{ e.date.dateLocale }}
+            </ion-note>
+          </div>
+        </ion-item>
+      </ion-list>
+
       <h2 class="q-px-md">Histórico de atividades</h2>
       <ion-list :inset="true" >
         <ion-item 
@@ -94,6 +126,15 @@
         }
       ]"
     />
+
+    <ion-modal :keep-contents-mounted="true">
+      <ion-datetime
+        id="datetime"
+        presentation="date"
+        @ionChange="onChangeDate($event, c)"
+      ></ion-datetime>
+    </ion-modal>
+
   </ion-page>
 </template>
 
@@ -115,7 +156,9 @@ import {
   IonBadge,
   IonContent,
   onIonViewWillEnter,
-  IonIcon
+  IonIcon,
+  IonDatetimeButton, IonDatetime,
+  IonModal
 } from '@ionic/vue';
 import { trashOutline } from 'ionicons/icons';
 import { useFetch } from '../../composables/fetch'
@@ -142,7 +185,9 @@ export default {
         rowsPerPage: 6
       },
       startPhotoHandler: false,
-      familyAdmin: false
+      familyAdmin: false,
+      dateSelected: null,
+      childAttendance: []
     };
   },
   mounted(){
@@ -150,6 +195,24 @@ export default {
     this.verifyIfIsAdmin()
   },
   methods: {
+    onChangeDate($event, c) {
+      this.dateSelected = $event.detail.value.split('T')[0]
+      this.getChildEventsByUserId()
+      this.getChildAttendanceByDate()
+    },
+    getChildAttendanceByDate () {
+      const opt = {
+        route: '/mobile/parents/profile/getChildAttendanceByDateAndChild',
+        body: {
+          childId: this.$route.query.userId,
+          dateSelected: this.dateSelected
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (r.error) return
+        this.childAttendance = r.data
+      })
+    },
     verifyIfIsAdmin() {
       const opt = {
         route: '/mobile/parents/profile/getIfUserIsFamilyAdmin',
@@ -208,6 +271,7 @@ export default {
       this.userId = this.$route.query.userId
       this.getUserDetail()
       this.getChildEventsByUserId()
+      this.getChildAttendanceByDate()
     },
     getUserDetail() {
       const opt = {
@@ -231,7 +295,8 @@ export default {
         body: {
           childId: this.$route.query.userId,
           page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
+          rowsPerPage: this.pagination.rowsPerPage,
+          dateSelected: this.dateSelected
         },
       }
       useFetch(opt).then((r) => {

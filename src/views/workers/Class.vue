@@ -5,14 +5,24 @@
       :backButton="false"
     />
     <ion-content color="light">
-      <ion-searchbar 
+      <!-- <ion-searchbar 
         show-clear-button="always"
         animated="true" 
         placeholder="Pesquisar"
         :debounce="400"
         v-model="filterValue"
         @ionInput="getChildrenInClassList()"
-      />
+      /> -->
+      <div class="q-mt-md">
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+      </div>
+      <ion-modal :keep-contents-mounted="true">
+        <ion-datetime
+          id="datetime"
+          presentation="date"
+          @ionChange="onChangeDate($event, c)"
+        ></ion-datetime>
+      </ion-modal>
       <Transition name="bounce">
         <ion-list :inset="true" v-if="show">
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
@@ -280,7 +290,8 @@ import {
   IonRow,
   IonAvatar,
   IonAccordion, IonAccordionGroup,
-  IonNote
+  IonNote,
+  IonDatetimeButton, IonDatetime
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -339,7 +350,8 @@ export default {
       filterValue: '',
       selectAllChildren: false,
       formattedChildEventList: null,
-      childEventsHistory: []
+      childEventsHistory: [],
+      dateSelected: null
     };
   },
   mounted(){
@@ -348,7 +360,6 @@ export default {
     this.getChildrenInClassList()
     this.verifyIfHasChildId()
     this.getLastActivityFromChildrenOfClasses()
-    // this.getChildEventsByUserId()
   },
   watch: {
     $route (to, from) {
@@ -357,11 +368,14 @@ export default {
         this.getChildrenInClassList()
         this.verifyIfHasChildId()
         this.getLastActivityFromChildrenOfClasses()
-        // this.getChildEventsByUserId()
       }
     }
   },
   methods: {
+    onChangeDate($event, c) {
+      this.dateSelected = $event.detail.value.split('T')[0]
+      this.getLastActivityFromChildrenOfClasses()
+    },
     startModal(){
       this.getChildrenListByClassId()
       this.getLastActivityFromChildrenOfClasses(this.dialogInsertClassEvent.data.classId)
@@ -377,6 +391,7 @@ export default {
         body: {
           page: 1,
           rowsPerPage: 100,
+          dateSelected: this.dateSelected
         }
       }
       if (classId) opt.body.classId = classId
@@ -543,23 +558,6 @@ export default {
       this.dialogInsertChildEvent.open = true
       this.getLastActivityFromChild()
     },
-    // getLastChildActivities () {
-    //   const opt = {
-    //     route: '/mobile/workers/getLastChildActivities',
-    //     body: {
-    //       childId: this.dialogInsertChildEvent.data.childId,
-    //       page: this.pagination.page,
-    //       rowsPerPage: this.pagination.rowsPerPage
-    //     }
-    //   }
-    //   useFetch(opt).then((r) => {
-    //     if (r.error) {
-    //       utils.toast('Ocorreu um erro. Tente novamente.')
-    //       return
-    //     }
-    //     this.childEventsHistory = r.data.list
-    //   })
-    // },
     getChildEvents() {
       const opt = {
         route: '/mobile/workers/getChildEvents',
@@ -612,7 +610,7 @@ export default {
           // childId: this.dialogInsertChildEvent.data,
           selectedChildren: this.selectedChildren,
           childEventId: this.dialogInsertChildEvent.childEventId,
-          obs: this.dialogInsertChildEvent.obs
+          obs: this.dialogInsertChildEvent.obs,
         },
         // file: this.image.blob ? [{ file: this.image.blob, name: 'userPhoto' }] : null
       }

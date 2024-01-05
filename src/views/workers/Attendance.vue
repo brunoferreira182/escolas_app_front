@@ -5,14 +5,6 @@
       :backButton="false"
     />
     <ion-content color="light">
-      <!-- <ion-searchbar 
-        show-clear-button="always"
-        animated="true" 
-        placeholder="Pesquisar"
-        :debounce="400"
-        v-model="filterValue"
-        @ionInput="getChildrenInClassList()"
-      /> -->
       <div class="q-mt-md">
         <ion-datetime-button datetime="datetime"></ion-datetime-button>
       </div>
@@ -346,24 +338,6 @@ export default {
     onChangeDate($event, c) {
       this.dateAttendance = $event.detail.value.split('T')[0]
       this.getChildrenInClassList()
-
-      // 
-      
-      // const opt = {
-      //   route: '/mobile/workers/getChildAttendanceByDate',
-      //   body: {
-      //     childId: c.childId,
-      //     monthYear
-      //   }
-      // }
-      // useFetch(opt).then((r) => {
-      //   if (r.error) {
-      //     utils.toast('Ocorreu um erro. Tente novamente.')
-      //     return
-      //   }
-      //   c.highlightedDates = r.data.list.map((date) => date.date)
-      // })
-    
     },
     createUserChildAttendanceOneChild() {
       const opt = {

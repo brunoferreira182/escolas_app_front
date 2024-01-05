@@ -19,7 +19,7 @@
         <ion-item :button="true" @click="$router.push('/messenger')">
           <ion-label>Mensagens</ion-label>
         </ion-item>
-        <ion-item :button="true" @click="openModal = true">
+        <ion-item :button="true" @click="$router.push('/mealMenu')">
           <ion-label>Cardápio do dia</ion-label>
         </ion-item>
         <ion-item :button="true" @click="$router.push('/notesList')">

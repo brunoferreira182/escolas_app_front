@@ -8,24 +8,29 @@
       <ion-list v-if="resumeMessages.length > 0 " lines="full">
         <ion-item 
           v-for="item in resumeMessages"
-          :key="item._id.userId"
+          :key="item.userId"
           button 
           detail="false"
           @click="clkConectedUser(item)"
         >
-          <ion-avatar>
-            <img :src="utils.generateProfileImage(item._id.userId)"/>
+          <ion-avatar style="width: 60px; height: 60px;">
+            <img :src="utils.makeFileUrl(item.userImage)" />
           </ion-avatar>
           <ion-label class="q-pl-md">
-            <h4>{{ item._id.name }}</h4>
-            <p>	
-              <span v-if="item.messages.userId === userInfo.userId">Você: </span>
-              {{ item.messages.message }} 
-            </p>
+            <strong>{{ item.userName }}</strong><br>
+            <ion-note color="medium" class="ion-text-wrap" v-if="item.message.message !== ''">
+              {{ item.message.message }}
+            </ion-note>
+            <ion-note color="medium" class="ion-text-wrap" v-if="item.message.file.filename">
+              Arquivo
+            </ion-note>
+            <ion-note color="medium" class="ion-text-wrap" v-if="item.message.audio">
+              Mensagem de voz
+            </ion-note>
           </ion-label>
           <ion-label slot="end" class="ion-text-end">
-            <p>{{ item.messages.timestamps.createdAtInFullShort }}</p>
-            <p>{{ item.messages.timestamps.createdAtLocale.split(' ')[1] }}</p>
+            <p>{{ item.message.createdAt.createdAtLocale.split(' ')[0] }}</p>
+            <p>{{ item.message.createdAt.createdAtLocale.split(' ')[1] }}</p>
           </ion-label>
         </ion-item>
       </ion-list>
@@ -50,7 +55,8 @@ import {
   alertController,
   IonHeader,
   IonToolbar,
-  IonProgressBar
+  IonProgressBar,
+  IonNote
 } from '@ionic/vue';
 import { chatboxEllipsesOutline, peopleOutline, personAddOutline } from 'ionicons/icons'
 import { defineComponent } from 'vue'
@@ -281,9 +287,7 @@ export default defineComponent({
       
     },
     clkConectedUser (item) {
-      console.log(item)
-      const userId = item.arrayUsers ? item.arrayUsers.userId : item._id.userId
-      this.$router.push('/messengerChat?userId=' + userId)
+      this.$router.push('chatUserAndWorker?user_id=' + item.userId)
     },
     clkSearchResult (item) {
       const userId = item.userId
