@@ -5,27 +5,27 @@
       :backButton="true"
     />
     <ion-content>
-      <ion-list v-if="resumeMessages.length > 0 " lines="full">
+      <ion-list v-if="resumeMessages.length >= 0 " lines="full">
         <ion-item 
           v-for="item in resumeMessages"
-          :key="item._id.userId"
+          :key="item._id"
           button 
           detail="false"
           @click="clkConectedUser(item)"
         >
-          <ion-avatar>
-            <img :src="utils.generateProfileImage(item._id.userId)"/>
-          </ion-avatar>
+          <!-- <ion-avatar>
+            <img :src="utils.attachmentsAddress(item._id.userId)" />
+          </ion-avatar> -->
           <ion-label class="q-pl-md">
-            <h4>{{ item._id.name }}</h4>
+            <h4>{{ item.name }}</h4>
             <p>	
-              <span v-if="item.messages.userId === userInfo.userId">Você: </span>
-              {{ item.messages.message }} 
+              <span v-if=" item.createdBy.userId === userInfo.userId">Você: </span>
+              {{ item.messageData.message }} 
             </p>
           </ion-label>
           <ion-label slot="end" class="ion-text-end">
-            <p>{{ item.messages.timestamps.createdAtInFullShort }}</p>
-            <p>{{ item.messages.timestamps.createdAtLocale.split(' ')[1] }}</p>
+            <p>{{ item.messageData.timestamps.createdAtInFullShort }}</p>
+            <p>{{ item.messageData.timestamps.createdAtLocale.split(' ')[1] }}</p>
           </ion-label>
         </ion-item>
       </ion-list>
@@ -138,10 +138,11 @@ export default defineComponent({
     },
     getResumeMessages () {
       const opt = {
-        route: '/mobile/messenger/getResumeMessages'
+        route: '/mobile/messenger/getResumeMessages',
       }
       useFetch(opt).then(r => {
         this.resumeMessages = r.data
+        console.log('asasdssddsdsfffd',this.resumeMessages);
       })
     },
     confirmApproveReproveConnectionSolicitation (type,id) {
