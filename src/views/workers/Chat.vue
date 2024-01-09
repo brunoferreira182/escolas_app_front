@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Grupos de conversa"
+      title="Salas"
       :backButton="false"
     />
     <ion-content color="light">
@@ -17,10 +17,10 @@
               @click="goToChatDetail(c.classId)"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage" style="height: 60px; width: 60px">
-                <img :src="utils.makeFileUrl(c.classImage)" />
+                <img :src="utils.makeFileUrl(c.classImage, 'thumbnail')" />
               </ion-avatar>
               <ion-avatar aria-hidden="true" slot="start" v-else style="height: 60px; width: 60px">
-                <img :src="utils.makeFileUrl(c.image)"/>
+                <img :src="utils.makeFileUrl(c.image, 'thumbnail')"/>
               </ion-avatar>
               <ion-label>
                 <h6>{{ c.className }}</h6>
@@ -29,7 +29,17 @@
             </ion-item>
           </ion-list>
         </div>
-        <div v-if="childEventsHistory">
+        <div v-else>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Você não está em nenhuma sala</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              Procure um responsável da escola para conferir qual turma você participa.
+            </ion-card-content>
+          </ion-card>
+        </div>
+        <!-- <div v-if="childEventsHistory">
           <ion-list :inset="true" >
             <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico de atividades</div>
             <ion-item 
@@ -39,7 +49,7 @@
               @click="clkOpenDialogChildEvent(e)"
             >
               <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
-                <img :src="utils.makeFileUrl(e.childEventPhoto.filename)" v-if="e.childEventPhoto"/>
+                <img :src="utils.makeFileUrl(e.childEventPhoto.filename, 'thumbnail')" v-if="e.childEventPhoto"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
               </ion-avatar>
               <ion-avatar
@@ -47,7 +57,7 @@
                 slot="start"
                 style="margin-left: -30px; margin-top: 30px; height: 35px; width: 35px; border: 2px solid white !important;"
               >
-                <img :src="utils.makeFileUrl(e.childPhoto)" v-if="e.childPhoto"/>
+                <img :src="utils.makeFileUrl(e.childPhoto, 'thumbnail')" v-if="e.childPhoto"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
               </ion-avatar>
               <ion-label>
@@ -65,17 +75,8 @@
               </div>
             </ion-item>
           </ion-list>
-        </div>
-        <div v-else>
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Você não está em nenhuma sala</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Procure um responsável da escola para conferir qual turma você participa.
-            </ion-card-content>
-          </ion-card>
-        </div>
+        </div> -->
+        
       </div>
     </ion-content>
     <ion-alert v-if="formattedChildEventList"
@@ -253,7 +254,7 @@ export default {
     },
     startView () {
       this.getClassesByUserId()
-      this.getLastActivityFromChildrenOfClasses()
+      // this.getLastActivityFromChildrenOfClasses()
     },  
     clkOpenDialogChildEvent(child) {
       this.dialogInsertChildEvent.data = child

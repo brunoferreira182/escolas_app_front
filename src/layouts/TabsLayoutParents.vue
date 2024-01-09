@@ -58,7 +58,8 @@ import {
   idCardOutline,
   chatboxOutline,
   personCircleOutline,
-  ellipsisHorizontalOutline
+  ellipsisHorizontalOutline,
+  calendar
 } from 'ionicons/icons';
 import utils from '../composables/utils'
 import { useBackButton } from '@ionic/vue';
@@ -71,6 +72,7 @@ export default {
     return {
       tabs: [
         { name: "social", icon: idCardOutline, to: '/tabsParents/social', label: "Social" },
+        { name: "attendance", icon: calendar, to: '/childrenAttendanceCalendar', label: "Presença" },
         { name: "messenger", icon: chatboxOutline, to: '/tabsParents/chat' , label: "Sala" },
         { name: "profile", icon: personCircleOutline, to: '/tabsParents/profile', label: "Perfil" },
         { name: "more", icon: ellipsisHorizontalOutline, to: '/tabsParents/more', label: "Mais" },

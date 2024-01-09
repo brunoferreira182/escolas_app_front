@@ -5,14 +5,24 @@
       :backButton="false"
     />
     <ion-content color="light">
-      <ion-searchbar 
+      <!-- <ion-searchbar 
         show-clear-button="always"
         animated="true" 
         placeholder="Pesquisar"
         :debounce="400"
         v-model="filterValue"
         @ionInput="getChildrenInClassList()"
-      />
+      /> -->
+      <div class="q-mt-md">
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+      </div>
+      <ion-modal :keep-contents-mounted="true">
+        <ion-datetime
+          id="datetime"
+          presentation="date"
+          @ionChange="onChangeDate($event, c)"
+        ></ion-datetime>
+      </ion-modal>
       <Transition name="bounce">
         <ion-list :inset="true" v-if="show">
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
@@ -22,23 +32,23 @@
           <ion-item 
             v-for="c in classData"
             :key="c"
+            @click="clkOpenDialogClassEvent(c)"
             :button="true"
             class="q-pa-sm"
-            @click="clkOpenDialogClassEvent(c)"
           >
             <ion-avatar aria-hidden="true" slot="start" >
               <img :src="utils.makeFileUrl(c.classImage)" v-if="c.classImage"/>
-              <img :src="utils.makeFileUrl(c.image)" v-else/>
+              <img :src="utils.makeFileUrl(c.image, 'thumbnail')" v-else/>
             </ion-avatar>
             <ion-label>
-              <h6>{{ c.className }}</h6>
+              <div class="text-h6">{{ c.className }}</div>
               <ion-badge color="success">Função: {{ c.functionName }}</ion-badge>
             </ion-label>
           </ion-item>
         </ion-list>
       </Transition>
-      <ion-list :inset="true" >
-        <ion-accordion-group>
+      <ion-list :inset="true" color="light">
+        <ion-accordion-group >
           <ion-accordion value="alunos">
             <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
             <div slot="content">
@@ -50,13 +60,13 @@
                 :key="child"
                 @click="clkOpenDialogChildEvent(child)"
                 :button="true"
-                class="q-pa-sm"
+                detail="false"
               >
                 <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                  <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+                  <img :src="utils.makeFileUrl(child.childPhoto.filename, 'thumbnail')"/>
                 </ion-avatar>
                 <ion-avatar aria-hidden="true" slot="start" v-else>
-                  <img :src="utils.makeFileUrl(child.image)"/>
+                  <img :src="utils.makeFileUrl(child.image, 'thumbnail')"/>
                 </ion-avatar>
                 <ion-label>
                   <h6>{{ child.childName }}</h6>
@@ -68,14 +78,11 @@
         </ion-accordion-group>
       </ion-list>
 
-      <ion-list :inset="true" >
+      <ion-list :inset="true" color="light">
         <ion-accordion-group>
           <ion-accordion value="atividades">
             <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
             <div slot="content">
-              <div class="q-px-md text-caption">
-                Selecione um aluno para inserir uma atividade individualmente
-              </div>
               <ion-item 
                 v-for="e in classEventsHistory"
                 :key="e"
@@ -83,7 +90,7 @@
                 @click="clkOpenDialogChildEvent(e)"
               >
                 <ion-avatar aria-hidden="true" slot="start" >
-                  <img :src="utils.makeFileUrl(e.eventImage)" v-if="e.eventImage"/>
+                  <img :src="utils.makeFileUrl(e.eventImage, 'thumbnail')" v-if="e.eventImage"/>
                   <img :src="utils.makeFileUrl(null)" v-else/>
                 </ion-avatar>
                 <ion-avatar
@@ -91,7 +98,7 @@
                   slot="start"
                   style="margin-left: -30px; margin-top: 30px; height: 36px; width: 36px; border: 2px solid white !important;"
                 >
-                  <img :src="utils.makeFileUrl(e.childPhoto)" v-if="e.childPhoto"/>
+                  <img :src="utils.makeFileUrl(e.childPhoto, 'thumbnail')" v-if="e.childPhoto"/>
                   <img :src="utils.makeFileUrl(null)" v-else/>
                 </ion-avatar>
                 <ion-label>
@@ -102,8 +109,8 @@
                   </ion-note>
                 </ion-label>
                 <div class="metadata-end-wrapper" slot="end">
-                  <ion-note color="medium">
-                    {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
+                  <ion-note color="medium text-caption">
+                    {{ e.createdAt.createdAtInFullShort }}<br>
                     {{ e.createdAt.createdAtLocale.split(' ')[1] }}
                   </ion-note>
                 </div>
@@ -130,7 +137,7 @@
           </div>
         </ion-content>
       </ion-modal>
-
+      
       <ion-modal 
         :is-open="dialogInsertClassEvent.open" 
         @ionModalDidPresent="startModal()" 
@@ -167,7 +174,7 @@
             <ion-item class="ion-text-left text-h6">
               <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
               <ion-label class="q-px-md ion-text-capitalize">
-                Crianças
+                Todas crianças
               </ion-label>
             </ion-item>
             <ion-item
@@ -205,14 +212,10 @@
                     size="6" 
                     class="text-subtitle2 ion-text-end ion-text-wrap"
                   >
-                    <div>
-                      {{ e.createdAt.createdAtLocale.split('/')[1] }}/
-                      {{ e.createdAt.createdAtLocale.split('/')[0] }}/
-                      {{ e.createdAt.createdAtLocale.split('/')[2] }}
-                    </div>
-                    <!-- <div>
+                    <ion-note color="medium text-caption">
+                      {{ e.createdAt.createdAtInFullShort }}<br>
                       {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                    </div> -->
+                    </ion-note>
                   </ion-col>
                 </ion-row>
                 <ion-badge  style="background-color: #eb445a;">{{ e.obs }}</ion-badge>
@@ -225,6 +228,7 @@
         </ion-content>
         <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
       </ion-modal>
+
   
     </ion-content>
     <ion-alert v-if="formattedChildEventList"
@@ -286,7 +290,8 @@ import {
   IonRow,
   IonAvatar,
   IonAccordion, IonAccordionGroup,
-  IonNote
+  IonNote,
+  IonDatetimeButton, IonDatetime
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -345,7 +350,8 @@ export default {
       filterValue: '',
       selectAllChildren: false,
       formattedChildEventList: null,
-      childEventsHistory: []
+      childEventsHistory: [],
+      dateSelected: null
     };
   },
   mounted(){
@@ -354,7 +360,6 @@ export default {
     this.getChildrenInClassList()
     this.verifyIfHasChildId()
     this.getLastActivityFromChildrenOfClasses()
-    // this.getChildEventsByUserId()
   },
   watch: {
     $route (to, from) {
@@ -363,29 +368,21 @@ export default {
         this.getChildrenInClassList()
         this.verifyIfHasChildId()
         this.getLastActivityFromChildrenOfClasses()
-        // this.getChildEventsByUserId()
       }
     }
   },
   methods: {
-    // getLastActivityFromChildrenOfClasses() {
-    //   const opt = {
-    //     route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
-    //     body: {
-    //       page: this.pagination.page,
-    //       rowsPerPage: this.pagination.rowsPerPage
-    //     }
-    //   }
-    //   useFetch(opt).then((r) => {
-    //     if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
-    //     else {
-    //       this.childEventsHistory = r.data.list
-    //     } 
-    //   })
-    // },
+    onChangeDate($event, c) {
+      this.dateSelected = $event.detail.value.split('T')[0]
+      this.getLastActivityFromChildrenOfClasses()
+    },
     startModal(){
       this.getChildrenListByClassId()
       this.getLastActivityFromChildrenOfClasses(this.dialogInsertClassEvent.data.classId)
+      this.getChildrenInClassList()
+    },
+    startModalAttendance(){
+      this.getChildrenListByClassId()
       this.getChildrenInClassList()
     },
     getLastActivityFromChildrenOfClasses(classId) {
@@ -394,6 +391,7 @@ export default {
         body: {
           page: 1,
           rowsPerPage: 100,
+          dateSelected: this.dateSelected
         }
       }
       if (classId) opt.body.classId = classId
@@ -465,47 +463,33 @@ export default {
 
       this.dialogInsertChildEvent.data = this.selectedChildren.map((child) => child.childId);
     },
-    // handleCheckboxChangeAll(e) {
-    //   if (e.detail.checked === true) {
-    //     this.selectedChildren = this.classList.map((child) => ({
-    //     _id: child._id,
-    //   }));
-    //   } else {
-    //     this.selectedChildren = []
-    //   }
-    //   this.selectedChildren.forEach((child) => {
-    //     this.classList.forEach((classList, i) => {
-    //       if (child._id === classList._id) {
-    //         this.classList.forEach((teste) => {
-    //           teste.isChecked = e.detail.checked
-    //           if (teste.isChecked === false) {
-    //             this.selectedChildren = []
-    //             this.classList.forEach((classList) => {
-    //               classList.isChecked = false
-    //             })
-    //           }
-    //         }) 
-    //       }
-    //     })
-    //   })
-    //   this.dialogInsertChildEvent.data = this.selectedChildren
-    // },
-    // handleCheckboxChangeAll(e) {
-    //   this.selectedChildren = [];
-    //   this.classList.forEach((classList) => {
-    //     classList.isChecked = e.detail.checked;
-    //     if (e.detail.checked) {
-    //       this.selectedChildren.push({ _id: classList._id });
-    //     }
-    //   });
-    //   this.dialogInsertChildEvent.data = this.selectedChildren;
-    // },
     closeDialogInserChildren() {
       this.dialogInsertChildEvent.open = false
       this.dialogInsertChildEvent.data = []
       this.dialogInsertChildEvent.obs = ''
       this.dialogInsertChildEvent.childEventId = ''
       // this.pagination.page = 1
+    },
+    handleCheckboxAttendance(childId, e) {
+      if (e.detail.checked === true) {
+        this.selectedChildren.push({_id: childId})
+        if (this.selectedChildren.length === this.classList.length) {
+            this.selectAllChildren = true
+          }
+        return
+      }
+      if (e.detail.checked === false) {
+        const initialLength = this.selectedChildren.length
+        this.selectedChildren.forEach((child, childIndex) => {
+          if (child._id === childId) {
+            this.selectedChildren.splice(childIndex, 1)
+          if (initialLength === this.classList.length && this.selectedChildren !== initialLength) {
+            this.selectAllChildren = false
+          }
+            this.dialogInsertChildEvent.data = this.selectedChildren
+          }
+        })
+      }
     },
     handleCheckboxChange(childId, e) {
       if (e.detail.checked === true) {
@@ -574,23 +558,6 @@ export default {
       this.dialogInsertChildEvent.open = true
       this.getLastActivityFromChild()
     },
-    // getLastChildActivities () {
-    //   const opt = {
-    //     route: '/mobile/workers/getLastChildActivities',
-    //     body: {
-    //       childId: this.dialogInsertChildEvent.data.childId,
-    //       page: this.pagination.page,
-    //       rowsPerPage: this.pagination.rowsPerPage
-    //     }
-    //   }
-    //   useFetch(opt).then((r) => {
-    //     if (r.error) {
-    //       utils.toast('Ocorreu um erro. Tente novamente.')
-    //       return
-    //     }
-    //     this.childEventsHistory = r.data.list
-    //   })
-    // },
     getChildEvents() {
       const opt = {
         route: '/mobile/workers/getChildEvents',
@@ -630,6 +597,7 @@ export default {
         type: 'newImage'
       }
     },
+
     createUserChildEvents() {
       const file = [{ file: this.image.blob, name: 'newImage' }]
       if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
@@ -642,7 +610,7 @@ export default {
           // childId: this.dialogInsertChildEvent.data,
           selectedChildren: this.selectedChildren,
           childEventId: this.dialogInsertChildEvent.childEventId,
-          obs: this.dialogInsertChildEvent.obs
+          obs: this.dialogInsertChildEvent.obs,
         },
         // file: this.image.blob ? [{ file: this.image.blob, name: 'userPhoto' }] : null
       }
@@ -706,6 +674,25 @@ export default {
 };
 </script>
 <style scoped>
+
+.modal-absent ion-checkbox {
+  --size: 32px;
+  --checkbox-background-checked: #9b0d0d;
+}
+
+.modal-absent ion-checkbox::part(container) {
+  border-radius: 6px;
+  border: 2px solid #9b0d0d;
+}
+.modal-attendance ion-checkbox {
+  --size: 32px;
+  --checkbox-background-checked: #1d9b0d;
+}
+
+.modal-attendance ion-checkbox::part(container) {
+  border-radius: 6px;
+  border: 2px solid #1d9b0d;
+}
  
 ion-select.always-flip::part(icon) {
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);

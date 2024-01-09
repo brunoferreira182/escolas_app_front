@@ -22,6 +22,7 @@ import solicitationsDetail from '../views/parents/SolicitationsDetail.vue'
 import tabsLayoutWorkers from '../layouts/TabsLayoutWorkers.vue'
 import workerClass from '../views/workers/Class.vue'
 import workerChat from '../views/workers/Chat.vue'
+import workerAttendance from '../views/workers/Attendance.vue'
 import workerProfile from '../views/workers/Profile.vue'
 import chatDetail from '../views/parents/ChatDetail.vue'
 
@@ -41,6 +42,9 @@ import calendarWorker from '../views/workers/Calendar.vue'
 import storyDetail from '../views/parents/StoryDetail.vue'
 import calendarEventDetail from '../views/workers/CalendarEventDetail.vue'
 import Messenger from '../views/Messenger.vue';
+import ChildrenAttendanceCalendar from '../views/ChildrenAttendanceCalendar.vue';
+import MealMenu from '../views/MealMenu.vue';
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -62,6 +66,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Messenger',
         component: Messenger
       },
+      // {
+      //   path: '/childrenAttendanceCalendar',
+      //   name: 'ChildrenAttendanceCalendar',
+      //   component: ChildrenAttendanceCalendar
+      // },
       {
         path: '/register',
         name: 'Register',
@@ -163,7 +172,8 @@ const routes: Array<RouteRecordRaw> = [
         name: 'TabsWorkers',
         component: tabsLayoutWorkers,
         children: [
-          { path: '/', redirect: '/tabsWorkers/class'},
+          { path: '/', redirect: '/tabsWorkers/attendance'},
+          { path: '/tabsWorkers/attendance', component: workerAttendance},
           { path: '/tabsWorkers/class', component: workerClass},
           { path: '/tabsWorkers/chat', component: workerChat},
           { path: '/tabsWorkers/profile', component: workerProfile},
@@ -180,6 +190,11 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsParents/chat', component: parentsChat },
           { path: '/tabsParents/profile', component: parentsProfile },
           { path: '/tabsParents/more', component: parentsMore },
+          {
+            path: '/childrenAttendanceCalendar',
+            name: 'ChildrenAttendanceCalendar',
+            component: ChildrenAttendanceCalendar
+          },
         ]
       },
       { path: '/postDetail', component: postDetail },
@@ -192,6 +207,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'ChatMedia',
         component: chatMedia
       },
+      { path: '/mealMenu', component: MealMenu },
     ]
   },
 ]

@@ -6,6 +6,18 @@
     />
     <ion-content color="light">
       <div v-if="childClassInfo">
+        
+        <div class="q-mt-md">
+          <ion-datetime-button datetime="datetime"></ion-datetime-button>
+        </div>
+        <ion-modal :keep-contents-mounted="true">
+          <ion-datetime
+            id="datetime"
+            presentation="date"
+            @ionChange="onChangeDate($event, c)"
+          ></ion-datetime>
+        </ion-modal>
+
         <ion-list :inset="true">
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
           <ion-item 
@@ -22,7 +34,7 @@
               slot="start"
               style="height: 60px; width: 60px;"
             >
-              <img :src="utils.makeFileUrl(c.classImage)" v-if="c.classImage"/>
+              <img :src="utils.makeFileUrl(c.classImage, 'thumbnail')" v-if="c.classImage"/>
               <img :src="utils.makeFileUrl('default-avatar.svg')" v-else/>
             </ion-avatar>
             <ion-avatar
@@ -30,7 +42,7 @@
               slot="start"
               style="margin-left: -40px; height: 60px; width: 60px; border: 2px solid white !important;"
             >
-              <img :src="utils.makeFileUrl(c.userImage)" v-if="c.userImage"/>
+              <img :src="utils.makeFileUrl(c.userImage, 'thumbnail')" v-if="c.userImage"/>
               <img :src="utils.makeFileUrl('default-avatar.svg')" v-else/>
             </ion-avatar>
             <ion-label>
@@ -49,7 +61,7 @@
           </ion-item>
         </ion-list>
         <ion-list :inset="true" >
-          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico de atividades</div>
+          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Atividades de hoje</div>
           <div v-if="childEventsHistory && childEventsHistory.length">
             <ion-item 
               v-for="e in childEventsHistory"
@@ -58,7 +70,7 @@
               detail="false"
             >
               <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
-                <img :src="utils.makeFileUrl(e.image.filename)" v-if="e.image"/>
+                <img :src="utils.makeFileUrl(e.image.filename, 'thumbnail')" v-if="e.image"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
               </ion-avatar>
               <ion-avatar
@@ -66,7 +78,7 @@
                 slot="start"
                 style="margin-left: -30px; margin-top: 30px; height: 35px; width: 35px; border: 2px solid white !important;"
               >
-                <img :src="utils.makeFileUrl(e.childPhoto.filename)" v-if="e.childPhoto"/>
+                <img :src="utils.makeFileUrl(e.childPhoto.filename, 'thumbnail')" v-if="e.childPhoto"/>
                 <img :src="utils.makeFileUrl(null)" v-else/>
               </ion-avatar>
               <ion-label>
@@ -88,10 +100,11 @@
               :is-open="openImageModalProfile.open" 
               @didDismiss="dismissImageModalProfile()"
             >
-              <ion-content v-if="openImageModalProfile.imageData && openImageModalProfile.imageData.filename">
+              <ion-content >
                 <img 
                   :src="utils.makeFileUrl(openImageModalProfile.imageData.filename)" 
                   style="width: 100%"
+                  v-if="openImageModalProfile.imageData && openImageModalProfile.imageData.filename"
                 >
                 <div class="ion-text-center">
                   <div class="text-h4 text-capitalize">
@@ -132,7 +145,8 @@ import {
   IonItem, 
   IonLabel, 
   IonNote,
-  IonIcon
+  IonIcon,
+  IonDatetimeButton, IonDatetime
 } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
@@ -166,6 +180,7 @@ export default {
         data: {},
         imageData: null,
       },
+      dateSelected: null
     };
   },
   watch: {
@@ -180,6 +195,10 @@ export default {
     this.startView()
   },
   methods: {
+    onChangeDate($event, c) {
+      this.dateSelected = $event.detail.value.split('T')[0]
+      this.getLastActivitiesFromUserChildren()
+    },
     openChildEventModal(e){
       this.openImageModalProfile.open = true
       this.openImageModalProfile.data = e
@@ -196,6 +215,9 @@ export default {
     getLastActivitiesFromUserChildren() {
       const opt = {
         route: '/mobile/parents/chat/getLastActivitiesFromUserChildren',
+        body: {
+          dateSelected: this.dateSelected
+        }
       }
       useFetch(opt).then((r) => {
         if (!r.error) {

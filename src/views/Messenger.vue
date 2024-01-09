@@ -8,11 +8,16 @@
       <ion-list v-if="resumeMessages.length >= 0 " lines="full">
         <ion-item 
           v-for="item in resumeMessages"
+<<<<<<< HEAD
           :key="item._id"
+=======
+          :key="item.userId"
+>>>>>>> 1617de7c7bf4bce50dcae84066abe1c7d237451b
           button 
           detail="false"
           @click="clkConectedUser(item)"
         >
+<<<<<<< HEAD
           <!-- <ion-avatar>
             <img :src="utils.attachmentsAddress(item._id.userId)" />
           </ion-avatar> -->
@@ -26,6 +31,26 @@
           <ion-label slot="end" class="ion-text-end">
             <p>{{ item.messageData.timestamps.createdAtInFullShort }}</p>
             <p>{{ item.messageData.timestamps.createdAtLocale.split(' ')[1] }}</p>
+=======
+          <ion-avatar style="width: 60px; height: 60px;">
+            <img :src="utils.makeFileUrl(item.userImage)" />
+          </ion-avatar>
+          <ion-label class="q-pl-md">
+            <strong>{{ item.userName }}</strong><br>
+            <ion-note color="medium" class="ion-text-wrap" v-if="item.message.message !== ''">
+              {{ item.message.message }}
+            </ion-note>
+            <ion-note color="medium" class="ion-text-wrap" v-if="item.message.file.filename">
+              Arquivo
+            </ion-note>
+            <ion-note color="medium" class="ion-text-wrap" v-if="item.message.audio">
+              Mensagem de voz
+            </ion-note>
+          </ion-label>
+          <ion-label slot="end" class="ion-text-end">
+            <p>{{ item.message.createdAt.createdAtLocale.split(' ')[0] }}</p>
+            <p>{{ item.message.createdAt.createdAtLocale.split(' ')[1] }}</p>
+>>>>>>> 1617de7c7bf4bce50dcae84066abe1c7d237451b
           </ion-label>
         </ion-item>
       </ion-list>
@@ -50,7 +75,8 @@ import {
   alertController,
   IonHeader,
   IonToolbar,
-  IonProgressBar
+  IonProgressBar,
+  IonNote
 } from '@ionic/vue';
 import { chatboxEllipsesOutline, peopleOutline, personAddOutline } from 'ionicons/icons'
 import { defineComponent } from 'vue'
@@ -282,9 +308,7 @@ export default defineComponent({
       
     },
     clkConectedUser (item) {
-      console.log(item)
-      const userId = item.arrayUsers ? item.arrayUsers.userId : item._id.userId
-      this.$router.push('/messengerChat?userId=' + userId)
+      this.$router.push('chatUserAndWorker?user_id=' + item.userId)
     },
     clkSearchResult (item) {
       const userId = item.userId

@@ -82,18 +82,23 @@
                   </div>
                 </ion-row>
               </ion-item>
-              <!-- <ion-item-options :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'">
-                <ion-item-option style="text-transform: none" color="primary" @click="clkMessage(message)">Detalhes</ion-item-option>
-                <ion-item-option style="text-transform: none" color="secondary" @click="answerMessage(message)">Responder</ion-item-option>
-              </ion-item-options> -->
+              <ion-item-options :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" >
+                <ion-item-option style="text-transform: none; border-radius: .5rem;" color="danger" @click="clkMessage(message)" >Detalhes</ion-item-option>
+                <ion-item-option style="text-transform: none; border-radius: .5rem;" color="tertiary" >Reagir</ion-item-option>
+              </ion-item-options>
             </ion-item-sliding>
+            <ion-popover side="top" :is-open="popoverOpen" @didDismiss="popoverOpen = false">
+              <ion-content class="ion-padding">
+                <ion-icon :icon="play" @click="reactToMsg(message)"></ion-icon>
+              </ion-content>
+            </ion-popover>
           </div>
         </ion-list>
       </div>
     </ion-content>
-    <ion-footer v-if="canSendMessage">
-      <form :style="footerColor">
-        <ion-item v-if="isAnsweringMessage.isAnswering" lines="none" >
+    <ion-footer v-if="canSendMessage" style="background-color: var(--ion-color-step-50, #f7f7f7);">
+      <form >
+        <!-- <ion-item v-if="isAnsweringMessage.isAnswering" lines="none" >
           <ion-avatar slot="start">
             <img />
           </ion-avatar>
@@ -102,11 +107,19 @@
           </ion-label>
           <ion-icon :icon="close" slot="end" @click="undoAnswerMessage"></ion-icon>
         </ion-item>
-        
-        <ion-row class="q-mx-xs ion-align-items-end" style="padding-bottom: var(--ion-safe-area-bottom)">
+        -->
+        <ion-row
+          class="q-mx-xs ion-align-items-end"
+          style="padding-bottom: var(--ion-safe-area-bottom)"
+        >
           <ion-col size="10">
             <ion-item lines="none" style="border-radius: 15px;align-items: center;">
-              <ion-textarea @ionFocus="scrollToBottom"  v-model="chatMessage" auto-grow rows="1"  class="chat-input q-mb-xs">
+              <ion-textarea
+                @ionFocus="scrollToBottom"
+                v-model="chatMessage"
+                auto-grow rows="1"
+                class="chat-input q-mb-xs"
+              >
               </ion-textarea>
               <ion-button mode="ios" class="q-mr-xs" fill="clear" size="small" style="scale: 1.3;" v-if="chatMessage === ''" shape="circle" @click="clkAddAttachment">
                 <ion-icon slot="icon-only" :icon="attach"></ion-icon>
@@ -159,7 +172,8 @@ import {
   IonCard, IonIcon, IonRange, IonLabel,
   IonRow, IonItem, IonItemOption, IonItemOptions,
   IonItemSliding, IonList, IonAvatar, IonTextarea,
-  IonButton, IonCol, IonFooter, 
+  IonPopover,
+  IonButton, IonCol, IonFooter, alertController,
 } from '@ionic/vue'
 </script>
 
@@ -176,6 +190,7 @@ export default {
         isAnswering: false,
         message: {}
       },
+      popoverOpen: false,
       answerClickedId: null,
       blinkMessageId: null,
       startPhotoHandler: false,
@@ -325,10 +340,21 @@ export default {
       this.isAnsweringMessage.isAnswering = false
       this.isAnsweringMessage.message = {}
     },
-    answerMessage (msg) {
+    reactToMsg (msg) {
       this.$refs.listAnswerMsg.$el.closeSlidingItems()
-      this.isAnsweringMessage.isAnswering = true
-      this.isAnsweringMessage.message = msg
+      console.log(msg, 'aqui msg kkkkkkkkkkkkkkk')
+      const opt = {
+        route: '/mobile/messenger/insertReactionToChatMsg',
+        body: {
+					messageId: msg._id,
+          // reactionIcon: msg.icon
+          // userId: this.userInfo.userId
+        }
+      }
+			useFetch(opt).then(r => {
+        // this.findAndRemoveMessageFromArray(messageId)
+        utils.toast("Mensagem curtida!")
+      })
     },
     async clkMessage (message) {
       this.$refs.listAnswerMsg.$el.closeSlidingItems()
@@ -577,17 +603,17 @@ ion-list {
   background-color: var(--ion-color-light);
 } */
 .sent-message {
-  background-color: lightgreen;
+  background-color: var(--ion-color-primary);
 }
 .sent-temp-message {
   border-width: 2px;
   border-style: solid;
-  border-color: lightgreen
+  border-color: var(--ion-color-primary)
 }
 
 .received-message {
   margin-left: -10px;
-  background-color: lightskyblue;
+  background-color: var(--ion-color-secondary);
 }
 .blink-bg {
   animation: blinkingBackground 2s infinite;
