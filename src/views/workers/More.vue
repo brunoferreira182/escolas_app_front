@@ -13,13 +13,8 @@
         <ion-item :button="true">
           <ion-label>Pagamentos</ion-label>
         </ion-item>
-<<<<<<< HEAD
-        <ion-item :button="true" @click="$router.push('/messenger')">
-          <ion-label>Mensagens</ion-label>
-=======
         <ion-item :button="true" @click="$router.push('/childrenAttendanceCalendar')">
           <ion-label>Comparecimento</ion-label>
->>>>>>> 1617de7c7bf4bce50dcae84066abe1c7d237451b
         </ion-item>
         <ion-item :button="true" @click="$router.push('/notesList')">
           <ion-label>Recados</ion-label>

@@ -77,13 +77,18 @@ const useUtils = {
     }
     const perms = []
     r.data.forEach((p) => { perms.push(p.role) })
-    const currentVision = localStorage.getItem('currentVision')
-    if (!currentVision && perms.includes('IS_PARENT')) router.push("/tabsParents/social")
-    else if (currentVision === 'worker' && perms.includes('IS_WORKER')) router.push("/tabsWorkers/class")
-    else if (currentVision === 'worker' && !perms.includes('IS_WORKER') && perms.includes('IS_PARENT')) {
-      router.push("/tabsParents/social")
-      localStorage.removeItem('currentVision')
-    }
+    // const currentVision = localStorage.getItem('currentVision')
+    if (perms.length === 1){
+      if (perms[0] === 'IS_PARENT') router.push('/tabsParents/social')
+      if (perms[0] === 'IS_WORKER') router.push('/tabsWorkers/class')
+    } else router.push('/tabsParents/social') 
+
+    // if (!currentVision && perms.includes('IS_PARENT')) router.push("/tabsParents/social")
+    // else if (currentVision === 'worker' && perms.includes('IS_WORKER')) router.push("/tabsWorkers/class")
+    // else if (currentVision === 'worker' && !perms.includes('IS_WORKER') && perms.includes('IS_PARENT')) {
+    //   router.push("/tabsParents/social")
+    //   localStorage.removeItem('currentVision')
+    // }
   },
   async getUserPermissions(){
     const opt = {
