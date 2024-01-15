@@ -33,10 +33,8 @@
       <ion-list :inset="true">
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico</div>
       </ion-list>
-      <ion-list :inset="true">
-        <ion-item 
-          v-if="isWorker === true"
-        >
+      <ion-list :inset="true" v-if="isWorker === true">
+        <ion-item>
           Área do trabalhador
           <ion-toggle
             v-model="switchWork"
