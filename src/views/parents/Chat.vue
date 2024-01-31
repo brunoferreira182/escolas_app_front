@@ -222,6 +222,7 @@ export default {
       useFetch(opt).then((r) => {
         if (!r.error) {
           this.childEventsHistory = r.data
+          console.log(this.childEventsHistory,'kjakjsdnaskj');
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde.")
         }

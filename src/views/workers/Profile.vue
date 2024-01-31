@@ -36,7 +36,7 @@
       <ion-list :inset="true" v-if="isWorker === true">
         <ion-item>
           Área do trabalhador
-          <ion-toggle
+          <ion-toggle 
             v-model="switchWork"
             alignment="center" 
             justify="end"
@@ -124,6 +124,7 @@ export default {
   },
   beforeMount () {
     this.startView()
+    this.getCurrentVision();
   },
   mounted () {
     this.getFamilySolicitationsStatusByFamily()
@@ -133,20 +134,25 @@ export default {
   methods: {
     getCurrentVision() {
       const currentVision = localStorage.getItem("currentVision")
-      if (currentVision) {
         this.currentVision = currentVision
-        if (this.currentVision === 'worker') this.switchWork = true
-        else if (this.currentVision !== 'worker') this.switchWork = false
+      if (this.currentVision === 'worker') {
+        this.switchWork = true
       } else {
         this.switchWork = false
       }
     },
     verifyIsWorker() {
-      this.permissions.forEach((p) => {
-        if (p.role === 'IS_WORKER') {
+      if(this.permissions.length === 1){
+        if (this.permissions.role === 'IS_WORKER') {
           this.isWorker = true
         }
-      })
+      } else if (this.permissions.length > 1){
+        this.permissions.forEach((p) => {
+          if (p.role === 'IS_WORKER') {
+            this.isWorker = true
+          }
+        })
+      }
     },
     toggleChange(ev) {
       console.log(ev.detail.checked)

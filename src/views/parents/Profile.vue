@@ -149,6 +149,7 @@ export default {
   },
   beforeMount () {
     this.startView()
+    this.getCurrentVision()
   },
   mounted () {
     this.getUserPermissions()
@@ -157,20 +158,21 @@ export default {
   methods: {
     getCurrentVision() {
       const currentVision = localStorage.getItem("currentVision")
-      if (currentVision) {
         this.currentVision = currentVision
-        if (this.currentVision === 'worker') this.switchWork = true
-        else if (this.currentVision !== 'worker') this.switchWork = false
+      if (this.currentVision === 'worker') {
+        this.switchWork = true
       } else {
         this.switchWork = false
       }
     },
     verifyIsWorker() {
-      this.permissions.forEach((p) => {
-        if (p.role === 'IS_WORKER') {
-          this.isWorker = true
-        }
-      })
+      if (this.permissions.length > 1){
+        this.permissions.forEach((p) => {
+          if (p.role === 'IS_WORKER') {
+            this.isWorker = true
+          }
+        })
+      }
     },
     toggleChange(ev) {
       if (ev.detail.checked) {
