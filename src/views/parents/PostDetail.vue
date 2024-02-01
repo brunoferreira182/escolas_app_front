@@ -246,7 +246,7 @@ export default {
         }
         useFetch(opt).then(r => {
           this.newComment = ''
-          this.commentsPage++
+          // this.commentsPage++
           this.getPostComments(true)
         })
       }
@@ -254,7 +254,6 @@ export default {
     getPostComments (fromStart) {
       // this.comments = []
       if (fromStart) {
-        this.comments = []
         this.commentsPage = 1
       }
       const opt = {
