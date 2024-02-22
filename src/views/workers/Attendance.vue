@@ -467,7 +467,8 @@ export default {
           selectedChildren: this.selectedChildren,
           childAttendanceType: this.dialogAttendance.isAttendanceChecked ? 'present' : 'absent',
           obs: this.dialogAttendance.obs,
-          classId: this.dialogAttendance.data.classId
+          classId: this.dialogAttendance.data.classId,
+          dateAttendance: this.dateAttendance
         },
       }
       utils.loading.show()
