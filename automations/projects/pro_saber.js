@@ -21,12 +21,12 @@ export default {
         '/ios/App/App.xcodeproj/project.pbxproj',
       ]
     },
-    // {
-    //   type: 'replaceTextInFile',
-    //   textOut: 'return "VSP"',
-    //   textIn: 'return "VSP"',
-    //   files: [ '/src/composables/utils.js' ]
-    // },
+    {
+      type: 'replaceTextInFile',
+      textOut: 'EduLink',
+      textIn: 'Escola Pró-Saber',
+      files: [ '/src/composables/variables.js' ]
+    },
     {
       type: 'replaceTextInFile',
       textOut: '>EduLink</string>',
