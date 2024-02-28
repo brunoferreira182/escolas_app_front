@@ -50,7 +50,7 @@ import utils from '../composables/utils'
 import { APP_NAME, COMPANY_ID } from '../composables/variables'
 import { useFetch } from '../composables/fetch';
 import pushService from '../composables/notifications'
-import logo from '/src/assets/logo_login_custom_2.png'
+import logo from '/src/assets/logo_login_custom.png'
 
 export default {
   components: {
