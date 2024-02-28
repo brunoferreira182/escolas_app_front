@@ -43,7 +43,7 @@ export default {
     },
     {
       type: 'copyFile',
-      to: '/public/logo_login_custom.png',
+      to: '/src/assets/logo_login_custom.png',
       fileToCopy: '/pro_saber/public/logo.jpeg'
     },
     {
