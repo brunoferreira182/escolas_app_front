@@ -24,7 +24,7 @@ function setVersion () {
 async function doInstructions (project) {
   
   let objInstructions
-  try { objInstructions = await import('./automations/projects/' + project + '.cjs') }
+  try { objInstructions = await import('./automations/projects/' + project + '.js') }
   catch (e) {
     console.log('Erro: arquivo de projeto nao encontrado: ', project)
     console.log('Tipo do erro: ', e)
