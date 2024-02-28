@@ -39,12 +39,12 @@ export default {
     {
       type: 'copyFile',
       to: '/assets/logo.png',
-      fileToCopy: '/pro_saber/cordova-res/logo.png'
+      fileToCopy: '/pro_saber/cordova-res/icone.png'
     },
     {
       type: 'copyFile',
       to: '/public/logo_login_custom.png',
-      fileToCopy: '/pro_saber/public/logo_login_custom.png'
+      fileToCopy: '/pro_saber/public/logo.jpeg'
     },
     {
       type: 'copyFile',
