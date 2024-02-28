@@ -5,7 +5,7 @@
       <div class="ion-padding">
         <div class="ion-text-center ">
           <ion-img
-            src="/assets/logo_login_custom_2.png"
+            :src="logo"
             class="login-logo"
           />
           <div class="login-logo-letters q-mb-md">{{ APP_NAME}}</div>
@@ -49,7 +49,7 @@ import { useFetch } from '@/composables/fetch';
 import { IonPage, IonButton, IonContent, IonAlert, IonImg } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../composables/variables';
 import { defineComponent } from 'vue';
-
+import logo from '/src/assets/logo_login_custom.png'
 export default {
   components: {
     IonPage, IonButton,
@@ -60,6 +60,7 @@ export default {
   data() {
     return {
       APP_NAME,
+      logo,
       familySolicitation: null,
       dialogAcceptSolicitation: {open: false}
     };

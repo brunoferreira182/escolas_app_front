@@ -44,7 +44,7 @@ export default {
     {
       type: 'copyFile',
       to: '/src/assets/logo_login_custom.png',
-      fileToCopy: '/pro_saber/public/logo.jpeg'
+      fileToCopy: '/pro_saber/public/icone.png'
     },
     {
       type: 'copyFile',
