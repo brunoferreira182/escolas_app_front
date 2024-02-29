@@ -19,9 +19,9 @@
           Clique para ver mais
         </div>
       </ion-title>
-      <ion-buttons slot="end" >
+      <!-- <ion-buttons slot="end" >
         <ion-toggle :checked="themeToggle" @ionChange="toggleChange($event)" justify="space-between"/>
-      </ion-buttons>
+      </ion-buttons> -->
     </ion-toolbar>
   </ion-header>
 </template>
