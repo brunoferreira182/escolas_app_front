@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.escolas.app.b3dev',
+  appId: 'com.escolas.app.prosaber.b3dev',
   appName: 'escolas_app_front_app',
   webDir: 'dist',
   server: {

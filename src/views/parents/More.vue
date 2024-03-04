@@ -28,25 +28,18 @@
         <ion-item :button="true" @click="clkExitApp">
           <ion-label>Sair do aplicativo</ion-label>
         </ion-item>
+        <ion-item :button="true" @click="clkDeleteAccount">
+          <ion-label>Excluir conta</ion-label>
+        </ion-item>
       </ion-list>
-      <ion-modal 
-        :is-open="openModal" 
-        @willDismiss="dismissModal()" 
-        @willPresent="getMenuByTodaysDate()"
-      >
-        <ion-content>
-          <ion-toolbar>
-            <ion-title>Cardápio do dia</ion-title>
-            <ion-buttons slot="end">
-              <ion-button color="primary" @click="dismissModal()">Fechar</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-          <h2 class="ion-text-center">{{ todayMenuData.name }}</h2>
-          <p>
-            <div v-html="todayMenuData.content"></div>
-          </p>
-        </ion-content>
-      </ion-modal>
+      <ion-alert
+        :is-open="dialogDeleteAccount.open"
+        header="Confirma a exclusão da conta?"
+        message="Esta ação não pode ser desfeita."
+        :buttons="dialogDeleteAccount.buttons"
+        @didDismiss="dialogDeleteAccount.open = false"
+      ></ion-alert>
+
     </ion-content>
   </ion-page>
 </template>
@@ -60,35 +53,40 @@ import { IonPage, IonButton,
   IonTitle,IonButtons,
   IonToolbar,
   IonContent, IonImg,
-  IonList, IonItem, IonLabel } from '@ionic/vue';
-import { APP_NAME, COMPANY_ID } from '../../composables/variables';
-import { defineComponent } from 'vue';
+  IonList, IonItem, IonLabel,
+  IonAlert
+} from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
+import utils from '../../composables/utils'
 
 export default {
   name: 'More',
   data() {
     return {
-      APP_NAME,
-      openModal: false,
-      todayMenuData:{}
+      dialogDeleteAccount: {
+        open: false,
+        buttons: []
+      }
     };
+  },
+  beforeMount () {
+    this.dialogDeleteAccount.buttons = [
+      {
+        text: 'Confirma',
+        handler: () => {
+          this.confirmDeleteAccount()
+        }
+      },
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+      }
+    ]
   },
   methods: {
     dismissModal(){
       this.openModal = false
       this.todayMenuData = {}
-    },
-    getMenuByTodaysDate(){
-      const opt = {
-        route: '/mobile/social/getMenuByTodaysDate',
-      }
-      useFetch(opt).then(r => {
-        if(r.error){
-          utils.toast('Não foi possível obter o cardápio do dia, tente novamente mais tarde.')
-          return
-        }this.todayMenuData = r.data
-      })
     },
     clkExitApp () {
       const opt = {
@@ -101,6 +99,23 @@ export default {
         this.$router.push('/login')
       })
     },
+    clkDeleteAccount () {
+      this.dialogDeleteAccount.open = true
+    },
+    confirmDeleteAccount () {
+      const opt = {
+        route: '/mobile/auth/deleteAccount'
+      }
+      utils.loading.show()
+      useFetch(opt).then((r) => {
+        utils.loading.hide()
+        if (r.error) {
+          utils.toast('Não foi possível excluir a conta, tente novamente mais tarde.')
+          return
+        }
+        this.$router.push('/login')
+      })
+    }
   }
 }
 

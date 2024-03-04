@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.escolas.app.b3dev</string>
+	<string>com.escolas.app.prosaber.b3dev</string>
 	<key>PROJECT_ID</key>
 	<string>escolas-app-365ba</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:226987192335:ios:61506bd13247311622b37a</string>
+	<string>1:226987192335:ios:f1b718918423e3dc22b37a</string>
 </dict>
 </plist>

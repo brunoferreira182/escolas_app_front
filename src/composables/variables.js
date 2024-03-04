@@ -1,5 +1,5 @@
 //////////// VARIAVEIS DA APLICACAO //////
-const MODE_MASTER_SERVER = 'prod'
+const MODE_MASTER_SERVER = 'local'
 const COMPANY_ID = 2
 const VERSION = 1.1
 const BUILD = 7
@@ -9,7 +9,7 @@ const MODE_APP_SERVER = 'local'
 const PROJECT_NAME = 'escolas_app'
 const DEFAULT_SERVER_NAME = 'application'
 const CRYPTOYESORNO = 0 // 1 para criptografar, 0 para nao criptografar
-const APP_NAME = 'EduLink'
+const APP_NAME = 'Escola Pró-Saber'
 let IUGU_ID
 let IUGU_TEST_MODE
 const MODE_SERVER = 'app'

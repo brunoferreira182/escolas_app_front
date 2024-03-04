@@ -22,7 +22,17 @@
         <ion-item :button="true" @click="clkExitApp">
           <ion-label>Sair do aplicativo</ion-label>
         </ion-item>
+        <ion-item :button="true" @click="clkDeleteAccount">
+          <ion-label>Excluir conta</ion-label>
+        </ion-item>
       </ion-list>
+      <ion-alert
+        :is-open="dialogDeleteAccount.open"
+        header="Confirma a exclusão da conta?"
+        message="Esta ação não pode ser desfeita."
+        :buttons="dialogDeleteAccount.buttons"
+        @didDismiss="dialogDeleteAccount.open = false"
+      ></ion-alert>
     </ion-content>
   </ion-page>
 </template>
@@ -33,16 +43,32 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 <script>
 import { IonPage, IonButton,
   IonContent, IonImg,
-  IonList, IonItem, IonLabel } from '@ionic/vue';
-import { APP_NAME, COMPANY_ID } from '../../composables/variables';
-import { defineComponent } from 'vue';
+  IonList, IonItem, IonLabel,
+  IonAlert } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 
 export default {
   data() {
     return {
-      APP_NAME
+      dialogDeleteAccount: {
+        open: false,
+        buttons: []
+      }
     };
+  },
+  beforeMount () {
+    this.dialogDeleteAccount.buttons = [
+      {
+        text: 'Confirma',
+        handler: () => {
+          this.confirmDeleteAccount()
+        }
+      },
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+      }
+    ]
   },
   methods: {
     clkExitApp () {
@@ -56,6 +82,23 @@ export default {
         this.$router.push('/login')
       })
     },
+    clkDeleteAccount () {
+      this.dialogDeleteAccount.open = true
+    },
+    confirmDeleteAccount () {
+      const opt = {
+        route: '/mobile/auth/deleteAccount'
+      }
+      utils.loading.show()
+      useFetch(opt).then((r) => {
+        utils.loading.hide()
+        if (r.error) {
+          utils.toast('Não foi possível excluir a conta, tente novamente mais tarde.')
+          return
+        }
+        this.$router.push('/login')
+      })
+    }
   }
 }
 
