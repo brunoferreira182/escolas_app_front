@@ -380,6 +380,7 @@ export default {
       this.getChildrenListByClassId()
       this.getLastActivityFromChildrenOfClasses(this.dialogInsertClassEvent.data.classId)
       this.getChildrenInClassList()
+      this.getChildEvents(this.dialogInsertClassEvent.data.classId)
     },
     startModalAttendance(){
       this.getChildrenListByClassId()
@@ -558,7 +559,8 @@ export default {
       this.dialogInsertChildEvent.open = true
       this.getLastActivityFromChild()
     },
-    getChildEvents() {
+    getChildEvents(classId) {
+      console.log('chmaou', classId)
       const opt = {
         route: '/mobile/workers/getChildEvents',
         body: {
@@ -566,6 +568,9 @@ export default {
           page: 1,
           rowsPerPage: 100
         }
+      }
+      if(classId){
+        opt.body.classId = classId
       }
       useFetch(opt).then((r) => {
     
@@ -651,7 +656,6 @@ export default {
           return
         }
         this.childrenInClassList = r.data.list
-        this.getChildEvents()
       })
     },
     getClassesByUserId() {
