@@ -26,7 +26,7 @@
         {{ userInfo.familyData.name }}
       </div> -->
       <ion-list :inset="true"  v-if="userInfo && userInfo.children" >
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Filhos</div>
+        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Crianças</div>
         <div v-if="userInfo.children">
           <ion-item 
             lines="inset"
@@ -53,7 +53,7 @@
           </ion-item>
         </div>
         <div v-else class="q-pa-md">
-          Você ainda não possui filhos cadastrados
+          Você ainda não possui crianças cadastradas
         </div>
       </ion-list>
       <ion-list :inset="true" v-if="isWorker === true">
@@ -149,7 +149,6 @@ export default {
   },
   beforeMount () {
     this.startView()
-    this.getCurrentVision()
   },
   mounted () {
     this.getUserPermissions()
@@ -161,8 +160,10 @@ export default {
         this.currentVision = currentVision
       if (this.currentVision === 'worker') {
         this.switchWork = true
+        this.$router.replace("/tabsWorkers/profile")
       } else {
         this.switchWork = false
+        this.$router.replace("/tabsParents/profile")
       }
     },
     verifyIsWorker() {

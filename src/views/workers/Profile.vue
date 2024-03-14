@@ -124,7 +124,6 @@ export default {
   },
   beforeMount () {
     this.startView()
-    this.getCurrentVision();
   },
   mounted () {
     this.getFamilySolicitationsStatusByFamily()
@@ -137,8 +136,10 @@ export default {
         this.currentVision = currentVision
       if (this.currentVision === 'worker') {
         this.switchWork = true
+        this.$router.replace("/tabsWorkers/profile")
       } else {
         this.switchWork = false
+        this.$router.replace("/tabsParents/profile")
       }
     },
     verifyIsWorker() {

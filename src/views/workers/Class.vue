@@ -50,7 +50,9 @@
       <ion-list :inset="true" color="light">
         <ion-accordion-group >
           <ion-accordion value="alunos">
-            <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
+            <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">
+              Alunos
+            </div>
             <div slot="content">
               <div class="q-px-md text-caption">
                 Selecione um aluno para inserir uma atividade individualmente
@@ -154,7 +156,7 @@
         <ion-content>
           <div class="input-wrapper q-px-md q-mx-md">
             <ion-button 
-              @click="openActivityAlert()" 
+              @click="dialogInsertActivity.open = true" 
               expand="block" 
               fill="flat"
             >
@@ -191,7 +193,9 @@
             </ion-item>
           </ion-list>
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
+          
           <ion-list :inset="true" v-if="childEventsHistory.length">
+            
             <ion-item 
               v-for="e in childEventsHistory"
               :key="e"
@@ -236,6 +240,8 @@
       header="Escolha uma atividade"
       :backdropDismiss="false"
       animated
+      @willPresent="getChildEvents(dialogInsertClassEvent.data.classId)"
+      @willDismiss="formattedChildEventList = null"
       :inputs="formattedChildEventList"
       :buttons="[
         {
@@ -255,11 +261,10 @@
     />
     <DialogInsertChildEvent
       :dialogInsertChildEvent="dialogInsertChildEvent"
-      :selectedEvent="selectedEvent"
       :childEventsHistory="childEventsHistory"
       :pagination="pagination"
       :dialogInsertActivity="dialogInsertActivity"
-      @close="closeDialogInserChildren"
+      @close="closeDialogInserChildrenActivity"
     />
   </ion-page>
 </template>
@@ -444,16 +449,13 @@ export default {
       this.dialogInsertChildEvent.childEventId = e
       this.selectedEvent = this.childEventsList.filter(event => event._id === e)
     },
-    openActivityAlert() {
-      this.dialogInsertActivity.open = true
-    },
     filterChildren(event) {
       const query = event.target.value.toLowerCase();
       this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
     },
     handleCheckboxChangeAll(e) {
       if (e.detail.checked === true) {
-        this.selectedChildren = this.classList.map((child) => ({ _id: child.childId }));
+        this.selectedChildren = this.classList.map((child) => ({ childId: child.childId }));
       } else {
         this.selectedChildren = [];
       }
@@ -464,10 +466,11 @@ export default {
 
       this.dialogInsertChildEvent.data = this.selectedChildren.map((child) => child.childId);
     },
-    closeDialogInserChildren() {
+    closeDialogInserChildrenActivity() {
       this.dialogInsertChildEvent.open = false
       this.dialogInsertChildEvent.data = []
       this.dialogInsertChildEvent.obs = ''
+      this.dialogInsertActivity.open = false
       this.dialogInsertChildEvent.childEventId = ''
       // this.pagination.page = 1
     },
@@ -545,6 +548,7 @@ export default {
       this.dialogInsertClassEvent.open = false
       this.dialogInsertClassEvent.data = {}
       this.dialogInsertClassEvent.obs = ''
+      this.dialogInsertActivity.open = false
       this.getLastActivityFromChildrenOfClasses()
       // this.getChildrenInClassList()
     },
@@ -605,8 +609,8 @@ export default {
 
     createUserChildEvents() {
       const file = [{ file: this.image.blob, name: 'newImage' }]
-      if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
-        utils.toast('Preencha o evento e insira uma observação para prosseguir')
+      if(this.dialogInsertChildEvent.childEventId === ''){
+        utils.toast('Preencha a atividade para prosseguir')
         return
       }
       const opt = {
@@ -634,7 +638,7 @@ export default {
           this.getLastActivityFromChildrenOfClasses()
           this.getLastActivityFromChild()
           this.selectedEvent = null
-          utils.toast('Evento inserido com sucesso!')
+          utils.toast('Atividade inserida com sucesso!')
       })
     },
     

@@ -7,7 +7,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button @click="closeDialogInserChildren">Fechar</ion-button>
+          <ion-button @click="closeDialogInserChildrenActivity">Fechar</ion-button>
         </ion-buttons>
         <ion-title >Atividades</ion-title>
       </ion-toolbar>
@@ -18,7 +18,7 @@
       </div>
       <div class="input-wrapper q-px-md q-mx-md">
         <ion-button 
-          @click="openActivityAlert()" 
+          @click="dialogInsertActivity.open = true" 
           expand="block" 
           fill="flat"
         >
@@ -57,6 +57,7 @@
       </ion-row>
       
       <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
+      
       <ion-list :inset="true" v-if="childEventsHistory.length">
         <ion-item 
           v-for="e in childEventsHistory"
@@ -73,6 +74,9 @@
               <ion-col size="8">
                 <div  class="ion-text-wrap">
                   <ion-badge>{{ e.eventName }}</ion-badge>
+                  <div>
+                    {{ e.className }}
+                  </div>
                   <p>{{ e.eventObs }}</p>
                 </div>
               </ion-col>
@@ -98,6 +102,31 @@
     </ion-content>
     <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
   </ion-modal>
+  
+  <ion-alert v-if="formattedChildEventList"
+    :is-open="dialogInsertActivity.open"
+    header="Escolha uma atividade"
+    @willPresent="getChildEvents()"
+    @willDismiss="formattedChildEventList = null"
+    :backdropDismiss="false"
+    animated
+    :inputs="formattedChildEventList"
+    :buttons="[
+      {
+        text: 'Depois',
+        handler: () => {
+          dialogInsertActivity.open = false;
+        },
+      },
+      {
+        text: 'Confirmar',
+        handler: (e) => {
+          dialogInsertActivity.open = false;
+          selectOptionActivity(e)
+        },
+      },
+    ]"
+  />
   <PhotoHandler
     v-show="startPhotoHandler"
     :start="startPhotoHandler"
@@ -111,7 +140,7 @@
 <script setup>
 import { 
   IonModal, IonButton, IonContent,
-  IonList, IonLabel, IonBadge, IonCheckbox,
+  IonList, IonLabel, IonBadge, IonCheckbox, IonAlert,
   IonItem, IonChip,IonRow, IonCol, IonAvatar,
   IonTextarea, IonImg, IonHeader, IonToolbar, IonTitle,
   IonButtons } from '@ionic/vue';
@@ -131,18 +160,24 @@ export default {
         blob: null,
         name: null
       },
-      startPhotoHandler: false
+      selectedEvent: null,
+      startPhotoHandler: false,
+      formattedChildEventList: null,
     }
   },
   props: {
     dialogInsertChildEvent: Object,
-    selectedEvent: Array,
+    // selectedEvent: Array,
     childEventsHistory: Array,
     pagination: Object,
     dialogInsertActivity: Object,
   },
-  emits: ['close', 'getLastActivityFromChildrenOfClasses'],
+  emits: ['close', 'getLastActivityFromChildrenOfClasses', ],
   methods: {
+    selectOptionActivity(e) {
+      this.dialogInsertChildEvent.childEventId = e
+      this.selectedEvent = this.childEventsList.filter(event => event._id === e)
+    },
     captured(fileUrl, fileBlob, fileName) {
       this.startPhotoHandler = false
       this.image = {
@@ -157,8 +192,8 @@ export default {
     },
     createUserChildEvents() {
       const file = [{ file: this.image.blob, name: 'newImage' }]
-      if(this.dialogInsertChildEvent.obs === '' || this.dialogInsertChildEvent.childEventId === ''){
-        utils.toast('Preencha o evento e insira uma observação para prosseguir')
+      if(this.dialogInsertChildEvent.childEventId === ''){
+        utils.toast('Preencha a atividade para prosseguir')
         return
       }
       const opt = {
@@ -179,10 +214,11 @@ export default {
         }
           this.clearModalData()
           this.$emit('getLastActivityFromChildrenOfClasses')
-          utils.toast('Evento inserido com sucesso!')
+          utils.toast('Atividade inserido com sucesso!')
       })
     },
     getChildEventsByUserId() {
+      
       const opt = {
         route: '/mobile/workers/getChildEventsByUserId',
         body: {
@@ -199,9 +235,6 @@ export default {
         this.childEventsHistory = r.data.list
       })
     },
-    openActivityAlert() {
-      this.dialogInsertActivity.open = true
-    },
     startDialogViewImage(e) {
       this.dialogViewImage.open = true
       this.dialogViewImage.image = e.childEventImage
@@ -213,10 +246,11 @@ export default {
       this.dialogInsertChildEvent.obs = ''
       this.dialogInsertChildEvent.childEventId = ''
     },
-    closeDialogInserChildren() {
+    closeDialogInserChildrenActivity() {
       this.dialogInsertChildEvent.open = false
       this.dialogInsertChildEvent.data = []
       this.dialogInsertChildEvent.obs = ''
+      this.formattedChildEventList = null
       this.dialogInsertChildEvent.childEventId = ''
       this.image = {
         url: null,
@@ -227,6 +261,7 @@ export default {
       this.$emit('close')
     },
     getChildEvents() {
+      const classId = this.dialogInsertChildEvent.data.classId
       const opt = {
         route: '/mobile/workers/getChildEvents',
         body: {
@@ -235,6 +270,7 @@ export default {
           rowsPerPage: 100
         }
       }
+      if(classId) opt.body.classId = classId
       utils.loading.show()
       useFetch(opt).then((r) => {
         utils.loading.hide()

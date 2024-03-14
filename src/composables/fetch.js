@@ -105,7 +105,7 @@ export async function useFetch ({
   catch (e) {
     console.log('AQUI ERRO CATCH', e)
   }
-  // console.log('retorno fetch ' + route, ret.data)
+  console.log('retorno fetch ' + route, ret.data)
 
   if (ret.data.error) {
     if (
