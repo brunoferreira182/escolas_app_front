@@ -154,7 +154,78 @@
           </ion-toolbar>
         </ion-header>
         <ion-content>
-          <div class="input-wrapper q-px-md q-mx-md">
+          <ion-list :inset="true">
+            <div class="text-h6 q-pa-md">
+              Selecione a atividade
+            </div>
+            <ion-item 
+              v-for="act in childEventsList"
+              :key="act"
+            >
+              <!-- Checkbox para a atividade -->
+              <ion-checkbox 
+                :checked="act.isChecked" 
+                @ionChange="handleActivityCheckboxChange(act)"
+              />
+              <!-- Label da atividade -->
+              <ion-label class="q-px-md ion-text-capitalize">
+                {{ act.name }}
+              </ion-label>
+            </ion-item>
+            <!-- Lista de intensidades (subtipos de atividade) -->
+            <div v-if="showSubtypesList && selectedActivity && selectedActivity.activitySubtypes">
+              <div class="text-h6 q-pa-md">
+                Selecione a intensidade
+              </div>
+              <ion-item
+                v-for="sub in selectedActivity.activitySubtypes"
+                :key="sub"
+              >
+                <!-- Checkbox para a intensidade -->
+                <ion-checkbox 
+                  :checked="sub.isChecked" 
+                  @ionChange="handleSubtypeCheckboxChange(sub)"
+                />
+                <!-- Label da intensidade -->
+                <ion-label class="q-px-md ion-text-capitalize">
+                  {{ sub.name }}
+                </ion-label>
+              </ion-item>
+            </div>
+            <!-- <div   
+              v-for="act in childEventsList"
+              :key="act">
+              <ion-item
+              
+              >
+                <ion-checkbox 
+                  :checked="act.isChecked" 
+                  @ionChange="handleCheckboxChange(act._id, $event)" 
+                />
+                <ion-label class="q-px-md ion-text-capitalize">
+                  {{ act.name }}
+                </ion-label>
+              </ion-item>
+              <div v-if="act.activitySubtypes">
+                <div class="text-caption q-pa-md">
+                  Selecione a intensidade
+                </div>
+                <ion-item
+                  v-for="sub in act.activitySubtypes"
+                  :key="sub"
+                >
+                  <ion-checkbox 
+                    :checked="act.isChecked" 
+                    @ionChange="handleCheckboxChange(sub._id, $event)" 
+                  />
+                  <ion-label class="q-px-md ion-text-capitalize">
+                    {{ sub }}
+                  </ion-label>
+                </ion-item>
+              </div>
+            </div> -->
+          </ion-list>
+          <!-- <div class="input-wrapper q-px-md q-mx-md">
             <ion-button 
               @click="dialogInsertActivity.open = true" 
               expand="block" 
@@ -171,7 +242,7 @@
               placeholder="Descrição da atividade"
               :auto-grow="true"
             ></ion-textarea>
-          </div>
+          </div> -->
           <ion-list :inset="true">
             <ion-item class="ion-text-left text-h6">
               <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
@@ -194,10 +265,10 @@
           </ion-list>
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
           
-          <ion-list :inset="true" v-if="childEventsHistory.length">
+          <ion-list :inset="true" v-if="classEventsHistory.length">
             
             <ion-item 
-              v-for="e in childEventsHistory"
+              v-for="e in classEventsHistory"
               :key="e"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="e.childEventImage">
@@ -235,7 +306,7 @@
 
   
     </ion-content>
-    <ion-alert v-if="formattedChildEventList"
+    <!-- <ion-alert v-if="formattedChildEventList"
       :is-open="dialogInsertActivity.open"
       header="Escolha uma atividade"
       :backdropDismiss="false"
@@ -258,7 +329,7 @@
           },
         },
       ]"
-    />
+    /> -->
     <DialogInsertChildEvent
       :dialogInsertChildEvent="dialogInsertChildEvent"
       :childEventsHistory="childEventsHistory"
@@ -304,6 +375,7 @@ import { caretDownSharp } from 'ionicons/icons';
 import utils from '../../composables/utils'
 import PhotoHandler from '../../components/PhotoHandler.vue'
 import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
+
 </script>
 <script>
 
@@ -312,6 +384,9 @@ export default {
   data() {
     return {
       startPhotoHandler: false,
+      showSubtypesList: false,
+      selectedActivity: null,
+      selectedSubtype: null,
       dialogInsertChildEvent: {
         open: false,
         data: [],
@@ -377,6 +452,44 @@ export default {
     }
   },
   methods: {
+    handleActivityCheckboxChange(act) {
+      console.log(act, 'act');
+      // Desmarca todas as outras atividades
+      this.childEventsList.forEach((item) => {
+        item.isChecked = item === act;
+      });
+
+      // Verifica se a atividade selecionada possui subtipos
+      if (Array.isArray(act.activitySubtypes) && act.activitySubtypes.length > 0) {
+        // Converte cada subtipo em um objeto com a propriedade isChecked
+        this.selectedActivity = {
+          ...act,
+          activitySubtypes: act.activitySubtypes.map((sub) => ({ name: sub, isChecked: false }))
+        };
+        this.showSubtypesList = true; // Mostra automaticamente a lista de intensidades
+      } else {
+        // Adiciona a atividade selecionada ao selectedActivity
+        this.selectedActivity = act;
+        this.showSubtypesList = false;
+      }
+
+      // Limpa a seleção de subtipos ao mudar de atividade
+      this.selectedSubtype = null;
+    },
+
+    handleSubtypeCheckboxChange(sub) {
+      // Desmarca o subtipo anterior se outro subtipo for selecionado
+      if (this.selectedSubtype !== sub.name) {
+        this.selectedActivity.activitySubtypes.forEach((item) => {
+          item.isChecked = item.name === sub.name;
+        });
+        this.selectedSubtype = sub.name; // Armazena o subtipo selecionado na variável selectedSubtype
+      } else {
+        // Limpa a variável selectedSubtype e define isChecked como false se o mesmo subtipo for clicado novamente
+        this.selectedSubtype = null;
+        this.selectedActivity.activitySubtypes.find(item => item.name === sub.name).isChecked = false;
+      }
+    },
     onChangeDate($event, c) {
       this.dateSelected = $event.detail.value.split('T')[0]
       this.getLastActivityFromChildrenOfClasses()
@@ -454,6 +567,7 @@ export default {
       this.childrenFilter = this.states.filter((d) => d.nome.toLowerCase().indexOf(query) > -1);
     },
     handleCheckboxChangeAll(e) {
+      this.selectAllChildren = false
       if (e.detail.checked === true) {
         this.selectedChildren = this.classList.map((child) => ({ childId: child.childId }));
       } else {
@@ -476,7 +590,7 @@ export default {
     },
     handleCheckboxAttendance(childId, e) {
       if (e.detail.checked === true) {
-        this.selectedChildren.push({_id: childId})
+        this.selectedChildren.push({childId: childId})
         if (this.selectedChildren.length === this.classList.length) {
             this.selectAllChildren = true
           }
@@ -496,24 +610,29 @@ export default {
       }
     },
     handleCheckboxChange(childId, e) {
-      if (e.detail.checked === true) {
-        this.selectedChildren.push({_id: childId})
-        if (this.selectedChildren.length === this.classList.length) {
-            this.selectAllChildren = true
-          }
-        return
+      if (this.selectAllChildren && e.detail.checked === false) {
+        this.selectAllChildren = false;
       }
+
+      if (e.detail.checked === true) {
+        const isChildSelected = this.selectedChildren.some(child => child.childId === childId);
+        if (!isChildSelected) {
+          this.selectedChildren.push({ childId: childId });
+        }
+
+        if (this.selectedChildren.length === this.classList.length) {
+          this.selectAllChildren = true;
+        }
+        return;
+      }
+
       if (e.detail.checked === false) {
-        const initialLength = this.selectedChildren.length
-        this.selectedChildren.forEach((child, childIndex) => {
-          if (child._id === childId) {
-            this.selectedChildren.splice(childIndex, 1)
-          if (initialLength === this.classList.length && this.selectedChildren !== initialLength) {
-            this.selectAllChildren = false
-          }
-            this.dialogInsertChildEvent.data = this.selectedChildren
-          }
-        })
+        this.selectedChildren = this.selectedChildren.filter(child => child.childId !== childId);
+
+        if (this.selectedChildren.length !== this.classList.length) {
+          this.selectAllChildren = false;
+        }
+        this.dialogInsertChildEvent.data = this.selectedChildren;
       }
     },
     startDialogViewImage(e) {
@@ -549,6 +668,9 @@ export default {
       this.dialogInsertClassEvent.data = {}
       this.dialogInsertClassEvent.obs = ''
       this.dialogInsertActivity.open = false
+      this.selectAllChildren = false
+      this.selectedChildren = []
+      this.selectedActivity = null
       this.getLastActivityFromChildrenOfClasses()
       // this.getChildrenInClassList()
     },
@@ -557,6 +679,8 @@ export default {
       this.dialogInsertChildEvent.data = {}
       this.dialogInsertChildEvent.obs = ''
       this.dialogInsertChildEvent.childEventId = ''
+      this.selectAllChildren = false
+      this.selectedChildren = []
     },
     clkOpenDialogChildEvent(child){
       this.dialogInsertChildEvent.data = child
@@ -588,6 +712,7 @@ export default {
           label: event.name,
           value: event._id
         }))
+        this.act
       })
     },
     clkOpenDialogClassEvent(c){
@@ -609,8 +734,8 @@ export default {
 
     createUserChildEvents() {
       const file = [{ file: this.image.blob, name: 'newImage' }]
-      if(this.dialogInsertChildEvent.childEventId === ''){
-        utils.toast('Preencha a atividade para prosseguir')
+      if(this.selectedActivity._id === ''){
+        utils.toast('Selecione a atividade para prosseguir')
         return
       }
       const opt = {
@@ -618,14 +743,16 @@ export default {
         body: {
           // childId: this.dialogInsertChildEvent.data,
           selectedChildren: this.selectedChildren,
-          childEventId: this.dialogInsertChildEvent.childEventId,
-          obs: this.dialogInsertChildEvent.obs,
+          childEventId: this.selectedActivity._id,
         },
         // file: this.image.blob ? [{ file: this.image.blob, name: 'userPhoto' }] : null
       }
-      if(this.image.blob !== null){
-        opt.file = file
+      if(this.selectedSubtype){
+        opt.body.selectedSubtype = this.selectedSubtype
       }
+      // if(this.image.blob !== null){
+      //   opt.file = file
+      // }
       utils.loading.show()
       useFetch(opt).then((r) => {
         utils.loading.hide()

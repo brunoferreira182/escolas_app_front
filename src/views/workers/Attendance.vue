@@ -66,6 +66,7 @@
                 </ion-label>
                 <ion-label slot="end">
                   <ion-button 
+                    size="small"
                     color="success"
                     shape="round"
                     @click="clkAddPresenceToChild(child, 'presença')"
@@ -74,12 +75,14 @@
                   </ion-button>
                   <ion-button 
                     color="danger"
+                    size="small"
                     shape="round"
                     @click="clkAddPresenceToChild(child, 'falta')"
                   > 
                     <ion-icon slot="icon-only" :icon="close"></ion-icon>
                   </ion-button><br>
                   <ion-chip
+                    
                     v-if="child.attendanceData"
                     :outline="true"
                     :color="child.attendanceData.childAttendanceType === 'present' ? 'success' : 'danger'"

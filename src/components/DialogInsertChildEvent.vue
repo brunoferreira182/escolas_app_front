@@ -16,46 +16,45 @@
       <div class="q-pa-md ion-text-capitalize ion-text-center">
         {{ dialogInsertChildEvent.data.childName }}
       </div>
-      <div class="input-wrapper q-px-md q-mx-md">
-        <ion-button 
-          @click="dialogInsertActivity.open = true" 
-          expand="block" 
-          fill="flat"
+      <ion-list :inset="true">
+        <div class="text-h6 q-pa-md">
+          Selecione a atividade
+        </div>
+        <ion-item 
+          v-for="act in childEventsList"
+          :key="act"
         >
-          {{ dialogInsertChildEvent.childEventId !== '' ? selectedEvent[0].name : 'Selecionar Atividade'}}
-        </ion-button>
-      </div>
-      <div class="input-wrapper  q-px-md q-mx-md">
-        <ion-textarea
-          label="Descrição"
-          label-placement="floating"
-          v-model="dialogInsertChildEvent.obs"
-          placeholder="Descrição da atividade"
-          :auto-grow="true"
-        ></ion-textarea>
-      </div>
-      <ion-button
-        expand="block"
-        class="q-ma-md"
-        fill="clear"
-        @click="startPhotoHandler = true"
-        v-if="!image.blob"
-      >Inserir foto (opcional)
-      </ion-button>
-      <ion-row class="q-ma-md" v-if="image.blob">
-        <ion-col size="2">
-          <ion-avatar >
-            <ion-img :src="image.url" ></ion-img>
-          </ion-avatar>
-        </ion-col>
-        <ion-col size="4">
-          <ion-button
-            @click="startPhotoHandler = true"
-            fill="outline"
-          >Trocar foto</ion-button>
-        </ion-col>
-      </ion-row>
-      
+          <!-- Checkbox para a atividade -->
+          <ion-checkbox 
+            :checked="act.isChecked" 
+            @ionChange="handleActivityCheckboxChange(act)"
+          />
+          <!-- Label da atividade -->
+          <ion-label class="q-px-md ion-text-capitalize">
+            {{ act.name }}
+          </ion-label>
+        </ion-item>
+        <!-- Lista de intensidades (subtipos de atividade) -->
+        <div v-if="showSubtypesList && selectedActivity && selectedActivity.activitySubtypes">
+          <div class="text-h6 q-pa-md">
+            Selecione a intensidade
+          </div>
+          <ion-item
+            v-for="sub in selectedActivity.activitySubtypes"
+            :key="sub"
+          >
+            <!-- Checkbox para a intensidade -->
+            <ion-checkbox 
+              :checked="sub.isChecked" 
+              @ionChange="handleSubtypeCheckboxChange(sub)"
+            />
+            <!-- Label da intensidade -->
+            <ion-label class="q-px-md ion-text-capitalize">
+              {{ sub.name }}
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-list>
       <div class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
       
       <ion-list :inset="true" v-if="childEventsHistory.length">
@@ -160,9 +159,13 @@ export default {
         blob: null,
         name: null
       },
+      showSubtypesList: false,
+      selectedActivity: null,
+      selectedSubtype: null,
       selectedEvent: null,
       startPhotoHandler: false,
       formattedChildEventList: null,
+      childEventsList: [],
     }
   },
   props: {
@@ -174,6 +177,44 @@ export default {
   },
   emits: ['close', 'getLastActivityFromChildrenOfClasses', ],
   methods: {
+    handleActivityCheckboxChange(act) {
+      console.log(act, 'act');
+      // Desmarca todas as outras atividades
+      this.childEventsList.forEach((item) => {
+        item.isChecked = item === act;
+      });
+
+      // Verifica se a atividade selecionada possui subtipos
+      if (Array.isArray(act.activitySubtypes) && act.activitySubtypes.length > 0) {
+        // Converte cada subtipo em um objeto com a propriedade isChecked
+        this.selectedActivity = {
+          ...act,
+          activitySubtypes: act.activitySubtypes.map((sub) => ({ name: sub, isChecked: false }))
+        };
+        this.showSubtypesList = true; // Mostra automaticamente a lista de intensidades
+      } else {
+        // Adiciona a atividade selecionada ao selectedActivity
+        this.selectedActivity = act;
+        this.showSubtypesList = false;
+      }
+
+      // Limpa a seleção de subtipos ao mudar de atividade
+      this.selectedSubtype = null;
+    },
+
+    handleSubtypeCheckboxChange(sub) {
+      // Desmarca o subtipo anterior se outro subtipo for selecionado
+      if (this.selectedSubtype !== sub.name) {
+        this.selectedActivity.activitySubtypes.forEach((item) => {
+          item.isChecked = item.name === sub.name;
+        });
+        this.selectedSubtype = sub.name; // Armazena o subtipo selecionado na variável selectedSubtype
+      } else {
+        // Limpa a variável selectedSubtype e define isChecked como false se o mesmo subtipo for clicado novamente
+        this.selectedSubtype = null;
+        this.selectedActivity.activitySubtypes.find(item => item.name === sub.name).isChecked = false;
+      }
+    },
     selectOptionActivity(e) {
       this.dialogInsertChildEvent.childEventId = e
       this.selectedEvent = this.childEventsList.filter(event => event._id === e)
@@ -191,21 +232,21 @@ export default {
       this.startPhotoHandler = false
     },
     createUserChildEvents() {
-      const file = [{ file: this.image.blob, name: 'newImage' }]
-      if(this.dialogInsertChildEvent.childEventId === ''){
-        utils.toast('Preencha a atividade para prosseguir')
+      // const file = [{ file: this.image.blob, name: 'newImage' }]
+      if(this.selectedActivity._id === ''){
+        utils.toast('Selecione a atividade para prosseguir')
         return
       }
       const opt = {
         route: '/mobile/workers/createUserChildEvents',
         body: {
-          selectedChildren: [{_id: this.dialogInsertChildEvent.data.childId}],
-          childEventId: this.dialogInsertChildEvent.childEventId,
+          selectedChildren: [{childId: this.dialogInsertChildEvent.data.childId}],
+          childEventId: this.selectedActivity._id,
           obs: this.dialogInsertChildEvent.obs
         },
       }
-      if(this.image.blob !== null){
-        opt.file = file
+      if(this.selectedSubtype){
+        opt.body.selectedSubtype = this.selectedSubtype
       }
       useFetch(opt).then((r) => {
         if (r.error) {
@@ -244,6 +285,8 @@ export default {
       this.dialogInsertChildEvent.open = false
       this.dialogInsertChildEvent.data = {}
       this.dialogInsertChildEvent.obs = ''
+      this.selectAllChildren = false
+      this.selectedChildren = []
       this.dialogInsertChildEvent.childEventId = ''
     },
     closeDialogInserChildrenActivity() {
