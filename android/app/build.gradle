@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.escolas.app.prosaber.b3dev"
+    namespace "com.escolas.app.b3dev"
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.escolas.app.prosaber.b3dev"
+        applicationId "com.escolas.app.b3dev"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 9

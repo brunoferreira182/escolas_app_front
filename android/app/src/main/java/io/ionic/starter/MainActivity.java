@@ -1,4 +1,4 @@
-package com.escolas.app.prosaber.b3dev;
+package com.escolas.app.b3dev;
 
 import com.getcapacitor.BridgeActivity;
 
