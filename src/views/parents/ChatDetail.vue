@@ -96,7 +96,7 @@
         </ion-list>
       </div>
     </ion-content>
-    <ion-footer v-if="canSendMessage" style="background-color: var(--ion-color-step-50, #f7f7f7);">
+    <ion-footer style="background-color: var(--ion-color-step-50, #f7f7f7);">
       <form >
         <!-- <ion-item v-if="isAnsweringMessage.isAnswering" lines="none" >
           <ion-avatar slot="start">
