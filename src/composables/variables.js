@@ -9,7 +9,7 @@ const MODE_APP_SERVER = 'local'
 const PROJECT_NAME = 'escolas_app'
 const DEFAULT_SERVER_NAME = 'application'
 const CRYPTOYESORNO = 0 // 1 para criptografar, 0 para nao criptografar
-const APP_NAME = 'Escola Pró-Saber'
+const APP_NAME = 'EduLink'
 let IUGU_ID
 let IUGU_TEST_MODE
 const MODE_SERVER = 'app'
