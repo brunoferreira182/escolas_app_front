@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Pró-saber</string>
-    <string name="title_activity_main">Pró-saber</string>
+    <string name="app_name">EduLink</string>
+    <string name="title_activity_main">EduLink</string>
     <string name="package_name">com.escolas.app.b3dev</string>
     <string name="custom_url_scheme">com.escolas.app.b3dev</string>
 </resources>
