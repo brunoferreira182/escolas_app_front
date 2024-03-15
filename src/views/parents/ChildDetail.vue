@@ -8,7 +8,7 @@
       <ion-list :inset="true">
         <ion-item
           lines="none"
-          class="profile-item"
+          class="profile-item q-py-md"
         >
           <ion-avatar style="width:60px; height: 60px;" >
             <img :src="utils.makeFileUrl(userDetail.userData.image)" class="profile-avatar">
@@ -28,7 +28,7 @@
         Editar foto de perfil
       </ion-button>
       <h2 class="q-px-md">Responsáveis</h2>
-      <ion-list :inset="true" v-if="userDetail.responsibleData">
+      <ion-list :inset="true" v-if="userDetail.responsibleData" class="q-py-md">
         <ion-item 
             lines="inset"
             v-for="resp in userDetail.responsibleData"
