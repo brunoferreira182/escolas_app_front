@@ -85,6 +85,7 @@
           <ion-label>
             <strong class="text-capitalize">{{ e.name }}</strong>
             <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
+            <ion-badge  color="primary">{{ e.activitySubtype }}</ion-badge><br />
             <ion-note color="medium" class="ion-text-wrap">
               {{ e.obs }}
             </ion-note>
