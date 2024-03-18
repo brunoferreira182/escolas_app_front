@@ -43,7 +43,7 @@
             />
           </ion-card>
         </div>
-        <div v-else>
+        <div v-else class="q-pa-md">
           Nenhum dado de comparecimento
         </div>
       </div>
@@ -87,7 +87,6 @@ export default defineComponent({
   },
   methods: {
     onChangeDate($event, c) {
-      console.log($event.detail.value, c)
       const splitDate = $event.detail.value.split('T')
       const monthYear = splitDate[0].substring(0, 7)
       this.getChildAttendanceByDate(monthYear)

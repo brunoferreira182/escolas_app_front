@@ -43,6 +43,7 @@ import storyDetail from '../views/parents/StoryDetail.vue'
 import calendarEventDetail from '../views/workers/CalendarEventDetail.vue'
 import Messenger from '../views/Messenger.vue';
 import ChildrenAttendanceCalendar from '../views/ChildrenAttendanceCalendar.vue';
+import ParentFiles from  '../views/parents/ParentFiles.vue'
 import MealMenu from '../views/MealMenu.vue';
 
 
@@ -105,6 +106,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/childDetail',
         name: 'ChildDetail',
         component: childDetail
+      },
+      {
+        path: '/parentFiles',
+        name: 'ParentFiles',
+        component: ParentFiles
       },
       {
         path: '/parentDetail',

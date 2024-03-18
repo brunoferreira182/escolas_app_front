@@ -29,6 +29,7 @@
         <div class="ion-text-left text-h6 q-py-sm q-pl-md">Crianças</div>
         <div v-if="userInfo.children">
           <ion-item 
+            class="q-py-sm"
             lines="inset"
             v-for="child in userInfo.children"
             :key="child"
