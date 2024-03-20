@@ -9,7 +9,13 @@
       <div class="q-mt-md">
         <ion-datetime-button datetime="datetime"></ion-datetime-button>
       </div>
-      <ion-modal :keep-contents-mounted="true">
+      <div class="q-ma-md">
+        <ion-img 
+          :src="menuData"
+          alt="Erro ao encontrar cardápio!"
+        ></ion-img>
+      </div>
+      <!-- <ion-modal :keep-contents-mounted="true">
         <ion-datetime
           id="datetime"
           presentation="date"
@@ -30,7 +36,7 @@
             <div v-html="e.content"></div>
           </ion-label>
         </ion-item>
-      </ion-list>
+      </ion-list> -->
 
     </ion-content>
   </ion-page>
@@ -67,13 +73,13 @@ export default {
   data() {
     return {
       openModal: false,
-      menuData: [],
+      menuData: null,
       selecteDate: null,
       selectedMenu: {}
     };
   },
   mounted () {
-    this.getMenuByTodaysDate()
+    this.getMenuFile()
   },
   methods: {
     onChangeDate($event, c) {
@@ -83,18 +89,31 @@ export default {
     dismissModal(){
       this.openModal = false
     },
-    getMenuByTodaysDate(){
+    // getMenuByTodaysDate(){
+    //   const opt = {
+    //     route: '/mobile/social/getMenuByTodaysDate',
+    //     body: {
+    //       dateSelected: this.dateSelected
+    //     }
+    //   }
+    //   useFetch(opt).then(r => {
+    //     if(r.error){
+    //       utils.toast('Não foi possível obter o cardápio do dia, tente novamente mais tarde.')
+    //       return
+    //     }
+    //     this.menuData = r.data
+    //   })
+    // },
+    getMenuFile(){
       const opt = {
-        route: '/mobile/social/getMenuByTodaysDate',
-        body: {
-          dateSelected: this.dateSelected
-        }
+        route: '/mobile/social/getMenuFile',
       }
       useFetch(opt).then(r => {
         if(r.error){
-          utils.toast('Não foi possível obter o cardápio do dia, tente novamente mais tarde.')
+          utils.toast('Não foi possível obter o cardápio, tente novamente mais tarde.')
           return
         }
+        console.log(r.data, 'coisa');
         this.menuData = r.data
       })
     },
