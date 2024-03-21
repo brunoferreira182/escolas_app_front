@@ -6,12 +6,18 @@
     />
     <ion-content color="light">
       
-      <div class="q-mt-md">
+      <div class="q-ma-md"  style="display: flex;">
+        <ion-select placeholder-placement="floating" fill="outline" justify="end" placeholder= "Mes">
+          <ion-select-option v-for="month in months" :key="month"> {{ month.value + 1 }}</ion-select-option>
+        </ion-select>
+        <ion-select placeholder-placement="floating" fill="outline" class="q-pl-sm" placeholder= "Ano">
+          <ion-select-option v-for="year in years" :key="year"> {{ year }}</ion-select-option>
+        </ion-select>
         <ion-datetime-button datetime="datetime"></ion-datetime-button>
       </div>
       <div class="q-ma-md">
         <ion-img 
-          :src="menuData"
+          :src="utils.makeFileUrl(menuData)"
           alt="Erro ao encontrar cardápio!"
         ></ion-img>
       </div>
@@ -75,6 +81,22 @@ export default {
       openModal: false,
       menuData: null,
       selecteDate: null,
+      date: null,
+      months: [
+        { nome: "Janeiro", value: 1 },
+        { nome: "Fevereiro", value: 2 },
+        { nome: "Março", value: 3 },
+        { nome: "Abril", value: 4 },
+        { nome: "Maio", value: 5 },
+        { nome: "Junho", value: 6 },
+        { nome: "Julho", value: 7 },
+        { nome: "Agosto", value: 8 },
+        { nome: "Setembro", value: 9 },
+        { nome: "Outubro", value: 10 },
+        { nome: "Novembro", value: 11 },
+        { nome: "Dezembro", value: 12 }
+      ],
+      years:[2024, 2025, 2026, 2027],
       selectedMenu: {}
     };
   },
@@ -105,16 +127,28 @@ export default {
     //   })
     // },
     getMenuFile(){
+      let year, month
+      if (!this.date){
+        const date = new Date()
+        month = date.getMonth()
+        year = date.getYear()
+      }
+      console.log(this.date, 'dkjnaksjdnkjasnkj')
       const opt = {
         route: '/mobile/social/getMenuFile',
+        body: {
+          month : month,
+          year : year
+        }
       }
       useFetch(opt).then(r => {
         if(r.error){
           utils.toast('Não foi possível obter o cardápio, tente novamente mais tarde.')
           return
         }
-        console.log(r.data, 'coisa');
+        // console.log(r.data, 'coisa');
         this.menuData = r.data
+        // console.log(this.menuData)
       })
     },
   }
