@@ -8,43 +8,27 @@
       
       <div class="q-ma-md"  style="display: flex;">
         <ion-select v-model="date.month"  justify="end" placeholder= "Mes">
-          <ion-select-option :value="month.value" v-for="month in months" :key="month.value"> {{ month.nome }}</ion-select-option>
+          <ion-select-option 
+            :value="month.value" 
+            v-for="month in months" 
+            :key="month.value"> {{ month.nome }}
+          </ion-select-option>
         </ion-select>
         <ion-select v-model="date.year" class="q-pl-sm" placeholder= "Ano">
-          <ion-select-option :value="year" v-for="year in years" :key="year"> {{ year }}</ion-select-option>
+          <ion-select-option 
+            :value="year" 
+            v-for="year in years" 
+            :key="year"> {{ year }}
+          </ion-select-option>
         </ion-select>
       </div>
       <div class="q-ma-md">
         <ion-img 
-          :src="utils.makeFileUrl(menuData)"
+          :src="utils.makeFileUrl(menuData.filename)"
           alt="Erro ao encontrar cardápio!"
         ></ion-img>
       </div>
-      
-      
-      <!-- <ion-modal :keep-contents-mounted="true">
-        <ion-datetime
-          id="datetime"
-          presentation="date"
-          @ionChange="onChangeDate($event, c)"
-        ></ion-datetime>
-      </ion-modal>
-
-      <ion-list
-        :inset="true"
-        v-for="e in menuData"
-        :key="e"
-      >
-        <ion-item detail="false">
-          <ion-label>
-            <div class="q-mb-md">
-              <strong class="text-capitalize">{{ e.name }}</strong>
-            </div>
-            <div v-html="e.content"></div>
-          </ion-label>
-        </ion-item>
-      </ion-list> -->
-
+    
     </ion-content>
   </ion-page>
 </template>
@@ -81,7 +65,7 @@ export default {
   data() {
     return {
       openModal: false,
-      dateSend: null, 
+      dateSearch: '', 
       menuData: null,
       date: {
         month: '',
@@ -126,37 +110,27 @@ export default {
       this.makeDatefullSend()
       this.getMenuFile()
     },
-    // getMenuByTodaysDate(){
-    //   const opt = {
-    //     route: '/mobile/social/getMenuByTodaysDate',
-    //     body: {
-    //       dateSelected: this.dateSelected
-    //     }
-    //   }
-    //   useFetch(opt).then(r => {
-    //     if(r.error){
-    //       utils.toast('Não foi possível obter o cardápio do dia, tente novamente mais tarde.')
-    //       return
-    //     }
-    //     this.menuData = r.data
-    //   })
-    // },
     async makeDatefullSend(){
-      this.dateSend = this.date.month + "/" + this.date.year
-      console.log(this.dateSend, 'osndansljansdlka');
+      return this.dateSearch = '0' + this.date.month + "/" + this.date.year
     },
     getMenuFile(){
       let year, month
       if (this.date.month ==='' && this.date.year ===''){
         const date = new Date()
         month = date.getMonth()
+        month = '0' + (month + 1)
+        month.toString()
+
         year = date.getYear()
+        year = year + 1900
+        year.toString()
+        this.dateSearch = month + '/' + year  
+        console.log(this.dateSearch, 'LKAJSNDKJASNKDNKJSAN')
       }
       const opt = {
         route: '/mobile/social/getMenuFile',
         body: {
-          month : month,
-          year : year
+          date: this.dateSearch,
         }
       }
       useFetch(opt).then(r => {
@@ -164,9 +138,8 @@ export default {
           utils.toast('Não foi possível obter o cardápio, tente novamente mais tarde.')
           return
         }
-        // console.log(r.data, 'coisa');
         this.menuData = r.data
-        // console.log(this.menuData)
+        console.log('kjndakjsndkjasnkd', this.menuData)
       })
     },
   }

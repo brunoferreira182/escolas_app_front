@@ -25,7 +25,8 @@
           <ion-label>Mensagens</ion-label>
         </ion-item>
         <ion-item :button="true" @click="$router.push('/mealMenu')">
-          <ion-label>Cardápio do dia</ion-label>
+          <!-- <ion-label>Cardápio do dia</ion-label> -->
+          <ion-label>Cardápio Mensal</ion-label>
         </ion-item>
         <ion-item :button="true" @click="$router.push('/notesList')">
           <ion-label>Recados</ion-label>
