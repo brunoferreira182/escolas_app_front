@@ -7,13 +7,12 @@
     <ion-content color="light">
       
       <div class="q-ma-md"  style="display: flex;">
-        <ion-select placeholder-placement="floating" fill="outline" justify="end" placeholder= "Mes">
-          <ion-select-option v-for="month in months" :key="month"> {{ month.value + 1 }}</ion-select-option>
+        <ion-select v-model="date.month"  justify="end" placeholder= "Mes">
+          <ion-select-option :value="month.value" v-for="month in months" :key="month.value"> {{ month.nome }}</ion-select-option>
         </ion-select>
-        <ion-select placeholder-placement="floating" fill="outline" class="q-pl-sm" placeholder= "Ano">
-          <ion-select-option v-for="year in years" :key="year"> {{ year }}</ion-select-option>
+        <ion-select v-model="date.year" class="q-pl-sm" placeholder= "Ano">
+          <ion-select-option :value="year" v-for="year in years" :key="year"> {{ year }}</ion-select-option>
         </ion-select>
-        <ion-datetime-button datetime="datetime"></ion-datetime-button>
       </div>
       <div class="q-ma-md">
         <ion-img 
@@ -21,6 +20,8 @@
           alt="Erro ao encontrar cardápio!"
         ></ion-img>
       </div>
+      
+      
       <!-- <ion-modal :keep-contents-mounted="true">
         <ion-datetime
           id="datetime"
@@ -65,6 +66,7 @@ import {
   IonLabel, 
   IonNote,
   IonIcon,
+  IonSelect, IonSelectOption,
   IonDatetimeButton, IonDatetime
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
@@ -79,29 +81,38 @@ export default {
   data() {
     return {
       openModal: false,
+      dateSend: null, 
       menuData: null,
-      selecteDate: null,
-      date: null,
+      date: {
+        month: '',
+        year: '',
+      },
       months: [
-        { nome: "Janeiro", value: 1 },
-        { nome: "Fevereiro", value: 2 },
-        { nome: "Março", value: 3 },
-        { nome: "Abril", value: 4 },
-        { nome: "Maio", value: 5 },
-        { nome: "Junho", value: 6 },
-        { nome: "Julho", value: 7 },
-        { nome: "Agosto", value: 8 },
-        { nome: "Setembro", value: 9 },
-        { nome: "Outubro", value: 10 },
-        { nome: "Novembro", value: 11 },
-        { nome: "Dezembro", value: 12 }
+        { nome: "Janeiro", value: 0 },
+        { nome: "Fevereiro", value: 1 },
+        { nome: "Março", value: 2 },
+        { nome: "Abril", value: 3 },
+        { nome: "Maio", value: 4 },
+        { nome: "Junho", value: 5 },
+        { nome: "Julho", value: 6 },
+        { nome: "Agosto", value: 7 },
+        { nome: "Setembro", value: 8 },
+        { nome: "Outubro", value: 9 },
+        { nome: "Novembro", value: 10 },
+        { nome: "Dezembro", value: 11 }
       ],
-      years:[2024, 2025, 2026, 2027],
+      years:['2024', '2025', '2026', '2027'],
       selectedMenu: {}
     };
   },
   mounted () {
     this.getMenuFile()
+  },
+  watch:{
+    date:{
+      handler: 'watcherDate',
+      deep:true
+    }
   },
   methods: {
     onChangeDate($event, c) {
@@ -110,6 +121,10 @@ export default {
     },
     dismissModal(){
       this.openModal = false
+    },
+    watcherDate(){
+      this.makeDatefullSend()
+      this.getMenuFile()
     },
     // getMenuByTodaysDate(){
     //   const opt = {
@@ -126,14 +141,17 @@ export default {
     //     this.menuData = r.data
     //   })
     // },
+    async makeDatefullSend(){
+      this.dateSend = this.date.month + "/" + this.date.year
+      console.log(this.dateSend, 'osndansljansdlka');
+    },
     getMenuFile(){
       let year, month
-      if (!this.date){
+      if (this.date.month ==='' && this.date.year ===''){
         const date = new Date()
         month = date.getMonth()
         year = date.getYear()
       }
-      console.log(this.date, 'dkjnaksjdnkjasnkj')
       const opt = {
         route: '/mobile/social/getMenuFile',
         body: {
