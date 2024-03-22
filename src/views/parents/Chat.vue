@@ -18,10 +18,18 @@
           ></ion-datetime>
         </ion-modal>
 
+        <div>
+          <ion-text>
+            <h3 class="q-mx-md">Turmas</h3>
+          </ion-text>
+        </div>
+        <div
+          v-for="(ch, i) in childClassInfo"
+          :key="i"
+        >
         <ion-list :inset="true">
-          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
           <ion-item 
-            v-for="c in childClassInfo"
+            v-for="c in ch"
             :key="c"
             :disabled="c.className ? false : true"
             :button="true"
@@ -60,6 +68,7 @@
             </ion-label>
           </ion-item>
         </ion-list>
+        </div>
         <ion-list :inset="true" >
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Atividades de hoje</div>
           <div v-if="childEventsHistory && childEventsHistory.length">
@@ -146,7 +155,8 @@ import {
   IonLabel, 
   IonNote,
   IonIcon,
-  IonDatetimeButton, IonDatetime
+  IonDatetimeButton, IonDatetime,
+  IonText
 } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
