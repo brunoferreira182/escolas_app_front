@@ -23,12 +23,14 @@
         </ion-select>
       </div>
       <div class="q-ma-md">
-        <ion-img 
+      <ion-img 
+          v-if = "menuData && menuData!==null"
           :src="utils.makeFileUrl(menuData.filename)"
-          alt="Erro ao encontrar cardápio!"
-        ></ion-img>
+        >
+      </ion-img>
+        <div v-else class="q-ma-sm "> Cardápio não encontrado</div>
       </div>
-    
+      
     </ion-content>
   </ion-page>
 </template>
@@ -72,18 +74,18 @@ export default {
         year: '',
       },
       months: [
-        { nome: "Janeiro", value: 0 },
-        { nome: "Fevereiro", value: 1 },
-        { nome: "Março", value: 2 },
-        { nome: "Abril", value: 3 },
-        { nome: "Maio", value: 4 },
-        { nome: "Junho", value: 5 },
-        { nome: "Julho", value: 6 },
-        { nome: "Agosto", value: 7 },
-        { nome: "Setembro", value: 8 },
-        { nome: "Outubro", value: 9 },
-        { nome: "Novembro", value: 10 },
-        { nome: "Dezembro", value: 11 }
+        { nome: "Janeiro", value: 1 },
+        { nome: "Fevereiro", value: 2 },
+        { nome: "Março", value: 3 },
+        { nome: "Abril", value: 4 },
+        { nome: "Maio", value: 5 },
+        { nome: "Junho", value: 6 },
+        { nome: "Julho", value: 7 },
+        { nome: "Agosto", value: 8 },
+        { nome: "Setembro", value: 9 },
+        { nome: "Outubro", value: 10 },
+        { nome: "Novembro", value: 11 },
+        { nome: "Dezembro", value: 12 }
       ],
       years:['2024', '2025', '2026', '2027'],
       selectedMenu: {}
@@ -110,13 +112,14 @@ export default {
       this.makeDatefullSend()
       this.getMenuFile()
     },
-    async makeDatefullSend(){
+    makeDatefullSend(){
       return this.dateSearch = '0' + this.date.month + "/" + this.date.year
     },
     getMenuFile(){
       let year, month
       if (this.date.month ==='' && this.date.year ===''){
         const date = new Date()
+
         month = date.getMonth()
         month = '0' + (month + 1)
         month.toString()
@@ -124,6 +127,7 @@ export default {
         year = date.getYear()
         year = year + 1900
         year.toString()
+
         this.dateSearch = month + '/' + year  
         console.log(this.dateSearch, 'LKAJSNDKJASNKDNKJSAN')
       }
