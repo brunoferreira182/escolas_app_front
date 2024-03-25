@@ -11,10 +11,8 @@
         <ion-list :inset="true">
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Meus arquivos</div>
           <ion-item 
-            :button="true"
             v-for="doc in parentFiles"
             :key="doc"
-            @click="clkDownloadAttachment(doc)"
           >
             <ion-label>
               <h6>
@@ -25,6 +23,8 @@
                 {{ doc.createdAt.createdAtOnlyDate }}
               </div>
             </ion-label>
+            <ion-button v-if="doc.type==='Boleto'" @click="copyBarCode(doc)">Copiar código</ion-button>
+            <ion-button v-if="doc.type==='Boleto'" @click="clkDownloadAttachment(doc)">PDF</ion-button>
           </ion-item>
         </ion-list>
 
@@ -51,6 +51,9 @@ import {
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
+import { Clipboard } from '@capacitor/clipboard';
+import { clipboard } from 'ionicons/icons';
+
 </script>
 <script>
 
@@ -95,6 +98,16 @@ export default {
           utils.toast("Ocorreu um erro, tente novamente.")
         }
       })
+    },
+    async copyBarCode(doc) {
+      if (doc.type === 'Boleto') {
+        await Clipboard.write({
+          string: doc.barCode
+        });
+        
+        utils.toast("Código copiado para a área de transferência.");
+      } 
+      else return utils.toast("Ocorreu um erro ao copiar o código.");
     },
     getUserProfileById() {
       const opt = {
