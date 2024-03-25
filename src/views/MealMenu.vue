@@ -14,7 +14,7 @@
             :key="month.value"> {{ month.nome }}
           </ion-select-option>
         </ion-select>
-        <ion-select v-model="date.year" class="q-pl-sm" placeholder= "Ano">
+        <ion-select v-model="date.year" class="q-pl-sm" placeholder= "Ano" hidden>
           <ion-select-option 
             :value="year" 
             v-for="year in years" 
@@ -24,7 +24,7 @@
       </div>
       <div class="q-ma-md">
       <ion-img 
-          v-if = "menuData && menuData!==null"
+          v-if="menuData"
           :src="utils.makeFileUrl(menuData.filename)"
         >
       </ion-img>
@@ -63,7 +63,7 @@ import { useFetch } from '@/composables/fetch';
 
 <script>
 export default {
-  name: 'More',
+  name: 'MealMenu',
   data() {
     return {
       openModal: false,
@@ -87,12 +87,20 @@ export default {
         { nome: "Novembro", value: 11 },
         { nome: "Dezembro", value: 12 }
       ],
-      years:['2024', '2025', '2026', '2027'],
+      years:[],
       selectedMenu: {}
     };
   },
-  mounted () {
-    this.getMenuFile()
+  beforeMount () {
+    const date = new Date()
+    let month = date.getMonth()
+    console.log(this.months[month], 'month')
+    this.date.month = this.months[month].value
+    let year = date.getYear()
+    year = year + 1900
+    this.date.year = year.toString()
+    this.years.push(this.date.year)
+    // this.getMenuFile()
   },
   watch:{
     date:{
@@ -129,7 +137,6 @@ export default {
         year.toString()
 
         this.dateSearch = month + '/' + year  
-        console.log(this.dateSearch, 'LKAJSNDKJASNKDNKJSAN')
       }
       const opt = {
         route: '/mobile/social/getMenuFile',
@@ -143,7 +150,6 @@ export default {
           return
         }
         this.menuData = r.data
-        console.log('kjndakjsndkjasnkd', this.menuData)
       })
     },
   }
