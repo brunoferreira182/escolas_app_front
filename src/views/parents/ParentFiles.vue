@@ -5,26 +5,30 @@
       :backButton="true"
     />
     <ion-content color="light">
-      <div 
-        class="q-pt-md"  
-      >
+      <div class="q-pt-md">
         <ion-list :inset="true">
           <div class="ion-text-left text-h6 q-py-sm q-pl-md">Meus arquivos</div>
           <ion-item 
-            :button="true"
             v-for="doc in parentFiles"
             :key="doc"
-            @click="clkDownloadAttachment(doc)"
+            
           >
             <ion-label>
-              <h6>
-                Arquivo
-              </h6>
-              <div>
-                Criado em
+              <div v-if="doc.type === 'Boleto'">Boleto</div>
+              <div v-else>Arquivo</div>
+              <ion-note>
                 {{ doc.createdAt.createdAtOnlyDate }}
-              </div>
+              </ion-note>
             </ion-label>
+            <ion-note slot="end">
+              <ion-button fill="clear" @click="copyBarcode(doc)" v-if="doc.type === 'Boleto'">
+                <ion-icon slot="icon-only" :icon="barcode"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" @click="clkDownloadAttachment(doc)">
+                <ion-icon slot="icon-only" :icon="cloudDownload"></ion-icon>
+              </ion-button>
+            </ion-note>
+            
           </ion-item>
         </ion-list>
 
@@ -46,11 +50,21 @@ import {
   onIonViewWillEnter,
   IonImg,
   IonAvatar,
-  IonList
+  IonList,
+  IonNote,
+  IonText,
+  IonIcon,
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
+import {
+  cloudDownload,
+  barcode,
+  close
+} from 'ionicons/icons';
+import { Clipboard } from '@capacitor/clipboard';
+
 </script>
 <script>
 
@@ -75,6 +89,13 @@ export default {
     this.getFilesByUserId()
   },
   methods: {
+    async copyBarcode (doc) {
+      console.log(doc, 'doc.barCode')
+      await Clipboard.write({
+        string: doc.barCode
+      });
+      utils.toast("Código de barras copiado.")
+    },
     async clkDownloadAttachment (doc) {
       utils.loading.show()
       const retDownload = await utils.downloadFile({
