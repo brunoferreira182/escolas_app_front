@@ -58,17 +58,12 @@ import {
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
-<<<<<<< HEAD
 import {
   cloudDownload,
   barcode,
   close
 } from 'ionicons/icons';
 import { Clipboard } from '@capacitor/clipboard';
-=======
-import { Clipboard } from '@capacitor/clipboard';
-import { clipboard } from 'ionicons/icons';
->>>>>>> a97211666adc461387b8050685b9f502e52cf643
 
 </script>
 <script>
