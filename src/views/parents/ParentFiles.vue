@@ -58,12 +58,17 @@ import {
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
+<<<<<<< HEAD
 import {
   cloudDownload,
   barcode,
   close
 } from 'ionicons/icons';
 import { Clipboard } from '@capacitor/clipboard';
+=======
+import { Clipboard } from '@capacitor/clipboard';
+import { clipboard } from 'ionicons/icons';
+>>>>>>> a97211666adc461387b8050685b9f502e52cf643
 
 </script>
 <script>
@@ -116,6 +121,16 @@ export default {
           utils.toast("Ocorreu um erro, tente novamente.")
         }
       })
+    },
+    async copyBarCode(doc) {
+      if (doc.type === 'Boleto') {
+        await Clipboard.write({
+          string: doc.barCode
+        });
+        
+        utils.toast("Código copiado para a área de transferência.");
+      } 
+      else return utils.toast("Ocorreu um erro ao copiar o código.");
     },
     getUserProfileById() {
       const opt = {
