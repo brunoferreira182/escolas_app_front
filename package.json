@@ -46,6 +46,7 @@
     "swiper": "^10.3.1",
     "vue": "^3.2.45",
     "vue-advanced-cropper": "^2.8.8",
+    "vue-pinch-zoom": "^1.0.1",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

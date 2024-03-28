@@ -22,12 +22,11 @@
           </ion-select-option>
         </ion-select>
       </div>
-      <div class="q-ma-md">
-      <ion-img 
+      <div class="q-ma-md" v-if="menuData">
+        <ion-img 
           v-if="menuData"
           :src="utils.makeFileUrl(menuData.filename)"
-        >
-      </ion-img>
+        />
         <div v-else class="q-ma-sm "> Cardápio não encontrado</div>
       </div>
       
@@ -59,6 +58,7 @@ import { defineComponent } from 'vue';
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
 import utils from '../composables/utils'
 import { useFetch } from '@/composables/fetch';
+import PinchImage from '../components/PinchImage.vue'
 </script>
 
 <script>

@@ -78,7 +78,7 @@ library.add(
   faUsers, faCalendar,
   faHand, faHeadphones, faThumbsUp, faBullhorn, faChildReaching,
   faRepeat,faCompass,faTags,faStar,faPaperPlane,faArrowRightFromBracket
-  )
+)
 ///////////// FONT AWESOME //////////////////
 
 const pinia = createPinia()
@@ -86,7 +86,8 @@ const pinia = createPinia()
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
-  .component('font-awesome-icon', FontAwesomeIcon);
+  .component('font-awesome-icon', FontAwesomeIcon)
+  // .component('pinch-zoom', PinchZoom);
   
 router.isReady().then(() => {
   app.mount('#app');
