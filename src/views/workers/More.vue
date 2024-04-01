@@ -10,14 +10,18 @@
         <ion-item :button="true" @click="$router.push('/calendar')">
           <ion-label>Agenda</ion-label>
         </ion-item>
-        <ion-item :button="true">
+        <!-- <ion-item :button="true">
           <ion-label>Pagamentos</ion-label>
-        </ion-item>
+        </ion-item> -->
         <ion-item :button="true" @click="$router.push('/childrenAttendanceCalendar')">
           <ion-label>Comparecimento</ion-label>
         </ion-item>
         <ion-item :button="true" @click="$router.push('/notesList')">
           <ion-label>Recados</ion-label>
+        </ion-item>
+        <ion-item :button="true" @click="$router.push('/mealMenu')">
+          <!-- <ion-label>Cardápio do dia</ion-label> -->
+          <ion-label>Cardápio Mensal</ion-label>
         </ion-item>
         <ion-item :button="true" @click="clkExitApp">
           <ion-label>Sair do aplicativo</ion-label>
