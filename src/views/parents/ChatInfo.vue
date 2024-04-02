@@ -59,7 +59,7 @@
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
-            <ion-label>Responsáveis</ion-label>
+            <ion-label>Professores e Representantes</ion-label>
           </ion-item>
           <div slot="content" v-if="workersClassData && workersClassData.users">
             <div 
@@ -83,10 +83,46 @@
             </div>
           </div>
           <div v-else class="text-caption q-px-md">
-            Não há funcionários nesta turma
+            Não há professores ou representantes nesta turma
           </div>
         </ion-accordion>
       </ion-accordion-group>
+
+      <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+          <ion-item slot="header">
+            <ion-label>Responsáveis</ion-label>
+          </ion-item>
+          <div slot="content" v-if="parents">
+            <div 
+              v-for="parent in parents"
+              :key="parent"
+            >
+              <ion-item>
+                <ion-avatar aria-hidden="true" slot="start" v-if="parent.image">
+                  <img :src="utils.makeFileUrl(parent.image, 'thumbnail')"/>
+                </ion-avatar>
+                <p class="text-capitalize">
+                  {{ parent.userName }}
+                  <div class="text-caption">{{ parent.relationType }}</div>
+                </p>
+                <ion-button
+                  slot="end"
+                  fill="clear"
+                  @click="$router.push('/chatUserAndWorker?user_id=' + parent.user_id)"
+                >
+                  <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </div>
+          </div>
+          <div v-else class="text-caption q-px-md">
+            Não há responsáveis nesta turma
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+
+
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">  
@@ -157,13 +193,31 @@ export default {
       },
       userChildren: null,
       userInfo: null,
+      parents: null
     };
   },
   mounted () {
     this.getClassDetailById()
     this.getWorkersByClassId()
+    this.getParentsByClassId()
   },
   methods: {
+    getParentsByClassId() {
+      console.log(',erda')
+      const opt = {
+        route: '/mobile/workers/getParentsOfChildrenOfClass',
+        body: {
+          classId: this.$route.query.classId,
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this.parents = r.data
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
     getWorkersByClassId() {
       const opt = {
         route: '/mobile/workers/getWorkersByClassId',
