@@ -78,6 +78,9 @@
                 <p class="text-capitalize">{{ worker.userName }} 
                   <div class="text-caption">{{ worker.userFunction }}</div>
                 </p>
+                <ion-button slot="end" fill="clear" @click="$router.push('/directMessage?user_id=' + worker.user_id)">
+                  <ion-icon color="primary" size="large" :icon="mail"></ion-icon> 
+                </ion-button>
                 <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
                   <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
                 </ion-button>
@@ -132,7 +135,7 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
-import {chevronForwardOutline, chatbubble} from 'ionicons/icons'
+import {mail, chatbubble} from 'ionicons/icons'
 import {
   IonPage, IonContent,
   IonList, IonItem, IonIcon,

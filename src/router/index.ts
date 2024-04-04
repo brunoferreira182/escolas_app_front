@@ -26,6 +26,8 @@ import workerAttendance from '../views/workers/Attendance.vue'
 import workerProfile from '../views/workers/Profile.vue'
 import chatDetail from '../views/parents/ChatDetail.vue'
 
+import noteSenderToUser from '../views/workers/NoteSenderToUser.vue'
+
 import chatDetailWorker from '../views/parents/ChatDetail.vue'
 
 import postReactions from '../views/parents/PostReactions.vue'
@@ -214,6 +216,7 @@ const routes: Array<RouteRecordRaw> = [
         component: chatMedia
       },
       { path: '/mealMenu', component: MealMenu },
+      { path: '/noteSenderToUser', component: noteSenderToUser },
     ]
   },
 ]

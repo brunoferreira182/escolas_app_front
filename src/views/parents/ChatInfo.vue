@@ -76,9 +76,9 @@
                 <p class="text-capitalize">{{ worker.userName }} 
                   <div class="text-caption">{{ worker.userFunction }}</div>
                 </p>
-                <ion-button v-if="localStorage.getItem(currentVision)=== 'worker'" slot="end" fill="clear" @click="$router.push('/directMessage?user_id=' + worker.user_id)">
-                  <ion-icon color="primary" size="large" :icon="mail"></ion-icon>
-                </ion-button>
+                <!-- <ion-button v-if="verifyVision()" slot="end" fill="clear" @click="$router.push('/directMessage?user_id=' + worker.user_id)">
+                  <ion-icon color="primary" size="large" :icon="mail"></ion-icon> 
+                </ion-button> -->
                 <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
                   <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
                 </ion-button>
@@ -109,6 +109,9 @@
                   {{ parent.userName }}
                   <div class="text-caption">{{ parent.relationType }}</div>
                 </p>
+                <ion-button v-if="verifyVision()" slot="end" fill="clear" @click="$router.push('/noteSenderToUser?userId=' + parent.userId)">
+                  <ion-icon color="primary" size="large" :icon="mail"></ion-icon> 
+                </ion-button>
                 <ion-button
                   slot="end"
                   fill="clear"
@@ -213,7 +216,6 @@ export default {
   },
   methods: {
     getParentsByClassId() {
-      console.log(',erda')
       const opt = {
         route: '/mobile/workers/getParentsOfChildrenOfClass',
         body: {
@@ -251,6 +253,9 @@ export default {
     },
     goToChatDetail() {
       this.$router.push("/chatDetail?classId=" + this.$route.query.classId)
+    },
+    verifyVision(){
+      return localStorage.getItem('currentVision') === 'worker'
     },
     getClassDetailById() {
       const opt = {
