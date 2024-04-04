@@ -14,7 +14,7 @@
               :key="c"
               :button="true"
               class="q-pa-sm"
-              @click="goToChatDetail(c.classId)"
+              @click="goToChatInfo(c.classId)"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage" style="height: 60px; width: 60px">
                 <img :src="utils.makeFileUrl(c.classImage, 'thumbnail')" />
@@ -274,9 +274,12 @@ export default {
         this.classesInfo = r.data.list
       })
     },
-    goToChatDetail (classId) {
-      this.$router.push('/chatDetailWorker?classId=' + classId)
+    goToChatInfo(classId) {
+      this.$router.push('/chatInfo?classId=' + classId)
     },
+    // goToChatDetail (classId) {
+    //   this.$router.push('/chatDetailWorker?classId=' + classId)
+    // },
     getLastActivityFromChildrenOfClasses() {
       const opt = {
         route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',

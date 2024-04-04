@@ -34,7 +34,7 @@
             :disabled="c.className ? false : true"
             :button="true"
             class="q-pa-sm"
-            @click="goToChatDetail(c.classId)"
+            @click="goToChatInfo(c.classId)"
           >
           
             <ion-avatar
@@ -246,9 +246,12 @@ export default {
         this.childClassInfo = r.data
       })
     },
-    goToChatDetail (classId) {
-      this.$router.push('/chatDetail?classId=' + classId)
+    goToChatInfo(classId) {
+      this.$router.push('/chatInfo?classId=' + classId)
     },
+    // goToChatDetail (classId) {
+    //   this.$router.push('/chatDetail?classId=' + classId)
+    // },
   }
 }
 

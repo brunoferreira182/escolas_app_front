@@ -76,6 +76,9 @@
                 <p class="text-capitalize">{{ worker.userName }} 
                   <div class="text-caption">{{ worker.userFunction }}</div>
                 </p>
+                <ion-button v-if="localStorage.getItem(currentVision)=== 'worker'" slot="end" fill="clear" @click="$router.push('/directMessage?user_id=' + worker.user_id)">
+                  <ion-icon color="primary" size="large" :icon="mail"></ion-icon>
+                </ion-button>
                 <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
                   <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
                 </ion-button>
@@ -118,6 +121,13 @@
       >
         <ion-label>Mídias</ion-label>
       </ion-item>
+      <ion-item 
+        button
+        style="border-radius: 1rem; margin: 10px; margin-top: 20px;"
+        @click="goToChatDetail" 
+      >
+        <ion-label>Chat</ion-label>
+      </ion-item>
     </ion-content>
   </ion-page>
 </template>
@@ -126,8 +136,8 @@
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
 import {
-  chevronForwardOutline,
-  chatbubble
+  chatbubble,
+  mail
 } from 'ionicons/icons'
 import {
   IonPage, IonContent,
@@ -184,6 +194,9 @@ export default {
     },
     goToEventDetail(i) {
       this.$router.push("/eventDetail?eventId=" + i)
+    },
+    goToChatDetail() {
+      this.$router.push("/chatDetail?classId=" + this.$route.query.classId)
     },
     getClassDetailById() {
       const opt = {

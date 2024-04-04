@@ -191,6 +191,9 @@ export default {
         }
       })
     },
+    goToChatDetail() {
+      this.$router.push("/chatDetailWorker?classId=" + this.$route.query.classId)
+    },
     getWorkersByClassId() {
       const opt = {
         route: '/mobile/workers/getWorkersByClassId',
