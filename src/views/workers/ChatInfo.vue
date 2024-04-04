@@ -154,22 +154,24 @@ export default {
       classChildrenData: null,
       eventList: null,
       workersClassData: [],
-      classData: null
+      classData: null,
+      parents: null
     };
   },
   mounted () {
     this.getClassDetailById()
     this.getEventsByClassId()
+    this.getParentsByClassId()
   },
-  watch: {
-    $route (to, from) {
-      if (to.path === '/chatInfoWorker') {
-        this.getClassDetailById()
-        this.getEventsByClassId()
-        this.getWorkersByClassId()
-      }
-    }
-  },
+  // watch: {
+  //   $route (to, from) {
+  //     if (to.path === '/chatInfoWorker') {
+  //       this.getClassDetailById()
+  //       this.getEventsByClassId()
+  //       this.getWorkersByClassId()
+  //     }
+  //   }
+  // },
   methods: {
     goToMedia() {
       this.$router.push("/chatMediaWorker?classId=" + this.$route.query.classId)
@@ -204,6 +206,23 @@ export default {
       useFetch(opt).then((r) => {
         if (!r.error) {
           this.workersClassData = r.data
+        } else {
+          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
+        }
+      })
+    },
+
+    getParentsByClassId() {
+      console.log(',erda')
+      const opt = {
+        route: '/mobile/workers/getParentsOfChildrenOfClass',
+        body: {
+          classId: this.$route.query.classId,
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          this.parents = r.data
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde.")
         }

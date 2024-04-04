@@ -688,7 +688,6 @@ export default {
       this.getLastActivityFromChild()
     },
     getChildEvents(classId) {
-      console.log('chmaou', classId)
       const opt = {
         route: '/mobile/workers/getChildEvents',
         body: {

@@ -1,7 +1,7 @@
 <template>
   <ion-modal 
     :is-open="dialogInsertChildEvent.open" 
-    @ionModalDidPresent="getChildEvents() && getChildEventsByUserId()" 
+    @ionModalDidPresent="executeMethods"
     @willDismiss="clearModalData()"
   >
     <ion-header>
@@ -177,6 +177,14 @@ export default {
   },
   emits: ['close', 'getLastActivityFromChildrenOfClasses', ],
   methods: {
+    executeMethods () {
+      this.getChildEvents()
+      // this.getChildEventsByUserId()
+      this.clearCheckboxes()
+    },
+    clearCheckboxes () {
+      this.selectedActivity.activitySubtypes = null
+    },
     handleActivityCheckboxChange(act) {
       console.log(act, 'act');
       // Desmarca todas as outras atividades
