@@ -5,14 +5,20 @@
       :backButton="true"
     />
     <ion-content color="light" >
-      <ion-item class="q-pa-md"> 
-        <ion-input  placeholder="Recado"
-          v-model="note" class="q-ma-sm"/>
-
-        <ion-button @click="sendNoteToUser" expand="block" >
-          <ion-icon class="q-ml-xs" :icon="send"> </ion-icon>
-        </ion-button>
-      </ion-item>
+        <ion-item lines="none">
+          <ion-input placeholder="Título do recado"
+            v-model="noteName" class="q-ma-sm"/>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input  placeholder="Recado"
+            v-model="note" class="q-ma-sm">
+          </ion-input>
+          <ion-button @click="sendNoteToUser" expand="block" slot="end" >
+            <ion-icon class="q-ml-xs" :icon="send"> </ion-icon>
+          </ion-button>
+        </ion-item>
+        <!-- <ion-item lines="none">
+        </ion-item> -->
       <div v-if="notesList.length > 0" class="ion-padding"> 
         <h3>Recados</h3>
       </div>
@@ -25,6 +31,7 @@
           style="min-height: auto;"
           >
           <div class="ion-align-items-start note-content">
+            <ion-text><h6>Título: {{ note.noteName}} </h6></ion-text>
             <ion-label> {{ note.noteContent }} </ion-label>
             <div class="date-card ion-align-items-start" >
               <div class="style-date" >
@@ -33,7 +40,7 @@
               </div>
             </div>
           </div>
-          <ion-button @click="deleteNote" class="align-end" :icon="trash">
+          <ion-button @click="deleteNote" class="align-end ion-">
             <ion-icon slot="icon-only" :icon="trash"></ion-icon>
           </ion-button>
         </ion-item>
@@ -51,7 +58,7 @@ import {
   IonList, IonItem, IonIcon, IonChip,
   IonButton, IonAvatar,
   IonAccordionGroup, IonAccordion,
-  IonLabel, IonCardTitle, IonCardSubtitle, IonInput,
+  IonLabel, IonCardTitle, IonText, IonInput,
   IonCardHeader, IonCardContent, IonCard, IonRow, 
   IonCol, IonBadge
 } from '@ionic/vue'
@@ -66,6 +73,7 @@ export default {
     return {
       notesList: [],
       note: '',
+      noteName: '',
     };
   },
   mounted () {
@@ -84,6 +92,10 @@ export default {
         }
       }
     if(this.note !== '' && this.note) opt.body.noteContent = this.note
+    else if(this.note === '') return utils.toast("Insira uma mensagem de recado!")
+
+    if(this.noteName !== '' && this.noteName) opt.body.noteName = this.noteName
+    else if(this.noteName === '') return utils.toast("Insira um título ao seu recado!")
 
     useFetch(opt).then((r) => {
       this.note = ""

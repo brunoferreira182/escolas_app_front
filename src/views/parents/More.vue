@@ -31,6 +31,9 @@
         <ion-item :button="true" @click="$router.push('/notesList')">
           <ion-label>Recados</ion-label>
         </ion-item>
+        <ion-item :button="true" @click="$router.push('/userNotesList')">
+          <ion-label>Meus Recados</ion-label>
+        </ion-item>
         <ion-item :button="true" @click="clkExitApp">
           <ion-label>Sair do aplicativo</ion-label>
         </ion-item>

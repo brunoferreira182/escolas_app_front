@@ -39,6 +39,7 @@ import workerMore from '../views/workers/More.vue'
 import chatMedia from '../views/ChatMedia.vue'
 import notesList from '../views/parents/NotesList.vue'
 import notesListWorker from '../views/workers/NotesList.vue'
+import userNotesList from '../views/parents/UserNotesList.vue';
 import calendarParent from '../views/parents/Calendar.vue'
 import calendarWorker from '../views/workers/Calendar.vue'
 import storyDetail from '../views/parents/StoryDetail.vue'
@@ -217,6 +218,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       { path: '/mealMenu', component: MealMenu },
       { path: '/noteSenderToUser', component: noteSenderToUser },
+      { path: '/userNotesList', component: userNotesList },
     ]
   },
 ]
