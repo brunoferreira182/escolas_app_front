@@ -78,7 +78,7 @@
                     <span
                       class="ion-float-right q-mt-xs text-caption q-ml-sm"
                       v-if="message.createdAt"
-                    >{{ message.createdAt.createdAtLocale.split(' ')[1].substring(0,5) }}</span>
+                    >{{ message.hour }}</span>
                   </div>
                 </ion-row>
               </ion-item>
