@@ -5,6 +5,7 @@
       :backButton="true"
     />
     <ion-content color="light" >
+      <div class="ion-padding">
         <ion-item lines="none">
           <ion-input placeholder="Título do recado"
             v-model="noteName" class="q-ma-sm"/>
@@ -17,6 +18,7 @@
             <ion-icon class="q-ml-xs" :icon="send"> </ion-icon>
           </ion-button>
         </ion-item>
+      </div>
         <!-- <ion-item lines="none">
         </ion-item> -->
       <div v-if="notesList.length > 0" class="ion-padding"> 
