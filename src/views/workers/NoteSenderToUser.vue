@@ -11,8 +11,8 @@
             v-model="noteName" class="q-ma-sm"/>
         </ion-item>
         <ion-item lines="none">
-          <ion-input  placeholder="Recado"
-            v-model="note" class="q-ma-sm">
+          <ion-input class=" q-ma-sm" placeholder="Recado"
+            v-model="note">
           </ion-input>
           <ion-button @click="sendNoteToUser" expand="block" slot="end" >
             <ion-icon class="q-ml-xs" :icon="send"> </ion-icon>
