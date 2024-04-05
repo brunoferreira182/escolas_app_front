@@ -18,7 +18,7 @@
         <ion-list ref="listAnswerMsg">
           <div v-for="message in messages" :key="message._id" :id="message._id">
             <ion-item-sliding>
-              <ion-item lines="none" >
+              <ion-item lines="none">
                 <ion-row :slot="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" >
                   <div
                     :class="`chat-message ${message.tempId ? 'sent-temp-message' : message.createdBy.userId === userInfo.userId ? 'sent-message': 'received-message'} q-ma-xs q-pa-sm ${blinkMessageId === message._id ? 'blink-bg' : ''}`"
@@ -73,7 +73,12 @@
                       </div>
                     </div>
                     <div v-else>
-                      {{ message.messageText }}
+                      <div class="ion-flat-left q-mb-xs text-caption">
+                        {{ message.name }}
+                      </div>
+                      <div class="q-px-xs">
+                        {{ message.messageText }}
+                      </div>
                     </div>
                     <span
                       class="ion-float-right q-mt-xs text-caption q-ml-sm"
