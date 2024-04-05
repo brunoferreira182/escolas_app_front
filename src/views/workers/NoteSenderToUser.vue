@@ -26,8 +26,8 @@
           >
           <div class="ion-align-items-start note-content">
             <ion-label> {{ note.noteContent }} </ion-label>
-            <div class="style-date ion-align-items-start" >
-              <div class="date-card" >
+            <div class="date-card ion-align-items-start" >
+              <div class="style-date" >
                 <ion-label size="smaller"> {{ note.createdDate }} </ion-label>
                 <ion-label class="hour"> {{ note.hour }} </ion-label>
               </div>
@@ -124,7 +124,7 @@ export default {
   flex-direction: column; 
   width: 100%
 }
-.date-card {
+.style-date {
   display: flex; 
   align-items: flex-start;
 }
@@ -132,7 +132,7 @@ export default {
   font-size: smaller; 
   margin-left: 10px;
 }
-.style-date{
+.date-card{
   display: flex; 
   justify-content: space-between; 
   width: 100%;
