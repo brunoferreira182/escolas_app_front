@@ -12,27 +12,31 @@
         <ion-button @click="sendNoteToUser" expand="block" >
           <ion-icon class="q-ml-xs" :icon="send"> </ion-icon>
         </ion-button>
-
       </ion-item>
-        <ion-card v-if="notesList.length > 0" class="q-pa-sm q-ml-xs text-h6"> 
-          Recados
-          <ion-item  class="q-pa-xs row" v-for="note in notesList" :key="note" style="min-height: auto;">
-            <div class="ion-align-items-start" style="display: flex; flex-direction: column; width: 100%;">
-              <div>
-                <ion-label> {{ note.noteContent }}</ion-label>
-              </div>
-              <div class="ion-align-items-start" style="display: flex; justify-content: space-between; width: 100%;">
-                <div style="display: flex; align-items: flex-start;">
-                  <ion-label style="font-size: smaller;"> {{ note.createdDate }}</ion-label>
-                  <ion-label class="q-mx-sm" style="font-size: smaller;"> {{ note.hour }}</ion-label>
-                </div>
+      <div v-if="notesList.length > 0" class="ion-padding"> 
+        <h3>Recados</h3>
+      </div>
+      <div v-else class="ion-padding"> 
+        <h3> Sem recados Diponíveis </h3>
+      </div>
+      <ion-card v-if="notesList.length > 0" class="text-h6"> 
+        <ion-item class="q-pa-xs row" 
+          v-for="note in notesList" :key="note" 
+          style="min-height: auto;"
+          >
+          <div class="ion-align-items-start note-content">
+            <ion-label> {{ note.noteContent }} </ion-label>
+            <div class="style-date ion-align-items-start" >
+              <div class="date-card" >
+                <ion-label size="smaller"> {{ note.createdDate }} </ion-label>
+                <ion-label class="hour"> {{ note.hour }} </ion-label>
               </div>
             </div>
-            <ion-button @click="deleteNote()" class="align-end" :icon="trash"></ion-button>
-          </ion-item>
-      </ion-card>
-      <ion-card v-else class="q-pa-sm q-ml-xs text-h6"> 
-          Sem recados Diponíveis 
+          </div>
+          <ion-button @click="deleteNote" class="align-end" :icon="trash">
+            <ion-icon slot="icon-only" :icon="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
       </ion-card>
     </ion-content>
   </ion-page>
@@ -82,6 +86,7 @@ export default {
     if(this.note !== '' && this.note) opt.body.noteContent = this.note
 
     useFetch(opt).then((r) => {
+      this.note = ""
       this.getUserNotes()
     })
   },
@@ -113,3 +118,23 @@ export default {
   } 
 }
 </script>
+<style>
+.note-content{
+  display: flex; 
+  flex-direction: column; 
+  width: 100%
+}
+.date-card {
+  display: flex; 
+  align-items: flex-start;
+}
+.hour{
+  font-size: smaller; 
+  margin-left: 10px;
+}
+.style-date{
+  display: flex; 
+  justify-content: space-between; 
+  width: 100%;
+}
+</style>
