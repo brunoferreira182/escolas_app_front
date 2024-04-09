@@ -20,11 +20,9 @@
               <p class="q-py-sm">{{item.noteContent}}</p>
             </ion-label>
             <div class="text-caption">
-              {{ item.createdAt.createdAtOnlyDate.split('/')[1] }}/
-              {{ item.createdAt.createdAtOnlyDate.split('/')[0] }}/
-              {{ item.createdAt.createdAtOnlyDate.split('/')[2] }}
+              {{ item.createdDate }}
               às
-              {{ item.createdAt.createdAtLocale.split(' ')[1] }}
+              {{ item.hour }}
             </div>
           </ion-card-content>
         </ion-card>
@@ -76,6 +74,7 @@ export default {
       useFetch(opt).then((r) => {
         if (!r.error) {
           this.notesList = r.data.list
+          console.log(r.data.list)
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde")
         }

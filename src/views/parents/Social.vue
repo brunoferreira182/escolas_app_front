@@ -4,7 +4,6 @@
       title="Social"
       :backButton="false"
     />
-
     <ion-content color="light">
       <swiper 
         class="q-my-md"
@@ -66,14 +65,13 @@ import {
   IonButton,
   IonIcon,
   IonContent,
-  IonImg,
-  IonHeader,
-  IonToolbar,
+  IonToast,
   IonTitle
 } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+import { toastController, loadingController } from '@ionic/vue';
 import { useFetch } from '@/composables/fetch';
 import PostLite from '../../components/PostLite.vue'
 import PostSchoolNotes from '../../components/PostSchoolNotes.vue'
@@ -100,6 +98,8 @@ export default {
       rowsPerPage: 10,
       posts: [],
       notesList: [],
+      userNotes: '',
+      noteString: '',
       storiesPosts: [],
     };
   },
@@ -119,24 +119,53 @@ export default {
     },
     async startView () {
       await this.getPosts()
+      await this.getUserNotes()
       await this.getStories()
-      await this.getNotesList()
+      // await this.getNotesList()
     },
-    async getNotesList (refreshPage) {
-      if (refreshPage) this.page = 0
+    async getUserNotes() {
       const opt = {
-        route: '/mobile/social/getNotesList',
-        body: {
-          page: this.page,
-          rowsPerPage: this.rowsPerPage
-        }
+        route: '/mobile/parents/profile/getUserNotesList'
       }
-      const ret = await useFetch(opt)
-      // this.page++
-      if (!refreshPage) this.notesList = ret.data.list
-      else this.notesList.push(...ret.data.list)
-      return
+      try {
+        const response = await useFetch(opt);
+        if (response.data.count.length > 0 && response.data.count) {
+          this.userNotes = response.data.count[0].count;
+          const toast = await toastController.create({
+            message: 'Você tem ' + this.userNotes + ' recados!',
+            duration: 4000,
+            position: 'bottom',
+            buttons: [
+              {
+                text: 'Ver Recados',
+                handler: () => {
+                  this.$router.push('/userNotesList'); 
+                }
+              }
+            ] 
+          })
+          await toast.present();
+        }
+      } catch (error) {
+        console.error('Error fetching user notes:', error);
+        // Handle error accordingly
+      }
     },
+    // async getNotesList (refreshPage) {
+    //   if (refreshPage) this.page = 0
+    //   const opt = {
+    //     route: '/mobile/social/getNotesList',
+    //     body: {
+    //       page: this.page,
+    //       rowsPerPage: this.rowsPerPage
+    //     }
+    //   }
+    //   const ret = await useFetch(opt)
+    //   // this.page++
+    //   if (!refreshPage) this.notesList = ret.data.list
+    //   else this.notesList.push(...ret.data.list)
+    //   return
+    // },
     async getStories (refreshPage) {
       if (refreshPage) this.page = 0
       const opt = {
