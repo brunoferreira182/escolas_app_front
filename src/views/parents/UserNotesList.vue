@@ -4,7 +4,7 @@
       title="Meus Recados"
       :backButton="true"
     />
-    <ion-content color="light">
+    <ion-content color="light" >
       <MasonryWall
         :items="notesList"
         :column-width="180"
@@ -21,7 +21,7 @@
             </ion-label>
             <div class="text-caption">
               {{ item.createdDate }}
-              às
+              às 
               {{ item.hour }}
             </div>
           </ion-card-content>
@@ -53,11 +53,13 @@ export default {
   data() {
     return {
       notesList: [],
+      notesIds: []
     }
   },
   mounted() {
     utils.loading.hide()
     this.getNotesList()
+    // this.setReadNotes()
   },
   methods: {
     clkOpenNoteDetail(item){
@@ -74,11 +76,26 @@ export default {
       useFetch(opt).then((r) => {
         if (!r.error) {
           this.notesList = r.data.list
-          console.log(r.data.list)
+          r.data.list.forEach((r) => {
+            this.notesIds.push( r._id)
+          })
+        this.setReadNotes()
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde")
         }
       })
+    },
+    async setReadNotes() {
+      const opt = {
+        route: '/mobile/parents/profile/updateUserNote',
+        body: {
+          notesIds: this.notesIds
+        }
+      }
+      useFetch(opt).then(r=>{
+        if(r.error)
+        console.error("ERROR: 404");
+      });
     }
   }
 };

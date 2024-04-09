@@ -128,12 +128,12 @@ export default {
         route: '/mobile/parents/profile/getUserNotesList'
       }
       try {
-        const response = await useFetch(opt);
+        const response = await useFetch(opt)
         if (response.data.count.length > 0 && response.data.count) {
           this.userNotes = response.data.count[0].count;
           const toast = await toastController.create({
             message: 'Você tem ' + this.userNotes + ' recados!',
-            duration: 4000,
+            duration: 3000,
             position: 'bottom',
             buttons: [
               {
@@ -148,24 +148,8 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching user notes:', error);
-        // Handle error accordingly
       }
     },
-    // async getNotesList (refreshPage) {
-    //   if (refreshPage) this.page = 0
-    //   const opt = {
-    //     route: '/mobile/social/getNotesList',
-    //     body: {
-    //       page: this.page,
-    //       rowsPerPage: this.rowsPerPage
-    //     }
-    //   }
-    //   const ret = await useFetch(opt)
-    //   // this.page++
-    //   if (!refreshPage) this.notesList = ret.data.list
-    //   else this.notesList.push(...ret.data.list)
-    //   return
-    // },
     async getStories (refreshPage) {
       if (refreshPage) this.page = 0
       const opt = {
