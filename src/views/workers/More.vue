@@ -17,7 +17,7 @@
           <ion-label>Comparecimento</ion-label>
         </ion-item>
         <ion-item :button="true" @click="$router.push('/notesList')">
-          <ion-label>Recados</ion-label>
+          <ion-label>Recados Gerais</ion-label>
         </ion-item>
         <ion-item :button="true" @click="$router.push('/mealMenu')">
           <!-- <ion-label>Cardápio do dia</ion-label> -->

@@ -29,7 +29,7 @@
           <ion-label>Cardápio Mensal</ion-label>
         </ion-item>
         <ion-item :button="true" @click="$router.push('/notesList')">
-          <ion-label>Recados</ion-label>
+          <ion-label>Recados Gerais</ion-label>
         </ion-item>
         <ion-item :button="true" @click="$router.push('/userNotesList')">
           <ion-label>Meus Recados</ion-label>
