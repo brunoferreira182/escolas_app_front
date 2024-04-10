@@ -125,16 +125,21 @@ export default {
     },
     async getUserNotes() {
       const opt = {
-        route: '/mobile/parents/profile/getUserNotesList'
+        route: '/mobile/parents/profile/getUserNotesList',
+        body: {
+          onlyNotRead: true,
+          doNotUpdate: true
+        }
       }
       try {
         const response = await useFetch(opt)
         if (response.data.count.length > 0 && response.data.count) {
           this.userNotes = response.data.count[0].count;
           const toast = await toastController.create({
-            message: 'Você tem ' + this.userNotes + ' recados!',
+            message: `Você tem ${this.userNotes} recado${this.userNotes > 1 ? 's' : ''}`,
             duration: 3000,
-            position: 'bottom',
+            position: 'top',
+            color: "primary",
             buttons: [
               {
                 text: 'Ver Recados',

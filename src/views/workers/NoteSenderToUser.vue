@@ -5,48 +5,53 @@
       :backButton="true"
     />
     <ion-content color="light" >
-      <div class="ion-padding">
-        <ion-item lines="none">
+      <ion-list :inset="true">
+        <!-- <ion-item>
           <ion-input placeholder="Título do recado"
             v-model="noteName" class="q-ma-sm"/>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-input class=" q-ma-sm" placeholder="Recado"
-            v-model="note">
+        </ion-item> -->
+        <ion-item>
+          <ion-input
+            placeholder="Recado"
+            v-model="note"
+          >
           </ion-input>
-          <ion-button @click="sendNoteToUser" expand="block" slot="end" >
+          <ion-button
+            @click="sendNoteToUser"
+            slot="end"
+            fill="clear"
+          >
             <ion-icon class="q-ml-xs" :icon="send"> </ion-icon>
           </ion-button>
         </ion-item>
-      </div>
-        <!-- <ion-item lines="none">
-        </ion-item> -->
+      </ion-list>
+
       <div v-if="notesList.length > 0" class="ion-padding"> 
         <h3>Recados</h3>
       </div>
       <div v-else class="ion-padding"> 
         <h3> Sem recados Diponíveis </h3>
       </div>
-      <ion-card v-if="notesList.length > 0" class="text-h6"> 
-        <ion-item class="q-pa-xs row" 
-          v-for="note in notesList" :key="note" 
-          style="min-height: auto;"
+      
+      <ion-list :inset="true" v-if="notesList.length > 0"> 
+        <ion-item
+          v-for="note in notesList"
+          :key="note"
+        >
+          <ion-label>
+            <!-- <strong>{{ note.noteName}}</strong><br> -->
+            <ion-text>{{ note.noteContent }}</ion-text><br>
+            <ion-note>{{ note.createdDate }}</ion-note>
+          </ion-label>
+          <ion-button
+            @click="deleteNote"
+            fill="clear"
+            color="danger"
           >
-          <div class="ion-align-items-start note-content">
-            <ion-text><h6>Título: {{ note.noteName}} </h6></ion-text>
-            <ion-label> {{ note.noteContent }} </ion-label>
-            <div class="date-card ion-align-items-start" >
-              <div class="style-date" >
-                <ion-label size="smaller"> {{ note.createdDate }} </ion-label>
-                <ion-label class="hour"> {{ note.hour }} </ion-label>
-              </div>
-            </div>
-          </div>
-          <ion-button @click="deleteNote" class="align-end ion-">
             <ion-icon slot="icon-only" :icon="trash"></ion-icon>
           </ion-button>
         </ion-item>
-      </ion-card>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -62,7 +67,8 @@ import {
   IonAccordionGroup, IonAccordion,
   IonLabel, IonCardTitle, IonText, IonInput,
   IonCardHeader, IonCardContent, IonCard, IonRow, 
-  IonCol, IonBadge
+  IonCol, IonBadge,
+  IonNote
 } from '@ionic/vue'
 </script>
 
@@ -87,17 +93,14 @@ export default {
       this.getUserNotes()
     },  
     sendNoteToUser(){
+      if (this.note === '') return utils.toast("Insira uma mensagem de recado!")
       const opt = {
         route: '/mobile/workers/chat/insertNewUserNote',
         body : {
-          userReceiver: this.$route.query.userId
+          userReceiver: this.$route.query.userId,
+          noteContent: this.note
         }
       }
-    if(this.note !== '' && this.note) opt.body.noteContent = this.note
-    else if(this.note === '') return utils.toast("Insira uma mensagem de recado!")
-
-    if(this.noteName !== '' && this.noteName) opt.body.noteName = this.noteName
-    else if(this.noteName === '') return utils.toast("Insira um título ao seu recado!")
 
     useFetch(opt).then((r) => {
       this.note = ""

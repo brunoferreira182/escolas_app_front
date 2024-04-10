@@ -5,28 +5,21 @@
       :backButton="true"
     />
     <ion-content color="light" >
-      <MasonryWall
-        :items="notesList"
-        :column-width="180"
-        :gap="10"
-        :ssr-columns="100"
-        #default="{ item }"
-        class="q-pa-xs"
-      >
-        <ion-card @click="clkOpenNoteDetail(item)" class="my-card q-ma-none">
-          <ion-card-content>
-            <ion-label>
-              <h2 class="text-capitalize">{{item.noteName}}</h2>
-              <p class="q-py-sm">{{item.noteContent}}</p>
-            </ion-label>
-            <div class="text-caption">
-              {{ item.createdDate }}
-              às 
-              {{ item.hour }}
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </MasonryWall>
+      <ion-list :inset="true">
+        <ion-item
+          v-for="note in notesList"
+          :key="note"
+        >
+          <ion-label>
+            <ion-text>{{ note.noteContent }}</ion-text><br>
+            <ion-note>{{ note.createdDate }}</ion-note>
+          </ion-label>
+          <ion-note slot="end" v-if="note.isRead !== 1">
+            <ion-badge>Novo</ion-badge>
+          </ion-note>
+        </ion-item>
+        
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -39,9 +32,10 @@ import {
   IonText,
   IonLabel,
   IonCardContent,
+  IonList, IonItem, IonNote,
+  IonBadge
   
 } from '@ionic/vue';
-import MasonryWall from '@yeger/vue-masonry-wall'
 import { useFetch } from '@/composables/fetch';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../../src/composables/utils.js';
@@ -59,7 +53,6 @@ export default {
   mounted() {
     utils.loading.hide()
     this.getNotesList()
-    // this.setReadNotes()
   },
   methods: {
     clkOpenNoteDetail(item){
@@ -76,27 +69,12 @@ export default {
       useFetch(opt).then((r) => {
         if (!r.error) {
           this.notesList = r.data.list
-          r.data.list.forEach((r) => {
-            this.notesIds.push( r._id)
-          })
-        this.setReadNotes()
         } else {
           utils.toast("Ocorreu um erro, tente novamente mais tarde")
         }
       })
     },
-    async setReadNotes() {
-      const opt = {
-        route: '/mobile/parents/profile/updateUserNote',
-        body: {
-          notesIds: this.notesIds
-        }
-      }
-      useFetch(opt).then(r=>{
-        if(r.error)
-        console.error("ERROR: 404");
-      });
-    }
+
   }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ToolbarEscolas
-      title="Chat"
+      title="Detalhe turma"
       :backButton="true"
     />
     <ion-content color="light" v-if="classData">
@@ -160,13 +160,22 @@
       >
         <ion-label>Mídias</ion-label>
       </ion-item>
-      <ion-item 
+      <!-- <ion-item 
         button
         style="border-radius: 1rem; margin: 10px; margin-top: 20px;"
         @click="goToChatDetail" 
       >
         <ion-label>Chat</ion-label>
-      </ion-item>
+      </ion-item> -->
+      <div class="ion-padding">
+        <ion-button
+          color="primary"
+          expand="block"
+          @click="goToChatDetail" 
+        >
+          Ir para o chat
+        </ion-button>
+      </div>
     </ion-content>
   </ion-page>
 </template>
