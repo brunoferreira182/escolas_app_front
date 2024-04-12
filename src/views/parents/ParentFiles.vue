@@ -97,13 +97,11 @@ export default {
       utils.toast("Código de barras copiado.")
     },
     async clkDownloadAttachment (doc) {
-      utils.loading.show()
       const retDownload = await utils.downloadFile({
         filename: doc.file.filename,
         originalname: doc.file.originalname
       })
       console.log(retDownload, 'retDownload aqui')
-      utils.loading.hide()
     },
     getFilesByUserId(){
       const opt = {

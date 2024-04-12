@@ -407,6 +407,7 @@ export default {
       this.startPhotoHandler = true
     },
     captured(img, imgBlob, fileName) {
+      console.log(img, imgBlob, fileName, 'aqui o segredo da parada')
       this.step = 'initial'
       this.startPhotoHandler = false
       this.insertMessage({

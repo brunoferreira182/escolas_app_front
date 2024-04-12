@@ -139,8 +139,6 @@ async function showBottomSheet () {
 
 async function openCamera () {
   imgType.value = 'camera'
-  console.log('Antes de abrir a camera')
-  // const tp = await takePhoto()
   
   const tp = await Camera.getPhoto({
     resultType: CameraResultType.Uri,
@@ -157,10 +155,6 @@ async function openCamera () {
   if (props.noCrop) {
     utils.loading.hide()
     sendPhoto(img.value)
-    // const file = await fetch(img.value)
-    // const fileBlob = await file.blob()
-    // step.value = 'initial'
-    // emits('captured', file.url, fileBlob, fileName)
   } else {
     step.value = 'crop'
   }
@@ -171,13 +165,12 @@ async function pickFile (type) {
   if (type === 'documents') types = ['application/pdf']
   let res
   try {
-      if (type === 'gallery' && !isPlatform('desktop')) {
-        console.log('media',getPlatforms())
-        res = await FilePicker.pickMedia({ types, multiple: false });
-      } else {
-        console.log('computer')
-        res = await FilePicker.pickFiles({ types, multiple: false });
-      }
+    if (type === 'gallery' && !isPlatform('desktop')) {
+      console.log('media',getPlatforms())
+      res = await FilePicker.pickMedia({ types, multiple: false });
+    } else {
+      res = await FilePicker.pickFiles({ types, multiple: false });
+    }
   } catch (e) {
     emits('cancel')
     return
@@ -185,7 +178,6 @@ async function pickFile (type) {
   const file = res.files[0];
   
   if (file.path) {
-    console.log('entrou no file.path')
     const fileSrc = Capacitor.convertFileSrc(file.path);
     const fileTemp = await fetch(fileSrc)
     file.blob = await fileTemp.blob()
