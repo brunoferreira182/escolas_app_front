@@ -46,7 +46,7 @@ export default defineComponent({
     // utils.getIuguLib()
     this.backButtonManager()
     defineCustomElements(window)
-    // this.getCompanyColors()
+    this.getCompanyColors()
   },
   methods: {
     async startView () {
