@@ -1,8 +1,8 @@
 //////////// VARIAVEIS DA APLICACAO //////
 const MODE_MASTER_SERVER = 'prod'
 const COMPANY_ID = 2
-const VERSION = 2.1
-const BUILD = 16
+const VERSION = 2.2
+const BUILD = 17
 //////////// NAO MUDAR //////
 const MODE_AUTH_SERVER = 'local'
 const MODE_APP_SERVER = 'local'
