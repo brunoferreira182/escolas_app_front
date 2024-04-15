@@ -44,7 +44,7 @@
             <ion-note>{{ note.createdDate }}</ion-note>
           </ion-label>
           <ion-button
-            @click="deleteNote"
+            @click="deleteNote(note)"
             fill="clear"
             color="danger"
           >
@@ -118,14 +118,19 @@ export default {
       this.notesList= r.data
       })
     },
-    deleteNote(){
+    deleteNote(note){
+      const noteId = note._id
+      console.log("🚀 ~ deleteNote ~ noteId:", noteId)
       const opt = {
         route: '/mobile/workers/chat/deleteNoteFromUser',
         body : {
-          userId: this.$route.query.userId
+          userId: this.$route.query.userId,
+          noteId: noteId
         }
       }
+      utils.loading.show()
       useFetch(opt).then((r) => {
+        utils.loading.hide()
         this.getUserNotes()
         if(r.error){
           return console.log("Não deletou, retorno vazio")
