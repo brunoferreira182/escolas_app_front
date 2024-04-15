@@ -19,6 +19,10 @@
         <ion-item :button="true" @click="$router.push('/notesList')">
           <ion-label>Recados Gerais</ion-label>
         </ion-item>
+        <ion-item :button="true" @click="$router.push('/userNotesList')">
+          <ion-label>Meus Recados</ion-label>
+          <ion-note slot="end">{{ userNotes }}</ion-note>
+        </ion-item>
         <ion-item :button="true" @click="$router.push('/mealMenu')">
           <!-- <ion-label>Cardápio do dia</ion-label> -->
           <ion-label>Cardápio Mensal</ion-label>
@@ -47,34 +51,63 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 <script>
 import { IonPage, IonButton,
   IonContent, IonImg,
+  IonNote,
   IonList, IonItem, IonLabel,
   IonAlert } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
-
+import utils from '../../composables/utils'
 export default {
+  name: 'More',
   data() {
     return {
       dialogDeleteAccount: {
         open: false,
         buttons: []
-      }
+      },
+      userNotes: 0,
     };
   },
-  beforeMount () {
-    this.dialogDeleteAccount.buttons = [
-      {
-        text: 'Confirma',
-        handler: () => {
-          this.confirmDeleteAccount()
-        }
-      },
-      {
-        text: 'Cancelar',
-        role: 'cancel',
+  mounted () {
+    utils.loading.clear()
+    this.startView()
+  },
+  watch: {
+    $route(to, from) {
+      if (this.$route.path === '/tabsWorkers/more' || this.$route.path === '/tabsParents/more') {
+        console.log('entrou no primeiro if')
+        this.startView()
       }
-    ]
+    }
   },
   methods: {
+    startView(){
+      this.getUserNotesList()
+      this.dialogDeleteAccount.buttons = [
+        {
+          text: 'Confirma',
+          handler: () => {
+            this.confirmDeleteAccount()
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        }
+      ]
+    },
+    async getUserNotesList() {
+      const opt = {
+        route: '/mobile/parents/profile/getUserNotesList',
+        body: {
+          onlyNotRead: true,
+          doNotUpdate: true
+        }
+      }
+        const response = await useFetch(opt)
+        if (response.data.count.length > 0 && response.data.count) {
+          this.userNotes = response.data.count[0].count;
+      }else{this.userNotes = 0}
+    },
     clkExitApp () {
       const opt = {
         route: '/disconnectFromAccount',

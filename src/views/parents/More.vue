@@ -78,27 +78,39 @@ export default {
       userNotes: 0
     };
   },
-  beforeMount () {
-    this.getUserNotes()
-    this.dialogDeleteAccount.buttons = [
-      {
-        text: 'Confirma',
-        handler: () => {
-          this.confirmDeleteAccount()
-        }
-      },
-      {
-        text: 'Cancelar',
-        role: 'cancel',
+  mounted () {
+    utils.loading.clear()
+    this.startView()
+  },
+  watch: {
+    $route(to, from) {
+      if (this.$route.path === '/tabsWorkers/more' || this.$route.path === '/tabsParents/more') {
+        console.log('entrou no primeiro if')
+        this.startView()
       }
-    ]
+    }
   },
   methods: {
+    startView(){
+      this.getUserNotesList()
+      this.dialogDeleteAccount.buttons = [
+        {
+          text: 'Confirma',
+          handler: () => {
+            this.confirmDeleteAccount()
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        }
+      ]
+    },
     dismissModal(){
       this.openModal = false
       this.todayMenuData = {}
     },
-    getUserNotes() {
+    async getUserNotesList() {
       const opt = {
         route: '/mobile/parents/profile/getUserNotesList',
         body: {
@@ -106,13 +118,10 @@ export default {
           doNotUpdate: true
         }
       }
-      useFetch(opt).then( r => {
-        if (r.data.count.length > 0 && r.data.count) {
-          this.userNotes = r.data.count[0].count;
-          return
-        }
-        
-      })
+        const response = await useFetch(opt)
+        if (response.data.count.length > 0 && response.data.count) {
+          this.userNotes = response.data.count[0].count;
+      } else{this.userNotes = 0}
     },
     clkExitApp () {
       const opt = {
