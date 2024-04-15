@@ -268,8 +268,7 @@ export default {
         if (r.data.list.length < 4) {
           this.noMoreData = true
         }
-        this.comments.push(...r.data.list)
-        console.log(this.comments, 'dnjkansdjan')
+        this.comments = r.data.list
       })
     },
   }

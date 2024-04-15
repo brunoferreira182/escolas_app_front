@@ -33,6 +33,7 @@
         </ion-item>
         <ion-item :button="true" @click="$router.push('/userNotesList')">
           <ion-label>Meus Recados</ion-label>
+          <ion-note slot="end">{{ userNotes }}</ion-note>
         </ion-item>
         <ion-item :button="true" @click="clkExitApp">
           <ion-label>Sair do aplicativo</ion-label>
@@ -54,17 +55,15 @@
 </template>
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-</script>
-
-<script>
-import { IonPage, IonButton,
-  IonModal,
-  IonTitle,IonButtons,
-  IonToolbar,
-  IonContent, IonImg,
+import { 
+  IonPage, IonNote,
+  IonContent,
   IonList, IonItem, IonLabel,
   IonAlert
 } from '@ionic/vue';
+
+</script>
+<script>
 import { useFetch } from '../../composables/fetch'
 import utils from '../../composables/utils'
 
@@ -75,10 +74,12 @@ export default {
       dialogDeleteAccount: {
         open: false,
         buttons: []
-      }
+      },
+      userNotes: 0
     };
   },
   beforeMount () {
+    this.getUserNotes()
     this.dialogDeleteAccount.buttons = [
       {
         text: 'Confirma',
@@ -96,6 +97,22 @@ export default {
     dismissModal(){
       this.openModal = false
       this.todayMenuData = {}
+    },
+    getUserNotes() {
+      const opt = {
+        route: '/mobile/parents/profile/getUserNotesList',
+        body: {
+          onlyNotRead: true,
+          doNotUpdate: true
+        }
+      }
+      useFetch(opt).then( r => {
+        if (r.data.count.length > 0 && r.data.count) {
+          this.userNotes = r.data.count[0].count;
+          return
+        }
+        
+      })
     },
     clkExitApp () {
       const opt = {

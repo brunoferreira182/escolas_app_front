@@ -36,7 +36,7 @@
             </ion-label>
             <ion-datetime 
               presentation="date" 
-              class=""
+              size="cover"
               :preferWheel="false"
               :highlighted-dates="c.highlightedDates"
               @ionChange="onChangeDate($event, c)"

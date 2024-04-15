@@ -21,7 +21,6 @@ const useUtils = {
       if (state === 'granted') {
         return resolve(true)
       } else if (state === 'denied') {
-        // You make want to redirect to the main app settings.
       } else {
         Filesystem.requestPermissions()
       }

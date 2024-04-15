@@ -38,12 +38,6 @@
                   </label>
                   {{ post.reactions }}
                 </div>
-                <!-- <div v-if="post.userReaction">
-                  <ion-icon size="large"  @click="clkRemoveReaction(post)" :src="heart_filled"/>{{ post.reactions }}
-                </div>
-                <div v-else-if="!post.userReaction" @click="clkReaction(heart, post)">
-                  <ion-icon size="large" :src="heart"/>{{ post.reactions }}
-                </div> -->
               </ion-col>
               <ion-col size="5">
                 <div class="q-pa-xs" v-if="post.routeDestination === '/postDetail'">
@@ -86,23 +80,15 @@
 import utils from '../composables/utils'
 import { useFetch } from '../composables/fetch'
 import {
-  IonPage,
   IonCol,
   IonRow,
   IonIcon,
   
   IonButton, 
 } from '@ionic/vue'
-import { 
-  location,
-  calendarOutline,
-  chatboxOutline
-} from 'ionicons/icons';
 
 import heart from '/src/assets/icons/heart.svg'
 import heart_filled from '/src/assets/icons/heart_filled.svg'
-import smile from '/src/assets/icons/smile.svg'
-import like from '/src/assets/icons/like.svg'
 import bubblesound from '/src/assets/sounds/bubblesound.wav'
 import comment from '/src/assets/icons/comment.svg'
 import { Haptics } from '@capacitor/haptics';

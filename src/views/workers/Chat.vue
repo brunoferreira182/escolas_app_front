@@ -119,10 +119,8 @@ import {
   IonItem, IonLabel, IonCardContent, IonNote,
   IonAvatar, IonAlert } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
-import { defineComponent } from 'vue';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../composables/utils'
-import PhotoHandler from '../../components/PhotoHandler.vue'
 import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 </script>
 
@@ -162,7 +160,6 @@ export default {
         open: false
       },
       formattedChildEventList: null,
-      startPhotoHandler: false
     };
   },
   watch: {
@@ -180,18 +177,6 @@ export default {
     selectOptionActivity(e) {
       this.dialogInsertChildEvent.childEventId = e
       this.selectedEvent = this.childEventsList.filter(event => event._id === e)
-    },
-    captured(fileUrl, fileBlob, fileName) {
-      this.startPhotoHandler = false
-      this.image = {
-        url: fileUrl,
-        blob: fileBlob,
-        name: fileName,
-        type: 'newImage'
-      }
-    },
-    cancelPhotoHandler () {
-      this.startPhotoHandler = false
     },
     openActivityAlert() {
       this.dialogInsertActivity.open = true
