@@ -1,5 +1,6 @@
 <template>
   <ion-modal :isOpen="step === 'crop'">
+    
     <cropper
       :src="img.webPath"
       @change="crop"
@@ -7,11 +8,20 @@
       style="max-height: 75vh;"
     />
     <cropper
-      :src="img"
-      @change="crop"
-      v-if="imgType === 'gallery'"
-      style="max-height: 75vh;"
+    :src="img"
+    @change="crop"
+    v-if="imgType === 'gallery'"
+    style="max-height: 75vh;"
     />
+    <ion-item style="top: -145px;" v-if="props.acceptImageCaption">
+      <ion-input 
+        label-placement="floating"
+        fill="outline"
+        v-model="imageCaption"
+        label="Legenda" 
+        placeholder="Escreva uma legenda para a foto" 
+      />
+    </ion-item>
     <div>
       <ion-button
         expand="block"
@@ -33,7 +43,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 export default {
   name: 'PhotoHandler',
 }
@@ -44,9 +53,9 @@ import {
   IonButton,
   actionSheetController,
   IonModal, 
+  IonInput,
+  IonItem,
 } from '@ionic/vue';
-// import { usePhotoGallery } from '@/composables/usePhotoGallery';
-// const { takePhoto } = usePhotoGallery();
 import { ref, onMounted, watch } from 'vue'
 import { Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
@@ -62,12 +71,12 @@ import {
   // Photo 
 } from '@capacitor/camera';
 
-const props = defineProps(['square', 'allFiles', 'start', 'noCrop'])
+const props = defineProps(['square', 'allFiles', 'start', 'noCrop', 'acceptImageCaption'])
 const emits = defineEmits([
   'captured',
   'cancel'
 ])
-
+const imageCaption = ref('')
 const img = ref(null)
 const imgType = ref(null)
 const step = ref('initial')
@@ -190,7 +199,7 @@ async function pickFile (type) {
     imgType.value = 'gallery'
   } else if (type === 'documents' || (type === 'gallery' && props.noCrop)) {
     utils.loading.hide()
-    emits('captured', file, file.blob, file.name, '', type)
+    emits('captured', file, file.blob, file.name, imageCaption, '', type)
   }
 }
 
@@ -207,7 +216,7 @@ async function sendPhoto (img) {
   fileBlob = new Blob([fileBlob], { type: 'image/png' })
   step.value = 'initial'
   utils.loading.hide()
-  emits('captured', file.url, fileBlob, fileName, null, 'camera')
+  emits('captured', file.url, fileBlob, fileName, imageCaption, null, 'camera' )
 }
 
 function clkRestart() {

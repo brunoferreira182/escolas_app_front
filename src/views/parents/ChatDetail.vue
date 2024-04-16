@@ -38,6 +38,9 @@
                         <ion-icon size="small" :icon="attach"></ion-icon>
                         <span>{{ message.messageFile.originalname }}</span>
                       </span>
+                      <div v-if="message.imageCaption">
+                        {{ message.imageCaption }}
+                      </div>
                     </div>
                     <div
                       style="width: 300px;margin-bottom: -5px;display: flex; align-items: center;"
@@ -80,11 +83,13 @@
                       <div class="q-px-xs">
                         {{ message.messageText }}
                       </div>
+                      
                     </div>
                     <span
                       class="ion-float-right q-mt-xs text-caption q-ml-sm"
                       v-if="message.createdAt"
-                    >{{ message.hour }}</span>
+                    >{{ message.hour }}
+                    </span>
                   </div>
                 </ion-row>
               </ion-item>
@@ -100,7 +105,7 @@
             </ion-popover>
           </div>
         </ion-list>
-        <ion-modal :isOpen="showModal" @willDismiss="showModal = false">
+        <ion-modal :isOpen="showModal" @willDismiss="showModal = false" class="ion-modal-image">
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="end">
@@ -183,6 +188,7 @@
       :start="startPhotoHandler"
       :allFiles="true"
       :noCrop="false"
+      :acceptImageCaption="true"
       @captured="captured"
       @cancel="cancelPhotoHandler"
     />
@@ -216,8 +222,8 @@ import {
 <script>
 import { useFetch } from '@/composables/fetch';
 export default {
-  components: {
-  },
+  name:'ChatDetail',
+
   data() {
     return {
       modules: [Zoom],
@@ -444,13 +450,13 @@ export default {
       this.step = 'addAttachment'
       this.startPhotoHandler = true
     },
-    captured(img, imgBlob, fileName) {
-      console.log(img, imgBlob, fileName, 'aqui o segredo da parada')
+    captured(img, imgBlob, fileName, imageCaption) {
       this.step = 'initial'
       this.startPhotoHandler = false
       this.insertMessage({
         file: imgBlob,
-        name: fileName
+        name: fileName,
+        imageCaption
       })
     },
     cancelPhotoHandler () {
@@ -552,7 +558,8 @@ export default {
         body: {
           classId: this.$route.query.classId,
 					message: this.chatMessage,
-          audioMessage: this.audioMessage
+          audioMessage: this.audioMessage,
+          imageCaption: file.imageCaption._value
         }
       }
       if (file.file) {
@@ -639,7 +646,7 @@ export default {
   height: 100%;
   object-fit: cover;
 }
-ion-modal {
+.ion-modal-image {
   --height: 50%;
   --border-radius: 16px;
   --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
