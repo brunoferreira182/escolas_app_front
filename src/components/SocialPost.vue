@@ -17,15 +17,7 @@
         </ion-header>
         <ion-content class="content-img">
           <swiper
-            :style="{
-              '--swiper-navigation-color': '#fff',
-              '--swiper-pagination-color': '#fff',
-            }"
             :zoom="true"
-            :navigation="true"
-            :pagination="{
-              clickable: true,
-            }"
             :modules="modules"
             class="mySwiper"
           >
@@ -120,10 +112,9 @@ import {
   IonContent,
   IonHeader,
   IonToolbar,
-  IonTitle,
+  IonModal,
   IonButtons,
   IonIcon,
-  IonModal,
   IonButton, 
 } from '@ionic/vue'
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -150,7 +141,6 @@ export default {
   
   methods: {
     openImageModal(imageFilename) {
-      console.log("🚀 ~ openImageModal ~ imageFilename:", imageFilename)
       this.modalImageUrl = utils.makeFileUrl(imageFilename);
       this.showModal = true;
     },
@@ -218,17 +208,12 @@ export default {
 .image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 ion-modal {
   --height: 50%;
   --border-radius: 16px;
   --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-.content-img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 ion-modal::part(backdrop) {
   background: rgb(31, 32, 32);

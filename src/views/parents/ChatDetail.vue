@@ -32,6 +32,7 @@
                       <img
                         v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
                         :src="utils.attachmentsAddress() + message.messageFile.filename"
+                        @click="openImageModal(message.messageFile.filename)"
                       >
                       <span v-else style="display:flex;align-items: center;" @click="clkAttachment(message)">
                         <ion-icon size="small" :icon="attach"></ion-icon>
@@ -99,6 +100,30 @@
             </ion-popover>
           </div>
         </ion-list>
+        <ion-modal :isOpen="showModal" @willDismiss="showModal = false">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="end">
+                <ion-button @click="showModal = false">Fechar</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content >
+            <swiper
+              :zoom="true"
+              :modules="modules"
+            >
+              <swiper-slide>
+                <div class="swiper-zoom-container container-img">
+                  <img 
+                    :src="modalImageUrl" 
+                    class="image"
+                  />
+                </div> 
+              </swiper-slide>
+            </swiper>
+          </ion-content>
+        </ion-modal>
       </div>
     </ion-content>
     <ion-footer style="background-color: var(--ion-color-step-50, #f7f7f7);">
@@ -168,6 +193,8 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import AudioRecorder from '../../components/AudioRecorder.vue'
+import { Zoom } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import PhotoHandler from '../../components/PhotoHandler.vue'
 import { send, attach, close, mic, play, pause, chevronBack } from 'ionicons/icons';
 import utils from '../../../src/composables/utils.js';
@@ -178,6 +205,10 @@ import {
   IonRow, IonItem, IonItemOption, IonItemOptions,
   IonItemSliding, IonList, IonAvatar, IonTextarea,
   IonPopover,
+  IonHeader,
+  IonToolbar,
+  IonModal,
+  IonButtons,
   IonButton, IonCol, IonFooter, alertController,
 } from '@ionic/vue'
 </script>
@@ -189,6 +220,9 @@ export default {
   },
   data() {
     return {
+      modules: [Zoom],
+      showModal: false,
+      modalImageUrl: null,
       classDetail: null,
       title: '',
       isAnsweringMessage: {
@@ -250,6 +284,10 @@ export default {
     this.startView()
   },
   methods: {
+    openImageModal(imageFilename) {
+      this.modalImageUrl = utils.makeFileUrl(imageFilename);
+      this.showModal = true;
+    },
     async clkAttachment (message) {
       // utils.loading.show()
       const retDownload = await utils.downloadFile({
@@ -591,6 +629,30 @@ export default {
 }
 </script>
 <style scoped>
+.container-img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+ion-modal {
+  --height: 50%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+ion-modal::part(backdrop) {
+  background: rgb(31, 32, 32);
+  opacity: 1;
+}
+ion-modal ion-toolbar {
+  --background: rgb(29, 29, 29);
+  --color: white;
+}
+
 ion-list {
   --background: "transparent"
 }

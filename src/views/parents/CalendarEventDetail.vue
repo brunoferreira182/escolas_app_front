@@ -6,7 +6,11 @@
     />
     <ion-content class="ion-padding" color="light" v-if="eventDetail">
       <ion-card>
-        <img v-if="eventDetail.images && eventDetail.images.filename" :src="utils.makeFileUrl(eventDetail.images.filename)" />
+        <img 
+          v-if="eventDetail.images && eventDetail.images.filename" 
+          :src="utils.makeFileUrl(eventDetail.images.filename)" 
+          @click="openImageModal(eventDetail.images.filename)"
+        />
         <ion-card-header>
           
           <ion-card-title>{{ eventDetail.eventName }}</ion-card-title>
@@ -30,6 +34,30 @@
           {{ eventDetail.eventDescription }}
         </ion-card-content>
       </ion-card>
+      <ion-modal :isOpen="showModal" @willDismiss="showModal = false">
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button @click="showModal = false">Fechar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content >
+          <swiper
+            :zoom="true"
+            :modules="modules"
+          >
+            <swiper-slide>
+              <div class="swiper-zoom-container container-img">
+                <img 
+                  :src="modalImageUrl" 
+                  class="image"
+                />
+              </div> 
+            </swiper-slide>
+          </swiper>
+        </ion-content>
+      </ion-modal>
       <div v-if="eventDetail.requireParentsPermission">
         <h2 class="q-px-lg">Autorizar crianças</h2>
         <ion-list :inset="true">
@@ -82,6 +110,8 @@
 
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+import { Zoom } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import { 
   IonPage, 
   IonContent, 
@@ -95,11 +125,9 @@ import {
   IonIcon,
   IonCardHeader,
   IonCardContent,
+
 } from '@ionic/vue';
 import { trashOutline, checkmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
-import heart from '/assets/icons/heart.svg'
-import smile from '/assets/icons/smile.svg'
-import like from '/assets/icons/like.svg'
 </script>
 
 <script>
@@ -111,6 +139,9 @@ export default defineComponent({
     return {
       eventDetail:{},
       childrenData:[],
+      modules: [Zoom],
+      showModal: false,
+      modalImageUrl: null,
     }
   },
   beforeMount(){
@@ -139,6 +170,10 @@ export default defineComponent({
     //     }
     //   });
     // }
+    openImageModal(imageFilename) {
+      this.modalImageUrl = utils.makeFileUrl(imageFilename);
+      this.showModal = true;
+    },
     acceptAuthorization(child) { 
       const opt = {
         route: '/mobile/social/insertUserInSchoolEvent',
@@ -196,3 +231,28 @@ export default defineComponent({
   }
 });
 </script>
+<style scoped>
+.container-img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+ion-modal {
+  --height: 50%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+ion-modal::part(backdrop) {
+  background: rgb(31, 32, 32);
+  opacity: 1;
+}
+ion-modal ion-toolbar {
+  --background: rgb(29, 29, 29);
+  --color: white;
+}
+</style>
