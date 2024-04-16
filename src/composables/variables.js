@@ -1,5 +1,5 @@
 //////////// VARIAVEIS DA APLICACAO //////
-const MODE_MASTER_SERVER = 'local'
+const MODE_MASTER_SERVER = 'tiago'
 const COMPANY_ID = 2
 const VERSION = 2.2
 const BUILD = 17

@@ -171,7 +171,7 @@ async function openCamera () {
 
 async function pickFile (type) {
   let types = ['image/*']
-  if (type === 'documents') types = ['application/pdf']
+  if (type === 'documents') types = ['application/pdf', 'video/quicktime']
   let res
   try {
     if (type === 'gallery' && !isPlatform('desktop')) {
