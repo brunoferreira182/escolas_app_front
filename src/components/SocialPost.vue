@@ -5,7 +5,41 @@
         v-if="post.postData.resume.img"
         style="width: 100%; height: auto; object-fit: cover; object-position: center;"
         :src="utils.makeFileUrl(post.postData.resume.img.filename)" class="img-style"
+        @click="openImageModal(post.postData.resume.img.filename)"
       />
+      <ion-modal :isOpen="showModal" @willDismiss="showModal = false">
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button @click="showModal = false">Fechar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="content-img">
+          <swiper
+            :style="{
+              '--swiper-navigation-color': '#fff',
+              '--swiper-pagination-color': '#fff',
+            }"
+            :zoom="true"
+            :navigation="true"
+            :pagination="{
+              clickable: true,
+            }"
+            :modules="modules"
+            class="mySwiper"
+          >
+            <swiper-slide>
+              <div class="swiper-zoom-container container-img">
+                <img 
+                  :src="modalImageUrl" 
+                  class="image"
+                />
+              </div> 
+            </swiper-slide>
+          </swiper>
+        </ion-content>
+      </ion-modal>
       <div >
         <p class="q-px-md text-caption" v-if="post.routeDestination.split('?')[0] === '/calendarEventDetail'">
           Evento para toda a escola
@@ -78,30 +112,48 @@
 
 <script setup>
 import utils from '../composables/utils'
+import { Zoom } from 'swiper/modules';
 import { useFetch } from '../composables/fetch'
 import {
   IonCol,
   IonRow,
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
   IonIcon,
-  
+  IonModal,
   IonButton, 
 } from '@ionic/vue'
-
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import heart from '/src/assets/icons/heart.svg'
 import heart_filled from '/src/assets/icons/heart_filled.svg'
 import bubblesound from '/src/assets/sounds/bubblesound.wav'
 import comment from '/src/assets/icons/comment.svg'
 import { Haptics } from '@capacitor/haptics';
+
 const props = defineProps(['post', 'i'])
 </script>
 <script>
 export default {
   name: "SocialPost",
   data() {
+    
     return {
+      utils,
+      modules: [Zoom],
+      showModal: false,
+      modalImageUrl: null,
     }
   },
+  
   methods: {
+    openImageModal(imageFilename) {
+      console.log("🚀 ~ openImageModal ~ imageFilename:", imageFilename)
+      this.modalImageUrl = utils.makeFileUrl(imageFilename);
+      this.showModal = true;
+    },
     async toggleReaction(post) {
       
       if (post.isButtonDisabled) {
@@ -158,6 +210,34 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.container-img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+ion-modal {
+  --height: 50%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+.content-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+ion-modal::part(backdrop) {
+  background: rgb(31, 32, 32);
+  opacity: 1;
+}
+ion-modal ion-toolbar {
+  --background: rgb(29, 29, 29);
+  --color: white;
+}
 $bubble-d: 4.5rem; // bubble diameter
 $bubble-r: .5*$bubble-d; // bubble-radius
 $sparkle-d: .375rem;

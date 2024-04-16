@@ -101,12 +101,11 @@ export default {
           noteContent: this.note
         }
       }
-
-    useFetch(opt).then((r) => {
-      this.note = ""
-      this.getUserNotes()
-    })
-  },
+      useFetch(opt).then((r) => {
+        this.note = ""
+        this.getUserNotes()
+      })
+    },
     async getUserNotes(){
       const opt = {
         route: '/mobile/workers/chat/getUsersNotes',

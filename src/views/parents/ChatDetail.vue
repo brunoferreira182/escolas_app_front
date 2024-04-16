@@ -39,7 +39,7 @@
                       </span>
                     </div>
                     <div
-                      style="width: 300px;margin-bottom: -20px;display: flex; align-items: center;"
+                      style="width: 300px;margin-bottom: -5px;display: flex; align-items: center;"
                       id="voice-message"
                       v-else-if="message.messageAudio"
                     >

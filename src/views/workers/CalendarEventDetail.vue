@@ -79,7 +79,7 @@
       </div>
       <div>
         <h2 class="q-px-lg"> Autorizados </h2>
-        <ion-list class="justify-between" :inset="true">
+        <ion-list class="justify-between" :inset="true" v-if="childList.list.length">
           <ion-item
             v-for="child in childList.list"
             :key="child"
@@ -94,6 +94,9 @@
             </ion-label>
           </ion-item>
         </ion-list>
+        <div v-else class="text-caption q-px-lg">
+          Não há autorizados até o mommento
+        </div>
         </div>
     </ion-content>
   </ion-page>
