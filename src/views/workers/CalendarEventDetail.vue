@@ -6,8 +6,16 @@
     />
     <ion-content color="light" v-if="eventDetail">
       <ion-card>
-        <img v-if="eventDetail.images && eventDetail.images.filename" :src="utils.makeFileUrl(eventDetail.images.filename)" />
-        <img v-else :src="utils.makeFileUrl(eventDetail.eventImage)" />
+        <img 
+          v-if="eventDetail.images && eventDetail.images.filename" 
+          :src="utils.makeFileUrl(eventDetail.images.filename)" 
+          @click="openImageModal(eventDetail.images.filename)"
+        />
+        <img 
+          v-else 
+          :src="utils.makeFileUrl(eventDetail.eventImage)" 
+          @click="openImageModal(eventDetail.images.filename)"
+        />
 
         <ion-card-header>
           <ion-card-title>{{ eventDetail.eventName }}</ion-card-title>
@@ -31,6 +39,30 @@
           {{ eventDetail.eventDescription }}
         </ion-card-content>
       </ion-card>
+      <ion-modal :isOpen="showModal" @willDismiss="showModal = false">
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button @click="showModal = false">Fechar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content >
+          <swiper
+            :zoom="true"
+            :modules="modules"
+          >
+            <swiper-slide>
+              <div class="swiper-zoom-container container-img">
+                <img 
+                  :src="modalImageUrl" 
+                  class="image"
+                />
+              </div> 
+            </swiper-slide>
+          </swiper>
+        </ion-content>
+      </ion-modal>
       <div v-if="eventDetail.requireParentsPermission">
         <h2 class="q-px-lg">Autorizar crianças</h2>
         <ion-list :inset="true">
@@ -79,7 +111,7 @@
       </div>
       <div>
         <h2 class="q-px-lg"> Autorizados </h2>
-        <ion-list class="justify-between" :inset="true" v-if="childList.list.length">
+        <ion-list class="justify-between" :inset="true" v-if="childList.list && childList.list.length">
           <ion-item
             v-for="child in childList.list"
             :key="child"
@@ -105,6 +137,8 @@
 
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+import { Zoom } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import { 
   IonPage, 
   IonContent, 
@@ -118,6 +152,10 @@ import {
   IonIcon,
   IonCardHeader,
   IonCardContent,
+  IonHeader,
+  IonToolbar,
+  IonModal,
+  IonButtons,
 } from '@ionic/vue';
 import { trashOutline, checkmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import heart from '/assets/icons/heart.svg'
@@ -134,7 +172,10 @@ export default defineComponent({
     return {
       eventDetail:{},
       childrenData:[],
-      childList:[]
+      childList:[],
+      modules: [Zoom],
+      showModal: false,
+      modalImageUrl: null,
     }
   },
   mounted(){
@@ -143,6 +184,10 @@ export default defineComponent({
     this.getParentChildrenByUserId()
   },
   methods: {
+    openImageModal(imageFilename) {
+      this.modalImageUrl = utils.makeFileUrl(imageFilename);
+      this.showModal = true;
+    },
     getChildrenByEventId (){
       const opt = {
         route:"/mobile/workers/getChildrenByEventId",
@@ -237,3 +282,28 @@ export default defineComponent({
   }
 });
 </script>
+<style scoped>
+.container-img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+ion-modal {
+  --height: 50%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+ion-modal::part(backdrop) {
+  background: rgb(31, 32, 32);
+  opacity: 1;
+}
+ion-modal ion-toolbar {
+  --background: rgb(29, 29, 29);
+  --color: white;
+}
+</style>
