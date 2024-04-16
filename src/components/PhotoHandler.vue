@@ -13,16 +13,17 @@
     v-if="imgType === 'gallery'"
     style="max-height: 75vh;"
     />
-    <ion-item style="top: -145px;" v-if="props.acceptImageCaption">
-      <ion-input 
-        label-placement="floating"
-        fill="outline"
-        v-model="imageCaption"
-        label="Legenda" 
-        placeholder="Escreva uma legenda para a foto" 
-      />
-    </ion-item>
+    
     <div>
+      <div class="input-wrapper  q-px-md q-mx-md"  v-if="props.acceptImageCaption">
+      <ion-textarea
+        label="Legenda"
+        label-placement="floating"
+        v-model="imageCaption"
+        placeholder="Escreva uma legenda para a foto"
+        :auto-grow="true"
+      ></ion-textarea>
+    </div>
       <ion-button
         expand="block"
         @click="sendPhoto"
@@ -53,8 +54,7 @@ import {
   IonButton,
   actionSheetController,
   IonModal, 
-  IonInput,
-  IonItem,
+  IonTextarea,
 } from '@ionic/vue';
 import { ref, onMounted, watch } from 'vue'
 import { Cropper } from 'vue-advanced-cropper';
@@ -243,3 +243,12 @@ const convertBlobToBase64 = (blob) => new Promise((resolve, reject) => {
 });
 
 </script>
+<style scoped
+>
+.input-wrapper {
+  border: 1px solid #ebebec;
+  /* padding-left: 15px; */
+  border-radius: 0.5rem;
+  margin-block: 10px;
+}
+</style>
