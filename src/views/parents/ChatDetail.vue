@@ -251,13 +251,13 @@ export default {
   },
   methods: {
     async clkAttachment (message) {
-      utils.loading.show()
+      // utils.loading.show()
       const retDownload = await utils.downloadFile({
         filename: message.messageFile.filename,
         originalname: message.messageFile.originalname
       })
       console.log(retDownload, 'retDownload aqui')
-      utils.loading.hide()
+      // utils.loading.hide()
     },
     goToChatInfo() {
       this.$router.push("/chatInfo?classId=" + this.$route.query.classId)

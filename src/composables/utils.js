@@ -9,6 +9,9 @@ import router from '../router/index.ts'
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { FileOpener } from '@capawesome-team/capacitor-file-opener';
 
+import { masterServerRoute } from './masterServerRoutes'
+let routeMasterServer = masterServerRoute()
+
 let loadingVar = []
 let updateUserInfoOnNextRoute = false
 
@@ -27,6 +30,23 @@ const useUtils = {
       return resolve(false)
     })
   },
+  async downloadFile2 (obj) {
+    const perm = await this.getFilesystemAccess()
+    if (!perm) return false
+    const originalnameSplit = obj.originalname.split('.')
+    const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
+    let nameToDownload
+    if (originalnameSplit.length === 1) nameToDownload = obj.originalname + '_' + currentDate
+    else nameToDownload = originalnameSplit[0] + '_' + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
+    const opt = {
+      url: routeMasterServer,
+      directory: Directory.Data
+      // path: '/Users/tiago/Documents/'
+    }
+    console.log(opt, 'opt aqui')
+    const dl = await Filesystem.downloadFile(opt)
+    console.log(dl, 'dl aqui')
+  },
   async downloadFile (obj) {
     const perm = await this.getFilesystemAccess()
     const opt = {
@@ -37,8 +57,8 @@ const useUtils = {
     const originalnameSplit = obj.originalname.split('.')
     const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
     let nameToDownload
-    if (originalnameSplit.length === 1) nameToDownload = obj.originalname + currentDate
-    else nameToDownload = originalnameSplit[0] + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
+    if (originalnameSplit.length === 1) nameToDownload = obj.originalname + '_' + currentDate
+    else nameToDownload = originalnameSplit[0] + '_' + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
 
     let writeFile
     let error = false
@@ -53,6 +73,7 @@ const useUtils = {
       console.log(e, 'erro criar arquivo')
       error = true
     }
+    console.log(writeFile, 'writeFiel aqui')
     if (!error) this.toast('Arquivo baixado na pasta Documentos')
     else {
       this.toast('Ocorreu um erro ao baixar o arquivo')
