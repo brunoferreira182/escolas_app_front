@@ -8,10 +8,10 @@
       style="max-height: 75vh;"
     />
     <cropper
-    :src="img"
-    @change="crop"
-    v-if="imgType === 'gallery'"
-    style="max-height: 75vh;"
+      :src="img"
+      @change="crop"
+      v-if="imgType === 'gallery'"
+      style="max-height: 75vh;"
     />
     
     <div>
