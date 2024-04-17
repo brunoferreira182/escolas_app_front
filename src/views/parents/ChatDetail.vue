@@ -16,19 +16,26 @@
           <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>
         <ion-list ref="listAnswerMsg">
-          <div v-for="message in messages" :key="message._id" :id="message._id">
+          <div v-for="(message, msgIndex) in messages" :key="message._id" :id="message._id" >
             <ion-item-sliding>
               <ion-item lines="none">
                 <ion-row :slot="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" >
                   <div
+                  
                     :class="`chat-message ${message.tempId ? 'sent-temp-message' : message.createdBy.userId === userInfo.userId ? 'sent-message': 'received-message'} q-ma-xs q-pa-sm ${blinkMessageId === message._id ? 'blink-bg' : ''}`"
                   >
+                    <div v-if="message.messageFile && message.messageFile.filename" class="ion-flat-left q-mb-xs text-caption">
+                      {{ message.name }}
+                    </div>
                     <ion-card v-if="message.answerMessage" style="margin: 0; padding: 3px;box-shadow:none" @click="clkAnswer(message)">
                       <div>{{ message.answerMessage.createdBy.name }}:</div>
                       <div v-if="message.answerMessage.message">{{ message.answerMessage.message }}</div>
                       <div v-else>Arquivo</div>
                     </ion-card>
-                    <div v-if="message.messageFile && Object.keys(message.messageFile).length > 0">
+                    <div 
+                      v-if="message.messageFile && 
+                      Object.keys(message.messageFile).length > 0"
+                    >
                       <img
                         v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
                         :src="utils.attachmentsAddress() + message.messageFile.filename"
@@ -93,9 +100,21 @@
                   </div>
                 </ion-row>
               </ion-item>
-              <ion-item-options :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" >
-                <ion-item-option style="text-transform: none; border-radius: .5rem;" color="danger" @click="clkMessage(message)" >Detalhes</ion-item-option>
-                <ion-item-option style="text-transform: none; border-radius: .5rem;" color="tertiary" >Reagir</ion-item-option>
+              <ion-item-options 
+                :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" 
+              >
+                <ion-item-option 
+                  style="text-transform: none; border-radius: .5rem;" 
+                  color="danger" 
+                  @click="clkMessage(message, msgIndex)" 
+                  >Detalhes
+                </ion-item-option>
+                <!-- <ion-item-option 
+                  style="text-transform: none; border-radius: .5rem;" 
+                  color="tertiary" 
+                >
+                  Reagir
+                </ion-item-option> -->
               </ion-item-options>
             </ion-item-sliding>
             <ion-popover side="top" :is-open="popoverOpen" @didDismiss="popoverOpen = false">
@@ -178,7 +197,51 @@
         </ion-row>
       </form>
     </ion-footer>
-
+    <ion-modal 
+      :is-open="modalEditImageCaption.open" 
+      :keep-contents-mounted="true" 
+      @didDismiss="closeModalEditImageCaption()"
+    >
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button @click="closeModalEditImageCaption()">Cancelar</ion-button>
+          </ion-buttons>
+          <ion-title>Editar legenda</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding"> 
+        <img
+          v-if="modalEditImageCaption.messageData.messageFile && modalEditImageCaption.messageData.messageFile.filename"
+          :src="utils.attachmentsAddress() + modalEditImageCaption.messageData.messageFile.filename"
+        >
+        <div class="input-wrapper  q-px-md">
+          <ion-textarea
+            label="Legenda"
+            label-placement="floating"
+            v-model="modalEditImageCaption.newImageCaption"
+            placeholder="Escreva uma legenda para a foto"
+            :auto-grow="true"
+          ></ion-textarea>
+        </div>
+        <div class="buttons-edit-image-caption">
+          <ion-button
+            expand="block"
+            @click="clkUpdateImageCaptionMessage"
+            class="q-mt-lg q-mb-md"
+          >
+            Confirmar
+          </ion-button>
+          <ion-button
+            expand="block"
+            @click="closeModalEditImageCaption"
+            fill="outline"
+          >
+            Voltar
+          </ion-button>
+        </div>
+      </ion-content>
+    </ion-modal>
     <AudioRecorder
       :open="openAudioRecorder"
       @done="doneAudioRecorder"
@@ -195,7 +258,6 @@
 
   </ion-page>
 </template>
-
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import AudioRecorder from '../../components/AudioRecorder.vue'
@@ -212,6 +274,7 @@ import {
   IonItemSliding, IonList, IonAvatar, IonTextarea,
   IonPopover,
   IonHeader,
+  IonTitle,
   IonToolbar,
   IonModal,
   IonButtons,
@@ -221,13 +284,21 @@ import {
 
 <script>
 import { useFetch } from '@/composables/fetch';
+import { formToJSON } from 'axios';
 export default {
   name:'ChatDetail',
 
   data() {
     return {
+      show: true,
       modules: [Zoom],
       showModal: false,
+      modalEditImageCaption:{
+        open: false,
+        messageData: '',
+        newImageCaption: '',
+        msgIndex: '',
+      },
       modalImageUrl: null,
       classDetail: null,
       title: '',
@@ -308,7 +379,7 @@ export default {
     },
     startView() {
       this.getClassDetailById()
-      this.getMessages()
+      this.getClassMessages()
       this.userInfo = utils.presentUserInfo()
     },
     playAudio(message) {
@@ -371,7 +442,7 @@ export default {
       this.answerClickedId = answer.answerMessage.messageId
       if (!foundMsg) {
         utils.loading.show()
-        this.getMessages(null, answer.answerMessage.createdAt.createdAtPosix, true)
+        this.getClassMessages(null, answer.answerMessage.createdAt.createdAtPosix, true)
       } else {
         this.scrollToMessage()
       }
@@ -391,7 +462,6 @@ export default {
     },
     reactToMsg (msg) {
       this.$refs.listAnswerMsg.$el.closeSlidingItems()
-      console.log(msg, 'aqui msg kkkkkkkkkkkkkkk')
       const opt = {
         route: '/mobile/messenger/insertReactionToChatMsg',
         body: {
@@ -405,7 +475,8 @@ export default {
         utils.toast("Mensagem curtida!")
       })
     },
-    async clkMessage (message) {
+    async clkMessage (message, msgIndex) {
+      console.log("🚀 ~ clkMessage ~ message:", message)
       this.$refs.listAnswerMsg.$el.closeSlidingItems()
       const d = `Data: ${message.createdAt.createdAtInFullLong} de  ${message.createdAt.createdAtYear}`
       const buttons = [{ text: 'Voltar', role: 'cancel' }]
@@ -416,6 +487,16 @@ export default {
           handler: () => {
             this.clkDeleteMessage(message._id)
           },
+        },
+      )
+      }
+      if(message.imageCaption){
+        buttons.push({
+          text: 'Editar',
+          role: 'confirm',
+          handler: () => {
+            this.clkEditImageCaption(message, msgIndex)
+          },
         })
       }
       const alert = await alertController.create({
@@ -425,18 +506,50 @@ export default {
       });
       await alert.present();
     },
+    closeModalEditImageCaption(){
+      this.modalEditImageCaption.open = false
+      this.modalEditImageCaption.messageData = ''
+      this.modalEditImageCaption.newImageCaption = ''
+      this.modalEditImageCaption.msgIndex = ''
+    },
+    clkEditImageCaption(messageData, msgIndex){
+      console.log("🚀 ~ clkEditImageCaption ~ msgIndex:", msgIndex)
+      this.modalEditImageCaption.open = true
+      this.modalEditImageCaption.messageData = messageData
+      this.modalEditImageCaption.msgIndex = msgIndex
+    },
     clkDeleteMessage (messageId) {
+      console.log("🚀 ~ clkDeleteMessage ~ messageId:", messageId)
       const opt = {
-        method: 'POST',
-        route: '/messenger/updateMessageStatus',
+        route: '/mobile/messenger/deleteMessage',
         body: {
 					messageId,
-          userId: this.userInfo.userId
         }
       }
-			useFetch(opt).then(r => {
+			useFetch(opt).then(() => {
         this.findAndRemoveMessageFromArray(messageId)
+        this.show = false
         utils.toast("Mensagem apagada!")
+      })
+    },
+    clkUpdateImageCaptionMessage() {
+      if(this.modalEditImageCaption.newImageCaption === ''){
+        utils.toast('Preencha a legenda') 
+        return
+      }
+      const messageId = this.modalEditImageCaption.messageData._id
+      const msgIndex = this.modalEditImageCaption.msgIndex
+      const opt = {
+        route: '/mobile/messenger/updateImageCaptionMessage',
+        body: {
+					messageId,
+          newImageCaption: this.modalEditImageCaption.newImageCaption
+        }
+      }
+			useFetch(opt).then(() => {
+        this.modalEditImageCaption.open = false
+        this.messages[msgIndex].imageCaption = this.modalEditImageCaption.newImageCaption
+        utils.toast("Mensagem editada com sucesso!")
       })
     },
     findAndRemoveMessageFromArray (id) {
@@ -511,10 +624,10 @@ export default {
       })
 		},
     moreData (ev) {
-      this.getMessages(ev)
+      this.getClassMessages(ev)
     },
     
-    getMessages (ev, lPosix, fromAnswer) {
+    getClassMessages (ev, lPosix, fromAnswer) {
       if (this.noMoreMessages) return
       const opt = {
         method: 'POST',
@@ -559,8 +672,10 @@ export default {
           classId: this.$route.query.classId,
 					message: this.chatMessage,
           audioMessage: this.audioMessage,
-          imageCaption: file.imageCaption._value
         }
+      }
+      if(file.imageCaption){
+        opt.body.imageCaption = file.imageCaption._value
       }
       if (file.file) {
         opt.file = [ file ]
@@ -589,6 +704,7 @@ export default {
         utils.loading.hide()
         this.scrollToBottom()
         this.undoAnswerMessage()
+        this.getClassMessages()
       })
     },
     insertTemporaryMessage (opt) {
@@ -636,6 +752,16 @@ export default {
 }
 </script>
 <style scoped>
+.buttons-edit-image-caption{
+  position: fixed;
+  width: 90%;
+  bottom: 10px;
+}
+.input-wrapper {
+  border: 1px solid #ebebec;
+  border-radius: 0.5rem;
+  margin-block: 10px;
+}
 .container-img {
   max-width: 100%;
   max-height: 100%;

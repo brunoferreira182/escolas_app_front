@@ -16,14 +16,14 @@
     
     <div>
       <div class="input-wrapper  q-px-md q-mx-md"  v-if="props.acceptImageCaption">
-      <ion-textarea
-        label="Legenda"
-        label-placement="floating"
-        v-model="imageCaption"
-        placeholder="Escreva uma legenda para a foto"
-        :auto-grow="true"
-      ></ion-textarea>
-    </div>
+        <ion-textarea
+          label="Legenda"
+          label-placement="floating"
+          v-model="imageCaption"
+          placeholder="Escreva uma legenda para a foto"
+          :auto-grow="true"
+        ></ion-textarea>
+      </div>
       <ion-button
         expand="block"
         @click="sendPhoto"
@@ -134,11 +134,13 @@ async function showBottomSheet () {
   const res = await actionSheet.onDidDismiss();
   if (!res.data) {
     step.value = 'initial'
+    imageCaption = ''
     emits('cancel')
   } else if (res.data.action === 'camera') {
     openCamera()
   } else if (res.data.action === 'cancel') {
     step.value = 'initial'
+    imageCaption = ''
     emits('cancel')
   } else {
     pickFile(res.data.action)
