@@ -141,6 +141,7 @@ export default defineComponent({
         utils.loading.hide()
         if (r.error) {
           this.btnEnterLoading = false;
+          utils.toast(r.errorMessage)
           return;
         }
         this.loginStep = 'email'

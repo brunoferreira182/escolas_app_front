@@ -15,11 +15,10 @@
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
-        <ion-content class="content-img">
+        <ion-content class="">
           <swiper
             :zoom="true"
             :modules="modules"
-            class="mySwiper"
           >
             <swiper-slide>
               <div class="swiper-zoom-container container-img">
@@ -205,13 +204,20 @@ export default {
   max-height: 100%;
 }
 
+
+ion-modal {
+  --height:300px;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
 .image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100vw; 
+  height: auto; 
+  object-fit: cover; 
 }
 ion-modal {
-  --height: 50%;
+  --max-height: 50%;
   --border-radius: 16px;
   --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }

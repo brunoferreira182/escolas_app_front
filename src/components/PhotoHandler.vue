@@ -1,5 +1,6 @@
 <template>
   <ion-modal :isOpen="step === 'crop'">
+    
     <cropper
       :src="img.webPath"
       @change="crop"
@@ -7,12 +8,22 @@
       style="max-height: 75vh;"
     />
     <cropper
-      :src="img"
-      @change="crop"
-      v-if="imgType === 'gallery'"
-      style="max-height: 75vh;"
+    :src="img"
+    @change="crop"
+    v-if="imgType === 'gallery'"
+    style="max-height: 75vh;"
     />
+    
     <div>
+      <div class="input-wrapper  q-px-md q-mx-md"  v-if="props.acceptImageCaption">
+      <ion-textarea
+        label="Legenda"
+        label-placement="floating"
+        v-model="imageCaption"
+        placeholder="Escreva uma legenda para a foto"
+        :auto-grow="true"
+      ></ion-textarea>
+    </div>
       <ion-button
         expand="block"
         @click="sendPhoto"
@@ -33,7 +44,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 export default {
   name: 'PhotoHandler',
 }
@@ -44,9 +54,8 @@ import {
   IonButton,
   actionSheetController,
   IonModal, 
+  IonTextarea,
 } from '@ionic/vue';
-// import { usePhotoGallery } from '@/composables/usePhotoGallery';
-// const { takePhoto } = usePhotoGallery();
 import { ref, onMounted, watch } from 'vue'
 import { Cropper } from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
@@ -62,12 +71,12 @@ import {
   // Photo 
 } from '@capacitor/camera';
 
-const props = defineProps(['square', 'allFiles', 'start', 'noCrop'])
+const props = defineProps(['square', 'allFiles', 'start', 'noCrop', 'acceptImageCaption'])
 const emits = defineEmits([
   'captured',
   'cancel'
 ])
-
+const imageCaption = ref('')
 const img = ref(null)
 const imgType = ref(null)
 const step = ref('initial')
@@ -190,7 +199,7 @@ async function pickFile (type) {
     imgType.value = 'gallery'
   } else if (type === 'documents' || (type === 'gallery' && props.noCrop)) {
     utils.loading.hide()
-    emits('captured', file, file.blob, file.name, '', type)
+    emits('captured', file, file.blob, file.name, imageCaption, '', type)
   }
 }
 
@@ -207,7 +216,7 @@ async function sendPhoto (img) {
   fileBlob = new Blob([fileBlob], { type: 'image/png' })
   step.value = 'initial'
   utils.loading.hide()
-  emits('captured', file.url, fileBlob, fileName, null, 'camera')
+  emits('captured', file.url, fileBlob, fileName, imageCaption, null, 'camera' )
 }
 
 function clkRestart() {
@@ -234,3 +243,12 @@ const convertBlobToBase64 = (blob) => new Promise((resolve, reject) => {
 });
 
 </script>
+<style scoped
+>
+.input-wrapper {
+  border: 1px solid #ebebec;
+  /* padding-left: 15px; */
+  border-radius: 0.5rem;
+  margin-block: 10px;
+}
+</style>
