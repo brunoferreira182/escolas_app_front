@@ -372,7 +372,6 @@ export default {
         filename: message.messageFile.filename,
         originalname: message.messageFile.originalname
       })
-      console.log(retDownload, 'retDownload aqui')
       // utils.loading.hide()
     },
     goToChatInfo() {
@@ -477,7 +476,6 @@ export default {
       })
     },
     async clkMessage (message, msgIndex) {
-      console.log("🚀 ~ clkMessage ~ message:", message)
       this.$refs.listAnswerMsg.$el.closeSlidingItems()
       const d = `Data: ${message.createdAt.createdAtInFullLong} de  ${message.createdAt.createdAtYear}`
       const buttons = [{ text: 'Voltar', role: 'cancel' }]
@@ -514,13 +512,11 @@ export default {
       this.modalEditImageCaption.msgIndex = ''
     },
     clkEditImageCaption(messageData, msgIndex){
-      console.log("🚀 ~ clkEditImageCaption ~ msgIndex:", msgIndex)
       this.modalEditImageCaption.open = true
       this.modalEditImageCaption.messageData = messageData
       this.modalEditImageCaption.msgIndex = msgIndex
     },
     clkDeleteMessage (messageId) {
-      console.log("🚀 ~ clkDeleteMessage ~ messageId:", messageId)
       const opt = {
         route: '/mobile/messenger/deleteMessage',
         body: {
