@@ -259,12 +259,13 @@
   </ion-page>
 </template>
 <script setup>
+
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import AudioRecorder from '../../components/AudioRecorder.vue'
 import { Zoom } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import PhotoHandler from '../../components/PhotoHandler.vue'
-import { send, attach, close, mic, play, pause, chevronBack } from 'ionicons/icons';
+import { send, attach, close, mic, play, pause, chevronBack, watch } from 'ionicons/icons';
 import utils from '../../../src/composables/utils.js';
 import {
   IonPage, IonContent,
@@ -280,9 +281,10 @@ import {
   IonButtons,
   IonButton, IonCol, IonFooter, alertController,
 } from '@ionic/vue'
+
 </script>
 
-<script>
+<script >
 import { useFetch } from '@/composables/fetch';
 import { formToJSON } from 'axios';
 export default {
@@ -290,7 +292,6 @@ export default {
 
   data() {
     return {
-      show: true,
       modules: [Zoom],
       showModal: false,
       modalEditImageCaption:{
@@ -528,7 +529,6 @@ export default {
       }
 			useFetch(opt).then(() => {
         this.findAndRemoveMessageFromArray(messageId)
-        this.show = false
         utils.toast("Mensagem apagada!")
       })
     },
