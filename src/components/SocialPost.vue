@@ -7,30 +7,7 @@
         :src="utils.makeFileUrl(post.postData.resume.img.filename)" class="img-style"
         @click="openImageModal(post.postData.resume.img.filename)"
       />
-      <ion-modal :isOpen="showModal" @willDismiss="showModal = false">
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="end">
-              <ion-button @click="showModal = false">Fechar</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="">
-          <swiper
-            :zoom="true"
-            :modules="modules"
-          >
-            <swiper-slide>
-              <div class="swiper-zoom-container container-img">
-                <img 
-                  :src="modalImageUrl" 
-                  class="image"
-                />
-              </div> 
-            </swiper-slide>
-          </swiper>
-        </ion-content>
-      </ion-modal>
+      
       <div >
         <p class="q-px-md text-caption" v-if="post.routeDestination.split('?')[0] === '/calendarEventDetail'">
           Evento para toda a escola
@@ -99,6 +76,36 @@
       </div>
     </div>
   </div>
+
+  <ion-modal
+    :isOpen="showModal"
+    @willDismiss="showModal = false"
+    :enter-animation="enterAnimation"
+    :leave-animation="leaveAnimation"
+  >
+    
+    <ion-content class="">
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button @click="showModal = false">Fechar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <swiper
+        :zoom="true"
+        :modules="modules"
+      >
+        <swiper-slide>
+          <div class="swiper-zoom-container container-img">
+            <img 
+              :src="modalImageUrl" 
+            />
+          </div> 
+        </swiper-slide>
+      </swiper>
+    </ion-content>
+  </ion-modal>
 </template>
 
 <script setup>
@@ -115,6 +122,7 @@ import {
   IonButtons,
   IonIcon,
   IonButton, 
+  createAnimation
 } from '@ionic/vue'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import heart from '/src/assets/icons/heart.svg'
@@ -124,6 +132,35 @@ import comment from '/src/assets/icons/comment.svg'
 import { Haptics } from '@capacitor/haptics';
 
 const props = defineProps(['post', 'i'])
+
+import { ref } from 'vue';
+const modal = ref();
+
+const enterAnimation = (baseEl) => {
+  const root = baseEl.shadowRoot;
+
+  const backdropAnimation = createAnimation()
+    .addElement(root.querySelector('ion-backdrop'))
+    .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+
+  const wrapperAnimation = createAnimation()
+    .addElement(root.querySelector('.modal-wrapper'))
+    .keyframes([
+      { offset: 0, opacity: '0', transform: 'scale(0)' },
+      { offset: 1, opacity: '0.99', transform: 'scale(1)' },
+    ]);
+
+  return createAnimation()
+    .addElement(baseEl)
+    .easing('ease-out')
+    .duration(200)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+const leaveAnimation = (baseEl) => {
+  return enterAnimation(baseEl).direction('reverse');
+};
+
 </script>
 <script>
 export default {
@@ -205,30 +242,12 @@ export default {
 }
 
 
-ion-modal {
-  --height:300px;
-  --border-radius: 16px;
-  --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-}
-
 .image {
   width: 100vw; 
   height: auto; 
   object-fit: cover; 
 }
-ion-modal {
-  --max-height: 50%;
-  --border-radius: 16px;
-  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-ion-modal::part(backdrop) {
-  background: rgb(31, 32, 32);
-  opacity: 1;
-}
-ion-modal ion-toolbar {
-  --background: rgb(29, 29, 29);
-  --color: white;
-}
+
 $bubble-d: 4.5rem; // bubble diameter
 $bubble-r: .5*$bubble-d; // bubble-radius
 $sparkle-d: .375rem;
