@@ -23,11 +23,35 @@
         </ion-select>
       </div>
       <div class="q-ma-md" v-if="menuData">
-        <ion-img 
-          v-if="menuData"
-          :src="utils.makeFileUrl(menuData.filename)"
-        />
-        <div v-else class="q-ma-sm "> Cardápio não encontrado</div>
+        <ion-modal 
+          :isOpen="showModal" 
+          @willDismiss="showModal = false"
+        >
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="end">
+                <ion-button @click="showModal = false">Fechar</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content >
+            <swiper
+              :zoom="true"
+              :modules="modules"
+            >
+              <swiper-slide>
+                <div class="swiper-zoom-container container-img">
+                  <ion-img 
+                    v-if="menuData"
+                    class="image"
+                    :src="utils.makeFileUrl(menuData.filename)"
+                  />
+                  <div v-else class="q-ma-sm "> Cardápio não encontrado</div>
+                </div> 
+              </swiper-slide>
+            </swiper>
+          </ion-content>
+        </ion-modal>
       </div>
       
     </ion-content>
@@ -40,25 +64,17 @@ import {
   IonButton, 
   IonContent, 
   IonImg, 
-  IonList, 
-  IonRow,
-  IonCol,
-  IonBadge,
-  IonChip, 
-  IonAvatar,
   IonModal,
-  IonItem, 
-  IonLabel, 
-  IonNote,
-  IonIcon,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
   IonSelect, IonSelectOption,
-  IonDatetimeButton, IonDatetime
 } from '@ionic/vue';
-import { defineComponent } from 'vue';
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
+import { Zoom } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import utils from '../composables/utils'
 import { useFetch } from '@/composables/fetch';
-import PinchImage from '../components/PinchImage.vue'
 </script>
 
 <script>
@@ -67,6 +83,9 @@ export default {
   data() {
     return {
       openModal: false,
+      modules: [Zoom],
+      showModal: false,
+      modalImageUrl: null,
       dateSearch: '', 
       menuData: null,
       date: {
@@ -109,6 +128,10 @@ export default {
     }
   },
   methods: {
+    openImageModal(imageFilename) {
+      this.modalImageUrl = utils.makeFileUrl(imageFilename);
+      this.showModal = true;
+    },
     onChangeDate($event, c) {
       this.dateSelected = $event.detail.value.split('T')[0]
       this.getMenuByTodaysDate()

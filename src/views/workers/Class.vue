@@ -47,12 +47,12 @@
           </ion-item>
         </ion-list>
       </Transition>
-      <ion-list :inset="true" color="light">
+      <ion-list :inset="true" >
         <ion-accordion-group >
-          <ion-accordion value="alunos">
-            <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">
-              Alunos
-            </div>
+          <ion-accordion value="alunos" >
+            <ion-item slot="header" class="text-h6">
+              <ion-label>Alunos</ion-label>
+            </ion-item>
             <div slot="content">
               <div class="q-px-md text-caption">
                 Selecione um aluno para inserir uma atividade individualmente
@@ -83,7 +83,9 @@
       <ion-list :inset="true" color="light">
         <ion-accordion-group>
           <ion-accordion value="atividades">
-            <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Últimas atividades</div>
+            <ion-item slot="header" class="text-h6">
+              <ion-label>Últimas atividades</ion-label>
+            </ion-item>
             <div slot="content">
               <ion-item 
                 v-for="e in classEventsHistory"
@@ -144,13 +146,14 @@
         :is-open="dialogInsertClassEvent.open" 
         @ionModalDidPresent="startModal()" 
         @didDismiss="clearModalDataClass()"
+        :presenting-element="presentingElement"
       >
         <ion-header>
           <ion-toolbar>
-            <ion-buttons slot="start">
+            <ion-buttons slot="end">
               <ion-button @click="closeDialogClass">Fechar</ion-button>
             </ion-buttons>
-            <ion-title >Atividades</ion-title>
+            <ion-title >Inserir atividades</ion-title>
           </ion-toolbar>
         </ion-header>
         <ion-content>
@@ -183,6 +186,7 @@
               >
                 <!-- Checkbox para a intensidade -->
                 <ion-checkbox 
+                
                   :checked="sub.isChecked" 
                   @ionChange="handleSubtypeCheckboxChange(sub)"
                 />
@@ -301,35 +305,17 @@
             Nenhuma atividade
           </div>
         </ion-content>
-        <ion-button @click="createUserChildEvents" class="q-pa-md" expand="block">Salvar</ion-button>
+        <ion-button 
+          @click="createUserChildEvents" 
+          class="q-pa-md" 
+          expand="block"
+        >
+          Salvar
+        </ion-button>
       </ion-modal>
 
   
     </ion-content>
-    <!-- <ion-alert v-if="formattedChildEventList"
-      :is-open="dialogInsertActivity.open"
-      header="Escolha uma atividade"
-      :backdropDismiss="false"
-      animated
-      @willPresent="getChildEvents(dialogInsertClassEvent.data.classId)"
-      @willDismiss="formattedChildEventList = null"
-      :inputs="formattedChildEventList"
-      :buttons="[
-        {
-          text: 'Depois',
-          handler: () => {
-            dialogInsertActivity.open = false;
-          },
-        },
-        {
-          text: 'Confirmar',
-          handler: (e) => {
-            dialogInsertActivity.open = false;
-            selectOptionActivity(e)
-          },
-        },
-      ]"
-    /> -->
     <DialogInsertChildEvent
       :dialogInsertChildEvent="dialogInsertChildEvent"
       :childEventsHistory="childEventsHistory"
@@ -384,6 +370,7 @@ export default {
   data() {
     return {
       startPhotoHandler: false,
+      presentingElement: null,
       showSubtypesList: false,
       selectedActivity: null,
       selectedSubtype: null,
@@ -453,7 +440,7 @@ export default {
   },
   methods: {
     handleActivityCheckboxChange(act) {
-      console.log(act, 'act');
+      this.selectedActivity = null
       // Desmarca todas as outras atividades
       this.childEventsList.forEach((item) => {
         item.isChecked = item === act;
@@ -488,6 +475,7 @@ export default {
         // Limpa a variável selectedSubtype e define isChecked como false se o mesmo subtipo for clicado novamente
         this.selectedSubtype = null;
         this.selectedActivity.activitySubtypes.find(item => item.name === sub.name).isChecked = false;
+        this.selectedActivity = null
       }
     },
     onChangeDate($event, c) {

@@ -65,18 +65,23 @@
                   
                 </ion-label>
                 <ion-label slot="end">
-                  <ion-button 
-                    size="small"
-                    color="success"
-                    shape="round"
-                    @click="clkAddPresenceToChild(child, 'presença')"
-                  > 
-                    <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
-                  </ion-button>
+                  <div>
+                    <ion-button 
+                      size="small"
+                      color="success"
+                      shape="round"
+                      fill="clear"
+                      @click="clkAddPresenceToChild(child, 'presença')"
+                    > 
+                      <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
+                    </ion-button>
+                  </div>
                   <ion-button 
                     color="danger"
                     size="small"
                     shape="round"
+                    fill="clear"
+                    class="q-py-md"
                     @click="clkAddPresenceToChild(child, 'falta')"
                   > 
                     <ion-icon slot="icon-only" :icon="close"></ion-icon>
@@ -101,10 +106,11 @@
     <ion-modal 
       :is-open="dialogAttendance.open" 
       @didDismiss="clearModalAttendanceData()"
+      :presenting-element="presentingElement"
     >
       <ion-header>
         <ion-toolbar>
-          <ion-buttons slot="start">
+          <ion-buttons slot="end">
             <ion-button @click="clearModalAttendanceData">Fechar</ion-button>
           </ion-buttons>
           <ion-title >Comparecimento</ion-title>
@@ -183,7 +189,10 @@
       <ion-button @click="createUserChildAttendance" class="q-pa-md" expand="block">Salvar</ion-button>
     </ion-modal>
 
-    <ion-modal :keep-contents-mounted="true">
+    <ion-modal 
+      :keep-contents-mounted="true" 
+      :presenting-element="presentingElement"
+    >
       <ion-datetime
         id="datetime"
         presentation="date"
@@ -250,6 +259,7 @@ export default {
   name: "Attendance",
   data() {
     return {
+      presentingElement: null,
       modalChangeDate: {
         open: false,
         date: ''

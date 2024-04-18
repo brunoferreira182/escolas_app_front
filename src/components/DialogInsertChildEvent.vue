@@ -3,10 +3,11 @@
     :is-open="dialogInsertChildEvent.open" 
     @ionModalDidPresent="executeMethods"
     @willDismiss="clearModalData()"
+    :presenting-element="presentingElement"
   >
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
+        <ion-buttons slot="end">
           <ion-button @click="closeDialogInserChildrenActivity">Fechar</ion-button>
         </ion-buttons>
         <ion-title >Atividades</ion-title>
@@ -159,6 +160,7 @@ export default {
         blob: null,
         name: null
       },
+      presentingElement: null,
       showSubtypesList: false,
       selectedActivity: null,
       selectedSubtype: null,

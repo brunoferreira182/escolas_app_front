@@ -10,7 +10,10 @@
         <div class="q-mt-md">
           <ion-datetime-button datetime="datetime"></ion-datetime-button>
         </div>
-        <ion-modal :keep-contents-mounted="true">
+        <ion-modal 
+          :keep-contents-mounted="true"
+          :presenting-element="presentingElement"
+        >
           <ion-datetime
             id="datetime"
             presentation="date"
@@ -106,6 +109,7 @@
             </ion-item>
             <ion-modal 
               class="modalTeste"
+              :presenting-element="presentingElement"
               :is-open="openImageModalProfile.open" 
               @didDismiss="dismissImageModalProfile()"
             >
@@ -179,6 +183,7 @@ export default {
       APP_NAME,
       progressBar: false,
       childClassInfo: null,
+      presentingElement: null,
       pagination: {
         page: 1,
         rowsPerPage: 10

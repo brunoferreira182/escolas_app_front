@@ -7,7 +7,10 @@
         :src="utils.makeFileUrl(post.postData.resume.img.filename)" class="img-style"
         @click="openImageModal(post.postData.resume.img.filename)"
       />
-      <ion-modal :isOpen="showModal" @willDismiss="showModal = false">
+      <ion-modal 
+        :isOpen="showModal" 
+        @willDismiss="showModal = false"
+      >
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="end">
@@ -135,6 +138,7 @@ export default {
       modules: [Zoom],
       showModal: false,
       modalImageUrl: null,
+      presentingElement: null,
     }
   },
   
@@ -206,7 +210,7 @@ export default {
 
 
 ion-modal {
-  --height:300px;
+  --height:60%;
   --border-radius: 16px;
   --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }

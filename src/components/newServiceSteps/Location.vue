@@ -21,7 +21,7 @@
     {{citySelected ? citySelected.nome : 'Selecione a sua cidade'}}
     </ion-item>
 
-    <ion-modal trigger="select-state" ref="statemodal">
+    <ion-modal trigger="select-state" ref="statemodal" :presenting-element="presentingElement">
       <ion-content>
         <div style="padding-top: var(--ion-safe-area-top);">
           <ion-button
@@ -57,7 +57,12 @@
         </ion-list>
       </ion-content>
     </ion-modal>
-    <ion-modal trigger="select-city" ref="citymodal" @didDismiss="cities = []">
+    <ion-modal 
+      :presenting-element="presentingElement" 
+      trigger="select-city" 
+      ref="citymodal" 
+      @didDismiss="cities = []"
+    >
       <ion-content>
         <div style="padding-top: var(--ion-safe-area-top);">
           <ion-button
@@ -125,6 +130,7 @@ export default {
       cities: [],
       citySearchString: '',
       citySelected: null,
+      presentingElement: null,
       statesLoaded: false
     };
   },
