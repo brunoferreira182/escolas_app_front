@@ -610,7 +610,6 @@ export default {
 }
 
 .modal-absent ion-checkbox::part(container) {
-  border-radius: 6px;
   border: 2px solid #9b0d0d;
 }
 .modal-attendance ion-checkbox {
@@ -619,10 +618,8 @@ export default {
 }
 
 .modal-attendance ion-checkbox::part(container) {
-  border-radius: 6px;
   border: 2px solid #1d9b0d;
 }
- 
 ion-select.always-flip::part(icon) {
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
