@@ -490,7 +490,6 @@ export default {
           },
         },
       )
-      }
       if(message.imageCaption){
         buttons.push({
           text: 'Editar',
@@ -499,6 +498,7 @@ export default {
             this.clkEditImageCaption(message, msgIndex)
           },
         })
+      }
       }
       const alert = await alertController.create({
         header: 'Detalhe',
