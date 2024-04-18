@@ -39,7 +39,10 @@
           {{ eventDetail.eventDescription }}
         </ion-card-content>
       </ion-card>
-      <ion-modal :isOpen="showModal" @willDismiss="showModal = false">
+      <ion-modal 
+        :isOpen="showModal" 
+        @willDismiss="showModal = false"
+      >
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="end">
@@ -154,13 +157,10 @@ import {
   IonCardContent,
   IonHeader,
   IonToolbar,
-  IonModal,
   IonButtons,
+  IonModal,
 } from '@ionic/vue';
-import { trashOutline, checkmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
-import heart from '/assets/icons/heart.svg'
-import smile from '/assets/icons/smile.svg'
-import like from '/assets/icons/like.svg'
+import {  checkmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
 </script>
 
 <script>

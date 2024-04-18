@@ -13,14 +13,6 @@
         <ion-item :button="true" @click="$router.push('/parentFiles')">
           <ion-label>Anexos</ion-label>
         </ion-item>
-        <!-- <ion-item :button="true">
-          <ion-label>Pagamentos</ion-label>
-        </ion-item> -->
-        <!-- <ion-item :button="true" @click="$router.push('/childrenAttendanceCalendar')">
-          <ion-label>Comparecimento</ion-label>
-        </ion-item> -->
-        
-        
         <ion-item :button="true" @click="$router.push('/messenger')">
           <ion-label>Mensagens</ion-label>
         </ion-item>
@@ -156,34 +148,3 @@ export default {
 
 </script>
 
-<style scoped>
-ion-modal {
-  --height: 80%;
-  --border-radius: 16px;
-  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-
-ion-modal::part(backdrop) {
-  background: rgba(209, 213, 219);
-  opacity: 1;
-}
-
-ion-modal ion-toolbar {
-  --background: transparent
-  --color: white;
-}
-.q-carousel__slide {
-  padding-right: 0%;
-  padding-left: 0%;
-}
-.login-logo {
-  /* width: 12em; */
-  height: 19em;
-}
-.login-logo-letters {
-  font-weight: 600;
-  color: var(--ion-color-primary);
-  font-size: 35px;
-  translate:0 20px;
-}
-</style>

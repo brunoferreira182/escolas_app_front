@@ -34,7 +34,10 @@
           {{ eventDetail.eventDescription }}
         </ion-card-content>
       </ion-card>
-      <ion-modal :isOpen="showModal" @willDismiss="showModal = false">
+      <ion-modal 
+        :isOpen="showModal" 
+        @willDismiss="showModal = false"
+      >
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="end">

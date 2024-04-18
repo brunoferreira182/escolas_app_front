@@ -139,7 +139,7 @@ export default {
   } 
 }
 </script>
-<style>
+<style scoped>
 .note-content{
   display: flex; 
   flex-direction: column; 

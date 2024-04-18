@@ -128,7 +128,7 @@
       ]"
     />
 
-    <ion-modal :keep-contents-mounted="true">
+    <ion-modal :keep-contents-mounted="true" :presenting-element="presentingElement">
       <ion-datetime
         id="datetime"
         presentation="date"
@@ -175,6 +175,7 @@ export default {
   data() {
     return {
       userId: null,
+      presentingElement: null,
       userDetail: [],
       canCreateUsers: null,
       childEventsHistory: [],

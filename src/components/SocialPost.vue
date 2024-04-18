@@ -172,6 +172,7 @@ export default {
       modules: [Zoom],
       showModal: false,
       modalImageUrl: null,
+      presentingElement: null,
     }
   },
   

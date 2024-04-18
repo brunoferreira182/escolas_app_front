@@ -1,5 +1,6 @@
 <template>
-  <ion-modal :isOpen="step === 'crop'">
+  <ion-modal :isOpen="step === 'crop'" >
+    
     
     <cropper
       :src="img.webPath"

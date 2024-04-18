@@ -124,7 +124,11 @@
             </ion-popover>
           </div>
         </ion-list>
-        <ion-modal :isOpen="showModal" @willDismiss="showModal = false" class="ion-modal-image">
+        <ion-modal 
+          :isOpen="showModal" 
+          @willDismiss="showModal = false" 
+          class="ion-modal-image"
+        >
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="end">
@@ -198,6 +202,7 @@
       </form>
     </ion-footer>
     <ion-modal 
+      :presenting-element="presentingElement"
       :is-open="modalEditImageCaption.open" 
       :keep-contents-mounted="true" 
       @didDismiss="closeModalEditImageCaption()"
@@ -294,6 +299,7 @@ export default {
     return {
       modules: [Zoom],
       showModal: false,
+      presentingElement: null,
       modalEditImageCaption:{
         open: false,
         messageData: '',
