@@ -1,5 +1,5 @@
 //////////// VARIAVEIS DA APLICACAO //////
-const MODE_MASTER_SERVER = 'prod'
+const MODE_MASTER_SERVER = 'local'
 const COMPANY_ID = 2
 const VERSION = 2.5
 const BUILD = 25

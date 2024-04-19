@@ -140,7 +140,7 @@
 <script setup>
 import { 
   IonModal, IonButton, IonContent,
-  IonList, IonLabel, IonBadge, IonCheckbox, IonAlert,
+  IonList, IonLabel, IonBadge, IonCheckbox, IonAlert, IonHeader,
   IonItem, IonRow, IonCol, IonAvatar,
   IonToolbar, IonTitle,
   IonButtons } from '@ionic/vue';

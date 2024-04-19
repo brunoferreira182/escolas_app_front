@@ -196,38 +196,6 @@
                 </ion-label>
               </ion-item>
             </div>
-            <!-- <div   
-              v-for="act in childEventsList"
-              :key="act">
-              <ion-item
-              
-              >
-                <ion-checkbox 
-                  :checked="act.isChecked" 
-                  @ionChange="handleCheckboxChange(act._id, $event)" 
-                />
-                <ion-label class="q-px-md ion-text-capitalize">
-                  {{ act.name }}
-                </ion-label>
-              </ion-item>
-              <div v-if="act.activitySubtypes">
-                <div class="text-caption q-pa-md">
-                  Selecione a intensidade
-                </div>
-                <ion-item
-                  v-for="sub in act.activitySubtypes"
-                  :key="sub"
-                >
-                  <ion-checkbox 
-                    :checked="act.isChecked" 
-                    @ionChange="handleCheckboxChange(sub._id, $event)" 
-                  />
-                  <ion-label class="q-px-md ion-text-capitalize">
-                    {{ sub }}
-                  </ion-label>
-                </ion-item>
-              </div>
-            </div> -->
           </ion-list>
           <!-- <div class="input-wrapper q-px-md q-mx-md">
             <ion-button 
@@ -247,7 +215,7 @@
               :auto-grow="true"
             ></ion-textarea>
           </div> -->
-          <ion-list :inset="true">
+          <ion-list :inset="true" v-show="showChildrenCheckbox">
             <ion-item class="ion-text-left text-h6">
               <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
               <ion-label class="q-px-md ion-text-capitalize">
@@ -374,6 +342,7 @@ export default {
       showSubtypesList: false,
       selectedActivity: null,
       selectedSubtype: null,
+      showChildrenCheckbox: true,
       dialogInsertChildEvent: {
         open: false,
         data: [],
@@ -440,7 +409,12 @@ export default {
   },
   methods: {
     handleActivityCheckboxChange(act) {
+      if(this.showChildrenCheckbox === false){
+        this.selectedChildren = []
+        this.getChildrenListByClassId()
+      }
       this.selectedActivity = null
+      this.showChildrenCheckbox = false
       // Desmarca todas as outras atividades
       this.childEventsList.forEach((item) => {
         item.isChecked = item === act;
@@ -454,14 +428,19 @@ export default {
           activitySubtypes: act.activitySubtypes.map((sub) => ({ name: sub, isChecked: false }))
         };
         this.showSubtypesList = true; // Mostra automaticamente a lista de intensidades
+        this.showChildrenCheckbox = true
+        
       } else {
         // Adiciona a atividade selecionada ao selectedActivity
         this.selectedActivity = act;
         this.showSubtypesList = false;
+        this.selectedChildren = []
+        this.showChildrenCheckbox = false
       }
 
       // Limpa a seleção de subtipos ao mudar de atividade
       this.selectedSubtype = null;
+      
     },
 
     handleSubtypeCheckboxChange(sub) {
@@ -556,6 +535,7 @@ export default {
     },
     handleCheckboxChangeAll(e) {
       this.selectAllChildren = false
+      
       if (e.detail.checked === true) {
         this.selectedChildren = this.classList.map((child) => ({ childId: child.childId }));
       } else {
@@ -721,7 +701,7 @@ export default {
 
     createUserChildEvents() {
       const file = [{ file: this.image.blob, name: 'newImage' }]
-      if(this.selectedActivity._id === ''){
+      if(!this.selectedActivity || this.selectedActivity._id === ''){
         utils.toast('Selecione a atividade para prosseguir')
         return
       }
