@@ -297,7 +297,7 @@
 
 <script setup>
 import {
-  IonPage, IonAlert,
+  IonPage,
   IonButton,
   IonBadge,
   IonHeader,
@@ -305,18 +305,12 @@ import {
   IonItem,
   IonButtons,
   IonTitle,
-  IonSearchbar,
   IonLabel,
   IonContent,
-  IonSelect, 
-  IonSelectOption,
-  IonTextarea,
   IonModal,
   IonList,
-  IonChip ,
   IonCol,
   IonCheckbox,
-  IonImg,
   IonRow,
   IonAvatar,
   IonAccordion, IonAccordionGroup,
@@ -325,9 +319,7 @@ import {
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import { caretDownSharp } from 'ionicons/icons';
 import utils from '../../composables/utils'
-import PhotoHandler from '../../components/PhotoHandler.vue'
 import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 
 </script>
