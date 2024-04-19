@@ -39,33 +39,11 @@
           {{ eventDetail.eventDescription }}
         </ion-card-content>
       </ion-card>
-      <ion-modal 
-        :isOpen="showModal" 
-        @willDismiss="showModal = false"
-      >
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="end">
-              <ion-button @click="showModal = false">Fechar</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content >
-          <swiper
-            :zoom="true"
-            :modules="modules"
-          >
-            <swiper-slide>
-              <div class="swiper-zoom-container container-img">
-                <img 
-                  :src="modalImageUrl" 
-                  class="image"
-                />
-              </div> 
-            </swiper-slide>
-          </swiper>
-        </ion-content>
-      </ion-modal>
+      <ModalPinchZoomImage
+        :modalImageUrl="modalImageUrl"
+        :showModal="showModal"
+        @closeModal="showModal = false"
+      />
       <div v-if="eventDetail.requireParentsPermission">
         <h2 class="q-px-lg">Autorizar crianças</h2>
         <ion-list :inset="true">
@@ -141,7 +119,6 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { Zoom } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/vue';
 import { 
   IonPage, 
   IonContent, 
@@ -155,12 +132,17 @@ import {
   IonIcon,
   IonCardHeader,
   IonCardContent,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonModal,
 } from '@ionic/vue';
 import {  checkmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import ModalPinchZoomImage from '../../components/ModalPinchZoomImage.vue'
+import { ref } from 'vue';
+const showModal = ref(false);
+const modalImageUrl = ref(null);
+
+const openImageModal = (imageFilename) => {
+  modalImageUrl.value = utils.makeFileUrl(imageFilename);
+  showModal.value = true;
+};
 </script>
 
 <script>
@@ -173,7 +155,6 @@ export default defineComponent({
       eventDetail:{},
       childrenData:[],
       childList:[],
-      modules: [Zoom],
       showModal: false,
       modalImageUrl: null,
     }
@@ -184,10 +165,6 @@ export default defineComponent({
     this.getParentChildrenByUserId()
   },
   methods: {
-    openImageModal(imageFilename) {
-      this.modalImageUrl = utils.makeFileUrl(imageFilename);
-      this.showModal = true;
-    },
     getChildrenByEventId (){
       const opt = {
         route:"/mobile/workers/getChildrenByEventId",

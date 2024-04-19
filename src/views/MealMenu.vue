@@ -23,35 +23,17 @@
         </ion-select>
       </div>
       <div class="q-ma-md" v-if="menuData">
-        <ion-modal 
-          :isOpen="showModal" 
-          @willDismiss="showModal = false"
-        >
-          <ion-header>
-            <ion-toolbar>
-              <ion-buttons slot="end">
-                <ion-button @click="showModal = false">Fechar</ion-button>
-              </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content >
-            <swiper
-              :zoom="true"
-              :modules="modules"
-            >
-              <swiper-slide>
-                <div class="swiper-zoom-container container-img">
-                  <ion-img 
-                    v-if="menuData"
-                    class="image"
-                    :src="utils.makeFileUrl(menuData.filename)"
-                  />
-                  <div v-else class="q-ma-sm "> Cardápio não encontrado</div>
-                </div> 
-              </swiper-slide>
-            </swiper>
-          </ion-content>
-        </ion-modal>
+        <ion-img 
+          v-if="menuData"
+          class="image"
+          :src="utils.makeFileUrl(menuData.filename)"
+          @click="openImageModal(menuData.filename)"
+        />
+        <ModalPinchZoomImage
+          :modalImageUrl="modalImageUrl"
+          :showModal="showModal"
+          @closeModal="showModal = false"
+        />
       </div>
       
     </ion-content>
@@ -61,20 +43,26 @@
 <script setup>
 import { 
   IonPage, 
-  IonButton, 
   IonContent, 
   IonImg, 
-  IonModal,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
   IonSelect, IonSelectOption,
 } from '@ionic/vue';
+import { ref } from 'vue';
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
 import { Zoom } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/vue';
 import utils from '../composables/utils'
+
 import { useFetch } from '@/composables/fetch';
+
+import ModalPinchZoomImage from '../components/ModalPinchZoomImage.vue'
+
+const showModal = ref(false);
+const modalImageUrl = ref(null);
+
+const openImageModal = (imageFilename) => {
+  modalImageUrl.value = utils.makeFileUrl(imageFilename);
+  showModal.value = true;
+};
 </script>
 
 <script>

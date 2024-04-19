@@ -141,11 +141,9 @@
 import { 
   IonModal, IonButton, IonContent,
   IonList, IonLabel, IonBadge, IonCheckbox, IonAlert,
-  IonItem, IonChip,IonRow, IonCol, IonAvatar,
-  IonTextarea, IonImg, IonHeader, IonToolbar, IonTitle,
+  IonItem, IonRow, IonCol, IonAvatar,
+  IonToolbar, IonTitle,
   IonButtons } from '@ionic/vue';
-import { APP_NAME, COMPANY_ID } from '../composables/variables';
-import { defineComponent } from 'vue';
 import utils from '../composables/utils'
 import PhotoHandler from '../components/PhotoHandler.vue'
 </script>

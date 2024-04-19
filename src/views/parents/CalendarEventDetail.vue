@@ -34,33 +34,11 @@
           {{ eventDetail.eventDescription }}
         </ion-card-content>
       </ion-card>
-      <ion-modal 
-        :isOpen="showModal" 
-        @willDismiss="showModal = false"
-      >
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="end">
-              <ion-button @click="showModal = false">Fechar</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content >
-          <swiper
-            :zoom="true"
-            :modules="modules"
-          >
-            <swiper-slide>
-              <div class="swiper-zoom-container container-img">
-                <img 
-                  :src="modalImageUrl" 
-                  class="image"
-                />
-              </div> 
-            </swiper-slide>
-          </swiper>
-        </ion-content>
-      </ion-modal>
+      <ModalPinchZoomImage
+        :modalImageUrl="modalImageUrl"
+        :showModal="showModal"
+        @closeModal="showModal = false"
+      />
       <div v-if="eventDetail.requireParentsPermission">
         <h2 class="q-px-lg">Autorizar crianças</h2>
         <ion-list :inset="true">
@@ -114,7 +92,7 @@
 <script setup>
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import { Zoom } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/vue';
+
 import { 
   IonPage, 
   IonContent, 
@@ -130,7 +108,16 @@ import {
   IonCardContent,
 
 } from '@ionic/vue';
-import { trashOutline, checkmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import { checkmarkOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import ModalPinchZoomImage from '../components/ModalPinchZoomImage.vue'
+import { ref } from 'vue';
+const showModal = ref(false);
+const modalImageUrl = ref(null);
+
+const openImageModal = (imageFilename) => {
+  modalImageUrl.value = utils.makeFileUrl(imageFilename);
+  showModal.value = true;
+};
 </script>
 
 <script>
@@ -142,7 +129,6 @@ export default defineComponent({
     return {
       eventDetail:{},
       childrenData:[],
-      modules: [Zoom],
       showModal: false,
       modalImageUrl: null,
     }
@@ -150,33 +136,8 @@ export default defineComponent({
   beforeMount(){
     this.getCalendarEventDetail()
     this.getParentChildrenByUserId()
-    // this.getChildrenByEventId()
   },
   methods: {
-    // getChildrenByEventId(){
-    //   const opt = {
-    //     route:"/mobile/social/getChildrenByEventId",
-    //     body:{
-    //     page : 1,
-    //     rowsPerPage : 50,
-    //     schoolEventId: this.$route.query.schoolEventId
-    //     },
-    //   };
-    //   this.$q.loading.show();
-    //   useFetch(opt).then((r) => {
-    //     this.$q.loading.hide()
-    //     if(r.error){
-    //       this.$q.notify('Ocorreu um erro, tente novamente mais tarde.')
-    //       return
-    //     } else {
-    //       this.childsList = r.data
-    //     }
-    //   });
-    // }
-    openImageModal(imageFilename) {
-      this.modalImageUrl = utils.makeFileUrl(imageFilename);
-      this.showModal = true;
-    },
     acceptAuthorization(child) { 
       const opt = {
         route: '/mobile/social/insertUserInSchoolEvent',
@@ -234,28 +195,3 @@ export default defineComponent({
   }
 });
 </script>
-<style scoped>
-.container-img {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-ion-modal {
-  --height: 50%;
-  --border-radius: 16px;
-  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-ion-modal::part(backdrop) {
-  background: rgb(31, 32, 32);
-  opacity: 1;
-}
-ion-modal ion-toolbar {
-  --background: rgb(29, 29, 29);
-  --color: white;
-}
-</style>

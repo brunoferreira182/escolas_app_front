@@ -33,8 +33,6 @@
 import {
   IonButton,
 } from '@ionic/vue';
-// import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue';
-// import 'swiper/css';
 import { defineComponent } from 'vue';
 import InputEmail from './InputEmail.vue'
 import InputPassword from './InputPassword.vue'

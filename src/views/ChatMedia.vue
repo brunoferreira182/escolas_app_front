@@ -10,6 +10,7 @@
           <img
             v-if="media.messageFile.mimetype && media.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
             :src="utils.attachmentsAddress() + media.messageFile.filename"
+            @click="openImageModal(media.messageFile.filename)"
           >
           
           <span style="display:flex;align-items: center;" @click="clkAttachment(media)">
@@ -53,6 +54,11 @@
           </ion-label>
         </div>
       </ion-card>
+      <ModalPinchZoomImage
+        :modalImageUrl="modalImageUrl"
+        :showModal="showModal"
+        @closeModal="showModal = false"
+      />
     </ion-content>
   </ion-page>
 </template>
@@ -70,6 +76,15 @@ IonIcon,
 </script>
 <script>
 import { useFetch } from '@/composables/fetch';
+import ModalPinchZoomImage from '../components/ModalPinchZoomImage.vue'
+import { ref } from 'vue';
+const showModal = ref(false);
+const modalImageUrl = ref(null);
+
+const openImageModal = (imageFilename) => {
+  modalImageUrl.value = utils.makeFileUrl(imageFilename);
+  showModal.value = true;
+};
 export default {
   name: 'chatMedia',
   data() {

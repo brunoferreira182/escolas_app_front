@@ -43,10 +43,9 @@
     "pinia": "^2.1.6",
     "replace-in-file": "^7.0.2",
     "socket.io-client": "^4.7.2",
-    "swiper": "^10.3.1",
+    "swiper": "^11.1.1",
     "vue": "^3.2.45",
     "vue-advanced-cropper": "^2.8.8",
-    "vue-pinch-zoom": "^1.0.1",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

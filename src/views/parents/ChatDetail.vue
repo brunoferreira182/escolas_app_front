@@ -124,34 +124,11 @@
             </ion-popover>
           </div>
         </ion-list>
-        <ion-modal 
-          :isOpen="showModal" 
-          @willDismiss="showModal = false" 
-          class="ion-modal-image"
-        >
-          <ion-header>
-            <ion-toolbar>
-              <ion-buttons slot="end">
-                <ion-button @click="showModal = false">Fechar</ion-button>
-              </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content >
-            <swiper
-              :zoom="true"
-              :modules="modules"
-            >
-              <swiper-slide>
-                <div class="swiper-zoom-container container-img">
-                  <img 
-                    :src="modalImageUrl" 
-                    class="image"
-                  />
-                </div> 
-              </swiper-slide>
-            </swiper>
-          </ion-content>
-        </ion-modal>
+        <ModalPinchZoomImage
+          :modalImageUrl="modalImageUrl"
+          :showModal="showModal"
+          @closeModal="showModal = false"
+        />
       </div>
     </ion-content>
     <ion-footer style="background-color: var(--ion-color-step-50, #f7f7f7);">
@@ -267,8 +244,6 @@
 
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import AudioRecorder from '../../components/AudioRecorder.vue'
-import { Zoom } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/vue';
 import PhotoHandler from '../../components/PhotoHandler.vue'
 import { send, attach, close, mic, play, pause, chevronBack, watch } from 'ionicons/icons';
 import utils from '../../../src/composables/utils.js';
@@ -286,18 +261,24 @@ import {
   IonButtons,
   IonButton, IonCol, IonFooter, alertController,
 } from '@ionic/vue'
+import ModalPinchZoomImage from '../../components/ModalPinchZoomImage.vue'
+import { ref } from 'vue';
+const showModal = ref(false);
+const modalImageUrl = ref(null);
 
+const openImageModal = (imageFilename) => {
+  modalImageUrl.value = utils.makeFileUrl(imageFilename);
+  showModal.value = true;
+};
 </script>
 
 <script >
 import { useFetch } from '@/composables/fetch';
-import { formToJSON } from 'axios';
 export default {
   name:'ChatDetail',
 
   data() {
     return {
-      modules: [Zoom],
       showModal: false,
       presentingElement: null,
       modalEditImageCaption:{
@@ -368,10 +349,6 @@ export default {
     this.startView()
   },
   methods: {
-    openImageModal(imageFilename) {
-      this.modalImageUrl = utils.makeFileUrl(imageFilename);
-      this.showModal = true;
-    },
     async clkAttachment (message) {
       // utils.loading.show()
       const retDownload = await utils.downloadFile({
