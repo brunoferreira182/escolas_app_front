@@ -245,10 +245,10 @@ export default {
         utils.toast('As senhas digitadas são diferentes.')
         return
       }
-      if (this.passwordData.password.length < 6) {
-        utils.toast('A senha deve ter no mínimo 6 caracteres')
-        return
-      }
+      // if (this.passwordData.password.length < 6) {
+      //   utils.toast('A senha deve ter no mínimo 6 caracteres')
+      //   return
+      // }
 
       const tk = CryptoJS.AES.encrypt(JSON.stringify(this.passwordData), this.token).toString()
       
