@@ -222,7 +222,7 @@ export default {
           if (r.message) utils.toast(r.message);
           if (r.action === "toSms") {
             this.smsScreenText = 'Você já tem uma solicitação de troca de senha. Insira o código recebido pelo email.'
-            this.smsScreenText2 = 'Caso não tenha recebido, tente novamente em 1 hora'
+            this.smsScreenText2 = 'Caso não tenha recebido, tente novamente em 1 minuto'
             this.token = r.token
             this.phoneMasked = r.phone;
             this.step = 'confirmSms'
@@ -245,8 +245,8 @@ export default {
         utils.toast('As senhas digitadas são diferentes.')
         return
       }
-      if (this.passwordData.password.length < 1) {
-        utils.toast('A senha deve ter no mínimo 1 caractere')
+      if (this.passwordData.password.length < 6) {
+        utils.toast('A senha deve ter no mínimo 6 caracteres')
         return
       }
 

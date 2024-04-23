@@ -139,7 +139,6 @@
       @captured="captured"
       @cancel="cancelPhotoHandler"
     />
-
   </ion-page>
 </template>
 
