@@ -638,6 +638,7 @@ export default {
       })
     },
     insertMessage (file) {
+      console.log("🚀 ~ insertMessage ~ file:", file)
       if (this.chatMessage.length < 1 && !file.file && !this.audioMessage) return
       let optTemMsg
       if (file.file) optTemMsg = { file: file.file }

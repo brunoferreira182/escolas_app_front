@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     async clkAttachment (media) {
-      console.log(media)
+      console.log("🚀 ~ clkAttachment ~ mediaaaaaa:", media)
       utils.loading.show()
       await utils.downloadFile({
         filename: media.messageFile.filename,

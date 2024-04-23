@@ -30,23 +30,23 @@ const useUtils = {
       return resolve(false)
     })
   },
-  async downloadFile2 (obj) {
-    const perm = await this.getFilesystemAccess()
-    if (!perm) return false
-    const originalnameSplit = obj.originalname.split('.')
-    const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
-    let nameToDownload
-    if (originalnameSplit.length === 1) nameToDownload = obj.originalname + '_' + currentDate
-    else nameToDownload = originalnameSplit[0] + '_' + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
-    const opt = {
-      url: routeMasterServer,
-      directory: Directory.Data
-      // path: '/Users/tiago/Documents/'
-    }
-    console.log(opt, 'opt aqui')
-    const dl = await Filesystem.downloadFile(opt)
-    console.log(dl, 'dl aqui')
-  },
+  // async downloadFile2 (obj) {
+  //   const perm = await this.getFilesystemAccess()
+  //   if (!perm) return false
+  //   const originalnameSplit = obj.originalname.split('.')
+  //   const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
+  //   let nameToDownload
+  //   if (originalnameSplit.length === 1) nameToDownload = obj.originalname + '_' + currentDate
+  //   else nameToDownload = originalnameSplit[0] + '_' + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
+  //   const opt = {
+  //     url: routeMasterServer,
+  //     directory: Directory.Data
+  //     // path: '/Users/tiago/Documents/'
+  //   }
+  //   console.log(opt, 'opt aqui')
+  //   const dl = await Filesystem.downloadFile(opt)
+  //   console.log(dl, 'dl aqui')
+  // },
   async downloadFile (obj) {
     const perm = await this.getFilesystemAccess()
     const opt = {
