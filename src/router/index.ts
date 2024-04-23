@@ -48,6 +48,7 @@ import Messenger from '../views/Messenger.vue';
 import ChildrenAttendanceCalendar from '../views/ChildrenAttendanceCalendar.vue';
 import ParentFiles from  '../views/parents/ParentFiles.vue'
 import MealMenu from '../views/MealMenu.vue';
+import ForgotPassword from '../views/ForgotPassword.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -217,6 +218,7 @@ const routes: Array<RouteRecordRaw> = [
         component: chatMedia
       },
       { path: '/mealMenu', component: MealMenu },
+      { path: '/forgotPassword', component: ForgotPassword },
       { path: '/noteSenderToUser', component: noteSenderToUser },
       { path: '/userNotesList', component: userNotesList },
     ]

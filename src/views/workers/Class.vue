@@ -197,24 +197,6 @@
               </ion-item>
             </div>
           </ion-list>
-          <!-- <div class="input-wrapper q-px-md q-mx-md">
-            <ion-button 
-              @click="dialogInsertActivity.open = true" 
-              expand="block" 
-              fill="flat"
-            >
-              {{ dialogInsertChildEvent.childEventId !== '' ? selectedEvent[0].name : 'Selecionar Atividade' }}
-            </ion-button>
-          </div>
-          <div class="input-wrapper  q-px-md q-mx-md">
-            <ion-textarea
-              label="Descrição"
-              label-placement="floating"
-              v-model="dialogInsertChildEvent.obs"
-              placeholder="Descrição da atividade"
-              :auto-grow="true"
-            ></ion-textarea>
-          </div> -->
           <ion-list :inset="true" v-show="showChildrenCheckbox">
             <ion-item class="ion-text-left text-h6">
               <ion-checkbox v-model="selectAllChildren" @ionChange="handleCheckboxChangeAll($event)"/>
