@@ -55,6 +55,7 @@ const useUtils = {
       method: 'GET'
     }
     const httpResponse = await useFetch(opt)
+    console.log("🚀 ~ downloadFile ~ httpResponse:", httpResponse)
     const originalnameSplit = obj.originalname.split('.')
     const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
     let nameToDownload
@@ -74,7 +75,6 @@ const useUtils = {
       console.log(e, 'erro criar arquivo')
       error = true
     }
-    console.log(writeFile, 'writeFiel aqui')
     if (!error) this.toast('Arquivo baixado na pasta Documentos')
     else {
       this.toast('Ocorreu um erro ao baixar o arquivo')
