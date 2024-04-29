@@ -30,7 +30,8 @@ const useUtils = {
       return resolve(false)
     })
   },
-  // async downloadFile2 (obj) {
+  
+  // async downloadFile (obj) {
   //   const perm = await this.getFilesystemAccess()
   //   if (!perm) return false
   //   const originalnameSplit = obj.originalname.split('.')
@@ -45,7 +46,7 @@ const useUtils = {
   //   }
   //   console.log(opt, 'opt aqui')
   //   const dl = await Filesystem.downloadFile(opt)
-  //   console.log(dl, 'dl aqui')
+  //   console.log(dl, 'blob')
   // },
   async downloadFile (obj) {
     const perm = await this.getFilesystemAccess()
@@ -79,7 +80,6 @@ const useUtils = {
       this.toast('Ocorreu um erro ao baixar o arquivo')
       return
     }
-    console.log(writeFile, 'writeFile')
     await FileOpener.openFile({
       path: writeFile.uri,
     })

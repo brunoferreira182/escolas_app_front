@@ -77,7 +77,7 @@ const emits = defineEmits([
   'captured',
   'cancel'
 ])
-const imageCaption = ref('')
+let imageCaption = ref('')
 const img = ref(null)
 const imgType = ref(null)
 const step = ref('initial')
@@ -188,6 +188,7 @@ async function pickFile (type) {
     return
   }
   const file = res.files[0];
+  console.log("🚀 ~ pickFile ~ file:", file)
   
   if (file.path) {
     const fileSrc = Capacitor.convertFileSrc(file.path);
@@ -197,6 +198,7 @@ async function pickFile (type) {
 
   if (type === 'gallery' && !props.noCrop) {
     // img.value é base64
+    
     img.value = await convertBlobToBase64(file.blob)
     step.value = 'crop'
     imgType.value = 'gallery'
