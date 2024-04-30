@@ -48,7 +48,7 @@
       </div>
 
       <h2 class="q-px-md">Comparecimento</h2>
-      <ion-list :inset="true" >
+      <ion-list :inset="true" v-if="childAttendance && childAttendance.length">
         <ion-item 
           v-for="e in childAttendance"
           :key="e"
@@ -74,9 +74,12 @@
           </div>
         </ion-item>
       </ion-list>
+      <div v-else class="q-px-md text-caption">
+        Não há dados de comparecimento
+      </div>
 
-      <h2 class="q-px-md">Histórico de atividades</h2>
-      <ion-list :inset="true" >
+      <h2 class="q-pt-lg q-px-md">Histórico de atividades</h2>
+      <ion-list :inset="true" v-if="childEventsHistory && childEventsHistory.length">
         <ion-item 
           v-for="e in childEventsHistory"
           :key="e"
@@ -98,6 +101,9 @@
           </div>
         </ion-item>
       </ion-list>
+      <div v-else class="q-px-md text-caption">
+        Não há dados de atividades
+      </div>
       <PhotoHandler
         v-show="startPhotoHandler"
         :start="startPhotoHandler"
