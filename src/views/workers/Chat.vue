@@ -1,19 +1,33 @@
 <template>
-  <ion-page>
-    <ToolbarEscolas
-      title="Salas"
-      :backButton="false"
-    />
-    <ion-content color="light">
+  <ion-page  ref="page">
+    
+    <ion-header :translucent="true">
+      <ion-toolbar>
+        <ion-title>Salas</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content color="light" :fullscreen="true">
+
+      <ion-header collapse="condense">
+        <ion-toolbar color="light">
+          <ion-title size="large">Salas</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <div class="q-px-md">
+        <ion-text>
+          <h3>Turmas</h3>
+          <ion-note>Selecione uma turma entrar no detalhe</ion-note>
+        </ion-text>
+      </div>
       <div class="q-mt-md">
         <div v-if="classesInfo && classesInfo.length">
           <ion-list :inset="true">
-            <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
             <ion-item 
               v-for="c in classesInfo"
               :key="c"
               :button="true"
-              class="q-pa-sm"
               @click="goToChatInfo(c.classId)"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage" style="height: 60px; width: 60px">
@@ -23,92 +37,15 @@
                 <img :src="utils.makeFileUrl(c.image, 'thumbnail')"/>
               </ion-avatar>
               <ion-label>
-                <h6>{{ c.className }}</h6>
-                <ion-badge color="success">Função: {{ c.functionName }}</ion-badge>
+                <h2>{{ c.className }}</h2>
+                <ion-badge color="primary">Função: {{ c.functionName }}</ion-badge>
               </ion-label>
             </ion-item>
           </ion-list>
         </div>
-        <div v-else>
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>Você não está em nenhuma sala</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Procure um responsável da escola para conferir qual turma você participa.
-            </ion-card-content>
-          </ion-card>
-        </div>
-        <!-- <div v-if="childEventsHistory">
-          <ion-list :inset="true" >
-            <div class="ion-text-left text-h6 q-py-sm q-pl-md">Histórico de atividades</div>
-            <ion-item 
-              v-for="e in childEventsHistory"
-              :key="e"
-              detail="false"
-              @click="clkOpenDialogChildEvent(e)"
-            >
-              <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
-                <img :src="utils.makeFileUrl(e.childEventPhoto.filename, 'thumbnail')" v-if="e.childEventPhoto"/>
-                <img :src="utils.makeFileUrl(null)" v-else/>
-              </ion-avatar>
-              <ion-avatar
-                aria-hidden="true"
-                slot="start"
-                style="margin-left: -30px; margin-top: 30px; height: 35px; width: 35px; border: 2px solid white !important;"
-              >
-                <img :src="utils.makeFileUrl(e.childPhoto, 'thumbnail')" v-if="e.childPhoto"/>
-                <img :src="utils.makeFileUrl(null)" v-else/>
-              </ion-avatar>
-              <ion-label>
-                <h6 class="text-capitalize">{{ e.childName }}</h6>
-                <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
-                <ion-note color="medium" class="ion-text-wrap">
-                  {{ e.eventObs }}
-                </ion-note>
-              </ion-label>
-              <div class="metadata-end-wrapper" slot="end">
-                <ion-note color="medium">
-                  {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
-                  {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                </ion-note>
-              </div>
-            </ion-item>
-          </ion-list>
-        </div> -->
-        
       </div>
     </ion-content>
-    <ion-alert v-if="formattedChildEventList"
-      :is-open="dialogInsertActivity.open"
-      header="Escolha uma atividade"
-      :backdropDismiss="false"
-      animated
-      :inputs="formattedChildEventList"
-      :buttons="[
-        {
-          text: 'Depois',
-          handler: () => {
-            dialogInsertActivity.open = false;
-          },
-        },
-        {
-          text: 'Confirmar',
-          handler: (e) => {
-            dialogInsertActivity.open = false;
-            this.selectOptionActivity(e)
-          },
-        },
-      ]"
-    />
-    <DialogInsertChildEvent 
-      :dialogInsertChildEvent="dialogInsertChildEvent"
-      :selectedEvent="selectedEvent"
-      :childEventsHistory="childEventsHistory"
-      :pagination="pagination"
-      :dialogInsertActivity="dialogInsertActivity"
-      @getLastActivityFromChildrenOfClasses="getLastActivityFromChildrenOfClasses"
-    />
+    
   </ion-page>
 </template>
 <script setup>
@@ -117,22 +54,18 @@ import {
   IonContent, IonImg, IonCardHeader,
   IonList, IonChip, IonCardTitle, IonBadge,
   IonItem, IonLabel, IonCardContent, IonNote,
-  IonAvatar, IonAlert } from '@ionic/vue';
+  IonAvatar, IonAlert,
+  IonHeader, IonToolbar, IonTitle, IonText
+} from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import utils from '../../composables/utils'
-import DialogInsertChildEvent from '../../components/DialogInsertChildEvent.vue'
 </script>
 
 <script>
 import { useFetch } from '@/composables/fetch';
 export default {
   name: 'chatWorkers',
-  components: {
-    IonPage, IonButton,
-    IonContent,
-    IonImg
-  },
   data() {
     return {
       APP_NAME,
@@ -287,30 +220,10 @@ export default {
 
 </script>
 
+
 <style scoped>
-.q-carousel__slide {
-  padding-right: 0%;
-  padding-left: 0%;
+ion-avatar {
+  width: 56px;
+  height: 56px
 }
-.login-logo {
-  /* width: 12em; */
-  height: 19em;
-}
-.login-logo-letters {
-  font-weight: 600;
-  color: var(--ion-color-primary);
-  font-size: 35px;
-  translate:0 20px;
-}
-.metadata-end-wrapper {
-    position: absolute;
-
-    top: 10px;
-    inset-inline-end: 10px;
-
-    font-size: 0.8rem;
-
-    display: flex;
-    align-items: center;
-  }
 </style>

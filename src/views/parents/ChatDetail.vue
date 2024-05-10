@@ -3,7 +3,6 @@
     <ToolbarEscolas
       :title="classDetail ? classDetail.className : 'Carregando...'"
       :backButton="true"
-      @titleClicked="goToChatInfo"
     />
     <ion-content ref="elIonContent" color="light">
       <div >
@@ -21,7 +20,6 @@
               <ion-item lines="none">
                 <ion-row :slot="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" >
                   <div
-                  
                     :class="`chat-message ${message.tempId ? 'sent-temp-message' : message.createdBy.userId === userInfo.userId ? 'sent-message': 'received-message'} q-ma-xs q-pa-sm ${blinkMessageId === message._id ? 'blink-bg' : ''}`"
                   >
                     <div v-if="message.messageFile && message.messageFile.filename" class="ion-flat-left q-mb-xs text-caption">
@@ -784,7 +782,7 @@ ion-list {
   background-color: var(--ion-color-light);
 } */
 .sent-message {
-  background-color: var(--ion-color-primary);
+  background-color: rgb(197, 255, 197);
 }
 .sent-temp-message {
   border-width: 2px;
@@ -794,7 +792,7 @@ ion-list {
 
 .received-message {
   margin-left: -10px;
-  background-color: var(--ion-color-secondary);
+  background-color: rgb(221, 221, 221);
 }
 .blink-bg {
   animation: blinkingBackground 2s infinite;

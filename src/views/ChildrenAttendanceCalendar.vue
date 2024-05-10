@@ -1,47 +1,39 @@
 <template>
   <ion-page>
-    <ToolbarEscolas
-      title="Comparecimento"
-    />
-    <ion-content color="light" >
-      <div class="ion-text-center q-px-md">
-        <div class="q-ma-md " v-if="childAttendance.length">
-          <ion-badge 
-            class="text-subtitle1 q-mx-md" 
-            style="background-color: #1d9b0d;" 
-            color="primary"
-          >
-            Presença
-          </ion-badge>
-          <ion-badge 
-            class="text-subtitle1" 
-            style="background-color: #9b0d0d;" 
-            color="primary"
-          >
-            Falta
-          </ion-badge>
-        </div>
+    
+    <ion-header :translucent="true">
+      <ion-toolbar>
+        <ion-title>Presença</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    
+    <ion-content color="light" :fullscreen="true">
+
+      <ion-header collapse="condense">
+        <ion-toolbar color="light">
+          <ion-title size="large">Presença</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <div>
         <div v-if="childAttendance.length">
-          <ion-card
+          <div
             v-for="(c, i) in childAttendance"
             :key="i"
           >
-            <!-- <div class="">
-              <ion-avatar aria-hidden="true" slot="center" style="width: 46px; height: 46px;">
-                <img :src="utils.makeFileUrl(c.childPhoto)"/>
-              </ion-avatar>
-            </div> -->
-            <ion-label class="">
-              <strong class="text-capitalize text-h5">{{ c.name }}</strong><br/>
-            </ion-label>
-            <ion-datetime 
-              presentation="date" 
-              size="cover"
-              :preferWheel="false"
-              :highlighted-dates="c.highlightedDates"
-              @ionChange="onChangeDate($event, c)"
+            <ion-text>
+              <h3 class="q-mx-md">{{ c.name }}</h3>
+            </ion-text>
+            <Calendar
+              expanded
+              transparent
+              borderless
+              title-position="left"
+              :attributes="c.dates"
+              v-if="c.dates"
+              @did-move="updatePages"
             />
-          </ion-card>
+          </div>
         </div>
         <div v-else class="q-pa-md">
           Nenhum dado de comparecimento
@@ -58,11 +50,14 @@ import {
   IonCard,
   IonDatetime, 
   IonItem, IonLabel, IonList, IonAvatar,
+  IonText, IonHeader, IonToolbar, IonTitle
 } from '@ionic/vue';
 import { defineComponent } from 'vue'
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
 import { useFetch } from '../../src/composables/fetch.js'
 import utils from '../../src/composables/utils.js'
+import { Calendar, DatePicker } from 'v-calendar';
+import 'v-calendar/style.css';
 </script>
 <script>
 
@@ -86,6 +81,9 @@ export default defineComponent({
     }
   },
   methods: {
+    updatePages (event) {
+      this.getChildAttendanceByDate(event[0].id)
+    },
     onChangeDate($event, c) {
       const splitDate = $event.detail.value.split('T')
       const monthYear = splitDate[0].substring(0, 7)
@@ -108,6 +106,15 @@ export default defineComponent({
           utils.toast("Ocorreu um erro ao exibir o calendário. Tente novamente mais tarde")
           return
         }
+        r.data.forEach((child, i) => {
+          r.data[i].dates = []
+          child.highlightedDates.forEach((date, j) => {
+            r.data[i].dates.push({
+              highlight: date.childAttendanceType === 'present' ? 'green' : 'red',
+              dates: new Date(date.date),
+            })
+          })
+        })
         this.childAttendance = r.data
       })
     },

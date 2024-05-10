@@ -1,62 +1,61 @@
 <template>
   <ion-page>
-    <ToolbarEscolas
-      title="Perfil"
-      :backButton="false"
-    />
-    <ion-content v-if="userInfo" color="light">
-      <ion-list :inset="true">
-        <ion-item
+    <ion-content color="light">
+
+      <div style="padding-top: var(--ion-safe-area-top)"></div>
+      <div v-if="userInfo" class="ion-padding ion-text-center">
+        <img
+          :src="utils.makeFileUrl(userInfo.userImage)"
+          :style="`border-radius: 50%; height: 250px; width: 250px; object-fit: cover; object-position: center;`"
+        /><br>
+        <ion-button
+          color="primary"
+          fill="clear"
+          shape="round"
+          style="margin-top: -40px; margin-left: 200px"
           @click="$router.push('/editProfile')"
-          lines="none"
-          class="profile-item"
-          v-if="userInfo"
         >
-          <ion-avatar style="width:60px; height:auto">
-            <img :src="utils.makeFileUrl(userInfo.userImage)" class="profile-avatar">
-          </ion-avatar>
-          <ion-label class="q-px-sm">
-            <h2>{{ userInfo.name }}</h2>
-            <p>{{ userInfo.email }}</p>
-            <p>Editar perfil</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-      <!-- <div class="ion-text-center text-h5 q-py-sm" v-if="userInfo">
-        {{ userInfo.familyData.name }}
-      </div> -->
-      <ion-list :inset="true"  v-if="userInfo && userInfo.children" >
-        <div class="ion-text-left text-h6 q-py-sm q-pl-md">Crianças</div>
-        <div v-if="userInfo.children">
-          <ion-item 
-            class="q-py-sm"
-            lines="inset"
-            v-for="child in userInfo.children"
-            :key="child"
-            :button="true"
-            @click="goToChildDetail(child.childData._id)"
-          >
-            <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px">
-              <img 
-                v-if="child.childData"
-                :src="utils.makeFileUrl(child.childData.childImage) "/>
-              <img 
-                v-else
-                src="/assets/default_avatar.svg"
-              />
-            </ion-avatar>
-            <ion-label v-if="child.childData">
-              <h6>{{ child.childData.childName }}</h6>
-              <!-- <ion-badge v-if="child.status && child.status.status === 'inactive'" color="danger">{{ child.status.label }}</ion-badge>
-              <ion-badge v-else-if="child.status && child.status.status === 'waitingApproval'" color="warning">{{ child.status.label }}</ion-badge>
-              <ion-badge v-else >Sem status</ion-badge> -->
-            </ion-label>
-          </ion-item>
-        </div>
-        <div v-else class="q-pa-md">
-          Você ainda não possui crianças cadastradas
-        </div>
-      </ion-list>
+          <ion-icon slot="icon-only" :icon="brush"></ion-icon>
+        </ion-button>
+        <ion-text>
+          <h1>{{ userInfo.name }}</h1>
+          <p>{{ userInfo.email }}</p>
+        </ion-text>
+        
+      </div>
+
+      <div v-if="currentVision !== 'worker'">
+        <h2 class="q-px-md">Crianças</h2>
+        <ion-list :inset="true"  v-if="userInfo && userInfo.children" >
+          <div v-if="userInfo.children">
+            <ion-item 
+              class="q-py-sm"
+              lines="inset"
+              v-for="child in userInfo.children"
+              :key="child"
+              :button="true"
+              @click="goToChildDetail(child.childData._id)"
+            >
+              <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px">
+                <img 
+                  v-if="child.childData"
+                  :src="utils.makeFileUrl(child.childData.childImage) "/>
+                <img 
+                  v-else
+                  src="/assets/default_avatar.svg"
+                />
+              </ion-avatar>
+              <ion-label v-if="child.childData">
+                <h6>{{ child.childData.childName }}</h6>
+              </ion-label>
+            </ion-item>
+          </div>
+          <div v-else class="q-pa-md">
+            Você ainda não possui crianças cadastradas
+          </div>
+        </ion-list>
+      </div>
+
       <ion-list :inset="true" v-if="isWorker === true">
         <ion-item>
           Área do trabalhador
@@ -106,13 +105,21 @@ import {
   IonIcon,
   IonAlert,
   IonBadge,
-  IonToggle
+  IonToggle,
+  IonText
 } from '@ionic/vue';
-import { APP_NAME, COMPANY_ID } from '../../composables/variables';
-import { chevronForward, listCircle, personCircleOutline, happyOutline, peopleOutline } from 'ionicons/icons'
-import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+import { APP_NAME, COMPANY_ID } from '../composables/variables';
+import {
+  chevronForward,
+  listCircle,
+  personCircleOutline,
+  happyOutline,
+  peopleOutline,
+  brush
+} from 'ionicons/icons'
+import ToolbarEscolas from '../components/ToolbarEscolas.vue'
 import { defineComponent } from 'vue';
-import utils from '../../composables/utils'
+import utils from '../composables/utils'
 </script>
 
 <script>
@@ -208,9 +215,7 @@ export default {
     goToSolicitationsDetail() {
       this.$router.push("/solicitationsDetail")
     },
-    goToParentDetail(parentId) {
-      this.$router.push("/parentDetail?userId=" + parentId)
-    },
+
     createFamilyName (e) {
       const opt = {
         route: '/mobile/parents/profile/createFamily',
@@ -245,6 +250,7 @@ export default {
       if (!this.userInfo.document) {
         this.dialogUserData.open = true
       }
+      this.getCurrentVision()
     },
     backLogin() {
       this.$router.push('/login')

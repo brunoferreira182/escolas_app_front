@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="even-card" color="secondary">
+    <div class="even-card">
       <img 
         v-if="post.postData.resume.img"
         style="width: 100%; height: auto; object-fit: cover; object-position: center;"
@@ -9,70 +9,74 @@
       />
       
       <div >
-        <p class="q-px-md text-caption" v-if="post.routeDestination.split('?')[0] === '/calendarEventDetail'">
-          Evento para toda a escola
-        </p>
-        <h1 class="card-title">{{post.postData.resume.title}}</h1>
-        <p class="q-px-md">
-          {{ post.postData.resume.description.length > 50 ? post.postData.resume.description.slice(0, 50) + '...' : post.postData.resume.description }}
-          <span v-if="post.postData.resume.description.length > 50"></span>
-        </p>
-        <ion-row>
+        <ion-item lines="none">
+          <ion-label>
+            <ion-badge
+              color="primary"
+              class="q-my-sm"
+              v-if="post.routeDestination.split('?')[0] === '/calendarEventDetail'"
+            >
+              Evento para toda a escola
+            </ion-badge>
+            <br>
+            <strong class="q-mb-sm">{{ post.postData.resume.title }}</strong>
+            <br>
+            <!-- <ion-text>Never Gonna Give You Up</ion-text><br /> -->
+            <ion-note color="medium" class="q-pt-sm ion-text-wrap">
+              {{ post.postData.resume.description.length > 50 ? post.postData.resume.description.slice(0, 50) + '...' : post.postData.resume.description }}
+            </ion-note>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>
+            <span
+              @click.prevent="toggleReaction(post)"
+              :class="{ 'heart-animation': post.userReaction }"
+              :disabled="post.isButtonDisabled"
+            >
+              <input
+                class="animation-head"
+                type="checkbox"
+                :id="'toggle-heart-' + i"
+                :checked="post.userReaction"
+              />
+              <label
+                class="toggle-animation"
+                :for="'toggle-heart-' + i"
+              >
+                <ion-icon
+                  size="large"
+                  :src="post.userReaction ? heart_filled : heart"
+                />
+              </label>
+              {{ post.reactions }}
+            </span>
+            <span class="q-ml-lg" v-if="post.routeDestination === '/postDetail'">
+              <ion-icon
+                style="width: 28px; color:rgb(165, 164, 164); height: 28px;"
+                :src="comment"
+              />
+              {{ post.comments }}
+            </span>
+          </ion-label>
+          <ion-label slot="end">
+            <ion-button 
+              v-if="post.routeDestination !== '/postDetail'"
+              @click="$router.push(post.routeDestination )"
+              fill="clear"
+            >
+              Ler mais
+            </ion-button>
+            <ion-button 
+              v-else-if="post.routeDestination === '/postDetail'"
+              @click="$router.push('/postDetail?postId=' + post._id)"
+              fill="clear"
+            >
+              Ler mais
+            </ion-button>
+          </ion-label>
+        </ion-item>
 
-          <ion-col class="q-ma-sm q-pt-md">
-            <ion-row>
-              <ion-col size="5">
-                <div @click.prevent="toggleReaction(post)" :class="{ 'heart-animation': post.userReaction }" :disabled="post.isButtonDisabled">
-                  <input
-                    class="animation-head"
-                    type="checkbox"
-                    :id="'toggle-heart-' + i"
-                    :checked="post.userReaction"
-                  />
-                  <label
-                    class="toggle-animation"
-                    :for="'toggle-heart-' + i"
-                  >
-                    <ion-icon
-                      size="large"
-                      :src="post.userReaction ? heart_filled : heart"
-                    />
-                  </label>
-                  {{ post.reactions }}
-                </div>
-              </ion-col>
-              <ion-col size="5">
-                <div class="q-pa-xs" v-if="post.routeDestination === '/postDetail'">
-                  <ion-icon
-                    style="width: 28px;
-                    color:rgb(165, 164, 164); 
-                    height: 28px;" 
-                    :src="comment"
-                  />
-                  {{ post.comments }}
-                </div>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-          <ion-col>
-            <div class="ion-text-end">
-              <ion-button 
-                v-if="post.routeDestination !== '/postDetail'"
-                @click="$router.push(post.routeDestination )"
-                fill="clear"
-              >
-                <h6>Ler mais</h6>
-              </ion-button>
-              <ion-button 
-                v-else-if="post.routeDestination === '/postDetail'"
-                @click="$router.push('/postDetail?postId=' + post._id)"
-                fill="clear"
-              >
-                <h6>Ler mais</h6>
-              </ion-button>
-            </div>
-          </ion-col>
-        </ion-row>
       </div>
     </div>
   </div>
@@ -94,6 +98,7 @@ import {
   IonRow,
   IonIcon,
   IonButton, 
+  IonItem, IonLabel, IonBadge, IonNote
 } from '@ionic/vue'
 
 import heart from '/src/assets/icons/heart.svg'
@@ -111,6 +116,7 @@ const openImageModal = (imageFilename) => {
   showModal.value = true;
 };
 const props = defineProps(['post', 'i'])
+// const emits = defineEmits('getPosts')
 </script>
 <script>
 export default {
@@ -123,7 +129,7 @@ export default {
       modalImageUrl: null,
     }
   },
-  
+  emits: ['getPosts'],
   methods: {
     async toggleReaction(post) {
       
@@ -180,6 +186,9 @@ export default {
   }
 };
 </script>
+
+
+
 <style scoped lang="scss">
 
 
@@ -311,18 +320,18 @@ $sparkle-r: .5*$sparkle-d;
 	}
 }
 .card {
-  margin: 10px;
-  border-radius: 0.4rem;
+  margin-top: 10px;
+  border-radius: 0rem;
   overflow: hidden;
 }
-.even-card {
-  background-color: var(--ion-card-background);
-}
+// .even-card {
+//   background-color: var(--ion-card-background);
+// }
 
-.card-title {
-  margin: 14px;
-  font-size: 24px;;
-}
+// .card-title {
+//   margin: 14px;
+//   font-size: 24px;;
+// }
 .img-style {
   object-fit: cover;
   overflow: hidden;

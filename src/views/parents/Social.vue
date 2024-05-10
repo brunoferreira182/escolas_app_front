@@ -1,10 +1,22 @@
 <template>
   <ion-page>
-    <ToolbarEscolas
+    <!-- <ToolbarEscolas
       title="Social"
       :backButton="false"
-    />
-    <ion-content color="light">
+    /> -->
+    <ion-header :translucent="true">
+      <ion-toolbar>
+        <ion-title>{{ APP_NAME }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content color="light" :fullscreen="true">
+
+      <ion-header collapse="condense">
+        <ion-toolbar color="light">
+          <ion-title size="large">{{ APP_NAME }}</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
       <swiper 
         class="q-my-md"
         :modules="modules"
@@ -66,7 +78,9 @@ import {
   IonIcon,
   IonContent,
   IonToast,
-  IonTitle
+  IonTitle,
+  IonToolbar,
+  IonHeader,
 } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';
@@ -92,7 +106,6 @@ export default {
   name: 'Social',
   data() {
     return {
-      APP_NAME,
       page: 1,
       modules: [Pagination, Autoplay],
       rowsPerPage: 10,

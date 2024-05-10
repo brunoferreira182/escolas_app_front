@@ -4,29 +4,19 @@
       title="Dados pessoais"
       :backButton="true"
     />
-    <ion-content color="light" v-if="userDetail.userData">
-      <ion-list :inset="true">
-        <ion-item
-          lines="none"
-          class="profile-item q-py-md"
-        >
-          <ion-avatar style="width:60px; height: 60px;" >
-            <img :src="utils.makeFileUrl(userDetail.userData.image)" class="profile-avatar">
-          </ion-avatar>
-          <ion-label class="q-px-sm">
-            <h2>{{ userDetail.userData.name }}</h2>
-            <p>{{ userDetail.userData.document }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-      <ion-button 
-        @click="startPhotoHandler = true" 
-        fill="clear" 
-        size="default"
-        v-if="familyAdmin === true"
-      >
-        Editar foto de perfil
-      </ion-button>
+    <ion-content color="light">
+
+      <div v-if="userDetail.userData" class="ion-padding ion-text-center">
+        <img
+          :src="utils.makeFileUrl(userDetail.userData.image)"
+          :style="`border-radius: 50%; height: 250px; width: 250px; object-fit: cover; object-position: center;`"
+        /><br>
+        <ion-text>
+          <h2>{{ userDetail.userData.name }}</h2>
+          <p>{{ userDetail.userData.document }}</p>
+        </ion-text>
+        
+      </div>
       <h2 class="q-px-md">Responsáveis</h2>
       <ion-list :inset="true" v-if="userDetail.responsibleData" class="q-py-md">
         <ion-item 

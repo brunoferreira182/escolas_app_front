@@ -4,21 +4,24 @@
       title="Detalhe turma"
       :backButton="true"
     />
-    <ion-content color="light" v-if="classData">
-      <ion-row class="ion-justify-content-center q-ma-lg">
-        <ion-avatar style="width:150px; height:150px">
-          <img :src="utils.makeFileUrl(classData.classImage)"/>
-        </ion-avatar> 
-      </ion-row>
-      <div class="ion-text-center">
-        <h2>{{ classData.className }}</h2>
+    <ion-content color="light">
+      <div  v-if="classData">
+        <ion-row class="ion-justify-content-center q-ma-lg">
+          <img
+            :src="utils.makeFileUrl(classData.classImage)"
+            :style="`border-radius: 50%; height: 250px; width: 250px; object-fit: cover; object-position: center;`"
+          >
+        </ion-row>
+        <div class="ion-text-center">
+          <h2>{{ classData.className }}</h2>
+        </div>
       </div>
       <ion-accordion-group expand="inset">
         <ion-accordion value="first">
           <ion-item slot="header">
             <ion-label>Eventos</ion-label>
           </ion-item>
-          <div slot="content" v-if="classEvents.length">
+          <div slot="content" v-if="classEvents">
             <ion-item 
               :button="true" 
               detail="false"
@@ -26,19 +29,14 @@
               :key="event"
               @click="goToEventDetail(event._id)"
             >
-              <div class="unread-indicator-wrapper" slot="start">
-                <div class="unread-indicator"></div>
-              </div>
               <ion-label>
                 <strong>{{ event.eventName }}</strong>
                 <br/>
-                <div class="metadata-end-wrapper" slot="end">
-                  <ion-note color="medium">
-                    {{ event.eventDate.local.split('-')[2] }}/
-                    {{ event.eventDate.local.split('-')[1] }}/
-                    {{ event.eventDate.local.split('-')[0] }}
-                  </ion-note>
-                </div>
+                <ion-note slot="end">
+                  {{ event.eventDate.local.split('-')[2] }}/
+                  {{ event.eventDate.local.split('-')[1] }}/
+                  {{ event.eventDate.local.split('-')[0] }}
+                </ion-note>
                 <ion-note color="medium" class="ion-text-wrap">
                   {{ event.eventDescription.length > 100 ? 
                     event.eventDescription.slice(0, 100) + '...' : 
@@ -62,28 +60,24 @@
             <ion-label>Professores e Representantes</ion-label>
           </ion-item>
           <div slot="content" v-if="workersClassData && workersClassData.users">
-            <div 
+            <ion-item
               v-for="worker in workersClassData.users"
               :key="worker"
             >
-              <ion-item>
-                <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
-                  <img :src="utils.makeFileUrl(worker.childPhoto.filename, 'thumbnail')"/>
-                </ion-avatar>
-                <ion-avatar aria-hidden="true" slot="start" v-else>
-                  <img :src="utils.makeFileUrl(worker.image, 'thumbnail')"/>
-                </ion-avatar>
-                <p class="text-capitalize">{{ worker.userName }} 
-                  <div class="text-caption">{{ worker.userFunction }}</div>
-                </p>
-                <!-- <ion-button v-if="verifyVision()" slot="end" fill="clear" @click="$router.push('/directMessage?user_id=' + worker.user_id)">
-                  <ion-icon color="primary" size="large" :icon="mail"></ion-icon> 
-                </ion-button> -->
-                <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
-                  <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
-                </ion-button>
-              </ion-item>
-            </div>
+              <ion-avatar aria-hidden="true" slot="start" v-if="worker.childPhoto">
+                <img :src="utils.makeFileUrl(worker.childPhoto.filename, 'thumbnail')"/>
+              </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(worker.image, 'thumbnail')"/>
+              </ion-avatar>
+              <ion-label>
+                <h6>{{ worker.userName }}</h6>
+                <ion-note>{{ worker.userFunction }}</ion-note>
+              </ion-label>
+              <ion-button slot="end" fill="clear" @click="$router.push('/chatUserAndWorker?user_id=' + worker.user_id)">
+                <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
+              </ion-button>
+            </ion-item>
           </div>
           <div v-else class="text-caption q-px-md">
             Não há professores ou representantes nesta turma
@@ -97,30 +91,28 @@
             <ion-label>Responsáveis</ion-label>
           </ion-item>
           <div slot="content" v-if="parents">
-            <div 
+            <ion-item
               v-for="parent in parents"
               :key="parent"
             >
-              <ion-item>
-                <ion-avatar aria-hidden="true" slot="start" v-if="parent.image">
-                  <img :src="utils.makeFileUrl(parent.image, 'thumbnail')"/>
-                </ion-avatar>
-                <p class="text-capitalize">
-                  {{ parent.userName }}
-                  <div class="text-caption">{{ parent.relationType }}</div>
-                </p>
-                <ion-button v-if="verifyVision()" slot="end" fill="clear" @click="$router.push('/noteSenderToUser?userId=' + parent.userId)">
-                  <ion-icon color="primary" size="large" :icon="mail"></ion-icon> 
-                </ion-button>
-                <ion-button
-                  slot="end"
-                  fill="clear"
-                  @click="$router.push('/chatUserAndWorker?user_id=' + parent.user_id)"
-                >
-                  <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
-                </ion-button>
-              </ion-item>
-            </div>
+              <ion-avatar aria-hidden="true" slot="start" v-if="parent.image">
+                <img :src="utils.makeFileUrl(parent.image, 'thumbnail')"/>
+              </ion-avatar>
+              <ion-label>
+                <h6>{{ parent.userName }}</h6>
+                <ion-note>{{ parent.relationType }}</ion-note>
+              </ion-label>
+              <ion-button v-if="verifyVision()" slot="end" fill="clear" @click="$router.push('/noteSenderToUser?userId=' + parent.userId)">
+                <ion-icon color="primary" size="large" :icon="mail"></ion-icon> 
+              </ion-button>
+              <ion-button
+                slot="end"
+                fill="clear"
+                @click="$router.push('/chatUserAndWorker?user_id=' + parent.user_id)"
+              >
+                <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
+              </ion-button>
+            </ion-item>
           </div>
           <div v-else class="text-caption q-px-md">
             Não há responsáveis nesta turma
@@ -145,44 +137,40 @@
               <ion-avatar aria-hidden="true" slot="start" v-else>
                 <img :src="utils.makeFileUrl(child.image, 'thumbnail')"/>
               </ion-avatar>
-              <p>{{ child.childName }}</p>
+              <ion-label>
+                <h6>{{ child.childName }}</h6>
+              </ion-label>
             </ion-item>
           </div>
         </ion-accordion>
       </ion-accordion-group>
       
-      
-      <ion-item 
-        button
-        style="border-radius: 1rem; margin: 10px; margin-top: 20px;"
-        detail="true" 
-        @click="goToMedia" 
-      >
-        <ion-label>Mídias</ion-label>
-      </ion-item>
-      <!-- <ion-item 
-        button
-        style="border-radius: 1rem; margin: 10px; margin-top: 20px;"
-        @click="goToChatDetail" 
-      >
-        <ion-label>Chat</ion-label>
-      </ion-item> -->
       <div class="ion-padding">
         <ion-button
           color="primary"
           expand="block"
-          @click="goToChatDetail" 
+          fill="outline"
+          @click="goToMedia" 
+        >
+          Mídias
+        </ion-button>
+        <ion-button
+          color="primary"
+          expand="block"
+          @click="goToChatDetail"
+          class="q-mt-md"
         >
           Ir para o chat
         </ion-button>
       </div>
+
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import utils from '../../../src/composables/utils.js';
+import ToolbarEscolas from '../components/ToolbarEscolas.vue'
+import utils from '../composables/utils.js';
 import {
   chatbubble,
   mail
@@ -288,8 +276,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  ion-avatar {
-    --border-radius: 4px;
-  }
-</style>

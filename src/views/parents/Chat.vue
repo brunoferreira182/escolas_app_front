@@ -1,29 +1,23 @@
 <template>
   <ion-page>
-    <ToolbarEscolas
-      title="Salas de aula"
-      :backButton="false"
-    />
-    <ion-content color="light">
-      <div v-if="childClassInfo">
-        
-        <div class="q-mt-md">
-          <ion-datetime-button datetime="datetime"></ion-datetime-button>
-        </div>
-        <ion-modal 
-          :keep-contents-mounted="true"
-          :presenting-element="presentingElement"
-        >
-          <ion-datetime
-            id="datetime"
-            presentation="date"
-            @ionChange="onChangeDate($event, c)"
-          ></ion-datetime>
-        </ion-modal>
+    <ion-header :translucent="true">
+      <ion-toolbar>
+        <ion-title>Salas de aula</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content color="light" :fullscreen="true">
 
-        <div>
+      <ion-header collapse="condense">
+        <ion-toolbar color="light">
+          <ion-title size="large">Salas de aula</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <div v-if="childClassInfo">
+        <div class="ion-padding">
           <ion-text>
-            <h3 class="q-mx-md">Turmas</h3>
+            <h3>Turmas</h3>
+            <ion-note>Aqui estão as turmas que seu(s) filho(s) estão</ion-note>
           </ion-text>
         </div>
         <div
@@ -43,7 +37,7 @@
             <ion-avatar
               aria-hidden="true"
               slot="start"
-              style="height: 60px; width: 60px;"
+              style="height: 60px; width: 60px; border: 2px solid white !important;"
             >
               <img :src="utils.makeFileUrl(c.classImage, 'thumbnail')" v-if="c.classImage"/>
               <img :src="utils.makeFileUrl('default-avatar.svg')" v-else/>
@@ -72,13 +66,24 @@
           </ion-item>
         </ion-list>
         </div>
-        <ion-list :inset="true" >
-          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Atividades de hoje</div>
+
+        <div class="ion-padding">
+          <ion-text>
+            <h3>Atividades de hoje</h3>
+            <ion-note>Escolha uma data para ver de outros dias</ion-note>
+            <ion-datetime-button
+              class="q-mt-md"
+              datetime="datetime"
+              style="justify-content: left;"
+            />
+          </ion-text>
+          
+        </div>
+        <ion-list :inset="true">
           <div v-if="childEventsHistory && childEventsHistory.length">
             <ion-item 
               v-for="e in childEventsHistory"
               :key="e"
-              @click="openChildEventModal(e)"
               detail="false"
             >
               <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
@@ -107,39 +112,50 @@
                 </ion-note>
               </div>
             </ion-item>
-            <ion-modal 
-              class="modalTeste"
-              :presenting-element="presentingElement"
-              :is-open="openImageModalProfile.open" 
-              @didDismiss="dismissImageModalProfile()"
-            >
-              <ion-content >
-                <img 
-                  :src="utils.makeFileUrl(openImageModalProfile.imageData.filename)" 
-                  style="width: 100%"
-                  v-if="openImageModalProfile.imageData && openImageModalProfile.imageData.filename"
-                >
-                <div class="ion-text-center">
-                  <div class="text-h4 text-capitalize">
-                    {{ openImageModalProfile.data.name }}
-                  </div>
-                  <ion-chip color="primary" class="text-h5">
-                    {{ openImageModalProfile.data.eventName }}
-                  </ion-chip>
-                </div>
-              </ion-content>
-            </ion-modal>
+            
           </div>
           <div v-else>
             <ion-item>
               <ion-label>
-                Nenhum Histórico recente.
+                Nenhuma atividade
               </ion-label>
             </ion-item>
           </div>
         </ion-list>
       </div>
     </ion-content>
+
+    <ion-modal :keep-contents-mounted="true">
+      <ion-datetime
+        id="datetime"
+        presentation="date"
+        @ionChange="onChangeDate($event, c)"
+      ></ion-datetime>
+    </ion-modal>
+
+    <ion-modal 
+      class="modalTeste"
+      :presenting-element="presentingElement"
+      :is-open="openImageModalProfile.open" 
+      @didDismiss="dismissImageModalProfile()"
+    >
+      <ion-content >
+        <img 
+          :src="utils.makeFileUrl(openImageModalProfile.imageData.filename)" 
+          style="width: 100%"
+          v-if="openImageModalProfile.imageData && openImageModalProfile.imageData.filename"
+        >
+        <div class="ion-text-center">
+          <div class="text-h4 text-capitalize">
+            {{ openImageModalProfile.data.name }}
+          </div>
+          <ion-chip color="primary" class="text-h5">
+            {{ openImageModalProfile.data.eventName }}
+          </ion-chip>
+        </div>
+      </ion-content>
+    </ion-modal>
+
   </ion-page>
 </template>
 <script setup>
@@ -160,7 +176,8 @@ import {
   IonNote,
   IonIcon,
   IonDatetimeButton, IonDatetime,
-  IonText
+  IonText,
+  IonHeader, IonToolbar, IonTitle
 } from '@ionic/vue';
 import { APP_NAME, COMPANY_ID } from '../../composables/variables';
 import { defineComponent } from 'vue';

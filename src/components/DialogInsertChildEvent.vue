@@ -13,13 +13,13 @@
         <ion-title >Atividades</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content color="light">
       <div class="q-pa-md ion-text-capitalize ion-text-center">
         {{ dialogInsertChildEvent.data.childName }}
       </div>
       <ion-list :inset="true">
         <div class="text-h6 q-pa-md">
-          Selecione a atividade
+          Selecione a atividades
         </div>
         <ion-item 
           v-for="act in childEventsList"

@@ -4,10 +4,13 @@
       title="Editar perfil"
       :backButton="true"
     />
-    <ion-content :scroll-y="false">
+    <ion-content color="light">
       <div v-if="userInfo" class="ion-padding">
         <div class="ion-text-center">
-          <img :src="utils.makeFileUrl(userInfo.userImage)" class="profile-avatar">
+          <img
+            :src="utils.makeFileUrl(userInfo.userImage)"
+            :style="`border-radius: 50%; height: 250px; width: 250px; object-fit: cover; object-position: center;`"
+          >
           <br/>
           <ion-button @click="startPhotoHandler = true" fill="clear">
             Editar

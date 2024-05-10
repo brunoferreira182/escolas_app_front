@@ -127,7 +127,7 @@ export default {
       useFetch(opt).then((r) => {
         if (!r.error) {
           utils.toast("Evento criado com sucesso.")
-          this.$router.replace('/chatInfoWorker?classId=' + this.$route.query.classId)
+          this.$router.replace('/chatInfo?classId=' + this.$route.query.classId)
         } else {
           utils.toast("Ocorreu um erro, tente novamente.")
         }

@@ -1,104 +1,87 @@
 <template>
-  <ion-page>
-    <ToolbarEscolas
-      title="Presença"
-      :backButton="false"
-    />
-    <ion-content color="light">
-      <div class="q-mt-md">
-        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+  <ion-page ref="page">
+    <ion-header :translucent="true">
+      <ion-toolbar>
+        <ion-title>Presença</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content color="light" :fullscreen="true">
+
+      <ion-header collapse="condense">
+        <ion-toolbar color="light">
+          <ion-title size="large">Presença</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+
+      <div class="q-ml-md q-mt-md">
+        <ion-datetime-button
+          datetime="datetime"
+          style="justify-content: left;"
+        />
       </div>
-      <Transition name="bounce">
-        <ion-list :inset="true" v-if="show">
-          <div class="ion-text-left text-h6 q-py-sm q-pl-md">Turmas</div>
-          <div class="q-px-md text-caption">
-            Selecione uma turma para marcar presença
-          </div>
+
+      <div class="q-px-md">
+        <ion-text>
+          <h3>Turmas</h3>
+          <ion-note>Selecione uma turma para marcar presença em todos os alunos</ion-note>
+        </ion-text>
+      </div>
+      <ion-list :inset="true" v-if="show" >
+        <ion-item 
+          v-for="c in classData"
+          :key="c"
+          @click="clkOpenModalAttendance(c)"
+          :button="true"
+        >
+          <ion-avatar aria-hidden="true" slot="start" >
+            <img :src="utils.makeFileUrl(c.classImage)" v-if="c.classImage"/>
+            <img :src="utils.makeFileUrl(c.image)" v-else/>
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ c.className }}</h2>
+            <ion-badge color="primary">Função: {{ c.functionName }}</ion-badge>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <div class="q-px-md q-mt-lg">
+        <ion-text>
+          <h3>Alunos</h3>
+          <ion-note>Arraste para a esquerda para opções</ion-note>
+        </ion-text>
+      </div>
+      <ion-list :inset="true">
+        <ion-item-sliding
+          v-for="child in childrenInClassList"
+          :key="child"
+        >
           <ion-item 
-            v-for="c in classData"
-            :key="c"
-            class="q-pa-sm"
+            :button="true"
+            detail="false"
           >
-            <ion-avatar aria-hidden="true" slot="start" >
-              <img :src="utils.makeFileUrl(c.classImage)" v-if="c.classImage"/>
-              <img :src="utils.makeFileUrl(c.image)" v-else/>
+            <ion-avatar
+              aria-hidden="true"
+              slot="start"
+              v-if="child.childPhoto"
+              :style="!child.attendanceData ? '' : (child.attendanceData.childAttendanceType === 'present' ? 'border: 4px solid #40d648;' : 'border: 4px solid red;' )"
+            >
+              <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+            </ion-avatar>
+            <ion-avatar aria-hidden="true" slot="start" v-else>
+              <img :src="utils.makeFileUrl(child.image)"/>
             </ion-avatar>
             <ion-label>
-              <div class="text-h6">{{ c.className }}</div>
-              <ion-badge color="primary">Função: {{ c.functionName }}</ion-badge>
-              <div>
-                <ion-button 
-                  color="secondary" 
-                  slot="end"
-                  @click="clkOpenModalAttendance(c)"
-                > 
-                  Marcar presença/falta
-                </ion-button>
-              </div>
+              <h2>{{ child.childName }}</h2>
+              <ion-note> {{ child.className }}</ion-note><br>
             </ion-label>
           </ion-item>
-        </ion-list>
-      </Transition>
-      <ion-list :inset="true" color="light">
-        <ion-accordion-group >
-          <ion-accordion value="alunos">
-            <div slot="header" class="ion-text-left text-h6 q-py-sm q-pl-md">Alunos</div>
-            <div slot="content">
-              <div class="q-px-md text-caption">
-                Selecione um aluno para inserir uma presença individualmente
-              </div>
-              <ion-item 
-                v-for="child in childrenInClassList"
-                :key="child"
-                :button="true"
-                detail="false"
-              >
-                <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                  <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
-                </ion-avatar>
-                <ion-avatar aria-hidden="true" slot="start" v-else>
-                  <img :src="utils.makeFileUrl(child.image)"/>
-                </ion-avatar>
-                <ion-label>
-                  <h6>{{ child.childName }}</h6>
-                  <ion-badge  color="primary"> {{ child.className }}</ion-badge><br>
-                  
-                </ion-label>
-                <ion-label slot="end">
-                  <div>
-                    <ion-button 
-                      size="small"
-                      color="success"
-                      shape="round"
-                      fill="clear"
-                      @click="clkAddPresenceToChild(child, 'presença')"
-                    > 
-                      <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
-                    </ion-button>
-                  </div>
-                  <ion-button 
-                    color="danger"
-                    size="small"
-                    shape="round"
-                    fill="clear"
-                    class="q-py-md"
-                    @click="clkAddPresenceToChild(child, 'falta')"
-                  > 
-                    <ion-icon slot="icon-only" :icon="close"></ion-icon>
-                  </ion-button><br>
-                  <ion-chip
-                    
-                    v-if="child.attendanceData"
-                    :outline="true"
-                    :color="child.attendanceData.childAttendanceType === 'present' ? 'success' : 'danger'"
-                  >
-                    {{ child.attendanceData.childAttendanceType === 'present' ? 'Presente' : 'Ausente' }}
-                  </ion-chip>
-                </ion-label>
-              </ion-item>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
+          
+          <ion-item-options side="end">
+            <ion-item-option color="success" @click="clkAddPresenceToChild(child, 'presença')">Presença</ion-item-option>
+            <ion-item-option color="danger" @click="clkAddPresenceToChild(child, 'falta')">Ausência</ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
       </ion-list>
 
     </ion-content>
@@ -116,7 +99,7 @@
           <ion-title >Comparecimento</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
+      <ion-content color="light">
         <div class="ion-text-center q-pa-md">
           <ion-row>
             <ion-col>
@@ -145,7 +128,7 @@
             </ion-col>
           </ion-row>
         </div>
-        <div class="input-wrapper  q-px-md q-mx-md">
+        <!-- <div class="input-wrapper  q-px-md q-mx-md">
           <ion-textarea
             label="Descrição (opcional)"
             label-placement="floating"
@@ -153,9 +136,9 @@
             placeholder="Descrição da sobre o comparecimento"
             :auto-grow="true"
           ></ion-textarea>
-        </div>
+        </div> -->
         <ion-list :inset="true">
-          <ion-item class="ion-text-left text-h6">
+          <ion-item color="light" :disabled="dialogAttendance.attendance === ''">
             <div
               :class="`${dialogAttendance.isAttendanceChecked ? 'modal-attendance' : 'modal-absent'}`"
             >
@@ -169,6 +152,8 @@
               Todas crianças
             </ion-label>
           </ion-item>
+        </ion-list>
+        <ion-list :inset="true" v-if="dialogAttendance.attendance !== ''">
           <ion-item
             v-for="child in classList"
             :key="child"
@@ -185,13 +170,18 @@
             </ion-label>
           </ion-item>
         </ion-list>
+        <ion-button
+          @click="createUserChildAttendance"
+          class="q-pa-md"
+          expand="block"
+          :disabled="selectedChildren.length === 0"
+        >Salvar</ion-button>
       </ion-content>
-      <ion-button @click="createUserChildAttendance" class="q-pa-md" expand="block">Salvar</ion-button>
+      
     </ion-modal>
 
     <ion-modal 
       :keep-contents-mounted="true" 
-      :presenting-element="presentingElement"
     >
       <ion-datetime
         id="datetime"
@@ -241,7 +231,9 @@ import {
   IonIcon,
   IonDatetime,
   IonGrid,
-  IonDatetimeButton
+  IonDatetimeButton,
+  IonText,
+  IonItemSliding, IonItemOption, IonItemOptions
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -251,7 +243,6 @@ import {
   close
 } from 'ionicons/icons';
 import utils from '../../composables/utils'
-import PhotoHandler from '../../components/PhotoHandler.vue'
 </script>
 <script>
 
@@ -324,6 +315,7 @@ export default {
   },
   mounted(){
     utils.loading.hide()
+    this.presentingElement = this.$refs.page.$el;
     this.getClassesByUserId()
     this.getChildrenInClassList()
     this.dialogConfirmPresence.alertButtons = [
@@ -406,19 +398,6 @@ export default {
         }
       })
     },
-    cancelPhotoHandler () {
-      this.startPhotoHandler = false
-    },
-    closeDialogClass() {
-      this.dialogInsertClassEvent.open = false,
-      this.dialogInsertClassEvent.data = {},
-      this.image = {
-        url: null,
-        blob: null,
-        name: null
-      },
-      this.dialogInsertClassEvent.obs = ''
-    },
     handleCheckboxChangeAll(e) {
       if (e.detail.checked === true) {
         this.selectedChildren = this.classList.map((child) => ({ _id: child.childId }));
@@ -431,13 +410,6 @@ export default {
       });
 
       this.dialogInsertChildEvent.data = this.selectedChildren.map((child) => child.childId);
-    },
-    closeDialogInserChildren() {
-      this.dialogInsertChildEvent.open = false
-      this.dialogInsertChildEvent.data = []
-      this.dialogInsertChildEvent.obs = ''
-      this.dialogInsertChildEvent.childEventId = ''
-      // this.pagination.page = 1
     },
     handleCheckboxAttendanceChange(type) {
       if (type === 'attendance' && this.dialogAttendance.isAttendanceChecked) {
@@ -528,47 +500,12 @@ export default {
       this.dialogAttendance.obs = ''
       this.dialogAttendance.attendance = ''
     },
-    clearModalDataClass() {
-      this.dialogInsertClassEvent.open = false
-      this.dialogInsertClassEvent.data = {}
-      this.dialogInsertClassEvent.obs = ''
-      this.getLastAttendanceFromChildrenOfClasses()
-    },
     clearModalData(){
       this.dialogInsertChildEvent.open = false
       this.dialogInsertChildEvent.data = {}
       this.dialogInsertChildEvent.obs = ''
       this.dialogInsertChildEvent.childEventId = ''
     },
-    // clkOpenDialogChildEvent(child){
-    //   this.dialogInsertChildEvent.data = child
-    //   this.dialogInsertChildEvent.open = true
-    //   this.getLastActivityFromChild()
-    // },
-    getChildEvents() {
-      const opt = {
-        route: '/mobile/workers/getChildEvents',
-        body: {
-          status: 'active',
-          page: 1,
-          rowsPerPage: 100
-        }
-      }
-      useFetch(opt).then((r) => {
-    
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
-          return
-        }
-        this.childEventsList = r.data.list
-        this.formattedChildEventList = this.childEventsList.map((event) => ({
-          type: 'radio',
-          label: event.name,
-          value: event._id
-        }))
-      })
-    },
-    
     getChildrenInClassList() {
       if (this.filterValue !== '') {
         this.show = false
@@ -588,7 +525,6 @@ export default {
           return
         }
         this.childrenInClassList = r.data.list
-        this.getChildEvents()
       })
     },
     getClassesByUserId() {
@@ -611,6 +547,11 @@ export default {
 };
 </script>
 <style scoped>
+ion-avatar {
+  width: 56px;
+  height: 56px
+}
+/* 
 #time-button {
   display: none;
 }
@@ -684,7 +625,6 @@ ion-avatar {
 }
 .input-wrapper {
   border: 1px solid #ebebec;
-  /* padding-left: 15px; */
   border-radius: 0.5rem;
   margin-block: 10px;
 }
@@ -704,5 +644,5 @@ ion-avatar {
   100% {
     transform: scale(1);
   }
-}
+} */
 </style>

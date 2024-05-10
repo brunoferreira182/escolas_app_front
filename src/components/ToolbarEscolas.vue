@@ -15,13 +15,7 @@
       </ion-buttons>
       <ion-title @click="titleClicked">
         {{ props.title }}
-        <div class="text-caption" v-if="$route.path === ('/chatDetail')">
-          Clique para ver mais
-        </div>
       </ion-title>
-      <!-- <ion-buttons slot="end" >
-        <ion-toggle :checked="themeToggle" @ionChange="toggleChange($event)" justify="space-between"/>
-      </ion-buttons> -->
     </ion-toolbar>
   </ion-header>
 </template>
