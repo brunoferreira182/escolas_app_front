@@ -421,6 +421,7 @@ export default {
         return
       }
       this.closeDialogInsertClassActivity()
+      this.getLastActivityFromChildrenOfClasses()
       utils.toast('Atividade inserida com sucesso!')
     },
     

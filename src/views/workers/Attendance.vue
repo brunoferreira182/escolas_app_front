@@ -27,7 +27,7 @@
           <ion-note>Selecione uma turma para marcar presença em todos os alunos</ion-note>
         </ion-text>
       </div>
-      <ion-list :inset="true" v-if="show" >
+      <ion-list :inset="true">
         <ion-item 
           v-for="c in classData"
           :key="c"
@@ -53,7 +53,7 @@
       </div>
       <ion-list :inset="true">
         <ion-item-sliding
-          v-for="child in childrenInClassList"
+          v-for="child in childrenInClassesList"
           :key="child"
         >
           <ion-item 
@@ -66,9 +66,14 @@
               v-if="child.childPhoto"
               :style="!child.attendanceData ? '' : (child.attendanceData.childAttendanceType === 'present' ? 'border: 4px solid #40d648;' : 'border: 4px solid red;' )"
             >
-              <img :src="utils.makeFileUrl(child.childPhoto.filename)"/>
+              <img :src="utils.makeFileUrl(child.childPhoto?.filename)"/>
             </ion-avatar>
-            <ion-avatar aria-hidden="true" slot="start" v-else>
+            <ion-avatar
+              aria-hidden="true"
+              slot="start"
+              v-else
+              :style="!child.attendanceData ? '' : (child.attendanceData.childAttendanceType === 'present' ? 'border: 4px solid #40d648;' : 'border: 4px solid red;' )"
+            >
               <img :src="utils.makeFileUrl(child.image)"/>
             </ion-avatar>
             <ion-label>
@@ -100,81 +105,68 @@
         </ion-toolbar>
       </ion-header>
       <ion-content color="light">
-        <div class="ion-text-center q-pa-md">
-          <ion-row>
-            <ion-col>
-              <div class="modal-attendance">
-                <div class="q-ma-sm text-h6">
-                  Presença
-                </div>
-                <ion-checkbox 
-                  v-model="dialogAttendance.isAttendanceChecked"
-                  @ionChange="handleCheckboxAttendanceChange('attendance')"
-                  aria-label=""
-                ></ion-checkbox>
-              </div>
-            </ion-col>
-            <ion-col>
-              <div class="modal-absent">
-                <div class="q-ma-sm text-h6">
-                  Falta
-                </div>
-                <ion-checkbox 
-                  v-model="dialogAttendance.isAbsentChecked"
-                  @ionChange="handleCheckboxAttendanceChange('absent')"
-                  aria-label=""
-                ></ion-checkbox>
-              </div>
-            </ion-col>
-          </ion-row>
+
+        <div class="text-h6 q-pa-md">
+          Selecione presença ou ausência
         </div>
-        <!-- <div class="input-wrapper  q-px-md q-mx-md">
-          <ion-textarea
-            label="Descrição (opcional)"
-            label-placement="floating"
-            v-model="dialogAttendance.obs"
-            placeholder="Descrição da sobre o comparecimento"
-            :auto-grow="true"
-          ></ion-textarea>
-        </div> -->
         <ion-list :inset="true">
-          <ion-item color="light" :disabled="dialogAttendance.attendance === ''">
-            <div
-              :class="`${dialogAttendance.isAttendanceChecked ? 'modal-attendance' : 'modal-absent'}`"
-            >
-              <ion-checkbox 
-                v-model="selectAllChildren" 
-                @ionChange="handleCheckboxChangeAll($event)"
-                aria-label=""
-              ></ion-checkbox>
-            </div>
-            <ion-label class="q-px-md ion-text-capitalize">
+          <ion-item 
+            v-for="opt in dialogAttendance.options"
+            :key="opt"
+            @click="clkAttendanceType(opt)"
+          >
+            <ion-label>
+              {{ opt.label }}
+            </ion-label>
+            <ion-icon
+              aria-hidden="true"
+              :icon="checkmark"
+              slot="end"
+              :color="opt.color"
+              v-if="opt.option === dialogAttendance.optionSelected?.option"
+            ></ion-icon>
+          </ion-item>
+        </ion-list>
+
+        <div class="text-h6 q-pa-md" v-if="dialogAttendance.optionSelected">
+          Selecione as crianças
+        </div>
+        <ion-list :inset="true"  v-if="dialogAttendance.optionSelected">
+          <ion-item @click="clkAllChildren">
+            <ion-label>
               Todas crianças
             </ion-label>
+            <ion-icon
+              aria-hidden="true"
+              :icon="checkmark"
+              slot="end"
+              color="primary"
+              v-if="dialogAttendance.selectedChildren.selectAllChildren"
+            ></ion-icon>
           </ion-item>
-        </ion-list>
-        <ion-list :inset="true" v-if="dialogAttendance.attendance !== ''">
-          <ion-item
-            v-for="child in classList"
+          <ion-item 
+            v-for="child in dialogAttendance.childrenFromClass"
             :key="child"
+            @click="clkChild(child)"
           >
-            <div :class="`${dialogAttendance.isAttendanceChecked ? 'modal-attendance' : 'modal-absent'}`">
-              <ion-checkbox 
-                :checked="child.isChecked" 
-                @ionChange="handleCheckboxAttendance(child.childId, $event)"
-                aria-label=""
-              ></ion-checkbox>
-            </div>
-            <ion-label class="q-px-md ion-text-capitalize">
+            <ion-label>
               {{ child.childName }}
             </ion-label>
+            <ion-icon
+              aria-hidden="true"
+              :icon="checkmark"
+              slot="end"
+              color="primary"
+              v-if="dialogAttendance.selectedChildren.array.includes(child.childId)"
+            ></ion-icon>
           </ion-item>
         </ion-list>
+
         <ion-button
           @click="createUserChildAttendance"
           class="q-pa-md"
           expand="block"
-          :disabled="selectedChildren.length === 0"
+          :disabled="dialogAttendance.selectedChildren.data.length === 0"
         >Salvar</ion-button>
       </ion-content>
       
@@ -190,13 +182,13 @@
       ></ion-datetime>
     </ion-modal>
 
-    <ion-alert
+    <!-- <ion-alert
       :isOpen="dialogConfirmPresence.open"
       :header="`Confirma ${dialogConfirmPresence.action} para ${dialogConfirmPresence.childName}?`"
       :buttons="dialogConfirmPresence.alertButtons"
       @didDismiss="dialogConfirmPresence.open = false"
       
-    ></ion-alert>
+    ></ion-alert> -->
     
   </ion-page>
 </template>
@@ -251,10 +243,6 @@ export default {
   data() {
     return {
       presentingElement: null,
-      modalChangeDate: {
-        open: false,
-        date: ''
-      },
       dialogConfirmPresence: {
         open: false,
         action: '',
@@ -262,54 +250,23 @@ export default {
         childId: '',
         alertButtons: null
       },
-      startPhotoHandler: false,
-      dialogInsertChildEvent: {
-        open: false,
-        data: [],
-        obs: '',
-        childEventId: ''
-      },
-      image: {
-        url: null,
-        blob: null,
-        name: null
-      },
       dialogAttendance: {
-        data:{},
+        options: [
+          { label: 'Presença', option: 'present', color: 'success' },
+          { label: 'Ausência', option: 'absent', color: 'danger' },
+        ],
+        optionSelected: null,
         open: false,
-        isAttendanceChecked: false,
-        isAbsentChecked: false,
-        obs: '',
-        attendance: ''
-      },
-      dialogInsertClassEvent: {
-        open: false,
-        data: {},
-        obs: '',
-      },
-      dialogInsertActivity: {
-        open: false
-      },
-      pagination: {
-        page: 1,
-        rowsPerPage: 10,
-        rowsNumber: 0,
-        sortBy: "",
+        selectedChildren: {
+          data: [],
+          array: [],
+          selectAllChildren: false
+        },
+        childrenFromClass: [],
+        classData: null
       },
       classData: [],
-      childrenInClassList: [],
-      childEventsHistory: [],
-      childEventsList: [],
-      classEventsHistory: [],
-      show: true,
-      selectedEvent: null,
-      classList: [],
-      selectedChildren: [],
-      childrenFilter: [],
-      filterValue: '',
-      selectAllChildren: false,
-      formattedChildEventList: null,
-      childEventsHistory: [],
+      childrenInClassesList: [],
       dateAttendance: null
     };
   },
@@ -317,199 +274,101 @@ export default {
     utils.loading.hide()
     this.presentingElement = this.$refs.page.$el;
     this.getClassesByUserId()
-    this.getChildrenInClassList()
-    this.dialogConfirmPresence.alertButtons = [
-      {
-        text: 'Cancelar',
-        role: 'cancel',
-        handler: () => { this.dialogConfirmPresence.open = false }
-      },
-      {
-        text: 'Confirmar',
-        handler: () => { this.createUserChildAttendanceOneChild() }
-      }
-    ]
-    console.log(document.getElementById('time-button'), 'consoloooo')
+    this.getChildrenInClassesList()
   },
   watch: {
     $route (to, from) {
       if (to.path === '/tabsWorkers/attendance') {
         this.getClassesByUserId()
-        this.getChildrenInClassList()
+        this.getChildrenInClassesList()
       }
     }
   },
   methods: {
-    onChangeDate($event, c) {
-      this.dateAttendance = $event.detail.value.split('T')[0]
-      this.getChildrenInClassList()
-    },
-    createUserChildAttendanceOneChild() {
-      const opt = {
-        route: '/mobile/workers/createUserChildAttendance',
-        body: {
-          selectedChildren: [{_id: this.dialogConfirmPresence.childId}],
-          childAttendanceType: this.dialogConfirmPresence.action === 'presença' ? 'present' : 'absent',
-          obs: '',
-          classId: this.dialogConfirmPresence.classId,
-          dateAttendance: this.dateAttendance
-        },
-      }
-      utils.loading.show()
-      useFetch(opt).then((r) => {
-        utils.loading.hide()
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
-          return
-        }
-        this.dialogConfirmPresence.open = false
-        utils.toast('Comparecimento preenchido com sucesso!')
-        this.getChildrenInClassList()
-      })
-    },
-    clkAddPresenceToChild (child, action) {
-      this.dialogConfirmPresence.action = action
-      this.dialogConfirmPresence.childName = child.childName
-      this.dialogConfirmPresence.childId = child.childId
-      this.dialogConfirmPresence.classId = child.classId
-      this.dialogConfirmPresence.open = true
-    },
     clkOpenModalAttendance(c){
-      this.dialogAttendance.data = c
+      this.dialogAttendance.classData = c
       this.dialogAttendance.open = true
       this.getChildrenListByClassId(c.classId)
     },
     getChildrenListByClassId(classId) {
-      const opt = {
-        route: '/mobile/workers/getChildrenListByClassId',
-        body: {
-          classId,
-          page: 1,
-          rowsPerPage: 100,
-          dateAttendance: this.dateAttendance
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (!r.error) {
-          this.classList = r.data.list
-        }
-        else {
-          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
-        }
-      })
+      this.dialogAttendance.childrenFromClass = 
+        this.childrenInClassesList.filter((child) => child.classId === classId)
     },
-    handleCheckboxChangeAll(e) {
-      if (e.detail.checked === true) {
-        this.selectedChildren = this.classList.map((child) => ({ _id: child.childId }));
+    clkAttendanceType (opt) {
+      this.dialogAttendance.optionSelected = opt
+    },
+    clkAllChildren () {
+      this.dialogAttendance.selectedChildren.selectAllChildren = !this.dialogAttendance.selectedChildren.selectAllChildren
+      if (this.dialogAttendance.selectedChildren.selectAllChildren) {
+        this.dialogAttendance.selectedChildren.data = [...this.dialogAttendance.childrenFromClass]
+        this.dialogAttendance.selectedChildren.array = this.dialogAttendance.childrenFromClass.map((child) => child.childId)
       } else {
-        this.selectedChildren = [];
-      }
-
-      this.classList.forEach((classList) => {
-        classList.isChecked = e.detail.checked;
-      });
-
-      this.dialogInsertChildEvent.data = this.selectedChildren.map((child) => child.childId);
-    },
-    handleCheckboxAttendanceChange(type) {
-      if (type === 'attendance' && this.dialogAttendance.isAttendanceChecked) {
-        this.dialogAttendance.isAbsentChecked = false;
-        this.dialogAttendance.attendance = 'presence'
-      } else if (type === 'absent' && this.dialogAttendance.isAbsentChecked) {
-        this.dialogAttendance.isAttendanceChecked = false;
-        this.dialogAttendance.attendance = 'absent'
+        this.dialogAttendance.selectedChildren.data = []
+        this.dialogAttendance.selectedChildren.array = []
       }
     },
-    handleCheckboxAttendance(childId, e) {
-      if (e.detail.checked === true) {
-        this.selectedChildren.push({_id: childId})
-        if (this.selectedChildren.length === this.classList.length) {
-            this.selectAllChildren = true
-          }
-        return
-      }
-      if (e.detail.checked === false) {
-        const initialLength = this.selectedChildren.length
-        this.selectedChildren.forEach((child, childIndex) => {
-          if (child._id === childId) {
-            this.selectedChildren.splice(childIndex, 1)
-          if (initialLength === this.classList.length && this.selectedChildren !== initialLength) {
-            this.selectAllChildren = false
-          }
-            this.dialogInsertChildEvent.data = this.selectedChildren
+    clkChild (child) {
+      if (this.dialogAttendance.selectedChildren.array.includes(child.childId)) {
+        this.dialogAttendance.selectedChildren.array.forEach((c, i) => {
+          if (c === child.childId) {
+            this.dialogAttendance.selectedChildren.array.splice(i, 1)
           }
         })
+        this.dialogAttendance.selectedChildren.data.forEach((c, i) => {
+          if (c.childId === child.childId) {
+            this.dialogAttendance.selectedChildren.data.splice(i, 1)
+          }
+        })
+      } else {
+        this.dialogAttendance.selectedChildren.array.push(child.childId)
+        this.dialogAttendance.selectedChildren.data.push(child)
       }
     },
-    createUserChildAttendance() {
-      if(this.selectedChildren.length === 0 || this.dialogAttendance.attendance === ''){
-        utils.toast('Preencha o comparecimento e selecione um aluno para prosseguir')
-        return
-      }
+    onChangeDate($event, c) {
+      this.dateAttendance = $event.detail.value.split('T')[0]
+      this.getChildrenInClassesList()
+    },
+    async createUserChildAttendance() {
       const opt = {
         route: '/mobile/workers/createUserChildAttendance',
         body: {
-          selectedChildren: this.selectedChildren,
-          childAttendanceType: this.dialogAttendance.isAttendanceChecked ? 'present' : 'absent',
-          obs: this.dialogAttendance.obs,
-          classId: this.dialogAttendance.data.classId,
+          selectedChildren: this.dialogAttendance.selectedChildren.data.map((child) => { return { childId: child.childId } } ),
+          childAttendanceType: this.dialogAttendance.optionSelected.option,
+          classId: this.dialogAttendance.classData.classId,
           dateAttendance: this.dateAttendance
         },
       }
       utils.loading.show()
-      useFetch(opt).then((r) => {
-        utils.loading.hide()
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
-          return
-        }
-          this.clearModalAttendanceData()
-          this.dialogAttendance.open = false
-          utils.toast('Comparecimento preenchido com sucesso!')
-          this.getChildrenInClassList()
-      })
-    },
-    handleCheckboxChange(childId, e) {
-      if (e.detail.checked === true) {
-        this.selectedChildren.push({_id: childId})
-        if (this.selectedChildren.length === this.classList.length) {
-            this.selectAllChildren = true
-          }
+      const r = await useFetch(opt)
+      utils.loading.hide()
+      if (r.error) {
+        utils.toast('Ocorreu um erro. Tente novamente.')
         return
       }
-      if (e.detail.checked === false) {
-        const initialLength = this.selectedChildren.length
-        this.selectedChildren.forEach((child, childIndex) => {
-          if (child._id === childId) {
-            this.selectedChildren.splice(childIndex, 1)
-          if (initialLength === this.classList.length && this.selectedChildren !== initialLength) {
-            this.selectAllChildren = false
-          }
-            this.dialogInsertChildEvent.data = this.selectedChildren
-          }
-        })
-      }
-    },
-    
-    clearModalAttendanceData(){
+      this.clearModalAttendanceData()
       this.dialogAttendance.open = false
-      this.selectedChildren = []
-      this.dialogAttendance.isAbsentChecked = false
-      this.dialogAttendance.isAttendanceChecked = false
-      this.dialogAttendance.data = {}
-      this.dialogAttendance.obs = ''
-      this.dialogAttendance.attendance = ''
+      utils.toast('Comparecimento preenchido com sucesso!')
+      this.getChildrenInClassesList()
     },
-    clearModalData(){
-      this.dialogInsertChildEvent.open = false
-      this.dialogInsertChildEvent.data = {}
-      this.dialogInsertChildEvent.obs = ''
-      this.dialogInsertChildEvent.childEventId = ''
+    clkAddPresenceToChild (child, action) {
+      this.dialogAttendance.selectedChildren.data = [{...child}]
+      this.dialogAttendance.optionSelected = action === 'presença' ? { option: 'present' } : { option: 'absent' }
+      this.dialogAttendance.classData = { classId: child.classId }
+      this.createUserChildAttendance()
     },
-    getChildrenInClassList() {
-      if (this.filterValue !== '') {
-        this.show = false
-      } else this.show = true
+    clearModalAttendanceData () {
+      this.dialogAttendance
+      this.dialogAttendance.optionSelected = null
+      this.dialogAttendance.open = false
+      this.dialogAttendance.selectedChildren = {
+        data: [],
+        array: [],
+        selectAllChildren: false
+      },
+      this.dialogAttendance.childrenFromClass = []
+      this.dialogAttendance.classData = null
+    },
+    getChildrenInClassesList() {
       const opt = {
         route: '/mobile/workers/getChildrenInClassList',
         body: {
@@ -524,7 +383,7 @@ export default {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
         }
-        this.childrenInClassList = r.data.list
+        this.childrenInClassesList = r.data.list
       })
     },
     getClassesByUserId() {
@@ -551,98 +410,5 @@ ion-avatar {
   width: 56px;
   height: 56px
 }
-/* 
-#time-button {
-  display: none;
-}
-.modal-absent ion-checkbox {
-  --size: 32px;
-  --checkbox-background-checked: #9b0d0d;
-}
 
-.modal-absent ion-checkbox::part(container) {
-  border: 2px solid #9b0d0d;
-}
-.modal-attendance ion-checkbox {
-  --size: 32px;
-  --checkbox-background-checked: #1d9b0d;
-}
-
-.modal-attendance ion-checkbox::part(container) {
-  border: 2px solid #1d9b0d;
-}
-ion-select.always-flip::part(icon) {
-  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-ion-select.always-flip.select-expanded::part(icon) {
-  transform: rotate(180deg);
-}
-
-ion-select.never-flip::part(icon) {
-  transform: none;
-}
-ion-avatar {
-  --border-radius: 36px;
-  width: 56px;
-  height: 56px
-}
-.centered-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-.bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-.input-wrapper {
-  border: 1px solid #ebebec;
-  border-radius: 0.5rem;
-  margin-block: 10px;
-}
-.bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
-} */
 </style>

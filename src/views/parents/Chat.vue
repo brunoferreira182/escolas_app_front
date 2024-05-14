@@ -30,7 +30,6 @@
             :key="c"
             :disabled="c.className ? false : true"
             :button="true"
-            class="q-pa-sm"
             @click="goToChatInfo(c.classId)"
           >
           

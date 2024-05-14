@@ -35,7 +35,7 @@
                       >
                       <span v-else style="display:flex;align-items: center;"  @click="clkAttachment(message)">
                         <ion-icon size="small" :icon="attach"></ion-icon>
-                        <span>merda {{ message.messageFile.originalname }}</span>
+                        <span>{{ message.messageFile.originalname }}</span>
                       </span>
                     </div>
                     <div
