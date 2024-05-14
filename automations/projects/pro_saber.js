@@ -1,5 +1,5 @@
 export default {
-  defaultDir: '/Users/tiago/Desktop/B3Dev/Codigos/app_escolas/b3dev_escolas_app_front_app',
+  defaultDir: '/Users/tiago/Desktop/B3Dev/Codigos/escolas_app/b3dev_escolas_app_front_app',
   defaultDirFilesToCopy: '/Users/tiago/Desktop/B3Dev/Codigos/___Icons - Splash - more/escolas_app',
   actions: [
     {
