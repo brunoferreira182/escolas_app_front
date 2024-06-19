@@ -222,6 +222,11 @@
         </div>
       </ion-content>
     </ion-modal>
+    <SeenLastMsg
+      :modalLastMessage="modalLastMessage"
+      :usersReadersMsg="usersReadersMsg"
+      @modalLastMessage="modalLastMessage = false"
+    />
     <AudioRecorder
       :open="openAudioRecorder"
       @done="doneAudioRecorder"
@@ -254,12 +259,14 @@ import {
   IonPopover,
   IonHeader,
   IonTitle,
+  
   IonToolbar,
   IonModal,
   IonButtons,
   IonButton, IonCol, IonFooter, alertController,
 } from '@ionic/vue'
 import ModalPinchZoomImage from '../../components/ModalPinchZoomImage.vue'
+import SeenLastMsg from '../../components/SeenLastMsg.vue'
 import { ref } from 'vue';
 const showModal = ref(false);
 const modalImageUrl = ref(null);
@@ -318,6 +325,8 @@ export default {
       messages: [],
       message: '',
       page: 0,
+      usersReadersMsg: [],
+      nullImg: 'https://ionicframework.com/docs/img/demos/avatar.svg',
       pendingMessage: 'Você já tem uma solicitação de conexão para esta pessoa. Aguarde ela aprovar.',
       userNameAndPhoto: {},
       isLoadingMessages: false,
@@ -366,15 +375,21 @@ export default {
           messageId: messageId
         }
       }
-			useFetch(opt).then((r)=> {console.log(r, 'KDPOASKDPOASKDKPSA')})
+      utils.loading.show()
+			useFetch(opt).then(r=> {
+        utils.loading.hide()
+        if(!r.error){
+          this.usersReadersMsg = r.data.readers
+          return
+        }
+      })
     },
     async clkAttachment (message) {
-      // utils.loading.show()
+
       const retDownload = await utils.downloadFile({
         filename: message.messageFile.filename,
         originalname: message.messageFile.originalname
       })
-      // utils.loading.hide()
     },
     goToChatInfo() {
       this.$router.push("/chatInfo?classId=" + this.$route.query.classId)
@@ -491,7 +506,7 @@ export default {
           text: 'Visto por último',
           role: 'confirm',
           handler: () => {
-            this.clkDeleteMessage(message._id)
+            this.modalLastMessage = true
           },
         },
       )

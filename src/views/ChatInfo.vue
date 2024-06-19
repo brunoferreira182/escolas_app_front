@@ -108,8 +108,8 @@
               <ion-button
                 slot="end"
                 fill="clear"
-                @click="$router.push('/chatUserAndWorker?user_id=' + parent.user_id)"
-              >
+                @click="$router.push('/chatUserAndWorker?user_id=' + parent.user_id + '&classId=' + $route.query.classId)"
+                >
                 <ion-icon color="primary" size="large" :icon="chatbubble"></ion-icon>
               </ion-button>
             </ion-item>

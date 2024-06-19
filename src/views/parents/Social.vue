@@ -1,9 +1,5 @@
 <template>
   <ion-page>
-    <!-- <ToolbarEscolas
-      title="Social"
-      :backButton="false"
-    /> -->
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title>{{ APP_NAME }}</ion-title>
@@ -13,7 +9,10 @@
 
       <ion-header collapse="condense">
         <ion-toolbar color="light">
-          <ion-title size="large">{{ APP_NAME }}</ion-title>
+          <ion-title size="large">
+            {{ APP_NAME }}
+          </ion-title>
+          <ion-icon :icon="filter" slot="end" />            
         </ion-toolbar>
       </ion-header>
 
@@ -74,27 +73,25 @@
 
 import {
   IonPage,
-  IonButton,
-  IonIcon,
   IonContent,
-  IonToast,
   IonTitle,
   IonToolbar,
   IonHeader,
+  IonIcon,
 } from '@ionic/vue';
-import { APP_NAME, COMPANY_ID } from '../../composables/variables';
-import { defineComponent } from 'vue';
-import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import { toastController, loadingController } from '@ionic/vue';
+import { APP_NAME } from '../../composables/variables';
+import { toastController } from '@ionic/vue';
 import { useFetch } from '@/composables/fetch';
 import PostLite from '../../components/PostLite.vue'
 import PostSchoolNotes from '../../components/PostSchoolNotes.vue'
 import SocialPost from '../../components/SocialPost.vue'
 import 'swiper/css/pagination';
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue';
+import { 
+  filter
+} from 'ionicons/icons';
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
-import { heartOutline, heart} from 'ionicons/icons';
 </script>
 
 <script>
@@ -193,6 +190,7 @@ export default {
         }
       }
       const ret = await useFetch(opt)
+      console.log("🚀 ~ getPosts ~ ret:", ret)
       // this.page++
       if (!refreshPage) {
         if(ret.data.list) {

@@ -82,6 +82,16 @@
                   </div>
                 </ion-row>
               </ion-item>
+              <ion-item-options 
+                :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" 
+              >
+                <ion-item-option 
+                  style="text-transform: none; border-radius: .5rem;" 
+                  color="danger" 
+                  @click="clkMessage(message, msgIndex)" 
+                  >Detalhes
+                </ion-item-option>
+              </ion-item-options>
             </ion-item-sliding>
           </div>
         </ion-list>
@@ -126,7 +136,11 @@
         </ion-row>
       </form>
     </ion-footer>
-
+    <SeenLastMsg
+      :modalLastMessage="modalLastMessage"
+      :usersReadersMsg="usersReadersMsg"
+      @modalLastMessage="modalLastMessage = false"
+    />
     <AudioRecorder
       :open="openAudioRecorder"
       @done="doneAudioRecorder"
@@ -145,8 +159,9 @@
 <script setup>
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
 import AudioRecorder from '../components/AudioRecorder.vue'
+import SeenLastMsg from '../components/SeenLastMsg.vue'
 import PhotoHandler from '../components/PhotoHandler.vue'
-import { send, attach, close, mic, play, pause, chevronBack } from 'ionicons/icons';
+import { send, attach, close, mic, play, pause } from 'ionicons/icons';
 import utils from '../../src/composables/utils.js';
 import {
   IonPage, IonContent,
@@ -154,7 +169,7 @@ import {
   IonCard, IonIcon, IonRange, IonLabel,
   IonRow, IonItem, IonItemOption, IonItemOptions,
   IonItemSliding, IonList, IonAvatar, IonTextarea,
-  IonButton, IonCol, IonFooter, 
+  IonButton, IonCol, IonFooter, alertController, 
 } from '@ionic/vue'
 </script>
 
@@ -165,6 +180,8 @@ export default {
   data() {
     return {
       userDetail: null,
+      modalLastMessage: false,
+      usersReadersMsg: [],
       title: '',
       isAnsweringMessage: {
         isAnswering: false,
@@ -224,6 +241,73 @@ export default {
     this.startView()
   },
   methods: {
+    insertClassChatReadConfirmation () {
+      const opt = {
+        route: '/mobile/parents/chat/insertClassChatReadConfirmation',
+        body: {
+					classId: this.$route.query.classId,
+        }
+      }
+			useFetch(opt).then(() => {})
+    },
+    async clkMessage (message, msgIndex) {
+      this.$refs.listAnswerMsg.$el.closeSlidingItems()
+      const d = `Data: ${message.createdAt.createdAtInFullLong} de  ${message.createdAt.createdAtYear}`
+      const buttons = [{ text: 'Voltar', role: 'cancel' }]
+      if (message.createdBy.userId === this.userInfo.userId) {
+        buttons.push({
+          text: 'Apagar mensagem',
+          role: 'confirm',
+          handler: () => {
+            this.clkDeleteMessage(message._id)
+          },
+        },
+        // {
+        //   text: 'Visto por último',
+        //   role: 'confirm',
+        //   handler: () => {
+        //     this.modalLastMessage = true
+        //   },
+        // },
+      )
+      if(message.imageCaption){
+        buttons.push({
+          text: 'Editar',
+          role: 'confirm',
+          handler: () => {
+            this.clkEditImageCaption(message, msgIndex)
+          },
+        })
+      }
+      }
+      const alert = await alertController.create({
+        header: 'Detalhe',
+        message: d,
+        buttons
+      });
+      await alert.present();
+      // this.getClassChatMessageReadConf(message);
+    },
+    getClassChatMessageReadConf(message) {
+      const messageId = message._id
+      const classId = this.$route.query.classId
+      const opt = {
+        route: '/mobile/parents/chat/getClassChatMessageReadConf',
+        body: {
+          classId: classId,
+          messageId: messageId
+        }
+      }
+      utils.loading.show()
+			useFetch(opt).then(r=> {
+        console.log("🚀 ~ useFetch ~ r:", r)
+        utils.loading.hide()
+        if(!r.error){
+          this.usersReadersMsg = r.data.readers
+          return
+        }
+      })
+    },
     async clkAttachment (item) {
       console.log(item)
       utils.loading.show()
@@ -284,6 +368,7 @@ export default {
     startView() {
       this.getUserChatDetailById()
       this.getMessages()
+      this.insertClassChatReadConfirmation()
       this.userInfo = utils.presentUserInfo()
     },
     playAudio(message) {
@@ -368,26 +453,6 @@ export default {
       this.$refs.listAnswerMsg.$el.closeSlidingItems()
       this.isAnsweringMessage.isAnswering = true
       this.isAnsweringMessage.message = msg
-    },
-    async clkMessage (message) {
-      this.$refs.listAnswerMsg.$el.closeSlidingItems()
-      const d = `Data: ${message.createdAt.createdAtInFullLong} de  ${message.createdAt.createdAtYear}`
-      const buttons = [{ text: 'Voltar', role: 'cancel' }]
-      if (message.createdBy.userId === this.userInfo.userId) {
-        buttons.push({
-          text: 'Apagar mensagem',
-          role: 'confirm',
-          handler: () => {
-            this.clkDeleteMessage(message._id)
-          },
-        })
-      }
-      const alert = await alertController.create({
-        header: 'Detalhe',
-        message: d,
-        buttons
-      });
-      await alert.present();
     },
     clkDeleteMessage (messageId) {
       const opt = {

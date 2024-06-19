@@ -7,7 +7,6 @@
         :src="utils.makeFileUrl(post.postData.resume.img.filename)" class="img-style"
         @click="openImageModal(post.postData.resume.img.filename)"
       />
-      
       <div >
         <ion-item lines="none">
           <ion-label>
@@ -21,7 +20,6 @@
             <br>
             <strong class="q-mb-sm">{{ post.postData.resume.title }}</strong>
             <br>
-            <!-- <ion-text>Never Gonna Give You Up</ion-text><br /> -->
             <ion-note color="medium" class="q-pt-sm ion-text-wrap">
               {{ post.postData.resume.description.length > 50 ? post.postData.resume.description.slice(0, 50) + '...' : post.postData.resume.description }}
             </ion-note>
@@ -94,8 +92,6 @@ import utils from '../composables/utils'
 
 import { useFetch } from '../composables/fetch'
 import {
-  IonCol,
-  IonRow,
   IonIcon,
   IonButton, 
   IonItem, IonLabel, IonBadge, IonNote
