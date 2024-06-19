@@ -379,11 +379,11 @@ export default {
         }
       }
       useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
+        if (!r.error) {
+          r.data && r.data.list ? this.childrenInClassesList = r.data.list : this.childrenInClassesList = []
           return
         }
-        this.childrenInClassesList = r.data.list
+        utils.toast('Ocorreu um erro. Tente novamente.')
       })
     },
     getClassesByUserId() {

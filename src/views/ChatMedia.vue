@@ -54,6 +54,18 @@
           </ion-label>
         </div>
       </ion-card>
+      <ion-modal :isOpen="modalLastMessage" @willDismiss="modalLastMessage = false">
+        <ion-content>
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="end">
+                <ion-button @click="closeModal">Fechar</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          aospkdopaskpd
+        </ion-content>
+      </ion-modal>
       <ModalPinchZoomImage
         :modalImageUrl="modalImageUrl"
         :showModal="showModal"
@@ -65,7 +77,7 @@
 <script setup>
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
 import utils from '../../src/composables/utils.js';
-import { send, attach, close, mic, play, pause, chevronBack } from 'ionicons/icons';
+import { attach, play, pause, } from 'ionicons/icons';
 import {
 IonPage, IonContent,
 IonCard,
@@ -93,6 +105,7 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
+      
       mediaData: null,
       openAudioRecorder: false,
       currentAudioRef: null,

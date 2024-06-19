@@ -215,20 +215,14 @@ import {
   IonContent,
   IonModal,
   IonList,
-  IonCol,
-  IonCheckbox,
-  IonRow,
   IonAvatar,
-  IonAccordion, IonAccordionGroup,
   IonNote,
   IonDatetimeButton, IonDatetime,
   IonText,
   IonIcon
 } from '@ionic/vue';
 import {
-  caretDownSharp,
   checkmark,
-  close
 } from 'ionicons/icons';
 import { useFetch } from '../../composables/fetch'
 import utils from '../../composables/utils'
@@ -358,9 +352,14 @@ export default {
       }
       if (classId) opt.body.classId = classId
       useFetch(opt).then((r) => {
-        if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
+        if (!r.error) {
+          console.log("🚀 ~ useFetch ~ r:", r)
+          r.data && r.data.list ? this.classEventsHistory = r.data.list : 
+          this.classEventsHistory = []
+          return
+        }
         else {
-          this.classEventsHistory = r.data.list
+          utils.toast("Ocorreu um erro, tente novamente.")
         } 
       })
     },
@@ -399,7 +398,8 @@ export default {
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
         }
-        this.dialogInsertClassActivity.activitiesList = r.data.list
+        r.data && r.data.list ? this.dialogInsertClassActivity.activitiesList = r.data.list : 
+        this.dialogInsertClassActivity.activitiesList = []
       })
     },
     
@@ -438,11 +438,11 @@ export default {
         }
       }
       useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
+        if (!r.error) {
+          r.data && r.data.list ? this.childrenInClassesList = r.data.list : this.childrenInClassesList = []
           return
         }
-        this.childrenInClassesList = r.data.list
+        utils.toast('Ocorreu um erro. Tente novamente.')
       })
     },
     getClassesByUserId() {
@@ -454,11 +454,12 @@ export default {
         }
       }
       useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
+        if (!r.error) {
+          r.data && r.data.list ? this.classesData = r.data.list : this.classesData = []
           return
         }
-        this.classesData = r.data.list
+        utils.toast('Ocorreu um erro. Tente novamente.')
+        
       })
     }
   }

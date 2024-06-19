@@ -243,14 +243,14 @@
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import AudioRecorder from '../../components/AudioRecorder.vue'
 import PhotoHandler from '../../components/PhotoHandler.vue'
-import { send, attach, close, mic, play, pause, chevronBack, watch } from 'ionicons/icons';
+import { send, attach, mic, play, pause,} from 'ionicons/icons';
 import utils from '../../../src/composables/utils.js';
 import {
   IonPage, IonContent,
   IonInfiniteScroll, IonInfiniteScrollContent,
   IonCard, IonIcon, IonRange, IonLabel,
   IonRow, IonItem, IonItemOption, IonItemOptions,
-  IonItemSliding, IonList, IonAvatar, IonTextarea,
+  IonItemSliding, IonList, IonTextarea,
   IonPopover,
   IonHeader,
   IonTitle,
@@ -333,7 +333,8 @@ export default {
       currentAudioRef: null,
       currentTime: 0,
       currentAudioId: null,
-      audioIcon: 'play'
+      audioIcon: 'play',
+      modalLastMessage: false,
     };
   },
   watch: {
@@ -347,6 +348,26 @@ export default {
     this.startView()
   },
   methods: {
+    insertClassChatReadConfirmation () {
+      const opt = {
+        route: '/mobile/parents/chat/insertClassChatReadConfirmation',
+        body: {
+					classId: this.$route.query.classId,
+        }
+      }
+			useFetch(opt).then(() => {})
+    },
+    getClassChatMessageReadConf(message) {
+      const messageId = message._id
+      const opt = {
+        route: '/mobile/parents/chat/getClassChatMessageReadConf',
+        body: {
+					classId: this.$route.query.classId,
+          messageId: messageId
+        }
+      }
+			useFetch(opt).then((r)=> {console.log(r, 'KDPOASKDPOASKDKPSA')})
+    },
     async clkAttachment (message) {
       // utils.loading.show()
       const retDownload = await utils.downloadFile({
@@ -361,6 +382,7 @@ export default {
     startView() {
       this.getClassDetailById()
       this.getClassMessages()
+      this.insertClassChatReadConfirmation()
       this.userInfo = utils.presentUserInfo()
     },
     playAudio(message) {
@@ -447,12 +469,9 @@ export default {
         route: '/mobile/messenger/insertReactionToChatMsg',
         body: {
 					messageId: msg._id,
-          // reactionIcon: msg.icon
-          // userId: this.userInfo.userId
         }
       }
 			useFetch(opt).then(r => {
-        // this.findAndRemoveMessageFromArray(messageId)
         utils.toast("Mensagem curtida!")
       })
     },
@@ -463,6 +482,13 @@ export default {
       if (message.createdBy.userId === this.userInfo.userId) {
         buttons.push({
           text: 'Apagar mensagem',
+          role: 'confirm',
+          handler: () => {
+            this.clkDeleteMessage(message._id)
+          },
+        },
+        {
+          text: 'Visto por último',
           role: 'confirm',
           handler: () => {
             this.clkDeleteMessage(message._id)
@@ -485,6 +511,7 @@ export default {
         buttons
       });
       await alert.present();
+      this.getClassChatMessageReadConf(message);
     },
     closeModalEditImageCaption(){
       this.modalEditImageCaption.open = false
@@ -603,7 +630,6 @@ export default {
     moreData (ev) {
       this.getClassMessages(ev)
     },
-    
     getClassMessages (ev, lPosix, fromAnswer) {
       if (this.noMoreMessages) return
       const opt = {
@@ -636,7 +662,6 @@ export default {
       })
     },
     insertMessage (file) {
-      console.log("🚀 ~ insertMessage ~ file:", file)
       if (this.chatMessage.length < 1 && !file.file && !this.audioMessage) return
       let optTemMsg
       if (file.file) optTemMsg = { file: file.file }
@@ -682,6 +707,7 @@ export default {
         utils.loading.hide()
         this.scrollToBottom()
         this.undoAnswerMessage()
+        this.getClassDetailById()
         this.getClassMessages()
       })
     },
