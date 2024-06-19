@@ -31,6 +31,7 @@
         <ion-item 
           v-for="c in classData"
           :key="c"
+          class="q-ma-sm"
           @click="clkOpenModalAttendance(c)"
           :button="true"
         >
@@ -51,13 +52,14 @@
           <ion-note>Arraste para a esquerda para opções</ion-note>
         </ion-text>
       </div>
-      <ion-list :inset="true">
+      <ion-list :inset="true" lines="inset">
         <ion-item-sliding
           v-for="child in childrenInClassesList"
           :key="child"
         >
           <ion-item 
             :button="true"
+            class="q-ma-sm"
             detail="false"
           >
             <ion-avatar

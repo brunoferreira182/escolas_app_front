@@ -190,7 +190,6 @@ export default {
         }
       }
       const ret = await useFetch(opt)
-      console.log("🚀 ~ getPosts ~ ret:", ret)
       // this.page++
       if (!refreshPage) {
         if(ret.data.list) {

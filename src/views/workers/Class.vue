@@ -39,6 +39,7 @@
           v-for="c in classesData"
           :key="c"
           @click="clkOpenDialogClassEvent(c)"
+          class="q-ma-sm"
           :button="true"
         >
           <ion-avatar aria-hidden="true" slot="start" >
@@ -62,6 +63,7 @@
         <ion-item 
           v-for="e in classEventsHistory"
           :key="e"
+          class="q-ma-sm"
           detail="false"
         >
           <ion-avatar
