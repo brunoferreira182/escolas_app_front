@@ -30,6 +30,7 @@
             :key="c"
             :disabled="c.className ? false : true"
             :button="true"
+            class="q-ma-sm"
             @click="goToChatInfo(c.classId)"
           >
           
@@ -83,6 +84,7 @@
             <ion-item 
               v-for="e in childEventsHistory"
               :key="e"
+              class="q-ma-sm"
               detail="false"
             >
               <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
@@ -164,8 +166,6 @@ import {
   IonContent, 
   IonImg, 
   IonList, 
-  IonRow,
-  IonCol,
   IonBadge,
   IonChip, 
   IonAvatar,
@@ -178,9 +178,7 @@ import {
   IonText,
   IonHeader, IonToolbar, IonTitle
 } from '@ionic/vue';
-import { APP_NAME, COMPANY_ID } from '../../composables/variables';
-import { defineComponent } from 'vue';
-import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+import { APP_NAME} from '../../composables/variables';
 import utils from '../../composables/utils'
 </script>
 

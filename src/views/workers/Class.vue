@@ -80,7 +80,7 @@
           <ion-label slot="end">
             <ion-note color="medium text-caption">
               {{ e.createdAt.createdAtOnlyDate }}<br>
-              {{ e.createdAt.createdAtLocale.split(' ')[1].substring(0, 5)}}
+              {{ e.createdAt.createdAtLocale.split(' ')[1].substring(0, 5) }}
             </ion-note>
           </ion-label>
         </ion-item>
@@ -99,8 +99,6 @@
           </ion-toolbar>
         </ion-header>
         <ion-content color="light">
-
-
           <div class="text-h6 q-pa-md">
             Selecione a atividade
           </div>
@@ -404,15 +402,24 @@ export default {
         this.dialogInsertClassActivity.activitiesList = []
       })
     },
-    
-
     async createUserChildActivity() {
       const opt = {
         route: '/mobile/workers/createUserChildEvents',
         body: {
+          type: 'activities',
           selectedChildren: this.dialogInsertClassActivity.selectedChildren.data,
           childEventId: this.dialogInsertClassActivity.activitySelected._id,
-          selectedSubtype: this.dialogInsertClassActivity.subactivitySelected?.name
+          selectedSubtype: this.dialogInsertClassActivity.subactivitySelected?.name,
+          resume: {
+            title: this.dialogInsertClassActivity.activitySelected.name,
+            description:{
+              subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name
+            },
+            detail: {
+              activityId: this.dialogInsertClassActivity.activitySelected._id,
+              classData: this.dialogInsertClassActivity.classData,
+            }
+          },
         }
       }
       utils.loading.show()
@@ -426,7 +433,6 @@ export default {
       this.getLastActivityFromChildrenOfClasses()
       utils.toast('Atividade inserida com sucesso!')
     },
-    
     getchildrenInClassesList() {
       if (this.filterValue !== '') {
         this.show = false

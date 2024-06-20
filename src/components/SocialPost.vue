@@ -1,6 +1,22 @@
 <template>
   <div class="card">
     <div class="even-card">
+      <div >
+        <ion-item lines="full">
+          <ion-label class="ion-text-nowrap">
+            <h2 v-if="post.type === 'activities'">
+              {{ post.createdBy.name }}
+            </h2>
+            <h2 v-if="post.type === 'feed' || post.type === 'schoolEvent'">
+              Escola Pro-saber
+            </h2>
+            <p>{{ post.createdAt.createdAtInFullLong }}</p>
+          </ion-label>
+          <ion-avatar aria-hidden="true" slot="start" v-if="post.postData.resume.img">
+            <img class="ion-avatar" :src="utils.makeFileUrl(post.postData.resume.img.filename, 'thumbnail') "/>
+          </ion-avatar>
+        </ion-item>
+      </div>
       <img 
         v-if="post.postData.resume.img"
         style="width: 100%; height: auto; object-fit: cover; object-position: center;"
@@ -20,8 +36,11 @@
             <br>
             <strong class="q-mb-sm">{{ post.postData.resume.title }}</strong>
             <br>
-            <ion-note color="medium" class="q-pt-sm ion-text-wrap">
+            <ion-note color="medium" class="q-pt-sm ion-text-wrap" v-if="!post.postData.resume.description.subactivitySelected">
               {{ post.postData.resume.description.length > 50 ? post.postData.resume.description.slice(0, 50) + '...' : post.postData.resume.description }}
+            </ion-note>
+            <ion-note color="medium" class="q-pt-sm ion-text-wrap" v-if="post.postData.resume.description.subactivitySelected">
+              {{ post.postData.resume.description.length > 50 ? post.postData.resume.description.subactivitySelected.slice(0, 50) + '...' : post.postData.resume.description.subactivitySelected }}
             </ion-note>
           </ion-label>
         </ion-item>
@@ -94,6 +113,7 @@ import { useFetch } from '../composables/fetch'
 import {
   IonIcon,
   IonButton, 
+  IonAvatar,
   IonItem, IonLabel, IonBadge, IonNote
 } from '@ionic/vue'
 
@@ -187,7 +207,9 @@ export default {
 
 <style scoped lang="scss">
 
-
+.ion-avatar {
+  width: 100%; 
+}
 
 $bubble-d: 4.5rem; // bubble diameter
 $bubble-r: .5*$bubble-d; // bubble-radius

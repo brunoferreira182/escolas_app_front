@@ -12,7 +12,7 @@
           <ion-title size="large">
             {{ APP_NAME }}
           </ion-title>
-          <ion-icon :icon="filter" slot="end" />            
+          <!-- <ion-icon :icon="filter" slot="end" />             -->
         </ion-toolbar>
       </ion-header>
 
