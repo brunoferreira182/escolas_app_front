@@ -85,8 +85,16 @@
                       <div class="ion-flat-left q-mb-xs text-caption">
                         {{ message.name }}
                       </div>
-                      <div class="q-px-xs">
-                        {{ message.messageText }}
+                      <div class="q-px-xs ion-text-wrap">
+                        <div
+                          @click="abrirURL(extrairURL(message.messageText))" 
+                          v-if="message.messageText.includes('https')"
+                        >
+                          {{ message.messageText }}
+                        </div>
+                        <div v-if="!message.messageText.includes('https')">
+                          {{ message.messageText }}
+                        </div>
                       </div>
                       
                     </div>
@@ -249,6 +257,7 @@ import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
 import AudioRecorder from '../../components/AudioRecorder.vue'
 import PhotoHandler from '../../components/PhotoHandler.vue'
 import { send, attach, mic, play, pause,} from 'ionicons/icons';
+import { Browser } from '@capacitor/browser';
 import utils from '../../../src/composables/utils.js';
 import {
   IonPage, IonContent,
@@ -357,6 +366,19 @@ export default {
     this.startView()
   },
   methods: {
+    extrairURL(texto) {
+      const regex = /(https?:\/\/[^\s]+)/g;
+      const matches = texto.match(regex);
+      if (matches && matches.length > 0) {
+          return matches[0]; // Retorna a primeira URL encontrada na mensagem
+      } else {
+        return ''; // Retorna uma string vazia se nenhuma URL for encontrada
+      }
+    },
+    abrirURL(msgUrl){
+      const url = msgUrl
+      Browser.open({ url: url })
+    },
     insertClassChatReadConfirmation () {
       const opt = {
         route: '/mobile/parents/chat/insertClassChatReadConfirmation',

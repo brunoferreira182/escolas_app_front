@@ -5,9 +5,7 @@
         <ion-title>Atividades</ion-title>
       </ion-toolbar>
     </ion-header>
-
     <ion-content color="light" :fullscreen="true">
-
       <ion-header collapse="condense">
         <ion-toolbar color="light">
           <ion-title size="large">Atividades</ion-title>

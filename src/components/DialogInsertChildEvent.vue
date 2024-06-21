@@ -186,7 +186,6 @@ export default {
       this.selectedActivity.activitySubtypes = null
     },
     handleActivityCheckboxChange(act) {
-      console.log(act, 'act');
       // Desmarca todas as outras atividades
       this.childEventsList.forEach((item) => {
         item.isChecked = item === act;
