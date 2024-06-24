@@ -334,10 +334,21 @@ export default {
       const opt = {
         route: '/mobile/workers/createUserChildAttendance',
         body: {
+          type: 'presence',
           selectedChildren: this.dialogAttendance.selectedChildren.data.map((child) => { return { childId: child.childId } } ),
           childAttendanceType: this.dialogAttendance.optionSelected.option,
           classId: this.dialogAttendance.classData.classId,
-          dateAttendance: this.dateAttendance
+          dateAttendance: this.dateAttendance,
+          resume: {
+            title:  this.dialogAttendance.optionSelected.option,
+            // description:{
+            //   subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name
+            // },
+            detail: {
+              classData: this.dialogAttendance.classData,
+              selectedChildren: this.dialogAttendance.selectedChildren.data
+            }
+          }
         },
       }
       utils.loading.show()

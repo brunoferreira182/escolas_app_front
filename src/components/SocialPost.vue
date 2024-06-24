@@ -4,10 +4,10 @@
       <div >
         <ion-item lines="full">
           <ion-label class="ion-text-nowrap">
-            <h2 v-if="post.type === 'activities'">
+            <h2 v-if="post.type === 'activities' || post.type === 'presence'">
               {{ post.createdBy.name }}
             </h2>
-            <h2 v-if="post.type === 'feed' || post.type === 'schoolEvent'">
+            <h2 v-if="post.type === 'feed' || post.type === 'schoolEvent' ||  post.type === 'post'">
               Escola Pro-saber
             </h2>
             <p>{{ post.createdAt.createdAtInFullLong }}</p>
@@ -23,8 +23,8 @@
         :src="utils.makeFileUrl(post.postData.resume.img.filename)" class="img-style"
         @click="openImageModal(post.postData.resume.img.filename)"
       />
-      <div >
-        <ion-item lines="none">
+      <div>
+        <ion-item lines="none" >
           <ion-label>
             <ion-badge
               color="primary"
@@ -33,19 +33,39 @@
             >
               Evento para toda a escola
             </ion-badge>
+            <strong 
+              v-if="post.postData.detail.selectedChildren && post.postData.detail.selectedChildren.childName" 
+              class="q-mb-sm text-capitalize"
+            >
+              {{ post.postData.detail.selectedChildren.childName }}
+            </strong>
             <br>
-            <strong class="q-mb-sm">{{ post.postData.resume.title }}</strong>
-            <br>
-            <ion-note color="medium" class="q-pt-sm ion-text-wrap" v-if="!post.postData.resume.description.subactivitySelected">
-              {{ post.postData.resume.description.length > 50 ? post.postData.resume.description.slice(0, 50) + '...' : post.postData.resume.description }}
+            <ion-note 
+              color="medium" 
+              class="q-pt-sm ion-text-wrap" 
+              v-if="!post.postData.resume.description"
+            >
+              {{ post.postData.title }}
+              <ion-badge
+                :class="`${post.postData.resume.title === 'present' ? 'bg-green q-my-sm' : 'bg-red q-my-sm'}`"
+              >
+                {{ post.postData.resume.title === 'present' ? 'Presente' : 'Ausente'}}
+              </ion-badge>
             </ion-note>
-            <ion-note color="medium" class="q-pt-sm ion-text-wrap" v-if="post.postData.resume.description.subactivitySelected">
-              {{ post.postData.resume.description.length > 50 ? post.postData.resume.description.subactivitySelected.slice(0, 50) + '...' : post.postData.resume.description.subactivitySelected }}
+            <ion-note 
+              color="medium" 
+              class="q-pt-sm ion-text-wrap" 
+              v-if="post.postData.resume.description && post.postData.resume.description.subactivitySelected"
+            >
+              {{ post.postData.resume.title }} 
+              {{ post.postData.resume.description.length > 50 ? 
+                post.postData.resume.description.subactivitySelected.slice(0, 50) + '...' : post.postData.resume.description.subactivitySelected 
+              }}
             </ion-note>
           </ion-label>
         </ion-item>
         <ion-item lines="none">
-          <ion-label>
+          <ion-label v-if="post.type === 'feed' || post.type === 'schoolEvent' ||  post.type === 'post'">
             <span
               @click.prevent="toggleReaction(post)"
               :class="{ 'heart-animation': post.userReaction }"
@@ -119,6 +139,8 @@ import {
 
 import heart from '/src/assets/icons/heart.svg'
 import heart_filled from '/src/assets/icons/heart_filled.svg'
+import star_filled from '/src/assets/icons/star_filled.svg'
+import star from '/src/assets/icons/star.svg'
 import bubblesound from '/src/assets/sounds/bubblesound.wav'
 import comment from '/src/assets/icons/comment.svg'
 import { Haptics } from '@capacitor/haptics';
@@ -141,6 +163,7 @@ export default {
     
     return {
       utils,
+      // subactivitySelected:
       showModal: false,
       modalImageUrl: null,
     }
@@ -206,7 +229,15 @@ export default {
 
 
 <style scoped lang="scss">
-
+.bg-green{
+  background-color: rgb(51, 138, 51)
+}
+.bg-red{
+  background-color: rgb(138, 51, 51)
+}
+.bg-grey{
+  background-color: #888;
+}
 .ion-avatar {
   width: 100%; 
 }

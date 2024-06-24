@@ -12,7 +12,6 @@
           <ion-title size="large">
             {{ APP_NAME }}
           </ion-title>
-          <!-- <ion-icon :icon="filter" slot="end" />             -->
         </ion-toolbar>
       </ion-header>
 
@@ -77,7 +76,6 @@ import {
   IonTitle,
   IonToolbar,
   IonHeader,
-  IonIcon,
 } from '@ionic/vue';
 import { APP_NAME } from '../../composables/variables';
 import { toastController } from '@ionic/vue';
@@ -86,9 +84,6 @@ import PostLite from '../../components/PostLite.vue'
 import PostSchoolNotes from '../../components/PostSchoolNotes.vue'
 import SocialPost from '../../components/SocialPost.vue'
 import 'swiper/css/pagination';
-import { 
-  filter
-} from 'ionicons/icons';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
@@ -131,7 +126,6 @@ export default {
       await this.getPosts()
       await this.getUserNotes()
       await this.getStories()
-      // await this.getNotesList()
     },
     async getUserNotes() {
       const opt = {
