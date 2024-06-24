@@ -416,6 +416,7 @@ export default {
             detail: {
               activityId: this.dialogInsertClassActivity.activitySelected._id,
               classData: this.dialogInsertClassActivity.classData,
+              selectedChildren: this.dialogInsertClassActivity.selectedChildren.data
             }
           },
         }
