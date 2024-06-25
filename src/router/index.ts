@@ -10,13 +10,11 @@ import waitingPermission from '../views/WaitingPermission.vue';
 import parentsSocial from '../views/parents/Social.vue'
 import parentsChat from '../views/parents/Chat.vue'
 import parentsProfile from '../views/Profile.vue'
-// import parentsMore from '../views/parents/More.vue'
 import userPersonalData from '../views/parents/UserPersonalData.vue'
 import postDetail from '../views/parents/PostDetail.vue'
 import addChild from '../views/parents/AddChild.vue'
 import addParent from '../views/parents/AddParent.vue'
 import childDetail from '../views/parents/ChildDetail.vue'
-// import parentDetail from '../views/parents/ParentDetail.vue'
 import editProfile from '../views/parents/EditProfile.vue'
 import solicitationsDetail from '../views/parents/SolicitationsDetail.vue'
 import tabsLayoutWorkers from '../layouts/TabsLayoutWorkers.vue'
@@ -25,11 +23,8 @@ import workerChat from '../views/workers/Chat.vue'
 import workerAttendance from '../views/workers/Attendance.vue'
 import workerProfile from '../views/Profile.vue'
 import chatDetail from '../views/parents/ChatDetail.vue'
-
 import noteSenderToUser from '../views/workers/NoteSenderToUser.vue'
-
 import chatDetailWorker from '../views/parents/ChatDetail.vue'
-
 import postReactions from '../views/parents/PostReactions.vue'
 import chatInfo from '../views/ChatInfo.vue'
 import createEvent from '../views/workers/CreateEvent.vue'
@@ -47,9 +42,11 @@ import ChildrenAttendanceCalendar from '../views/ChildrenAttendanceCalendar.vue'
 import ParentFiles from  '../views/parents/ParentFiles.vue'
 import MealMenu from '../views/MealMenu.vue';
 import ForgotPassword from '../views/ForgotPassword.vue';
-
 import More from '../views/More.vue'
-
+import ParentsSolicitationsHome from '../views/parents/SolicitationsHome.vue'
+import NewParentSolicitation from '../views/parents/NewParentSolicitation.vue'
+import SolicitationChatParent from '../views/parents/SolicitationChat.vue'
+import SolicitationChatWorker from '../views/workers/SolicitationChat.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -192,6 +189,7 @@ const routes: Array<RouteRecordRaw> = [
         children: [
           { path: '/', redirect: '/tabsParents/social'},
           { path: '/tabsParents/social', component: parentsSocial },
+          { path: '/tabsParents/solicitationsHome', component: ParentsSolicitationsHome },
           { path: '/tabsParents/chat', component: parentsChat },
           { path: '/tabsParents/profile', component: parentsProfile },
           { path: '/tabsParents/more', component: More },
@@ -216,6 +214,9 @@ const routes: Array<RouteRecordRaw> = [
       { path: '/forgotPassword', component: ForgotPassword },
       { path: '/noteSenderToUser', component: noteSenderToUser },
       { path: '/userNotesList', component: userNotesList },
+      { path: '/newParentSolicitation', component: NewParentSolicitation },
+      { path: '/solicitationChatParent', component: SolicitationChatParent },
+      { path: '/solicitationChatWorker', component: SolicitationChatWorker },
     ]
   },
 ]
