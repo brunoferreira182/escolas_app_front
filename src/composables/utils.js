@@ -2,8 +2,6 @@ import { MODE_MASTER_SERVER, MODE_AUTH_SERVER, setIuguId, setIuguTestMode } from
 import CryptoJS from 'crypto-js';
 import { toastController, loadingController } from '@ionic/vue';
 import { useFetch } from './fetch'
-// import { Geolocation } from '@capacitor/geolocation';
-// let coordinates = null
 import { calculateMasterServerAttachmentsRoute } from "./masterServerRoutes";
 import router from '../router/index.ts'
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
@@ -29,6 +27,7 @@ const useUtils = {
     })
   },
   async writeFile (data, pathAndName) {
+    console.log(data, 'data aqui')
     let writeFile
     let error = false
     try {
@@ -61,13 +60,21 @@ const useUtils = {
   async openFile (file) {
     try {
       await FileOpener.openFile({
-        path: file.uri,
+        path: file.path,
       })
     } catch (e) {
       console.log(e, 'erro abrir arquivo')
     }
   },
-  async downloadFile (obj) {
+  makeFileName (originalname) {
+    const originalnameSplit = originalname.split('.')
+    const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
+    let nameToDownload
+    if (originalnameSplit.length === 1) nameToDownload = obj.originalname + '_' + currentDate
+    else nameToDownload = originalnameSplit[0] + '_' + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
+    return nameToDownload
+  },
+  async downloadFile2 (obj) {
     const perm = await this.getFilesystemAccess()
     const opt = {
       route: '/download/' + obj.filename,
@@ -76,11 +83,7 @@ const useUtils = {
     const httpResponse = await useFetch(opt)
     const resBlob = new Blob([httpResponse])
     // console.log("🚀 ~ downloadFile ~ httpResponse:", httpResponse)
-    const originalnameSplit = obj.originalname.split('.')
-    const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
-    let nameToDownload
-    if (originalnameSplit.length === 1) nameToDownload = obj.originalname + '_' + currentDate
-    else nameToDownload = originalnameSplit[0] + '_' + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
+    let nameToDownload = this.makeFileName(obj.originalname)
     const writeFile = await this.writeFile2(resBlob, nameToDownload)
     if (writeFile.error) {
       this.toast('Ocorreu um erro ao baixar o arquivo')
@@ -89,6 +92,21 @@ const useUtils = {
     this.toast('Arquivo baixado na pasta Documentos')
     // this.openFile(writeFile)
     return
+  },
+  async downloadFile (obj) {
+    const filename = this.makeFileName(obj.originalname)
+    const opt = {
+      url: `${this.attachmentsAddress()}${obj.filename}`,
+      method: 'GET',
+      path: filename
+    }
+    const dl = await Filesystem.downloadFile(opt)
+    if (dl.path) {
+      this.toast('Arquivo baixado na pasta Documentos')
+      this.openFile(dl)
+    } else {
+      this.toast('Ocorreu um erro ao baixar o arquivo')
+    }
   },
   async verifyUserPermissions (data) {
     if (data.status === 'waitingApproval') {
