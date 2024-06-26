@@ -39,6 +39,7 @@ const modules = [Zoom];
 const closeModal = () => {
   emits('closeModal');
 };
+
 </script>
 
 <style scoped lang="scss">
