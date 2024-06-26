@@ -199,35 +199,6 @@
 <script setup>
 import {
   IonPage, IonAlert,
-  IonButton,
-  IonBadge,
-  IonHeader,
-  IonToolbar,
-  IonItem,
-  IonButtons,
-  IonTitle,
-  IonSearchbar,
-  IonLabel,
-  IonContent,
-  IonSelect, 
-  IonSelectOption,
-  IonTextarea,
-  IonModal,
-  IonList,
-  IonChip ,
-  IonCol,
-  IonCheckbox,
-  IonImg,
-  IonRow,
-  IonAvatar,
-  IonAccordion, IonAccordionGroup,
-  IonNote,
-  IonIcon,
-  IonDatetime,
-  IonGrid,
-  IonDatetimeButton,
-  IonText,
-  IonItemSliding, IonItemOption, IonItemOptions
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
@@ -341,9 +312,9 @@ export default {
           dateAttendance: this.dateAttendance,
           resume: {
             title:  this.dialogAttendance.optionSelected.option,
-            // description:{
-            //   subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name
-            // },
+            description:{
+              subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name
+            },
             detail: {
               classData: this.dialogAttendance.classData,
               selectedChildren: this.dialogAttendance.selectedChildren.data

@@ -4,10 +4,15 @@
       <div >
         <ion-item lines="full">
           <ion-label class="ion-text-nowrap">
-            <h2 v-if="post.type === 'activities' || post.type === 'presence'">
+            <h2  v-if="post.type === 'activities' || post.type === 'presence'">
               {{ post.createdBy.name }}
             </h2>
-            <h2 v-if="post.type === 'feed' || post.type === 'schoolEvent' ||  post.type === 'post'">
+            <h2 
+              class="text-capitalize" v-if="post.type === 'feed' || 
+              post.type === 'schoolEvent' ||  
+              post.type === 'post' || 
+              post.type === 'Boleto'"
+            >
               Escola Pro-saber
             </h2>
             <p>{{ post.createdAt.createdAtInFullLong }}</p>
@@ -43,7 +48,7 @@
             <ion-note 
               color="medium" 
               class="q-pt-sm ion-text-wrap" 
-              v-if="!post.postData.resume.description"
+              v-if="!post.postData.resume.description && post.type === 'presence'"
             >
               {{ post.postData.title }}
               <ion-badge
@@ -61,6 +66,13 @@
               {{ post.postData.resume.description.length > 50 ? 
                 post.postData.resume.description.subactivitySelected.slice(0, 50) + '...' : post.postData.resume.description.subactivitySelected 
               }}
+            </ion-note>
+            <ion-note 
+              color="medium" 
+              class="q-pt-sm ion-text-wrap" 
+              v-if="post.type === 'Boleto'"
+            >
+              CHEGOU TEU BOLETOOOOO
             </ion-note>
           </ion-label>
         </ion-item>
@@ -116,14 +128,14 @@
 
       </div>
     </div>
+    <ModalPinchZoomImage
+      :modalImageUrl="modalImageUrl"
+      :showModal="showModal"
+      @closeModal="showModal = false"
+    />
   </div>
   
 
-  <ModalPinchZoomImage
-    :modalImageUrl="modalImageUrl"
-    :showModal="showModal"
-    @closeModal="showModal = false"
-  />
 </template>
 
 <script setup>
@@ -163,7 +175,6 @@ export default {
     
     return {
       utils,
-      // subactivitySelected:
       showModal: false,
       modalImageUrl: null,
     }
