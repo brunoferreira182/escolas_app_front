@@ -8,7 +8,7 @@ import { calculateMasterServerAttachmentsRoute } from "./masterServerRoutes";
 import router from '../router/index.ts'
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { FileOpener } from '@capawesome-team/capacitor-file-opener';
-
+import write_blob from "capacitor-blob-writer";
 
 let loadingVar = []
 let updateUserInfoOnNextRoute = false
@@ -28,26 +28,13 @@ const useUtils = {
       return resolve(false)
     })
   },
-  async downloadFile (obj) {
-    const perm = await this.getFilesystemAccess()
-    const opt = {
-      route: '/download/' + obj.filename,
-      method: 'GET'
-    }
-    const httpResponse = await useFetch(opt)
-    console.log("🚀 ~ downloadFile ~ httpResponse:", httpResponse)
-    const originalnameSplit = obj.originalname.split('.')
-    const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
-    let nameToDownload
-    if (originalnameSplit.length === 1) nameToDownload = obj.originalname + '_' + currentDate
-    else nameToDownload = originalnameSplit[0] + '_' + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
-
+  async writeFile (data, pathAndName) {
     let writeFile
     let error = false
     try {
       writeFile = await Filesystem.writeFile({
-        path: nameToDownload,
-        data: httpResponse,
+        path: pathAndName,
+        data,
         directory: Directory.Documents,
         encoding: Encoding.UTF8,
       })
@@ -55,14 +42,52 @@ const useUtils = {
       console.log(e, 'erro criar arquivo')
       error = true
     }
-    if (!error) this.toast('Arquivo baixado na pasta Documentos')
-    else {
+    if (error) return { error: true }
+    else return writeFile
+  },
+  async writeFile2 (data, pathAndName) {
+    try {
+      return write_blob({
+        path: pathAndName,
+        directory: Directory.Documents,
+        blob: data,
+        fast_mode: true
+      })
+    } catch (e) {
+      this.toast(e)
+      return { error: true }
+    }
+  },
+  async openFile (file) {
+    try {
+      await FileOpener.openFile({
+        path: file.uri,
+      })
+    } catch (e) {
+      console.log(e, 'erro abrir arquivo')
+    }
+  },
+  async downloadFile (obj) {
+    const perm = await this.getFilesystemAccess()
+    const opt = {
+      route: '/download/' + obj.filename,
+      method: 'GET'
+    }
+    const httpResponse = await useFetch(opt)
+    const resBlob = new Blob([httpResponse])
+    // console.log("🚀 ~ downloadFile ~ httpResponse:", httpResponse)
+    const originalnameSplit = obj.originalname.split('.')
+    const currentDate = new Date().toLocaleString().replace(/[,:\s\/]/g, '-')
+    let nameToDownload
+    if (originalnameSplit.length === 1) nameToDownload = obj.originalname + '_' + currentDate
+    else nameToDownload = originalnameSplit[0] + '_' + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
+    const writeFile = await this.writeFile2(resBlob, nameToDownload)
+    if (writeFile.error) {
       this.toast('Ocorreu um erro ao baixar o arquivo')
       return
     }
-    await FileOpener.openFile({
-      path: writeFile.uri,
-    })
+    this.toast('Arquivo baixado na pasta Documentos')
+    // this.openFile(writeFile)
     return
   },
   async verifyUserPermissions (data) {

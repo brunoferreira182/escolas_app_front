@@ -30,7 +30,16 @@
                     <div
                       v-if="message.messageFile && message.messageFile.filename"
                       class="ion-flat-left q-mb-xs text-caption"
-                    >{{ message.name }}</div>
+                    >
+                      {{ message.name }}
+                      <span
+                        class="ion-float-right text-caption q-ml-sm"
+                        @click="clkAttachment(message)"
+                      >
+                        Baixar
+                      </span>
+                    </div>
+                    
                     <ion-card v-if="message.answerMessage" style="margin: 0; padding: 3px;box-shadow:none" @click="clkAnswer(message)">
                       <div>{{ message.answerMessage.createdBy.name }}:</div>
                       <div v-if="message.answerMessage.message">{{ message.answerMessage.message }}</div>
@@ -43,7 +52,7 @@
                       <img
                         v-if="message.messageFile.mimetype && message.messageFile.mimetype.includes('image')" style="border-radius:0.5rem;"
                         :src="utils.attachmentsAddress() + message.messageFile.filename"
-                        @click="openImageModal(message.messageFile.filename)"
+                        @click="openImageModal(message)"
                       >
                       <span v-else style="display:flex;align-items: center;" @click="clkAttachment(message)">
                         <ion-icon size="small" :icon="attach"></ion-icon>
@@ -155,7 +164,7 @@
 
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
 import PhotoHandler from '../components/PhotoHandler.vue'
-import { send, attach, mic, play, pause,} from 'ionicons/icons';
+import { send, attach, mic, play, pause, download} from 'ionicons/icons';
 import { Browser } from '@capacitor/browser';
 import utils from '../../src/composables/utils.js';
 import {
@@ -178,8 +187,8 @@ import { ref } from 'vue';
 const showModal = ref(false);
 const modalImageUrl = ref(null);
 
-const openImageModal = (imageFilename) => {
-  modalImageUrl.value = utils.makeFileUrl(imageFilename);
+const openImageModal = (message) => {
+  modalImageUrl.value = utils.makeFileUrl(message.messageFile.filename);
   showModal.value = true;
 };
 </script>

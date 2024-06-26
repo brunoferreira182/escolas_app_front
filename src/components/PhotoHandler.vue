@@ -25,20 +25,22 @@
           :auto-grow="true"
         ></ion-textarea>
       </div>
-      <ion-button
-        expand="block"
-        @click="sendPhoto"
-        class="q-mt-lg q-mb-md"
-      >
-        Continuar
-      </ion-button>
-      <ion-button
-        expand="block"
-        @click="clkBack"
-        fill="outline"
-      >
-        Voltar
-      </ion-button>
+      <div class="ion-padding">
+        <ion-button
+          expand="block"
+          @click="sendPhoto"
+          class="q-mb-md"
+        >
+          Continuar
+        </ion-button>
+        <ion-button
+          expand="block"
+          @click="clkBack"
+          fill="outline"
+        >
+          Voltar
+        </ion-button>
+      </div>
     </div>
     <img hidden id="imgToReference" :src="imgType === 'camera' ? img.webviewPath : img"/>
   </ion-modal>

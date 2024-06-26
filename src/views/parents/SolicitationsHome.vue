@@ -51,6 +51,28 @@
         <div v-if="!closedSolicitations || closedSolicitations.length === 0" class="ion-padding">
           Não há atendimentos no histórico
         </div>
+        <div v-else>
+          <ion-list :inset="true">
+            <ion-item
+              :button="true"
+              detail="false"
+              v-for="solicitation in closedSolicitations"
+              :key="solicitation.solicitationId"
+              @click="clkSolicitation(solicitation)"
+            >
+              <ion-label>
+                <strong>{{ solicitation.departmentName }}</strong>
+                <ion-text v-if="solicitation.childName">{{ solicitation.childName }}</ion-text><br v-if="solicitation.childName"/>
+                <ion-note color="medium" class="ion-text-wrap">
+                  {{ solicitation.description }}
+                </ion-note>
+              </ion-label>
+              <div class="metadata-end-wrapper" slot="end">
+                <ion-note color="medium">{{ solicitation.createdAt }}</ion-note>
+              </div>
+            </ion-item>
+          </ion-list>
+        </div>
       </div>
 
       <ion-fab
@@ -110,6 +132,7 @@ export default {
   methods: {
     startView () {
       this.getOpenSolicitations()
+      this.getClosedSolicitations()
     },
     clkSolicitation (sol) {
       this.$router.push(`/solicitationChatParent?solicitationId=${sol.solicitationId}`)
@@ -128,6 +151,18 @@ export default {
       const r = await useFetch(opt)
       if (r.error) return
       this.openSolicitations = r.data
+    },
+    async getClosedSolicitations() {
+      const opt = {
+        route: '/mobile/solicitations/getSolicitationsByStatus',
+        body: {
+          isActive: '1',
+          status: ['closed']
+        }
+      }
+      const r = await useFetch(opt)
+      if (r.error) return
+      this.closedSolicitations = r.data
     }
   }
 };
