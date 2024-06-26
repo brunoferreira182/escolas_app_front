@@ -9,7 +9,7 @@ import waitingAproval from '../views/WaitingAproval.vue';
 import waitingPermission from '../views/WaitingPermission.vue';
 import parentsSocial from '../views/parents/Social.vue'
 import parentsChat from '../views/parents/Chat.vue'
-import parentsProfile from '../views/Profile.vue'
+// import parentProfile from '../views/Profile.vue'
 import userPersonalData from '../views/parents/UserPersonalData.vue'
 import postDetail from '../views/parents/PostDetail.vue'
 import addChild from '../views/parents/AddChild.vue'
@@ -21,7 +21,8 @@ import tabsLayoutWorkers from '../layouts/TabsLayoutWorkers.vue'
 import workerClass from '../views/workers/Class.vue'
 import workerChat from '../views/workers/Chat.vue'
 import workerAttendance from '../views/workers/Attendance.vue'
-import workerProfile from '../views/Profile.vue'
+// import workerProfile from '../views/Profile.vue'
+import profile from '../views/Profile.vue'
 import chatDetail from '../views/parents/ChatDetail.vue'
 import noteSenderToUser from '../views/workers/NoteSenderToUser.vue'
 import chatDetailWorker from '../views/parents/ChatDetail.vue'
@@ -47,6 +48,7 @@ import ParentsSolicitationsHome from '../views/parents/SolicitationsHome.vue'
 import NewParentSolicitation from '../views/parents/NewParentSolicitation.vue'
 import SolicitationChatParent from '../views/parents/SolicitationChat.vue'
 import SolicitationChatWorker from '../views/workers/SolicitationChat.vue'
+import ChildrenMural from '../views/parents/ChildrenMural.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -178,7 +180,7 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsWorkers/attendance', component: workerAttendance},
           { path: '/tabsWorkers/class', component: workerClass},
           { path: '/tabsWorkers/chat', component: workerChat},
-          { path: '/tabsWorkers/profile', component: workerProfile},
+          // { path: '/tabsWorkers/profile', component: workerProfile},
           { path: '/tabsWorkers/more', component: More}
         ]
       },
@@ -191,7 +193,8 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsParents/social', component: parentsSocial },
           { path: '/tabsParents/solicitationsHome', component: ParentsSolicitationsHome },
           { path: '/tabsParents/chat', component: parentsChat },
-          { path: '/tabsParents/profile', component: parentsProfile },
+          { path: '/tabsParents/childrenMural', component: ChildrenMural },
+          // { path: '/tabsParents/profile', component: parentsProfile },
           { path: '/tabsParents/more', component: More },
           {
             path: '/childrenAttendanceCalendar',
@@ -217,6 +220,7 @@ const routes: Array<RouteRecordRaw> = [
       { path: '/newParentSolicitation', component: NewParentSolicitation },
       { path: '/solicitationChatParent', component: SolicitationChatParent },
       { path: '/solicitationChatWorker', component: SolicitationChatWorker },
+      { path: '/profile', component: profile },
     ]
   },
 ]

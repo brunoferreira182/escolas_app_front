@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Outras opções</ion-title>
+        <ion-title>Mural</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content color="light" :fullscreen="true">
@@ -70,11 +70,11 @@ import {
 
 </script>
 <script>
-import { useFetch } from '../composables/fetch'
-import utils from '../composables/utils'
+import { useFetch } from '../../composables/fetch'
+import utils from '../../composables/utils'
 
 export default {
-  name: 'More',
+  name: 'ChildrenMural',
   data() {
     return {
       dialogDeleteAccount: {

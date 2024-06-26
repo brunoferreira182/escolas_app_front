@@ -53,7 +53,7 @@ export default {
         { name: "attendance", icon: calendar, to: '/tabsWorkers/attendance', label: "Presença" },
         { name: "turmas", icon: accessibility, to: '/tabsWorkers/class', label: "Atividades" },
         { name: "messenger", icon: chatboxOutline, to: '/tabsWorkers/chat', label: "Salas" },
-        { name: "profile", icon: personCircleOutline, to: '/tabsWorkers/profile', label: "Perfil" },
+        // { name: "profile", icon: personCircleOutline, to: '/tabsWorkers/profile', label: "Perfil" },
         { name: "more", icon: ellipsisHorizontalOutline, to: '/tabsWorkers/more', label: "Mais" },
       ],
       userProfile: [],
