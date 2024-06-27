@@ -11,7 +11,8 @@
               class="text-capitalize" v-if="post.type === 'feed' || 
               post.type === 'schoolEvent' ||  
               post.type === 'post' || 
-              post.type === 'Boleto'"
+              post.type === 'Boleto' ||
+              post.type === 'mealMenu'"
             >
               Escola Pro-saber
             </h2>
@@ -72,7 +73,7 @@
               class="q-pt-sm ion-text-wrap" 
               v-if="post.type === 'Boleto'"
             >
-              CHEGOU TEU BOLETOOOOO
+              Boleto
             </ion-note>
           </ion-label>
         </ion-item>
@@ -110,6 +111,12 @@
           </ion-label>
           <ion-label slot="end">
             <ion-button 
+              v-if="post.type === 'Boleto'"
+              @click="utils.downloadFile(post.postData.resume.img)"
+            >
+              Baixar
+            </ion-button>
+            <ion-button 
               v-if="post.routeDestination !== '/postDetail'"
               @click="$router.push(post.routeDestination )"
               fill="clear"
@@ -117,7 +124,7 @@
               Ler mais
             </ion-button>
             <ion-button 
-              v-else-if="post.routeDestination === '/postDetail'"
+              v-else-if="post.routeDestination === '/postDetail' && post.type !== 'Boleto'"
               @click="$router.push('/postDetail?postId=' + post._id)"
               fill="clear"
             >
