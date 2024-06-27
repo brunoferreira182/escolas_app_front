@@ -31,7 +31,6 @@
         <ion-item 
           v-for="c in classData"
           :key="c"
-          class="q-ma-sm"
           @click="clkOpenModalAttendance(c)"
           :button="true"
         >
@@ -59,7 +58,6 @@
         >
           <ion-item 
             :button="true"
-            class="q-ma-sm"
             detail="false"
           >
             <ion-avatar
@@ -333,9 +331,9 @@ export default {
           dateAttendance: this.dateAttendance,
           resume: {
             title:  this.dialogAttendance.optionSelected.option,
-            description:{
-              subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name
-            },
+            // description:{
+            //   subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name
+            // },
             detail: {
               classData: this.dialogAttendance.classData,
               selectedChildren: this.dialogAttendance.selectedChildren.data

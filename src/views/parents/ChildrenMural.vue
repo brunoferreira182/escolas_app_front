@@ -68,8 +68,8 @@ export default {
     startView(){
       this.getParentChildren()
     },
-    clkChild () {
-      this.$router.push('/childMuralDetail')
+    clkChild (child) {
+      this.$router.push('/childMuralDetail?childId=' + child.childData.childId)
     },
     async getParentChildren () {
       const opt = {

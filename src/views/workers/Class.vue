@@ -37,7 +37,6 @@
           v-for="c in classesData"
           :key="c"
           @click="clkOpenDialogClassEvent(c)"
-          class="q-ma-sm"
           :button="true"
         >
           <ion-avatar aria-hidden="true" slot="start" >
@@ -87,6 +86,7 @@
       <ion-modal 
         :is-open="dialogInsertClassActivity.open" 
         :presenting-element="presentingElement"
+        @onDidDismiss="dialogInsertClassActivity.open = false"
       >
         <ion-header>
           <ion-toolbar>
@@ -284,11 +284,12 @@ export default {
     }
   },
   methods: {
-    clkOpenDialogClassEvent(c){
+    clkOpenDialogClassEvent (c) {
       this.dialogInsertClassActivity.classData = c
       this.getChildEvents(this.dialogInsertClassActivity.classData.classId)
       this.dialogInsertClassActivity.childrenFromClass = this.childrenInClassesList.filter((child) => child.classId === c.classId)
       this.dialogInsertClassActivity.open = true
+      console.log('chegou aqui')
     },
     clkActivity (act) {
       this.dialogInsertClassActivity.activitySelected = act

@@ -93,6 +93,9 @@ export default {
   watch: {
     $route(to, from) {
       this.currentRoute = this.$route.path
+      if (to.path === '/tabsLayout/social') {
+        this.verifyShowSwitchButton()
+      }
     }
   },
   mounted () {
@@ -106,16 +109,22 @@ export default {
       this.selectedTab = tab.name
       this.$router.push(tab.to)
     },
+    verifyShowSwitchButton () {
+      if (this.currentRoute.includes('social') && this.userPermissions.permissions.includes('IS_WORKER')) {
+        this.showSwitchButton = true
+      } else {
+        this.showSwitchButton = false
+      }
+    },
     verifyView () {
       const userPermissions = useUserPermissions()
       this.userPermissions = userPermissions
       if (userPermissions.permissions.includes('IS_WORKER')) {
-        this.showSwitchButton = true
         this.tabs = this.tabsWorkers
       } else {
         this.tabs = this.tabsParents
-        this.showSwitchButton = false
       }
+      this.verifyShowSwitchButton()
     },
     switchViews () {
       if (this.tabs === this.tabsParents) {
