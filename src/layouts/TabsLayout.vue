@@ -45,6 +45,7 @@ import {
   IonFab, IonFabButton,
   IonModal, IonContent,
   IonImg, IonAvatar, IonAlert,
+  toastController
 } from '@ionic/vue';
 import { 
   idCardOutline,
@@ -129,12 +130,28 @@ export default {
     switchViews () {
       if (this.tabs === this.tabsParents) {
         this.tabs = this.tabsWorkers
-        utils.toast('Você está na visualização de funcionário')
+        this.customToast('Você está na visualização de funcionário')
       } else {
         this.tabs = this.tabsParents
-        utils.toast('Você está na visualização de familiar')
+        this.customToast('Você está na visualização de familiar')
       }
-    }
+    },
+    async customToast (message) {
+      const t = await toastController.create({
+        message,
+        duration: 2500,
+        color: 'primary',
+        position: 'top',
+        buttons: [
+          {
+            text: 'Fechar',
+            role: 'cancel',
+            handler: () => { this.handlerMessage = 'Dismiss clicked'; }
+          }
+        ]
+      })
+      await t.present()
+    },
   }
 };
 </script>
