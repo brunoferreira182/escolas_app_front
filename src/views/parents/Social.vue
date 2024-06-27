@@ -188,6 +188,7 @@ export default {
       if (!refreshPage) {
         if(ret.data.list) {
           this.posts = ret.data.list
+          console.log("🚀 ~ getPosts ~ ret.data.list:", ret.data.list)
         }
       }
         else this.posts.push(...ret.data.list)

@@ -74,7 +74,7 @@ import {
   // Photo 
 } from '@capacitor/camera';
 
-const props = defineProps(['square', 'allFiles', 'start', 'noCrop', 'acceptImageCaption'])
+const props = defineProps(['square', 'multiple', 'allFiles', 'start', 'noCrop', 'acceptImageCaption'])
 const emits = defineEmits([
   'captured',
   'cancel'
@@ -146,6 +146,7 @@ async function showBottomSheet () {
     imageCaption = ''
     emits('cancel')
   } else {
+    console.log(res,' REDSDSA')
     pickFile(res.data.action)
   }
 }
@@ -175,21 +176,22 @@ async function openCamera () {
 }
 
 async function pickFile (type) {
+  console.log(props.multiple, 'props.multiple')
   let types = ['image/*']
   if (type === 'documents') types = ['application/pdf', 'video/quicktime']
   let res
   try {
     if (type === 'gallery' && !isPlatform('desktop')) {
       console.log('media',getPlatforms())
-      res = await FilePicker.pickMedia({ types, multiple: false });
+      res = await FilePicker.pickMedia({ types, multiple: props.multiple });
     } else {
-      res = await FilePicker.pickFiles({ types, multiple: false });
+      res = await FilePicker.pickFiles({ types, multiple: props.multiple });
     }
   } catch (e) {
     emits('cancel')
     return
   }
-  const file = res.files[0];
+  const file = props.multiple ? res.files : res.files[0];
   console.log("🚀 ~ pickFile ~ file:", file)
   
   if (file.path) {
@@ -200,11 +202,12 @@ async function pickFile (type) {
 
   if (type === 'gallery' && !props.noCrop) {
     // img.value é base64
-    
     img.value = await convertBlobToBase64(file.blob)
+    console.log('typeof', typeof img.value)
     step.value = 'crop'
     imgType.value = 'gallery'
   } else if (type === 'documents' || (type === 'gallery' && props.noCrop)) {
+    console.log('entrou no type === cascac', file)
     utils.loading.hide()
     emits('captured', file, file.blob, file.name, imageCaption, '', type)
   }
@@ -241,6 +244,7 @@ function clkBack () {
 
 
 const convertBlobToBase64 = (blob) => new Promise((resolve, reject) => {
+  console.log(blob, 'blobplboblbolb')
   const reader = new FileReader();
   reader.onerror = reject;
   reader.onload = () => {

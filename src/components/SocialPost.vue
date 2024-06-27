@@ -2,13 +2,17 @@
   <div class="card">
     <div class="even-card">
       <div >
-        <ion-item lines="full">
+        <ion-item lines="none">
           <ion-label class="ion-text-nowrap">
-            <h2  v-if="post.type === 'activities' || post.type === 'presence'">
-              {{ post.createdBy.name }}
-            </h2>
+            <div v-if="post.type === 'activities' || post.type === 'presence'">
+              <h2>
+                {{ post.createdBy.name }}
+              </h2>
+              <p>{{ post.postData.detail.classData.functionName }}</p>
+            </div>
             <h2 
-              class="text-capitalize" v-if="post.type === 'feed' || 
+              class="text-capitalize" 
+              v-if="post.type === 'feed' || 
               post.type === 'schoolEvent' ||  
               post.type === 'post' || 
               post.type === 'Boleto' ||
