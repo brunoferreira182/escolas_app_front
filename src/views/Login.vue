@@ -110,7 +110,15 @@ export default {
       utils.registerLogin(data, key)
       utils.loading.hide()
       pushService.initPush()
-      utils.verifyUserPermissions(data)
+      const verifyPerm = utils.verifyUserPermissions(data)
+      // if (verifyPerm.status === 'waitingPermission') {
+      //   this.$router.push("/waitingPermission")
+      //   return
+      // } else if (verifyPerm.status === 'waitingApproval') {
+      //   this.$router.push("/waitingApproval")
+      //   return
+      // }
+      // this.$router.push("/tabsLayout/social")
     },
     goToRegister() {
       this.$router.push('/register')

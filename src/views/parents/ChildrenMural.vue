@@ -8,52 +8,26 @@
     <ion-content color="light" :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar color="light">
-          <ion-title size="large">Outras opções</ion-title>
+          <ion-title size="large">Mural</ion-title>
+          
         </ion-toolbar>
+        <ion-note class="q-mx-md">Selecione a criança para ver o mural dela</ion-note>
       </ion-header>
-      <ion-list :inset="true">
-        <ion-item :button="true" @click="$router.push('/profile')">
-          <ion-label>Meu perfil</ion-label>
-        </ion-item>
-        <ion-item :button="true" @click="$router.push('/calendar')">
-          <ion-label>Agenda</ion-label>
-        </ion-item>
-
-        <ion-item
-          :button="true"
-          @click="$router.push('/parentFiles')"
-        >
-          <ion-label>Arquivos</ion-label>
-        </ion-item>
-        
-        <ion-item :button="true" @click="$router.push('/messenger')">
-          <ion-label>Mensagens</ion-label>
-        </ion-item>
-        <ion-item :button="true" @click="$router.push('/mealMenu')">
-          <ion-label>Cardápio Mensal</ion-label>
-        </ion-item>
-        <ion-item :button="true" @click="$router.push('/notesList')">
-          <ion-label>Recados Gerais</ion-label>
-        </ion-item>
-        <ion-item :button="true" @click="$router.push('/userNotesList')">
-          <ion-label>Meus Recados</ion-label>
-          <ion-note slot="end">{{ userNotes }}</ion-note>
-        </ion-item>
-        <ion-item :button="true" @click="clkExitApp">
-          <ion-label>Sair do aplicativo</ion-label>
-        </ion-item>
-        <ion-item :button="true" @click="clkDeleteAccount">
-          <ion-label>Excluir conta</ion-label>
-        </ion-item>
-      </ion-list>
-      <ion-alert
-        :is-open="dialogDeleteAccount.open"
-        header="Confirma a exclusão da conta?"
-        message="Esta ação não pode ser desfeita."
-        :buttons="dialogDeleteAccount.buttons"
-        @didDismiss="dialogDeleteAccount.open = false"
-      ></ion-alert>
-
+      <div v-if="children" class="ion-text-center q-mt-xl">
+        <ion-row>
+          <ion-col
+            v-for="child in children"
+            :key="child.childData.childId"
+            @click="clkChild(child)"
+          >
+            <img
+              :src="utils.makeFileUrl(child.childData.childImage)"
+              :style="`border-radius: 50%; height: ${widthChildImage}px; width: ${widthChildImage}px; `"
+            /><br/>
+            <ion-text>{{ child.childData.childName.split(' ')[0] }}</ion-text>
+          </ion-col>
+        </ion-row>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -66,6 +40,8 @@ import {
   IonTitle,
   IonToolbar,
   IonHeader,
+  IonText,
+  IonRow, IonCol
 } from '@ionic/vue';
 
 </script>
@@ -77,85 +53,31 @@ export default {
   name: 'ChildrenMural',
   data() {
     return {
-      dialogDeleteAccount: {
-        open: false,
-        buttons: []
-      },
-      userNotes: 0
+      children: null,
+      widthChildImage: null
     };
+  },
+  beforeMount () {
+    this.widthChildImage = window.innerWidth / 2.5
   },
   mounted () {
     utils.loading.clear()
     this.startView()
   },
-  watch: {
-    $route(to, from) {
-      if (this.$route.path === '/tabsWorkers/more' || this.$route.path === '/tabsParents/more') {
-        console.log('entrou no primeiro if')
-        this.startView()
-      }
-    }
-  },
   methods: {
     startView(){
-      this.getUserNotesList()
-      this.dialogDeleteAccount.buttons = [
-        {
-          text: 'Confirma',
-          handler: () => {
-            this.confirmDeleteAccount()
-          }
-        },
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        }
-      ]
+      this.getParentChildren()
     },
-    dismissModal(){
-      this.openModal = false
-      this.todayMenuData = {}
+    clkChild () {
+      this.$router.push('/childMuralDetail')
     },
-    async getUserNotesList() {
+    async getParentChildren () {
       const opt = {
-        route: '/mobile/parents/profile/getUserNotesList',
-        body: {
-          onlyNotRead: true,
-          doNotUpdate: true
-        }
+        route: '/mobile/parents/profile/getParentChildren'
       }
-        const response = await useFetch(opt)
-        if (response.data.count.length > 0 && response.data.count) {
-          this.userNotes = response.data.count[0].count;
-      } else{this.userNotes = 0}
-    },
-    clkExitApp () {
-      const opt = {
-        route: '/disconnectFromAccount',
-        body: {
-          fbToken: localStorage.getItem('fbToken')
-        }
-      }
-      useFetch(opt).then(() => {
-        this.$router.push('/login')
-      })
-    },
-    clkDeleteAccount () {
-      this.dialogDeleteAccount.open = true
-    },
-    confirmDeleteAccount () {
-      const opt = {
-        route: '/mobile/auth/deleteAccount'
-      }
-      utils.loading.show()
-      useFetch(opt).then((r) => {
-        utils.loading.hide()
-        if (r.error) {
-          utils.toast('Não foi possível excluir a conta, tente novamente mais tarde.')
-          return
-        }
-        this.$router.push('/login')
-      })
+      const r = await useFetch(opt)
+      if (r.error) return
+      this.children = r.data
     }
   }
 }

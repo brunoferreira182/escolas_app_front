@@ -49,6 +49,9 @@ import NewParentSolicitation from '../views/parents/NewParentSolicitation.vue'
 import SolicitationChatParent from '../views/parents/SolicitationChat.vue'
 import SolicitationChatWorker from '../views/workers/SolicitationChat.vue'
 import ChildrenMural from '../views/parents/ChildrenMural.vue'
+import ChildMuralDetail from '../views/parents/ChildMuralDetail.vue'
+
+import TabsLayout from '../layouts/TabsLayout.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -196,11 +199,11 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsParents/childrenMural', component: ChildrenMural },
           // { path: '/tabsParents/profile', component: parentsProfile },
           { path: '/tabsParents/more', component: More },
-          {
-            path: '/childrenAttendanceCalendar',
-            name: 'ChildrenAttendanceCalendar',
-            component: ChildrenAttendanceCalendar
-          },
+          // {
+          //   path: '/childrenAttendanceCalendar',
+          //   name: 'ChildrenAttendanceCalendar',
+          //   component: ChildrenAttendanceCalendar
+          // },
         ]
       },
       { path: '/postDetail', component: postDetail },
@@ -208,11 +211,7 @@ const routes: Array<RouteRecordRaw> = [
       { path: '/calendarEventDetail', component: calendarEventDetail },
       { path: '/editProfile', component: editProfile },
       { path: '/postReactions', component: postReactions },
-      {
-        path: '/chatMedia',
-        name: 'ChatMedia',
-        component: chatMedia
-      },
+      { path: '/chatMedia', component: chatMedia },
       { path: '/mealMenu', component: MealMenu },
       { path: '/forgotPassword', component: ForgotPassword },
       { path: '/noteSenderToUser', component: noteSenderToUser },
@@ -221,6 +220,25 @@ const routes: Array<RouteRecordRaw> = [
       { path: '/solicitationChatParent', component: SolicitationChatParent },
       { path: '/solicitationChatWorker', component: SolicitationChatWorker },
       { path: '/profile', component: profile },
+      { path: '/childMuralDetail', component: ChildMuralDetail },
+
+
+      {
+        path: '/tabsLayout',
+        component: TabsLayout,
+        children: [
+          { path: '/', redirect: '/tabsParents/social'},
+          { path: '/tabsLayout/social', component: parentsSocial },
+          { path: '/tabsLayout/solicitationsHome', component: ParentsSolicitationsHome },
+          { path: '/tabsLayout/chat', component: parentsChat },
+          { path: '/tabsLayout/childrenMural', component: ChildrenMural },
+          { path: '/tabsLayout/more', component: More },
+          { path: '/tabsLayout/attendance', component: workerAttendance},
+          { path: '/tabsLayout/class', component: workerClass},
+          { path: '/tabsLayout/chat', component: workerChat},
+          { path: '/tabsLayout/more', component: More}
+        ]
+      },
     ]
   },
 ]

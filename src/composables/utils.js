@@ -7,6 +7,8 @@ import router from '../router/index.ts'
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { FileOpener } from '@capawesome-team/capacitor-file-opener';
 import write_blob from "capacitor-blob-writer";
+import { useUserPermissions } from '@/stores/userPermissions'
+
 
 let loadingVar = []
 let updateUserInfoOnNextRoute = false
@@ -111,27 +113,20 @@ const useUtils = {
   async verifyUserPermissions (data) {
     if (data.status === 'waitingApproval') {
       router.push("/waitingAproval")
-      return
+      return { status: 'waitingApproval' }
     }
     const r = await this.getUserPermissions()
+    const userPermissions = useUserPermissions()
     if (r.data.length === 0) {
-      this.$router.push("/waitingPermission")
-      return
+      router.push("/waitingPermission")
+      return { status: 'waitingPermission' }
     }
     const perms = []
     r.data.forEach((p) => { perms.push(p.role) })
+    userPermissions.set(perms)
+    router.push("/tabsLayout/social")
+    return { status: 'ok', permissions: perms }
     // const currentVision = localStorage.getItem('currentVision')
-    if (perms.length === 1){
-      if (perms[0] === 'IS_PARENT') router.push('/tabsParents/social')
-      if (perms[0] === 'IS_WORKER') router.push('/tabsWorkers/class')
-    } else router.push('/tabsParents/social') 
-
-    // if (!currentVision && perms.includes('IS_PARENT')) router.push("/tabsParents/social")
-    // else if (currentVision === 'worker' && perms.includes('IS_WORKER')) router.push("/tabsWorkers/class")
-    // else if (currentVision === 'worker' && !perms.includes('IS_WORKER') && perms.includes('IS_PARENT')) {
-    //   router.push("/tabsParents/social")
-    //   localStorage.removeItem('currentVision')
-    // }
   },
   async getUserPermissions(){
     const opt = {
