@@ -1,5 +1,9 @@
 <template>
   <ion-page>
+    <ToolbarEscolas
+      title="Meu perfil"
+      :backButton="true"
+    />
     <ion-content color="light">
 
       <div style="padding-top: var(--ion-safe-area-top)"></div>
@@ -56,7 +60,7 @@
         </ion-list>
       </div>
 
-      <ion-list :inset="true" v-if="isWorker === true">
+      <!-- <ion-list :inset="true" v-if="isWorker === true">
         <ion-item>
           Área do trabalhador
           <ion-toggle
@@ -66,7 +70,7 @@
             @ionChange="toggleChange($event)"
           />
         </ion-item>
-      </ion-list>
+      </ion-list> -->
       <ion-alert
         :is-open="dialogUserData.open"
         header="Você precisa preencher seus dados cadastrais"
@@ -150,7 +154,7 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsParents/profile') {
+      if (to.path === '/profile') {
         this.startView()
       }
     }
@@ -159,8 +163,8 @@ export default {
     this.startView()
   },
   mounted () {
-    this.getUserPermissions()
-    this.getCurrentVision()
+    // this.getUserPermissions()
+    // this.getCurrentVision()
   },
   methods: {
     getCurrentVision() {
@@ -168,10 +172,10 @@ export default {
         this.currentVision = currentVision
       if (this.currentVision === 'worker') {
         this.switchWork = true
-        this.$router.replace("/tabsWorkers/profile")
+        this.$router.replace("/tabsWorkers/attendance")
       } else {
         this.switchWork = false
-        this.$router.replace("/tabsParents/profile")
+        this.$router.replace("/tabsParents/social")
       }
     },
     verifyIsWorker() {
@@ -186,10 +190,10 @@ export default {
     toggleChange(ev) {
       if (ev.detail.checked) {
         localStorage.setItem("currentVision", "worker")
-        this.$router.replace("/tabsWorkers/profile")
+        this.$router.replace("/tabsWorkers/attendance")
       } else {
         localStorage.removeItem("currentVision")
-        this.$router.replace("/tabsParents/profile")
+        this.$router.replace("/tabsParents/social")
         this.switchWork = false
       }
     },
@@ -250,7 +254,7 @@ export default {
       if (!this.userInfo.document) {
         this.dialogUserData.open = true
       }
-      this.getCurrentVision()
+      // this.getCurrentVision()
     },
     backLogin() {
       this.$router.push('/login')

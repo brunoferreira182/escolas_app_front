@@ -21,8 +21,6 @@ import { App } from '@capacitor/app';
 import utils from '../composables/utils'
 import pushService from '../composables/notifications'
 import { defineCustomElements } from '@ionic/pwa-elements/loader'
-// import { useSubscriptionDataStore } from '../stores/subscriptionData'
-// const subscriptionDataStore = useSubscriptionDataStore()
 </script>
 
 <script>
@@ -42,35 +40,31 @@ export default defineComponent({
   mounted () {
     this.startView()
     utils.loading.hide()
-    // utils.fetchIuguId()
-    // utils.getIuguLib()
     this.backButtonManager()
     defineCustomElements(window)
     this.getCompanyColors()
   },
   methods: {
     async startView () {
-      // this.changeAppBar()
       if (this.$route.path === '/login') return
       else this.checkUserAuthentication()
       
     },
-    async getUserPermissions(){
-      const opt = {
-        route:'/mobile/auth/getUserPermissions',
-        body: {
-          permissionType: 'mobile'
-        }
-      }
-      return await useFetch(opt)
-    },
+    // async getUserPermissions(){
+    //   const opt = {
+    //     route:'/mobile/auth/getUserPermissions',
+    //     body: {
+    //       permissionType: 'mobile'
+    //     }
+    //   }
+    //   return await useFetch(opt)
+    // },
     backButtonManager () {
       const ionRouter = useIonRouter();
       useBackButton(10, () => {
         const path = this.$route.path
-        // console.log('deu back button', path)
         if (!ionRouter.canGoBack()) App.exitApp()
-        else if (path === '/tabs/home' || path === '/login' || path === '/newAccount')
+        else if (path === '/tabsLayout/social' || path === '/login' || path === '/newAccount')
           App.exitApp()
         else this.$router.back()
       });
@@ -84,22 +78,11 @@ export default defineComponent({
           document.documentElement.style.setProperty('--ion-color-primary', r.data.primary);
           document.documentElement.style.setProperty('--ion-color-secondary', r.data.secondary);
           document.documentElement.style.setProperty('--ion-color-accent', r.data.accent);
-
-          // document.documentElement.style.setProperty('--ion-color-primary-dark', r.data.primary);
-
         } else if (r.error) {
           utils.toast(r.errorMessage)
         }
       })
     },
-    // changeAppBar () {
-    //   if (isPlatform('android')) {
-    //     const styles = getComputedStyle(document.body);
-    //     StatusBar.setStyle({ style: Style.Light });
-    //     const color = styles.getPropertyValue('--ion-color-background-secondary').trim()
-    //     StatusBar.setBackgroundColor({ color })
-    //   }
-    // },
     async checkUserAuthentication () {
       const ui = utils.presentUserInfo();
       if (!ui || !ui.token) { 
@@ -110,7 +93,15 @@ export default defineComponent({
       if (r.error) { this.$router.push("/login"); return; } 
       this.userInfo = r.data;
       pushService.initPush()
-      utils.verifyUserPermissions(r.data)
+      const verifyPerm = await utils.verifyUserPermissions(r.data)
+      // if (verifyPerm.status === 'waitingPermission') {
+      //   this.$router.push("/waitingPermission")
+      //   return
+      // } else if (verifyPerm.status === 'waitingApproval') {
+      //   this.$router.push("/waitingApproval")
+      //   return
+      // }
+      // this.$router.push("/tabsLayout/social")
     },
   }
 

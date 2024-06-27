@@ -198,7 +198,28 @@
 
 <script setup>
 import {
-  IonPage, IonAlert,
+  IonPage,
+  IonAlert,
+  IonModal,
+  IonDatetime,
+  IonDatetimeButton,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonAvatar,
+  IonBadge,
+  IonText,
+  IonIcon,
+  IonItemSliding,
+  IonItemOption,
+  IonItemOptions,
+  IonButton,
+  IonButtons,
+  IonToolbar,
+  IonHeader,
+  IonNote
 } from '@ionic/vue';
 import { useFetch } from '../../composables/fetch'
 import ToolbarEscolas from '../../components/ToolbarEscolas.vue'

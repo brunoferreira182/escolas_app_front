@@ -351,7 +351,6 @@ export default {
       if (classId) opt.body.classId = classId
       useFetch(opt).then((r) => {
         if (!r.error) {
-          console.log("🚀 ~ useFetch ~ r:", r)
           r.data && r.data.list ? this.classEventsHistory = r.data.list : 
           this.classEventsHistory = []
           return

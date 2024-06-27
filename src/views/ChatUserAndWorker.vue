@@ -300,7 +300,6 @@ export default {
       }
       utils.loading.show()
 			useFetch(opt).then(r=> {
-        console.log("🚀 ~ useFetch ~ r:", r)
         utils.loading.hide()
         if(!r.error){
           this.usersReadersMsg = r.data.readers
