@@ -51,15 +51,14 @@
 </template>
 <script setup>
 import { 
-  IonPage, IonButton, IonCard,
-  IonContent, IonImg, IonCardHeader,
-  IonList, IonChip, IonCardTitle, IonBadge,
-  IonItem, IonLabel, IonCardContent, IonNote,
-  IonAvatar, IonAlert,
+  IonPage,
+  IonContent,
+  IonList, IonBadge,
+  IonItem, IonLabel, IonNote,
+  IonAvatar,
   IonHeader, IonToolbar, IonTitle, IonText
 } from '@ionic/vue';
-import { APP_NAME, COMPANY_ID } from '../../composables/variables';
-import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
+import { APP_NAME, } from '../../composables/variables';
 import utils from '../../composables/utils'
 </script>
 

@@ -37,7 +37,7 @@
           <ion-avatar 
             aria-hidden="true" 
             slot="start" 
-            v-if="post.type === 'activities'"
+            v-if="post.type === 'activities' || post.type === 'presence'"
           >
             <img class="ion-avatar" :src="list"/>
           </ion-avatar>
@@ -150,7 +150,7 @@
               Ler mais
             </ion-button>
             <ion-button 
-              v-else-if="post.routeDestination === '/postDetail' && post.type !== 'Boleto' && post.type !== 'activities'"
+              v-else-if="post.routeDestination === '/postDetail' && post.type !== 'Boleto' && post.type !== 'activities' && post.type !== 'presence'"
               @click="$router.push('/postDetail?postId=' + post._id)"
               fill="clear"
             >
@@ -185,12 +185,12 @@ import {
 import heart from '/src/assets/icons/heart.svg'
 import heart_filled from '/src/assets/icons/heart_filled.svg'
 import { Clipboard } from '@capacitor/clipboard';
-import proSaberLogo from '/src/assets/proSaberLogo.jpg'
 import bubblesound from '/src/assets/sounds/bubblesound.wav'
 import comment from '/src/assets/icons/comment.svg'
 import list from '/src/assets/icons/list.svg'
 import { Haptics } from '@capacitor/haptics';
 import ModalPinchZoomImage from '../components/ModalPinchZoomImage.vue'
+import proSaberLogo from '/src/assets/logo_login_custom.png'
 import { ref } from 'vue';
 const showModal = ref(false);
 const modalImageUrl = ref(null);
