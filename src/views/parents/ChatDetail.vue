@@ -88,11 +88,11 @@
                       <div class="q-px-xs ion-text-wrap">
                         <div
                           @click="abrirURL(extrairURL(message.messageText))" 
-                          v-if="message.messageText.includes('https')"
+                          v-if="message.messageText?.includes('https')"
                         >
                           {{ message.messageText }}
                         </div>
-                        <div v-if="!message.messageText.includes('https')">
+                        <div v-else>
                           {{ message.messageText }}
                         </div>
                       </div>
@@ -111,9 +111,15 @@
               >
                 <ion-item-option 
                   style="text-transform: none; border-radius: .5rem;" 
-                  color="danger" 
+                  color="warning"
                   @click="clkMessage(message, msgIndex)" 
                   >Detalhes
+                </ion-item-option>
+                <ion-item-option 
+                  style="text-transform: none; border-radius: .5rem;" 
+                  color="success" 
+                  @click="getClassChatMessageReadConf(message)" 
+                  >Visualizações
                 </ion-item-option>
                 <!-- <ion-item-option 
                   style="text-transform: none; border-radius: .5rem;" 
@@ -401,10 +407,9 @@ export default {
       utils.loading.show()
 			useFetch(opt).then(r=> {
         utils.loading.hide()
-        if(!r.error){
-          this.usersReadersMsg = r.data.readers
-          return
-        }
+        if (r.error) return
+        this.usersReadersMsg = r.data.readers
+        this.modalLastMessage = true
       })
     },
     async clkAttachment (message) {
@@ -525,13 +530,13 @@ export default {
             this.clkDeleteMessage(message._id)
           },
         },
-        {
-          text: 'Visto por último',
-          role: 'confirm',
-          handler: () => {
-            this.modalLastMessage = true
-          },
-        },
+        // {
+        //   text: 'Visto por último',
+        //   role: 'confirm',
+        //   handler: () => {
+        //     this.modalLastMessage = true
+        //   },
+        // },
       )
       if(message.imageCaption){
         buttons.push({
@@ -549,7 +554,7 @@ export default {
         buttons
       });
       await alert.present();
-      this.getClassChatMessageReadConf(message);
+      // this.getClassChatMessageReadConf(message);
     },
     closeModalEditImageCaption(){
       this.modalEditImageCaption.open = false

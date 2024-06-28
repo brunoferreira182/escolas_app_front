@@ -76,7 +76,7 @@
                   </div>
                 </ion-row>
               </ion-item>
-              <ion-item-options 
+              <!-- <ion-item-options 
                 :side="message.createdBy.userId === userInfo.userId ? 'end' : 'start'" 
               >
                 <ion-item-option 
@@ -85,7 +85,7 @@
                   @click="clkMessage(message, msgIndex)" 
                   >Detalhes
                 </ion-item-option>
-              </ion-item-options>
+              </ion-item-options> -->
             </ion-item-sliding>
             <!-- <ion-popover side="top" :is-open="popoverOpen" @didDismiss="popoverOpen = false">
               <ion-content class="ion-padding">
@@ -334,28 +334,28 @@ export default {
     //     utils.toast("Mensagem curtida!")
     //   })
     // },
-    async clkMessage (message, msgIndex) {
-      this.$refs.listAnswerMsg.$el.closeSlidingItems()
-      const d = `Data: ${message.createdAt.createdAtInFullLong} de  ${message.createdAt.createdAtYear}`
-      const buttons = [{ text: 'Voltar', role: 'cancel' }]
-      if (message.createdBy.userId === this.userInfo.userId) {
-        buttons.push({
-          text: 'Apagar mensagem',
-          role: 'confirm',
-          handler: () => {
-            this.clkDeleteMessage(message._id)
-          },
-        },
-      )
-      }
-      const alert = await alertController.create({
-        header: 'Detalhe',
-        message: d,
-        buttons
-      });
-      await alert.present();
-      this.getClassChatMessageReadConf(message);
-    },
+    // async clkMessage (message, msgIndex) {
+    //   this.$refs.listAnswerMsg.$el.closeSlidingItems()
+    //   const d = `Data: ${message.createdAt.createdAtInFullLong} de  ${message.createdAt.createdAtYear}`
+    //   const buttons = [{ text: 'Voltar', role: 'cancel' }]
+    //   if (message.createdBy.userId === this.userInfo.userId) {
+    //     buttons.push({
+    //       text: 'Apagar mensagem',
+    //       role: 'confirm',
+    //       handler: () => {
+    //         this.clkDeleteMessage(message._id)
+    //       },
+    //     },
+    //   )
+    //   }
+    //   const alert = await alertController.create({
+    //     header: 'Detalhe',
+    //     message: d,
+    //     buttons
+    //   });
+    //   await alert.present();
+    //   this.getClassChatMessageReadConf(message);
+    // },
     clkDeleteMessage (messageId) {
       const opt = {
         route: '/mobile/messenger/deleteMessage',
