@@ -30,7 +30,6 @@
             :key="c"
             :disabled="c.className ? false : true"
             :button="true"
-            class="q-ma-sm"
             @click="goToChatInfo(c.classId)"
           >
           
@@ -66,96 +65,8 @@
           </ion-item>
         </ion-list>
         </div>
-
-        <div class="ion-padding">
-          <ion-text>
-            <h3>Atividades de hoje</h3>
-            <ion-note>Escolha uma data para ver de outros dias</ion-note>
-            <ion-datetime-button
-              class="q-mt-md"
-              datetime="datetime"
-              style="justify-content: left;"
-            />
-          </ion-text>
-          
-        </div>
-        <ion-list :inset="true">
-          <div v-if="childEventsHistory && childEventsHistory.length">
-            <ion-item 
-              v-for="e in childEventsHistory"
-              :key="e"
-              class="q-ma-sm"
-              detail="false"
-            >
-              <ion-avatar aria-hidden="true" slot="start" style="height: 60px; width: 60px;">
-                <img :src="utils.makeFileUrl(e.image.filename, 'thumbnail')" v-if="e.image"/>
-                <img :src="utils.makeFileUrl(null)" v-else/>
-              </ion-avatar>
-              <ion-avatar
-                aria-hidden="true"
-                slot="start"
-                style="margin-left: -30px; margin-top: 30px; height: 35px; width: 35px; border: 2px solid white !important;"
-              >
-                <img :src="utils.makeFileUrl(e.childPhoto.filename, 'thumbnail')" v-if="e.childPhoto"/>
-                <img :src="utils.makeFileUrl(null)" v-else/>
-              </ion-avatar>
-              <ion-label>
-                <strong class="text-capitalize">{{ e.name }}</strong>
-                <ion-badge  color="primary">{{ e.eventName }}</ion-badge><br />
-                <ion-note color="medium" class="ion-text-wrap">
-                  {{ e.obs }}
-                </ion-note>
-              </ion-label>
-              <div class="metadata-end-wrapper" slot="end">
-                <ion-note color="medium">
-                  {{ e.createdAt.createdAtLocale.split(' ')[0] }}<br>
-                  {{ e.createdAt.createdAtLocale.split(' ')[1] }}
-                </ion-note>
-              </div>
-            </ion-item>
-            
-          </div>
-          <div v-else>
-            <ion-item>
-              <ion-label>
-                Nenhuma atividade
-              </ion-label>
-            </ion-item>
-          </div>
-        </ion-list>
       </div>
     </ion-content>
-
-    <ion-modal :keep-contents-mounted="true">
-      <ion-datetime
-        id="datetime"
-        presentation="date"
-        @ionChange="onChangeDate($event, c)"
-      ></ion-datetime>
-    </ion-modal>
-
-    <ion-modal 
-      class="modalTeste"
-      :presenting-element="presentingElement"
-      :is-open="openImageModalProfile.open" 
-      @didDismiss="dismissImageModalProfile()"
-    >
-      <ion-content >
-        <img 
-          :src="utils.makeFileUrl(openImageModalProfile.imageData.filename)" 
-          style="width: 100%"
-          v-if="openImageModalProfile.imageData && openImageModalProfile.imageData.filename"
-        >
-        <div class="ion-text-center">
-          <div class="text-h4 text-capitalize">
-            {{ openImageModalProfile.data.name }}
-          </div>
-          <ion-chip color="primary" class="text-h5">
-            {{ openImageModalProfile.data.eventName }}
-          </ion-chip>
-        </div>
-      </ion-content>
-    </ion-modal>
 
   </ion-page>
 </template>
@@ -224,37 +135,8 @@ export default {
     this.startView()
   },
   methods: {
-    onChangeDate($event, c) {
-      this.dateSelected = $event.detail.value.split('T')[0]
-      this.getLastActivitiesFromUserChildren()
-    },
-    openChildEventModal(e){
-      this.openImageModalProfile.open = true
-      this.openImageModalProfile.data = e
-      this.openImageModalProfile.imageData = e.image
-    },
-    dismissImageModalProfile(){
-      this.openImageModalProfile.open = false
-      this.openImageModalProfile.imageData = null
-    },
     startView () {
       this.getChildClass()
-      this.getLastActivitiesFromUserChildren()
-    },
-    getLastActivitiesFromUserChildren() {
-      const opt = {
-        route: '/mobile/parents/chat/getLastActivitiesFromUserChildren',
-        body: {
-          dateSelected: this.dateSelected
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (!r.error) {
-          this.childEventsHistory = r.data
-        } else {
-          utils.toast("Ocorreu um erro, tente novamente mais tarde.")
-        }
-      })
     },
     getChildClass() {
       const opt = {
@@ -267,67 +149,7 @@ export default {
     goToChatInfo(classId) {
       this.$router.push('/chatInfo?classId=' + classId)
     },
-    // goToChatDetail (classId) {
-    //   this.$router.push('/chatDetail?classId=' + classId)
-    // },
   }
 }
 
 </script>
-
-<style scoped>
-  .modalTeste {
-    --height: 61%;
-    --border-radius: 16px;
-    --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  }
-
-  .modalTeste ion-modal::part(backdrop) {
-    background: rgba(209, 213, 219);
-    opacity: 1;
-  }
-
-  .modalTeste ion-toolbar {
-    --background: rgb(14 116 144);
-    --color: white;
-  }
-  .unread-indicator {
-    background: var(--ion-color-primary);
-
-    width: 10px;
-    height: 10px;
-
-    border-radius: 100%;
-
-    position: absolute;
-
-    inset-inline-start: 12px;
-    top: 12px;
-  }
-
-  .metadata-end-wrapper {
-    position: absolute;
-
-    top: 10px;
-    inset-inline-end: 10px;
-
-    font-size: 0.8rem;
-
-    display: flex;
-    align-items: center;
-  }
-
-  ion-label strong {
-    display: block;
-
-    max-width: calc(100% - 60px);
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-  }
-
-  ion-label ion-note {
-    font-size: 0.9rem;
-  }
-</style>

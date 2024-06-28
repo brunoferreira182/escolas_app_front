@@ -60,7 +60,6 @@
         <ion-item 
           v-for="e in classEventsHistory"
           :key="e"
-          class="q-ma-sm"
           detail="false"
         >
           <ion-avatar
@@ -265,7 +264,7 @@ export default {
       dateSelected: null
     };
   },
-  mounted(){
+  mounted () {
     utils.loading.hide()
     this.presentingElement = this.$refs.page.$el;
     this.getClassesByUserId()
@@ -275,7 +274,7 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsWorkers/class') {
+      if (to.path === '/tabsLayout/class') {
         this.getClassesByUserId()
         this.getchildrenInClassesList()
         this.getLastActivityFromChildrenOfClasses()

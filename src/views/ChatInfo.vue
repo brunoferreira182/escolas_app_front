@@ -132,7 +132,7 @@
               :key="child"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="child.childPhoto">
-                <img style="width: 60px; height: auto;" :src="utils.makeFileUrl(child.childPhoto.filename, 'thumbnail')"/>
+                <img :src="utils.makeFileUrl(child.childPhoto.filename, 'thumbnail')"/>
               </ion-avatar>
               <ion-avatar aria-hidden="true" slot="start" v-else>
                 <img :src="utils.makeFileUrl(child.image, 'thumbnail')"/>

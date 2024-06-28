@@ -170,7 +170,6 @@ export default {
   },
   props: {
     dialogInsertChildEvent: Object,
-    // selectedEvent: Array,
     childEventsHistory: Array,
     pagination: Object,
     dialogInsertActivity: Object,
@@ -179,7 +178,6 @@ export default {
   methods: {
     executeMethods () {
       this.getChildEvents()
-      // this.getChildEventsByUserId()
       this.clearCheckboxes()
     },
     clearCheckboxes () {
@@ -263,24 +261,6 @@ export default {
           this.clearModalData()
           this.$emit('getLastActivityFromChildrenOfClasses')
           utils.toast('Atividade inserido com sucesso!')
-      })
-    },
-    getChildEventsByUserId() {
-      
-      const opt = {
-        route: '/mobile/workers/getChildEventsByUserId',
-        body: {
-          childId: this.dialogInsertChildEvent.data.childId,
-          page: props.pagination.page,
-          rowsPerPage: props.pagination.rowsPerPage
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
-          return
-        }
-        this.childEventsHistory = r.data.list
       })
     },
     startDialogViewImage(e) {

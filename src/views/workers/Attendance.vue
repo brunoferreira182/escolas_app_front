@@ -270,7 +270,7 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsWorkers/attendance') {
+      if (to.path === '/tabsLayout/attendance') {
         this.getClassesByUserId()
         this.getChildrenInClassesList()
       }

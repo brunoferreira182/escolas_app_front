@@ -6,10 +6,6 @@
     />
     <ion-content color="light" >
       <ion-list :inset="true">
-        <!-- <ion-item>
-          <ion-input placeholder="Título do recado"
-            v-model="noteName" class="q-ma-sm"/>
-        </ion-item> -->
         <ion-item>
           <ion-input
             placeholder="Recado"

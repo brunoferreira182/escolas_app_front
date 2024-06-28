@@ -28,7 +28,6 @@
               v-for="c in classesInfo"
               :key="c"
               :button="true"
-              class="q-ma-sm"
               @click="goToChatInfo(c.classId)"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage" style="height: 60px; width: 60px">
@@ -98,7 +97,7 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsWorkers/chat') {
+      if (to.path === '/tabsLayout/chat') {
         this.startView()
       }
     }
@@ -154,26 +153,8 @@ export default {
         }))
       })
     },
-    getChildEventsByUserId() {
-      const opt = {
-        route: '/mobile/workers/getChildEventsByUserId',
-        body: {
-          childId: this.dialogInsertChildEvent.data.childId,
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) {
-          utils.toast('Ocorreu um erro. Tente novamente.')
-          return
-        }
-        this.childEventsHistory = r.data.list
-      })
-    },
     startView () {
       this.getClassesByUserId()
-      // this.getLastActivityFromChildrenOfClasses()
     },  
     clkOpenDialogChildEvent(child) {
       this.dialogInsertChildEvent.data = child
@@ -195,26 +176,6 @@ export default {
     },
     goToChatInfo(classId) {
       this.$router.push('/chatInfo?classId=' + classId)
-    },
-    // goToChatDetail (classId) {
-    //   this.$router.push('/chatDetailWorker?classId=' + classId)
-    // },
-    getLastActivityFromChildrenOfClasses() {
-      const opt = {
-        route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
-        body: {
-          page: this.pagination.page,
-          rowsPerPage: this.pagination.rowsPerPage
-        }
-      }
-      useFetch(opt).then((r) => {
-        if (r.error) utils.toast("Ocorreu um erro, tente novamente.")
-        else {
-          this.childEventsHistory = r.data.list
-          this.getChildEvents()
-        } 
-        
-      })
     },
   }
 }
