@@ -100,9 +100,11 @@ const useUtils = {
     const opt = {
       url: `${this.attachmentsAddress()}${obj.filename}`,
       method: 'GET',
-      path: filename
+      path: filename,
+      directory: Directory.Documents
     }
     const dl = await Filesystem.downloadFile(opt)
+    console.log(dl, 'dl aqui')
     if (dl.path) {
       this.toast('Arquivo baixado na pasta Documentos')
       this.openFile(dl)
