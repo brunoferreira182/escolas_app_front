@@ -12,7 +12,7 @@
       <ion-list>
         <ion-item v-for="item in usersReadersMsg" :key="item" lines="full">
           <ion-avatar aria-hidden="true" slot="start">
-            <img :src="utils.makeFileUrl(item.userImage.filename, 'thumbnail')" />
+            <img :src="utils.makeFileUrl(item.userImage?.filename, 'thumbnail')" />
           </ion-avatar>
           <ion-label class="ion-text-nowrap">
             <h3> {{ item.userDetails.name }}</h3>

@@ -28,7 +28,6 @@
               v-for="c in classesInfo"
               :key="c"
               :button="true"
-              class="q-ma-sm"
               @click="goToChatInfo(c.classId)"
             >
               <ion-avatar aria-hidden="true" slot="start" v-if="c.classImage" style="height: 60px; width: 60px">

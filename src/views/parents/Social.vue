@@ -113,19 +113,31 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsParents/social') {
-        this.startView()
+      if (to.path === '/tabsLayout/social') {
+        this.getUserNotes()
+        // this.verifyNewContent()
       }
     }
   },
   methods: {
+    async verifyNewContent () {
+      const opt = {
+        route: '/mobile/social/verifyNewContent',
+        body: {
+          posixLastContent: this.posts[0].createdAt.createdAtPosix
+        }
+      }
+      const ret = await useFetch(opt)
+      if (r.error) return
+      this.newContent = r.data
+    },
     backLogin() {
       this.$router.push('/login')
     },
     async startView () {
-      await this.getPosts()
-      await this.getUserNotes()
-      await this.getStories()
+      this.getPosts()
+      this.getUserNotes()
+      this.getStories()
     },
     async getUserNotes() {
       const opt = {
