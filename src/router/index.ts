@@ -50,6 +50,7 @@ import SolicitationChatParent from '../views/parents/SolicitationChat.vue'
 import SolicitationChatWorker from '../views/workers/SolicitationChat.vue'
 import ChildrenMural from '../views/parents/ChildrenMural.vue'
 import ChildMuralDetail from '../views/parents/ChildMuralDetail.vue'
+import SolicitationsHomeWorkers from '../views/workers/SolicitationsHome.vue'
 
 import TabsLayout from '../layouts/TabsLayout.vue'
 
@@ -58,171 +59,9 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     component: MainLayout,
     children: [
-      {
-        path: '/login',
-        name: 'Login',
-        component: Login
-      },
-      {
-        path: '/ChatUserAndWorker',
-        name: 'ChatUserAndWorker',
-        component: ChatUserAndWorker
-      },
-      {
-        path: '/messenger',
-        name: 'Messenger',
-        component: Messenger
-      },
-      // {
-      //   path: '/childrenAttendanceCalendar',
-      //   name: 'ChildrenAttendanceCalendar',
-      //   component: ChildrenAttendanceCalendar
-      // },
-      {
-        path: '/register',
-        name: 'Register',
-        component: Register
-      },
-      {
-        path: '/waitingAproval',
-        name: 'WaitingAproval',
-        component: waitingAproval
-      },
-      {
-        path: '/waitingpermission',
-        name: 'WaitingPermission',
-        component: waitingPermission
-      },
-      {
-        path: '/userPersonalData',
-        name: 'UserPersonalData',
-        component: userPersonalData
-      },
-      {
-        path: '/addChild',
-        name: 'AddChild',
-        component: addChild
-      },
-      {
-        path: '/addParent',
-        name: 'AddParent',
-        component: addParent
-      },
-      {
-        path: '/childDetail',
-        name: 'ChildDetail',
-        component: childDetail
-      },
-      {
-        path: '/parentFiles',
-        name: 'ParentFiles',
-        component: ParentFiles
-      },
-      // {
-      //   path: '/parentDetail',
-      //   name: 'ParentDetail',
-      //   component: parentDetail
-      // },
-      {
-        path: '/solicitationsDetail',
-        name: 'SolicitationsDetail',
-        component: solicitationsDetail
-      },
-      {
-        path: '/chatDetail',
-        name: 'ChatDetail',
-        component: chatDetail
-      },
-      {
-        path: '/chatDetailWorker',
-        name: 'ChatDetailWorker',
-        component: chatDetailWorker
-      },
-      {
-        path: '/chatInfo',
-        name: 'ChatInfo',
-        component: chatInfo
-      },
-      {
-        path: '/eventDetail',
-        name: 'EventDetail',
-        component: eventDetailParent
-      },
- 
-      {
-        path: '/notesList',
-        name: 'NotesList',
-        component: notesList
-      },
-      {
-        path: '/notesListWorker',
-        name: 'NotesListWorker',
-        component: notesListWorker
-      },
-      {
-        path: '/calendar',
-        name: 'Calendar',
-        component: calendarParent
-      },
-      {
-        path: '/calendarWorker',
-        name: 'CalendarWorker',
-        component: calendarWorker
-      },
-      {
-        path: '/createEvent',
-        name: 'CreateEvent',
-        component: createEvent
-      },
-      {
-        path: '/tabsWorkers',
-        name: 'TabsWorkers',
-        component: tabsLayoutWorkers,
-        children: [
-          { path: '/', redirect: '/tabsWorkers/attendance'},
-          { path: '/tabsWorkers/attendance', component: workerAttendance},
-          { path: '/tabsWorkers/class', component: workerClass},
-          { path: '/tabsWorkers/chat', component: workerChat},
-          // { path: '/tabsWorkers/profile', component: workerProfile},
-          { path: '/tabsWorkers/more', component: More}
-        ]
-      },
-      {
-        path: '/tabsParents',
-        name: 'TabsParents',
-        component: TabsLayoutParent,
-        children: [
-          { path: '/', redirect: '/tabsParents/social'},
-          { path: '/tabsParents/social', component: parentsSocial },
-          { path: '/tabsParents/solicitationsHome', component: ParentsSolicitationsHome },
-          { path: '/tabsParents/chat', component: parentsChat },
-          { path: '/tabsParents/childrenMural', component: ChildrenMural },
-          // { path: '/tabsParents/profile', component: parentsProfile },
-          { path: '/tabsParents/more', component: More },
-          // {
-          //   path: '/childrenAttendanceCalendar',
-          //   name: 'ChildrenAttendanceCalendar',
-          //   component: ChildrenAttendanceCalendar
-          // },
-        ]
-      },
-      { path: '/postDetail', component: postDetail },
-      { path: '/storyDetail', component: storyDetail },
-      { path: '/calendarEventDetail', component: calendarEventDetail },
-      { path: '/editProfile', component: editProfile },
-      { path: '/postReactions', component: postReactions },
-      { path: '/chatMedia', component: chatMedia },
-      { path: '/mealMenu', component: MealMenu },
-      { path: '/forgotPassword', component: ForgotPassword },
-      { path: '/noteSenderToUser', component: noteSenderToUser },
-      { path: '/userNotesList', component: userNotesList },
-      { path: '/newParentSolicitation', component: NewParentSolicitation },
-      { path: '/solicitationChatParent', component: SolicitationChatParent },
-      { path: '/solicitationChatWorker', component: SolicitationChatWorker },
-      { path: '/profile', component: profile },
-      { path: '/childMuralDetail', component: ChildMuralDetail },
-
-
+      { path: '/login', component: Login },
+      { path: '/ChatUserAndWorker', component: ChatUserAndWorker },
+      { path: '/messenger', component: Messenger },
       {
         path: '/tabsLayout',
         component: TabsLayout,
@@ -239,6 +78,40 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsLayout/more', component: More}
         ]
       },
+      { path: '/register', component: Register },
+      { path: '/waitingAproval', component: waitingAproval },
+      { path: '/waitingpermission', component: waitingPermission },
+      { path: '/userPersonalData', component: userPersonalData },
+      { path: '/addChild', component: addChild },
+      { path: '/addParent', component: addParent },
+      { path: '/childDetail', component: childDetail },
+      { path: '/parentFiles', component: ParentFiles },
+      { path: '/solicitationsDetail', component: solicitationsDetail },
+      { path: '/chatDetail', component: chatDetail },
+      { path: '/chatDetailWorker', component: chatDetailWorker },
+      { path: '/chatInfo', component: chatInfo },
+      { path: '/eventDetail', component: eventDetailParent },
+      { path: '/notesList', component: notesList },
+      { path: '/notesListWorker', component: notesListWorker },
+      { path: '/calendar', component: calendarParent },
+      { path: '/calendarWorker', component: calendarWorker },
+      { path: '/createEvent', component: createEvent },
+      { path: '/postDetail', component: postDetail },
+      { path: '/storyDetail', component: storyDetail },
+      { path: '/calendarEventDetail', component: calendarEventDetail },
+      { path: '/editProfile', component: editProfile },
+      { path: '/postReactions', component: postReactions },
+      { path: '/chatMedia', component: chatMedia },
+      { path: '/mealMenu', component: MealMenu },
+      { path: '/forgotPassword', component: ForgotPassword },
+      { path: '/noteSenderToUser', component: noteSenderToUser },
+      { path: '/userNotesList', component: userNotesList },
+      { path: '/newParentSolicitation', component: NewParentSolicitation },
+      { path: '/solicitationChatParent', component: SolicitationChatParent },
+      { path: '/solicitationChatWorker', component: SolicitationChatWorker },
+      { path: '/profile', component: profile },
+      { path: '/childMuralDetail', component: ChildMuralDetail },
+      { path: '/solicitationsHomeWorkers', component: SolicitationsHomeWorkers },
     ]
   },
 ]

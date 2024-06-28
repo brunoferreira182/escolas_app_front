@@ -124,7 +124,7 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsParents/solicitationsHome') {
+      if (to.path === '/tabsLayout/solicitationsHome') {
         this.startView()
       }
     }
