@@ -8,7 +8,7 @@
               <h2>
                 {{ post.createdBy.name }}
               </h2>
-              <p>{{ post.postData.detail.classData.functionName }}</p>
+              <p >{{ post.postData.detail.classData.functionName }} {{ post.postData.detail.classData.className }}</p>
             </div>
             <h2 
               class="text-capitalize" 
@@ -22,8 +22,24 @@
             </h2>
             <p>{{ post.createdAt.createdAtInFullLong }}</p>
           </ion-label>
-          <ion-avatar aria-hidden="true" slot="start" v-if="post.postData.resume.img">
-            <img class="ion-avatar" :src="utils.makeFileUrl(post.postData.resume.img.filename, 'thumbnail') "/>
+          <ion-avatar 
+            aria-hidden="true" 
+            slot="start" 
+            v-if="post.postData.resume.img || 
+            post.type === 'feed' || 
+            post.type === 'schoolEvent' ||  
+            post.type === 'post' || 
+            post.type === 'Boleto' ||
+            post.type === 'mealMenu'"
+            >
+            <img class="ion-avatar" :src="proSaberLogo"/>
+          </ion-avatar>
+          <ion-avatar 
+            aria-hidden="true" 
+            slot="start" 
+            v-if="post.type === 'activities'"
+          >
+            <img class="ion-avatar" :src="list"/>
           </ion-avatar>
         </ion-item>
       </div>
@@ -116,6 +132,12 @@
           <ion-label slot="end">
             <ion-button 
               v-if="post.type === 'Boleto'"
+              @click="copyBarcode(post.postData.detail)"
+            >
+              Copiar código de barras
+            </ion-button>
+            <ion-button 
+              v-if="post.type === 'Boleto'"
               @click="utils.downloadFile(post.postData.resume.img)"
             >
               Baixar
@@ -128,7 +150,7 @@
               Ler mais
             </ion-button>
             <ion-button 
-              v-else-if="post.routeDestination === '/postDetail' && post.type !== 'Boleto'"
+              v-else-if="post.routeDestination === '/postDetail' && post.type !== 'Boleto' && post.type !== 'activities'"
               @click="$router.push('/postDetail?postId=' + post._id)"
               fill="clear"
             >
@@ -162,10 +184,11 @@ import {
 
 import heart from '/src/assets/icons/heart.svg'
 import heart_filled from '/src/assets/icons/heart_filled.svg'
-import star_filled from '/src/assets/icons/star_filled.svg'
-import star from '/src/assets/icons/star.svg'
+import { Clipboard } from '@capacitor/clipboard';
+import proSaberLogo from '/src/assets/proSaberLogo.jpg'
 import bubblesound from '/src/assets/sounds/bubblesound.wav'
 import comment from '/src/assets/icons/comment.svg'
+import list from '/src/assets/icons/list.svg'
 import { Haptics } from '@capacitor/haptics';
 import ModalPinchZoomImage from '../components/ModalPinchZoomImage.vue'
 import { ref } from 'vue';
@@ -186,12 +209,21 @@ export default {
     
     return {
       utils,
+      list,
+      proSaberLogo,
       showModal: false,
       modalImageUrl: null,
     }
   },
   emits: ['getPosts'],
   methods: {
+    async copyBarcode (doc) {
+      console.log("🚀 ~ copyBarcode ~ doc:", doc)
+      await Clipboard.write({
+        string: doc.barCode
+      });
+      utils.toast("Código de barras copiado.")
+    },
     async toggleReaction(post) {
       
       if (post.isButtonDisabled) {
