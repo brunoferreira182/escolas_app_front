@@ -90,8 +90,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (this.$route.path === '/tabsWorkers/more' || this.$route.path === '/tabsParents/more') {
-        console.log('entrou no primeiro if')
+      if (this.$route.path === '/tabsLayout/more' || this.$route.path === '/tabsLayout/more') {
         this.startView()
       }
     }
