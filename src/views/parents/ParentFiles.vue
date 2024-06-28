@@ -90,7 +90,7 @@ export default {
   },
   methods: {
     async copyBarcode (doc) {
-      console.log(doc, 'doc.barCode')
+      console.log("🚀 ~ copyBarcode ~ doc:", doc)
       await Clipboard.write({
         string: doc.barCode
       });
