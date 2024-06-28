@@ -152,13 +152,22 @@
           fill="outline"
           @click="goToMedia" 
         >
-          Mídias
+          Mídias do chat
+        </ion-button>
+        <ion-button
+          color="primary"
+          expand="block"
+          fill="outline"
+          class="q-mt-sm"
+          @click="$router.push('/classPhotos?classId=' + $route.query.classId)" 
+        >
+          Fotos da turma
         </ion-button>
         <ion-button
           color="primary"
           expand="block"
           @click="goToChatDetail"
-          class="q-mt-md"
+          class="q-mt-sm"
         >
           Ir para o chat
         </ion-button>
