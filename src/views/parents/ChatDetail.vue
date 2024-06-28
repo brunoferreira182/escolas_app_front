@@ -245,6 +245,7 @@
       :allFiles="true"
       :noCrop="false"
       :acceptImageCaption="true"
+      :multiple="false"
       @captured="captured"
       @cancel="cancelPhotoHandler"
     />
