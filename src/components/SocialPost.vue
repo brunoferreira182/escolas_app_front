@@ -8,7 +8,7 @@
               <h2>
                 {{ post.createdBy.name }}
               </h2>
-              <p >{{ post.postData.detail.classData.functionName }} {{ post.postData.detail.classData.className }}</p>
+              <p >{{ post.postData.detail.classData.functionName }} em {{ post.postData.detail.classData.className }}</p>
             </div>
             <h2 
               class="text-capitalize" 
@@ -60,35 +60,24 @@
             >
               Evento para toda a escola
             </ion-badge>
-            <strong 
+            <span 
               v-if="post.postData.detail.selectedChildren && post.postData.detail.selectedChildren.childName" 
               class="q-mb-sm text-capitalize"
             >
-              {{ post.postData.detail.selectedChildren.childName }}
-            </strong>
-            <br>
-            <ion-note 
-              color="medium" 
-              class="q-pt-sm ion-text-wrap" 
-              v-if="!post.postData.resume.description && post.type === 'presence'"
-            >
-              {{ post.postData.title }}
-              <ion-badge
-                :class="`${post.postData.resume.title === 'present' ? 'bg-green q-my-sm' : 'bg-red q-my-sm'}`"
-              >
-                {{ post.postData.resume.title === 'present' ? 'Presente' : 'Ausente'}}
-              </ion-badge>
-            </ion-note>
-            <ion-note 
-              color="medium" 
-              class="q-pt-sm ion-text-wrap" 
+              {{ post.postData.detail.selectedChildren.childName }} <s></s>
+            </span>
+            <span class="q-pt-sm ion-text-wrap" v-if="!post.postData.resume.description && post.type === 'presence'">
+              {{ post.postData.title }}  {{ post.postData.resume.title === 'present' ? 'Confirmou presença' : 'Confirmou Ausência' }}
+            </span>
+            <span
+              class="q-pt-sm ion-text-wrap ion-text-lowercase" 
               v-if="post.postData.resume.description && post.postData.resume.description.subactivitySelected"
             >
               {{ post.postData.resume.title }} 
               {{ post.postData.resume.description.length > 50 ? 
-                post.postData.resume.description.subactivitySelected.slice(0, 50) + '...' : post.postData.resume.description.subactivitySelected 
+                post.postData.resume.description.subactivitySelected.slice(0, 50) + '...' : post.postData.resume.description.subactivitySelected
               }}
-            </ion-note>
+            </span>
             <ion-note 
               color="medium" 
               class="q-pt-sm ion-text-wrap" 
@@ -133,7 +122,7 @@
           <ion-label slot="end">
             <ion-button 
               v-if="post.type === 'Boleto'"
-              @click="copyBarcode(post.postData.detail)"
+              @click="copyBarcode(post.postData)"
             >
               Copiar código de barras
             </ion-button>
