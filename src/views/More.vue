@@ -15,17 +15,15 @@
         <ion-item :button="true" @click="$router.push('/profile')">
           <ion-label>Meu perfil</ion-label>
         </ion-item>
+        <ion-item v-if="currentView === 'worker'" :button="true" @click="$router.push('/solicitationsHomeWorkers')">
+          <ion-label>Atendimentos abertos</ion-label>
+        </ion-item>
         <ion-item :button="true" @click="$router.push('/calendar')">
           <ion-label>Agenda</ion-label>
         </ion-item>
-
-        <ion-item
-          :button="true"
-          @click="$router.push('/parentFiles')"
-        >
+        <ion-item :button="true" @click="$router.push('/parentFiles')">
           <ion-label>Arquivos</ion-label>
         </ion-item>
-        
         <ion-item :button="true" @click="$router.push('/messenger')">
           <ion-label>Mensagens</ion-label>
         </ion-item>
@@ -67,7 +65,7 @@ import {
   IonToolbar,
   IonHeader,
 } from '@ionic/vue';
-
+import { useCurrentView } from '@/stores/currentView'
 </script>
 <script>
 import { useFetch } from '../composables/fetch'
@@ -81,8 +79,23 @@ export default {
         open: false,
         buttons: []
       },
-      userNotes: 0
+      userNotes: 0,
+      currentView: null
     };
+  },
+  beforeMount () {
+    this.dialogDeleteAccount.buttons = [
+      {
+        text: 'Confirma',
+        handler: () => {
+          this.confirmDeleteAccount()
+        }
+      },
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+      }
+    ]
   },
   mounted () {
     utils.loading.clear()
@@ -98,18 +111,8 @@ export default {
   methods: {
     startView(){
       this.getUserNotesList()
-      this.dialogDeleteAccount.buttons = [
-        {
-          text: 'Confirma',
-          handler: () => {
-            this.confirmDeleteAccount()
-          }
-        },
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        }
-      ]
+      const currentView = useCurrentView()
+      this.currentView = currentView.currentView
     },
     dismissModal(){
       this.openModal = false

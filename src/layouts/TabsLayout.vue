@@ -26,9 +26,10 @@
       slot="fixed"
       vertical="bottom"
       horizontal="end"
-      style="margin-bottom: 50px"
+      style="margin-bottom: 50px; padding-bottom: var(ion-safe-area-bottom);"
       v-if="showSwitchButton && currentRoute.includes('social')"
       @click="switchViews"
+      class=""
     >
       <ion-fab-button size="small">
         <ion-icon :icon="reload"></ion-icon>
@@ -60,6 +61,7 @@ import {
 import utils from '../composables/utils'
 import { useBackButton } from '@ionic/vue';
 import { useUserPermissions } from '@/stores/userPermissions'
+import { useCurrentView } from '@/stores/currentView'
 </script>
 <script>
 import { useFetch } from '@/composables/fetch';
@@ -119,20 +121,26 @@ export default {
     },
     verifyView () {
       const userPermissions = useUserPermissions()
+      const currentView = useCurrentView()
       this.userPermissions = userPermissions
       if (userPermissions.permissions.includes('IS_WORKER')) {
         this.tabs = this.tabsWorkers
+        currentView.set('worker')
       } else {
         this.tabs = this.tabsParents
+        currentView.set('parent')
       }
       this.verifyShowSwitchButton()
     },
     switchViews () {
+      const currentView = useCurrentView()
       if (this.tabs === this.tabsParents) {
         this.tabs = this.tabsWorkers
+        currentView.set('worker')
         this.customToast('Você está na visualização de funcionário')
       } else {
         this.tabs = this.tabsParents
+        currentView.set('parent')
         this.customToast('Você está na visualização de familiar')
       }
     },

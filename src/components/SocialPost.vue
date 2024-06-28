@@ -18,8 +18,9 @@
               post.type === 'Boleto' ||
               post.type === 'mealMenu'"
             >
-              Escola Pro-saber
+              {{ APP_NAME }}
             </h2>
+            <h3 v-if="post.typeLabel">{{ post.typeLabel }}</h3>
             <p>{{ post.createdAt.createdAtInFullLong }}</p>
           </ion-label>
           <ion-avatar 
@@ -173,7 +174,7 @@
 
 <script setup>
 import utils from '../composables/utils'
-
+import { APP_NAME } from '../composables/variables'
 import { useFetch } from '../composables/fetch'
 import {
   IonIcon,
