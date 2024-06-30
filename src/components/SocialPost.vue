@@ -140,7 +140,10 @@
               Ler mais
             </ion-button>
             <ion-button 
-              v-else-if="post.routeDestination === '/postDetail' && post.type !== 'Boleto' && post.type !== 'activities' && post.type !== 'presence'"
+              v-else-if="post.routeDestination === '/postDetail' && 
+              post.type !== 'Boleto' && 
+              post.type !== 'activities' && 
+              post.type !== 'presence'"
               @click="$router.push('/postDetail?postId=' + post._id)"
               fill="clear"
             >

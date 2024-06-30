@@ -331,9 +331,9 @@ export default {
           dateAttendance: this.dateAttendance,
           resume: {
             title:  this.dialogAttendance.optionSelected.option,
-            // description:{
-            //   subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name
-            // },
+            description:{
+              subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name
+            },
             detail: {
               classData: this.dialogAttendance.classData,
               selectedChildren: this.dialogAttendance.selectedChildren.data
