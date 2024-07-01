@@ -1,9 +1,5 @@
 //////////// VARIAVEIS DA APLICACAO //////
-<<<<<<< HEAD
 const MODE_MASTER_SERVER = 'bruno'
-=======
-const MODE_MASTER_SERVER = 'local'
->>>>>>> c9f2a303f106bee2513222953ac64a328579c0b7
 const COMPANY_ID = 1
 const VERSION = 3.0
 const BUILD = 27
