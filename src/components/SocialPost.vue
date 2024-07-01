@@ -4,44 +4,26 @@
       <div >
         <ion-item lines="none">
           <ion-label class="ion-text-nowrap">
-            <div v-if="post.type === 'activities' || post.type === 'presence'">
-              <h2>
-                {{ post.createdBy.name }}
-              </h2>
+            <!-- <div v-if="post.type === 'activities' || post.type === 'presence'">
+              <h2>{{ post.createdBy.name }}</h2>
               <p>{{ post.postData.resume.classData.functionName }} em {{ post.postData.resume.classData.className }}</p>
-
-            </div>
-            <h2 
-              class="text-capitalize" 
-              v-if="post.type === 'feed' || 
-              post.type === 'schoolEvent' ||  
-              post.type === 'post' || 
-              post.type === 'Boleto' ||
-              post.type === 'mealMenu'"
-            >
+            </div> -->
+            
+            <h3 v-if="post.scope === 'private'">
+              {{ post.createdBy.name }}
+            </h3>
+            <h3 class="text-capitalize" v-else>
               {{ APP_NAME }}
-            </h2>
-            <h3 v-if="post.typeLabel">{{ post.typeLabel }}</h3>
+            </h3>
             <p>{{ post.createdAt.createdAtInFullLong }}</p>
+            <h2>{{ post.postData.resume.title }}</h2>
           </ion-label>
           <ion-avatar 
             aria-hidden="true" 
             slot="start" 
-            v-if="post.postData.resume.img || 
-            post.type === 'feed' || 
-            post.type === 'schoolEvent' ||  
-            post.type === 'post' || 
-            post.type === 'Boleto' ||
-            post.type === 'mealMenu'"
-            >
-            <img class="ion-avatar" :src="proSaberLogo"/>
-          </ion-avatar>
-          <ion-avatar 
-            aria-hidden="true" 
-            slot="start" 
-            v-if="post.type === 'activities' || post.type === 'presence'"
           >
-            <img class="ion-avatar" :src="list"/>
+            <img class="ion-avatar" v-if="post.scope === 'private'" :src="proSaberLogo"/>
+            <img class="ion-avatar" v-else :src="proSaberLogo"/>
           </ion-avatar>
         </ion-item>
       </div>
@@ -54,41 +36,11 @@
       <div>
         <ion-item lines="none" >
           <ion-label>
-            <ion-badge
-              color="primary"
-              class="q-my-sm"
-              v-if="post.routeDestination?.split('?')[0] === '/calendarEventDetail'"
-            >
-              Evento para toda a escola
-            </ion-badge>
-            <span 
-              class="q-mb-sm text-capitalize"
-            >
-              {{ post.childName }} <s></s>
-            </span>
-            <span class="q-pt-sm ion-text-wrap" v-if="!post.postData.resume.description && post.type === 'presence'">
-              {{ post.postData.resume.title }}
-            </span>
-            <span
-              class="q-pt-sm ion-text-wrap ion-text-lowercase" 
-              v-if="post.postData.resume && post.postData.resume.subactivitySelected"
-            >
-              {{ post.postData.resume.title }} 
-              {{ post.postData.resume.length > 50 ? 
-                post.postData.resume.subactivitySelected.slice(0, 50) + '...' : post.postData.resume.subactivitySelected
-              }}
-            </span>
-            <ion-note 
-              color="medium" 
-              class="q-pt-sm ion-text-wrap" 
-              v-if="post.type === 'Boleto'"
-            >
-              Boleto
-            </ion-note>
+            <div>{{ post.postData.resume.description }}</div>
           </ion-label>
         </ion-item>
         <ion-item lines="none" >
-          <ion-label v-if="post.type === 'feed' || post.type === 'schoolEvent' ||  post.type === 'post'">
+          <ion-label v-if="post.type === 'schoolEvent' ||  post.type === 'post'">
             <span
               @click.prevent="toggleReaction(post)"
               :class="{ 'heart-animation': post.userReaction }"
@@ -111,7 +63,7 @@
               </label>
               {{ post.reactions }}
             </span>
-            <span class="q-ml-lg" v-if="post.routeDestination === '/postDetail'">
+            <span class="q-ml-lg" v-if="post.type === 'post'">
               <ion-icon
                 style="width: 28px; color:rgb(165, 164, 164); height: 28px;"
                 :src="comment"
@@ -121,30 +73,8 @@
           </ion-label>
           <ion-label slot="end" >
             <ion-button 
-              v-if="post.type === 'Boleto'"
-              @click="copyBarcode(post.postData)"
-            >
-              Copiar código de barras
-            </ion-button>
-            <ion-button 
-              v-if="post.type === 'Boleto'"
-              @click="utils.downloadFile(post.postData.resume.img)"
-            >
-              Baixar
-            </ion-button>
-            <ion-button 
-              v-if="post.routeDestination !== '/postDetail'"
+              v-if="post.routeDestination"
               @click="$router.push(post.routeDestination )"
-              fill="clear"
-            >
-              Ler mais
-            </ion-button>
-            <ion-button 
-              v-else-if="post.routeDestination === '/postDetail' && 
-              post.type !== 'Boleto' && 
-              post.type !== 'activities' && 
-              post.type !== 'presence'"
-              @click="$router.push('/postDetail?postId=' + post._id)"
               fill="clear"
             >
               Ler mais
@@ -210,13 +140,6 @@ export default {
   },
   emits: ['getPosts'],
   methods: {
-    async copyBarcode (doc) {
-      console.log("🚀 ~ copyBarcode ~ doc:", doc)
-      await Clipboard.write({
-        string: doc.barCode
-      });
-      utils.toast("Código de barras copiado.")
-    },
     async toggleReaction(post) {
       
       if (post.isButtonDisabled) {
