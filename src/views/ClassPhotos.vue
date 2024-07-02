@@ -6,7 +6,7 @@
     />
     <ion-content color="light">
       <MasonryWall
-        :items="parentFiles"
+        :items="classPhotos"
         :column-width="180"
         :gap="10"
         :ssr-columns="100"
@@ -14,14 +14,33 @@
         class="q-pa-xs"
       >
         <ion-card @click="clkOpenImg(item)" class="my-card q-ma-none">
-          <ion-card-content>
-            <ion-label>
-              <h2>{{item.noteName}}</h2>
-              <p>{{item.noteDescription}}</p>
-            </ion-label>
-          </ion-card-content>
+          <img
+            :src="utils.attachmentsAddress() + item.image.filename"
+          >
         </ion-card>
       </MasonryWall>
+      <ion-fab
+        slot="fixed"
+        vertical="bottom"
+        horizontal="end"
+        style="margin-bottom: 50px; padding-bottom: var(ion-safe-area-bottom);"
+        v-if="showAddPhoto && currentRoute.includes('classPhotos')"
+        @click="clkAddAttachment"
+      >
+        <ion-fab-button size="medium">
+          <ion-icon :icon="add" />
+        </ion-fab-button>
+      </ion-fab>
+      <PhotoHandler
+        v-show="startPhotoHandler"
+        :start="startPhotoHandler"
+        :allFiles="true"
+        :noCrop="false"
+        :acceptImageCaption="true"
+        :multiple="true"
+        @captured="captured"
+        @cancel="cancelPhotoHandler"
+      />
     </ion-content>
   </ion-page>
 </template>
@@ -35,7 +54,6 @@ import {
   IonInput,
   IonItem,
   IonLabel,
-  IonCardContent,
   IonCard,
   IonContent,
   onIonViewWillEnter,
@@ -43,16 +61,19 @@ import {
   IonAvatar,
   IonList,
   IonNote,
+  IonFab,
+  IonFabButton,
   IonText,
   IonIcon,
 } from '@ionic/vue';
 import MasonryWall from '@yeger/vue-masonry-wall'
-// import { useFetch } from '../composables/fetch'
+import { useFetch } from '../composables/fetch'
+import PhotoHandler from '../components/PhotoHandler.vue'
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
-import utils from '../../src/composables/utils.js';
+import utils from '../composables/utils.js';
+import { useCurrentView } from '@/stores/currentView'
 import {
-  cloudDownload,
-  barcode,
+  add,
 } from 'ionicons/icons';
 
 </script>
@@ -64,23 +85,87 @@ export default {
     return {
       searchDocument: '',
       searchResult: null,
-      parentFiles: [],
+      showAddPhoto: false,
+      classPhotos: [],
+      startPhotoHandler: false,
+      step: 'initial',
+      currentRoute:'',
+      pagination: {
+        page: 1,
+        rowsPerPage: 10
+      },
     };
   },
+  beforeMount () {
+    this.currentRoute = this.$route.path
+  },
   watch: {
-    $route (to, from) {
+    $route(to, from) {
+      this.currentRoute = this.$route.path
       if (to.path === '/classPhotos') {
-        this.getFilesByUserId()
+        this.verifyView()
       }
     }
   },
   mounted(){
+    this.verifyView()
     utils.loading.hide()
   },
   methods: {
+    clkAddAttachment () {
+      this.step = 'addAttachment'
+      this.startPhotoHandler = true
+    },
+    sendImages (file) {
+      const opt = {
+        route: '/mobile/workers/chat/insertClassImages',
+        body: {
+          classId: this.$route.query.classId
+        },
+        file: [ file ]
+      }
+      utils.loading.show()
+			useFetch(opt).then(r => {
+        console.log("🚀 ~ useFetch ~ r:", r)
+        utils.loading.hide()
+      })
+    },
+    captured(img, imgBlob, fileName, imageCaption) {
+      this.step = 'initial'
+      this.startPhotoHandler = false
+      this.insertMessage({
+        file: imgBlob,
+        name: fileName,
+        imageCaption
+      })
+    },
+    cancelPhotoHandler () {
+      this.startPhotoHandler = false
+      this.step = 'initial'
+    },
+    getClassesPhotos(){
+      const opt = {
+        route: '/mobile/workers/chat/getClassesPhotos',
+        body: {
+          classId: this.$route.query.classId,
+          page: this.pagination.page,
+          rowsPerPage: this.pagination.rowsPerPage
+        }
+      }
+      useFetch(opt).then(r => {
+        this.classPhotos = r.data.list
+      })
+    },
+    verifyView () {
+      this.getClassesPhotos()
+      const currentView = useCurrentView()
+      console.log("🚀 ~ verifyView ~ currentView:", currentView.currentView)
+      if (currentView.currentView === 'worker') {
+        this.showAddPhoto = true
+      }
+    },
     clkOpenImg(item){
       console.log("🚀 ~ clkOpenImg ~ item:", item)
-      
     }
   }
 };
