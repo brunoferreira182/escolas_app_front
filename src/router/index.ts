@@ -66,7 +66,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/tabsLayout',
         component: TabsLayout,
         children: [
-          { path: '/', redirect: '/tabsParents/social'},
+          { path: '/', redirect: '/tabsLayout/social'},
           { path: '/tabsLayout/social', component: parentsSocial },
           { path: '/tabsLayout/solicitationsHome', component: ParentsSolicitationsHome },
           { path: '/tabsLayout/chat', component: parentsChat },

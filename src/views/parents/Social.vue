@@ -7,6 +7,8 @@
     </ion-header>
     <ion-content color="light" :fullscreen="true">
 
+      
+
       <ion-header collapse="condense">
         <ion-toolbar color="light">
           <ion-title size="large">
@@ -57,6 +59,9 @@
           />
         </swiper-slide>
       </swiper>
+      <ion-refresher slot="fixed" @ionRefresh="refresh($event)" :pull-factor="0.5" :pull-min="100" :pull-max="200">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <SocialPost
         v-for="(post, i) in posts"
         :key="post._id"
@@ -76,6 +81,7 @@ import {
   IonTitle,
   IonToolbar,
   IonHeader,
+  IonRefresher, IonRefresherContent
 } from '@ionic/vue';
 import { APP_NAME } from '../../composables/variables';
 import { toastController } from '@ionic/vue';
@@ -87,6 +93,7 @@ import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
+import utils from '../../composables/utils.js';
 </script>
 
 <script>
@@ -186,8 +193,12 @@ export default {
       else this.storiesPosts.push(...ret.data.list)
       return
     },
-    async getPosts (refreshPage) {
-      if (refreshPage) this.page = 0
+    async refresh ($event) {
+      this.page = 1
+      await utils.sleep(500)
+      this.getPosts($event)
+    },
+    async getPosts ($event) {
       const opt = {
         route: '/mobile/social/getPosts',
         body: {
@@ -197,13 +208,13 @@ export default {
       }
       const ret = await useFetch(opt)
       // this.page++
-      if (!refreshPage) {
+      if ($event) {
         if(ret.data.list) {
           this.posts = ret.data.list
-          console.log("🚀 ~ getPosts ~ ret.data.list:", ret.data.list)
         }
+        $event.target.complete()
       }
-        else this.posts.push(...ret.data.list)
+      else this.posts.push(...ret.data.list)
       return
     },
   }

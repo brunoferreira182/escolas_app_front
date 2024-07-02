@@ -57,6 +57,11 @@ export default {
       fileToCopy: '/pro_saber/google-services/GoogleService-Info.plist'
     },
     {
+      type: 'copyFile',
+      to: '/src/theme/variablesCustom.css',
+      fileToCopy: '/pro_saber/theme/variablesCustom.css'
+    },
+    {
       type: 'runCommand',
       commandToRun: "npx @capacitor/assets generate --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#212529' --splashBackgroundColorDark '#212529'"
     },
