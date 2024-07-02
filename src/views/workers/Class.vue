@@ -409,14 +409,10 @@ export default {
           selectedSubtype: this.dialogInsertClassActivity.subactivitySelected?.name,
           resume: {
             title: this.dialogInsertClassActivity.activitySelected.name,
-            description:{
-              subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name
-            },
-            detail: {
-              activityId: this.dialogInsertClassActivity.activitySelected._id,
-              classData: this.dialogInsertClassActivity.classData,
-              selectedChildren: this.dialogInsertClassActivity.selectedChildren.data
-            }
+            subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name,
+            activityId: this.dialogInsertClassActivity.activitySelected._id,
+            classData: this.dialogInsertClassActivity.classData,
+            selectedChildren: this.dialogInsertClassActivity.selectedChildren.data
           },
         }
       }

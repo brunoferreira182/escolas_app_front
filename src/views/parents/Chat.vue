@@ -125,7 +125,7 @@ export default {
   },
   watch: {
     $route (to, from) {
-      if (to.path === '/tabsParents/chat') {
+      if (to.path === '/tabsLayout/chat') {
         this.startView()
       }
     }
