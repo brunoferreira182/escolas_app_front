@@ -17,6 +17,16 @@
         </ion-toolbar>
       </ion-header>
 
+      <div class="q-mx-sm">
+        <ion-chip
+          v-for="(filter, i) in filterTypes"
+          :key="i"
+          @click="clkFilterPosts(filter)"
+          :outline="filter.type !== selectedFilter.type"
+          :color="filter.type === selectedFilter.type ? 'success' : 'primary'"
+        >{{ filter.label }}</ion-chip>
+      </div>
+
       <swiper 
         class="q-my-md"
         :modules="modules"
@@ -70,6 +80,10 @@
         :i="i"
       />
 
+      <ion-infinite-scroll @ionInfinite="bottomOfPage" v-if="showInfiniteScroll">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+
     </ion-content>
   </ion-page>
 </template>
@@ -81,7 +95,9 @@ import {
   IonTitle,
   IonToolbar,
   IonHeader,
-  IonRefresher, IonRefresherContent
+  IonRefresher, IonRefresherContent,
+  IonChip,
+  IonInfiniteScroll, IonInfiniteScrollContent
 } from '@ionic/vue';
 import { APP_NAME } from '../../composables/variables';
 import { toastController } from '@ionic/vue';
@@ -113,6 +129,16 @@ export default {
       userNotes: '',
       noteString: '',
       storiesPosts: [],
+      filterTypes: [
+        { label: 'Todos', type: 'all' },
+        { label: 'Público', type: 'public' },
+        { label: 'Meus posts', type: 'private' },
+      ],
+      selectedFilter: {
+        label: 'Todos',
+        type: 'all'
+      },
+      showInfiniteScroll: true
     };
   },
   mounted () {
@@ -127,6 +153,12 @@ export default {
     }
   },
   methods: {
+    clkFilterPosts (filter) {
+      this.selectedFilter = filter
+      this.page = 1
+      this.posts = []
+      this.getPosts(true)
+    },
     async verifyNewContent () {
       const opt = {
         route: '/mobile/social/verifyNewContent',
@@ -142,7 +174,7 @@ export default {
       this.$router.push('/login')
     },
     async startView () {
-      this.getPosts()
+      this.getPosts(null)
       this.getUserNotes()
       this.getStories()
     },
@@ -198,12 +230,18 @@ export default {
       await utils.sleep(500)
       this.getPosts($event)
     },
+    async bottomOfPage () {
+      this.page++
+      await this.getPosts(null)
+    },
     async getPosts ($event) {
+      this.showInfiniteScroll = true
       const opt = {
         route: '/mobile/social/getPosts',
         body: {
           page: this.page,
-          rowsPerPage: this.rowsPerPage
+          rowsPerPage: this.rowsPerPage,
+          scope: this.selectedFilter.type
         }
       }
       const ret = await useFetch(opt)
@@ -212,9 +250,11 @@ export default {
         if(ret.data.list) {
           this.posts = ret.data.list
         }
-        $event.target.complete()
+        try { $event.target.complete() }
+        catch (e) { console.log('vindo do filtro') }
       }
       else this.posts.push(...ret.data.list)
+      if (ret.data.list.length < this.rowsPerPage) this.showInfiniteScroll = false
       return
     },
   }
