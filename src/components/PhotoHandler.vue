@@ -1,7 +1,5 @@
 <template>
   <ion-modal :isOpen="step === 'crop'" >
-    
-    
     <cropper
       :src="img.webPath"
       @change="crop"
@@ -14,7 +12,6 @@
       v-if="imgType === 'gallery'"
       style="max-height: 75vh;"
     />
-    
     <div>
       <div class="input-wrapper  q-px-md q-mx-md"  v-if="props.acceptImageCaption">
         <ion-textarea
@@ -202,12 +199,16 @@ async function pickFile (type) {
 
   if (type === 'gallery' && !props.noCrop) {
     // img.value é base64
+    if(props.multiple){
+      for(let i = 0; i < file.length; i++){
+        emits('captured', file[i], file[i].blob, file[i].name, imageCaption, '', type)
+      }
+      return
+    }
     img.value = await convertBlobToBase64(file.blob)
-    console.log('typeof', typeof img.value)
     step.value = 'crop'
     imgType.value = 'gallery'
   } else if (type === 'documents' || (type === 'gallery' && props.noCrop)) {
-    console.log('entrou no type === cascac', file)
     utils.loading.hide()
     emits('captured', file, file.blob, file.name, imageCaption, '', type)
   }

@@ -15,10 +15,13 @@
       >
         <ion-card @click="clkOpenImg(item)" class="my-card q-ma-none">
           <img
-            :src="utils.attachmentsAddress() + item.image.filename"
+            :src="utils.attachmentsAddress() + item.img.filename"
           >
         </ion-card>
       </MasonryWall>
+      <ion-button @click="clkLoadMore()" expand="block">
+        Carregar mais
+      </ion-button>
       <ion-fab
         slot="fixed"
         vertical="bottom"
@@ -31,6 +34,7 @@
           <ion-icon :icon="add" />
         </ion-fab-button>
       </ion-fab>
+ 
       <PhotoHandler
         v-show="startPhotoHandler"
         :start="startPhotoHandler"
@@ -116,24 +120,32 @@ export default {
       this.step = 'addAttachment'
       this.startPhotoHandler = true
     },
+    clkLoadMore () {
+      this.pagination.page++
+      this.getClassesPhotos()
+    },
     sendImages (file) {
       const opt = {
-        route: '/mobile/workers/chat/insertClassImages',
+        route: '/mobile/workers/chat/insertClassesPhotos',
         body: {
           classId: this.$route.query.classId
         },
         file: [ file ]
       }
-      utils.loading.show()
 			useFetch(opt).then(r => {
         console.log("🚀 ~ useFetch ~ r:", r)
-        utils.loading.hide()
       })
     },
     captured(img, imgBlob, fileName, imageCaption) {
+      let teste = {
+        img,
+        imgBlob,
+        fileName,
+        imageCaption
+      }
       this.step = 'initial'
       this.startPhotoHandler = false
-      this.insertMessage({
+      this.sendImages({
         file: imgBlob,
         name: fileName,
         imageCaption
@@ -154,6 +166,7 @@ export default {
       }
       useFetch(opt).then(r => {
         this.classPhotos = r.data.list
+        console.log("🚀 ~ useFetch ~ classPhotos:", this.classPhotos)
       })
     },
     verifyView () {
