@@ -42,7 +42,7 @@ export default defineComponent({
     utils.loading.hide()
     this.backButtonManager()
     defineCustomElements(window)
-    this.getCompanyColors()
+    // this.getCompanyColors()
   },
   methods: {
     async startView () {
