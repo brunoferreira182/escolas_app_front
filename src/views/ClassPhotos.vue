@@ -5,20 +5,25 @@
       :backButton="true"
     />
     <ion-content color="light">
-      <MasonryWall
-        :items="classPhotos"
-        :column-width="180"
-        :gap="10"
-        :ssr-columns="100"
-        #default="{ item }"
-        class="q-pa-xs"
-      >
-        <ion-card @click="clkOpenImg(item)" class="my-card q-ma-none">
-          <img
-            :src="utils.attachmentsAddress() + item.img.filename"
-          >
-        </ion-card>
-      </MasonryWall>
+      <div v-for="item in classPhotos">
+        <ion-text>
+          <h3 class="q-mx-md">{{ item.date }}</h3>
+        </ion-text>
+        <MasonryWall
+          :items="item.img"
+          :column-width="180"
+          :gap="10"
+          :ssr-columns="100"
+          #default="{ item }"
+          class="q-pa-xs"
+        >  
+          <ion-card @click="clkOpenImg(item)" class="my-card q-ma-none">
+            <img
+              :src="utils.attachmentsAddress() + item.img.filename"
+            >
+          </ion-card>
+        </MasonryWall>
+      </div>
       <ion-button @click="clkLoadMore()" expand="block">
         Carregar mais
       </ion-button>
@@ -34,7 +39,6 @@
           <ion-icon :icon="add" />
         </ion-fab-button>
       </ion-fab>
- 
       <PhotoHandler
         v-show="startPhotoHandler"
         :start="startPhotoHandler"
@@ -98,6 +102,7 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
+      date: [],
     };
   },
   beforeMount () {
@@ -133,7 +138,7 @@ export default {
         file: [ file ]
       }
 			useFetch(opt).then(r => {
-        console.log("🚀 ~ useFetch ~ r:", r)
+        this.getClassesPhotos()
       })
     },
     captured(img, imgBlob, fileName, imageCaption) {
@@ -165,8 +170,15 @@ export default {
         }
       }
       useFetch(opt).then(r => {
-        this.classPhotos = r.data.list
-        console.log("🚀 ~ useFetch ~ classPhotos:", this.classPhotos)
+        console.log("🚀 ~ useFetch ~ classPhotos:", r.data.list)
+        r.data.list.forEach(item => {
+          this.classPhotos.push({
+            date: item._id,
+            img: item.images
+          })
+        });
+        // this.date = r.data.list[0]._id
+      
       })
     },
     verifyView () {
