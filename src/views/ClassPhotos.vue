@@ -6,7 +6,7 @@
     />
     <ion-content color="light">
       <MasonryWall
-        :items="notesList"
+        :items="parentFiles"
         :column-width="180"
         :gap="10"
         :ssr-columns="100"
@@ -35,6 +35,8 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonCardContent,
+  IonCard,
   IonContent,
   onIonViewWillEnter,
   IonImg,
@@ -45,9 +47,9 @@ import {
   IonIcon,
 } from '@ionic/vue';
 import MasonryWall from '@yeger/vue-masonry-wall'
-import { useFetch } from '../../composables/fetch'
-import ToolbarEscolas from '../../components/ToolbarEscolas.vue'
-import utils from '../../../src/composables/utils.js';
+// import { useFetch } from '../composables/fetch'
+import ToolbarEscolas from '../components/ToolbarEscolas.vue'
+import utils from '../../src/composables/utils.js';
 import {
   cloudDownload,
   barcode,
