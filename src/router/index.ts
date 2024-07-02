@@ -9,7 +9,7 @@ import waitingAproval from '../views/WaitingAproval.vue';
 import waitingPermission from '../views/WaitingPermission.vue';
 import parentsSocial from '../views/parents/Social.vue'
 import parentsChat from '../views/parents/Chat.vue'
-// import parentProfile from '../views/Profile.vue'
+import ClassPhotos from '../views/ClassPhotos.vue'
 import userPersonalData from '../views/parents/UserPersonalData.vue'
 import postDetail from '../views/parents/PostDetail.vue'
 import addChild from '../views/parents/AddChild.vue'
@@ -78,6 +78,7 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsLayout/more', component: More}
         ]
       },
+      { path: '/classPhotos', component: ClassPhotos },
       { path: '/register', component: Register },
       { path: '/waitingAproval', component: waitingAproval },
       { path: '/waitingpermission', component: waitingPermission },
