@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <ion-router-outlet style="height: 100%;"></ion-router-outlet>
+      <ion-router-outlet style="height: 100%; background: var(--ion-color-light)" ></ion-router-outlet>
       <ion-tab-bar
         style="padding-bottom: var(--ion-safe-area-bottom);"
         ref="tabbar"
