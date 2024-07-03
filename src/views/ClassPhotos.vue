@@ -4,21 +4,34 @@
       title="Fotos da turma"
       :backButton="true"
     />
-    <ion-content color="light">
-      <MasonryWall
-        :items="classPhotos"
-        :column-width="180"
-        :gap="10"
-        :ssr-columns="100"
-        #default="{ item }"
-        class="q-pa-xs"
-      >
-        <ion-card @click="clkOpenImg(item)" class="my-card q-ma-none">
-          <img
-            :src="utils.attachmentsAddress() + item.img.filename"
-          >
-        </ion-card>
-      </MasonryWall>
+    <ion-content color="light" @mousedown="$event.preventDefault()">
+      <div v-for="item in classPhotos">
+        <ion-text>
+          <h3 class="q-mx-md">{{ item._id }}</h3>
+        </ion-text>
+        <MasonryWall
+          :items="item.images"
+          :column-width="180"
+          :gap="10"
+          :ssr-columns="100"
+          #default="{ item }"
+          class="q-pa-xs"
+        >  
+          <ion-card @click="openImageModal(item.img.filename)" class="my-card q-ma-none">
+            <div>
+              <img
+                :src="utils.attachmentsAddress() + item.img.filename"
+              >
+              <ion-button 
+                slot="icon-only" 
+                style="position:absolute; bottom: 0px;"
+                :icon="add" 
+                @click="download(item.img)"
+              />
+            </div>
+          </ion-card>
+        </MasonryWall>
+      </div>
       <ion-button @click="clkLoadMore()" expand="block">
         Carregar mais
       </ion-button>
@@ -34,7 +47,6 @@
           <ion-icon :icon="add" />
         </ion-fab-button>
       </ion-fab>
- 
       <PhotoHandler
         v-show="startPhotoHandler"
         :start="startPhotoHandler"
@@ -44,6 +56,11 @@
         :multiple="true"
         @captured="captured"
         @cancel="cancelPhotoHandler"
+      />
+      <ModalPinchZoomImage
+        :modalImageUrl="modalImageUrl"
+        :showModal="showModal"
+        @closeModal="showModal = false"
       />
     </ion-content>
   </ion-page>
@@ -66,6 +83,8 @@ import {
   IonList,
   IonNote,
   IonFab,
+  IonLoading,
+  IonProgressBar,
   IonFabButton,
   IonText,
   IonIcon,
@@ -75,11 +94,18 @@ import { useFetch } from '../composables/fetch'
 import PhotoHandler from '../components/PhotoHandler.vue'
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
 import utils from '../composables/utils.js';
+import ModalPinchZoomImage from '../components/ModalPinchZoomImage.vue'
 import { useCurrentView } from '@/stores/currentView'
 import {
   add,
 } from 'ionicons/icons';
-
+import { ref } from 'vue';
+const showModal = ref(false);
+const modalImageUrl = ref(null);
+const openImageModal = (imageFilename) => {
+  modalImageUrl.value = utils.makeFileUrl(imageFilename);
+  showModal.value = true;
+};
 </script>
 <script>
 
@@ -87,6 +113,8 @@ export default {
   name: "ClassPhotos",
   data() {
     return {
+      showModal: false,
+      modalImageUrl: null,
       searchDocument: '',
       searchResult: null,
       showAddPhoto: false,
@@ -107,12 +135,12 @@ export default {
     $route(to, from) {
       this.currentRoute = this.$route.path
       if (to.path === '/classPhotos') {
-        this.verifyView()
+        this.verifyAndStartView()
       }
     }
   },
   mounted(){
-    this.verifyView()
+    this.verifyAndStartView()
     utils.loading.hide()
   },
   methods: {
@@ -133,16 +161,18 @@ export default {
         file: [ file ]
       }
 			useFetch(opt).then(r => {
-        console.log("🚀 ~ useFetch ~ r:", r)
+        let res = []
+        res.push(r)
+        for(let i = 0; i < res.length; i++){
+          if(!res[i].error){
+            utils.loading.hide()
+            this.getClassesPhotos()
+            return
+          }
+        }
       })
     },
     captured(img, imgBlob, fileName, imageCaption) {
-      let teste = {
-        img,
-        imgBlob,
-        fileName,
-        imageCaption
-      }
       this.step = 'initial'
       this.startPhotoHandler = false
       this.sendImages({
@@ -164,22 +194,30 @@ export default {
           rowsPerPage: this.pagination.rowsPerPage
         }
       }
+      utils.loading.show()
       useFetch(opt).then(r => {
-        this.classPhotos = r.data.list
-        console.log("🚀 ~ useFetch ~ classPhotos:", this.classPhotos)
+        utils.loading.hide()
+        if(!r.error){
+          this.classPhotos = r.data.list
+          return
+        }
       })
     },
-    verifyView () {
+    verifyAndStartView () {
       this.getClassesPhotos()
       const currentView = useCurrentView()
-      console.log("🚀 ~ verifyView ~ currentView:", currentView.currentView)
       if (currentView.currentView === 'worker') {
         this.showAddPhoto = true
       }
     },
-    clkOpenImg(item){
-      console.log("🚀 ~ clkOpenImg ~ item:", item)
-    }
+    async download (item) {
+      console.log("🚀 ~ clkDownloadAttachment ~ docccccccccc:", item)
+      return
+      const retDownload = await utils.downloadFile({
+        filename: doc.file.filename,
+        originalname: doc.file.originalname
+      })
+    },
   }
 };
 </script>

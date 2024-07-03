@@ -103,7 +103,6 @@ export default {
         filename: doc.file.filename,
         originalname: doc.file.originalname
       })
-      console.log(retDownload, 'retDownload aqui')
     },
     getFilesByUserId(){
       const opt = {
