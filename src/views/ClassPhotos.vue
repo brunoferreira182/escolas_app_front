@@ -32,9 +32,6 @@
           </ion-card>
         </MasonryWall>
       </div>
-      <ion-button @click="clkLoadMore()" expand="block">
-        Carregar mais
-      </ion-button>
       <ion-fab
         slot="fixed"
         vertical="bottom"
@@ -62,6 +59,11 @@
         :showModal="showModal"
         @closeModal="showModal = false"
       />
+      <ion-footer class="load-more-footer">
+        <ion-button @click="clkLoadMore()" expand="block">
+          Carregar mais
+        </ion-button>
+      </ion-footer>
     </ion-content>
   </ion-page>
 </template>
@@ -81,6 +83,7 @@ import {
   IonImg,
   IonAvatar,
   IonList,
+  IonFooter,
   IonNote,
   IonFab,
   IonLoading,
@@ -227,5 +230,12 @@ ion-avatar {
   width: 100px;
   height: 100px
 }
-
+.load-more-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+  background: var(--ion-color-light);
+  padding-bottom: var(--ion-safe-area-bottom);
+}
 </style>
