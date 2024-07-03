@@ -81,7 +81,7 @@ export default {
         { name: "social", icon: idCardOutline, to: '/tabsLayout/social', label: "Social" },
         { name: "attendance", icon: calendar, to: '/tabsLayout/attendance', label: "Presença" },
         { name: "turmas", icon: accessibility, to: '/tabsLayout/class', label: "Atividades" },
-        { name: "messenger", icon: chatboxOutline, to: '/tabsLayout/chat', label: "Salas" },
+        { name: "messenger", icon: chatboxOutline, to: '/tabsLayout/chatWorkers', label: "Salas" },
         { name: "more", icon: ellipsisHorizontalOutline, to: '/tabsLayout/more', label: "Mais" },
       ],
       userProfile: [],
