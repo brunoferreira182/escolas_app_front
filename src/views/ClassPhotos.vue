@@ -4,7 +4,7 @@
       title="Fotos da turma"
       :backButton="true"
     />
-    <ion-content color="light">
+    <ion-content color="light" @mousedown="$event.preventDefault()">
       <div v-for="item in classPhotos">
         <ion-text>
           <h3 class="q-mx-md">{{ item._id }}</h3>
@@ -18,10 +18,17 @@
           class="q-pa-xs"
         >  
           <ion-card @click="openImageModal(item.img.filename)" class="my-card q-ma-none">
-            <ion-button slot="icon-only" :icon="add" @click="download(item.img)"></ion-button>
-            <img
-              :src="utils.attachmentsAddress() + item.img.filename"
-            >
+            <div>
+              <img
+                :src="utils.attachmentsAddress() + item.img.filename"
+              >
+              <ion-button 
+                slot="icon-only" 
+                style="position:absolute; bottom: 0px;"
+                :icon="add" 
+                @click="download(item.img)"
+              />
+            </div>
           </ion-card>
         </MasonryWall>
       </div>
@@ -76,6 +83,8 @@ import {
   IonList,
   IonNote,
   IonFab,
+  IonLoading,
+  IonProgressBar,
   IonFabButton,
   IonText,
   IonIcon,
@@ -117,7 +126,6 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
-      date: [],
     };
   },
   beforeMount () {
@@ -153,11 +161,19 @@ export default {
         file: [ file ]
       }
 			useFetch(opt).then(r => {
-        this.getClassesPhotos()
+        let res = []
+        res.push(r)
+        for(let i = 0; i < res.length; i++){
+          if(!res[i].error){
+            utils.loading.hide()
+            this.getClassesPhotos()
+            return
+          }
+        }
       })
     },
     captured(img, imgBlob, fileName, imageCaption) {
-    this.step = 'initial'
+      this.step = 'initial'
       this.startPhotoHandler = false
       this.sendImages({
         file: imgBlob,
@@ -178,8 +194,9 @@ export default {
           rowsPerPage: this.pagination.rowsPerPage
         }
       }
+      utils.loading.show()
       useFetch(opt).then(r => {
-        console.log("🚀 ~ useFetch ~ r:", r)
+        utils.loading.hide()
         if(!r.error){
           this.classPhotos = r.data.list
           return
