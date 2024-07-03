@@ -21,6 +21,7 @@
             <img
               :src="utils.attachmentsAddress() + item.img.filename"
             >
+            <ion-button slot="icon-only" :icon="add" @click="download(item.img)"></ion-button>
           </ion-card>
         </MasonryWall>
       </div>
@@ -142,13 +143,7 @@ export default {
       })
     },
     captured(img, imgBlob, fileName, imageCaption) {
-      let teste = {
-        img,
-        imgBlob,
-        fileName,
-        imageCaption
-      }
-      this.step = 'initial'
+    this.step = 'initial'
       this.startPhotoHandler = false
       this.sendImages({
         file: imgBlob,
@@ -170,15 +165,15 @@ export default {
         }
       }
       useFetch(opt).then(r => {
-        console.log("🚀 ~ useFetch ~ classPhotos:", r.data.list)
-        r.data.list.forEach(item => {
-          this.classPhotos.push({
-            date: item._id,
-            img: item.images
-          })
-        });
-        // this.date = r.data.list[0]._id
-      
+        if(!r.error){
+          r.data.list.forEach(item => {
+            this.classPhotos.push({
+              date: item._id,
+              img: item.images
+            })
+          });
+          return
+        }
       })
     },
     verifyView () {
@@ -189,9 +184,14 @@ export default {
         this.showAddPhoto = true
       }
     },
-    clkOpenImg(item){
-      console.log("🚀 ~ clkOpenImg ~ item:", item)
-    }
+    async download (item) {
+      console.log("🚀 ~ clkDownloadAttachment ~ docccccccccc:", item)
+      return
+      const retDownload = await utils.downloadFile({
+        filename: doc.file.filename,
+        originalname: doc.file.originalname
+      })
+    },
   }
 };
 </script>
