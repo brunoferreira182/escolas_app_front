@@ -7,21 +7,21 @@
     <ion-content color="light">
       <div v-for="item in classPhotos">
         <ion-text>
-          <h3 class="q-mx-md">{{ item.date }}</h3>
+          <h3 class="q-mx-md">{{ item._id }}</h3>
         </ion-text>
         <MasonryWall
-          :items="item.img"
+          :items="item.images"
           :column-width="180"
           :gap="10"
           :ssr-columns="100"
           #default="{ item }"
           class="q-pa-xs"
         >  
-          <ion-card @click="clkOpenImg(item)" class="my-card q-ma-none">
+          <ion-card @click="openImageModal(item.img.filename)" class="my-card q-ma-none">
+            <ion-button slot="icon-only" :icon="add" @click="download(item.img)"></ion-button>
             <img
               :src="utils.attachmentsAddress() + item.img.filename"
             >
-            <ion-button slot="icon-only" :icon="add" @click="download(item.img)"></ion-button>
           </ion-card>
         </MasonryWall>
       </div>
@@ -49,6 +49,11 @@
         :multiple="true"
         @captured="captured"
         @cancel="cancelPhotoHandler"
+      />
+      <ModalPinchZoomImage
+        :modalImageUrl="modalImageUrl"
+        :showModal="showModal"
+        @closeModal="showModal = false"
       />
     </ion-content>
   </ion-page>
@@ -80,11 +85,18 @@ import { useFetch } from '../composables/fetch'
 import PhotoHandler from '../components/PhotoHandler.vue'
 import ToolbarEscolas from '../components/ToolbarEscolas.vue'
 import utils from '../composables/utils.js';
+import ModalPinchZoomImage from '../components/ModalPinchZoomImage.vue'
 import { useCurrentView } from '@/stores/currentView'
 import {
   add,
 } from 'ionicons/icons';
-
+import { ref } from 'vue';
+const showModal = ref(false);
+const modalImageUrl = ref(null);
+const openImageModal = (imageFilename) => {
+  modalImageUrl.value = utils.makeFileUrl(imageFilename);
+  showModal.value = true;
+};
 </script>
 <script>
 
@@ -92,6 +104,8 @@ export default {
   name: "ClassPhotos",
   data() {
     return {
+      showModal: false,
+      modalImageUrl: null,
       searchDocument: '',
       searchResult: null,
       showAddPhoto: false,
@@ -113,12 +127,12 @@ export default {
     $route(to, from) {
       this.currentRoute = this.$route.path
       if (to.path === '/classPhotos') {
-        this.verifyView()
+        this.verifyAndStartView()
       }
     }
   },
   mounted(){
-    this.verifyView()
+    this.verifyAndStartView()
     utils.loading.hide()
   },
   methods: {
@@ -165,21 +179,16 @@ export default {
         }
       }
       useFetch(opt).then(r => {
+        console.log("🚀 ~ useFetch ~ r:", r)
         if(!r.error){
-          r.data.list.forEach(item => {
-            this.classPhotos.push({
-              date: item._id,
-              img: item.images
-            })
-          });
+          this.classPhotos = r.data.list
           return
         }
       })
     },
-    verifyView () {
+    verifyAndStartView () {
       this.getClassesPhotos()
       const currentView = useCurrentView()
-      console.log("🚀 ~ verifyView ~ currentView:", currentView.currentView)
       if (currentView.currentView === 'worker') {
         this.showAddPhoto = true
       }
