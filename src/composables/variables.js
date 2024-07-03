@@ -1,6 +1,6 @@
 //////////// VARIAVEIS DA APLICACAO //////
 const MODE_MASTER_SERVER = 'local'
-const COMPANY_ID = 10
+const COMPANY_ID = 2
 const VERSION = 3.2
 const BUILD = 29
 //////////// NAO MUDAR //////
