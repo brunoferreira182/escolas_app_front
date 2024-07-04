@@ -18,19 +18,22 @@
           class="q-pa-xs"
         >  
           <ion-card @click="openImageModal(item.img.filename)" class="card q-ma-none">
-            <img
+            <ion-img
               class="img-style"
               :src="utils.attachmentsAddress() + item.img.filename + '_thumbnail'"
             >
-            <!-- <ion-button 
-              slot="icon-only" 
-              style="position:absolute; bottom: 0px;"
-              :icon="add" 
-              @click="download(item.img)"
-            /> -->
+          
+          </ion-img>
+          <ion-button 
+            slot="icon-only" 
+            style="margin-top: -100px; margin-left: -100px;"
+            :icon="add" 
+            @click="download(item.img)"
+          />
           </ion-card>
         </MasonryWall>
       </div>
+
       <ion-fab
         slot="fixed"
         vertical="bottom"
@@ -58,12 +61,12 @@
         :showModal="showModal"
         @closeModal="showModal = false"
       />
-      <ion-footer class="load-more-footer">
-        <ion-button @click="clkLoadMore()" expand="block">
-          Carregar mais
-        </ion-button>
-      </ion-footer>
     </ion-content>
+    <ion-footer class="load-more-footer">
+      <ion-button @click="clkLoadMore()" expand="block">
+        Carregar mais
+      </ion-button>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -155,69 +158,48 @@ export default {
       this.pagination.page++
       this.getClassesPhotos()
     },
-    // sendImages (file) {
-    //   const opt = {
-    //     route: '/mobile/workers/chat/insertClassesPhotos',
-    //     body: {
-    //       classId: this.$route.query.classId
-    //     },
-    //     file: [ file ]
-    //   }
-    //   if (!this.isLoading) {
-    //     this.isLoading = true
-    //     utils.loading.show()
-    //   }
-		// 	useFetch(opt).then(r => {
-    //     let res = []
-    //     res.push(r)
-    //     let allProcessed = res.every(result => !result.error)
-    //     if (allProcessed) {
-    //       this.getClassesPhotos()
-    //       utils.loading.hide()
-    //       this.isLoading = false
-    //     }
-    //   })
-    // },
-    sendImages(file) {
+    async sendImages(file) {
+      if(!file && file.length === 0){
+        utils.toast('Insira pelo menos 1 imagem')
+        return
+      }
       const opt = {
         route: '/mobile/workers/chat/insertClassesPhotos',
         body: {
-          classId: this.$route.query.classId
+          classId: this.$route.query.classId,
+          className: this.$route.query.className
         },
         file: [file]
       }
-      if (!this.isLoading) {
-        this.isLoading = true
-        utils.loading.show()
-      }
-      if (!this.pendingUploads) {
-        this.pendingUploads = 0;
-      }
-      this.pendingUploads++;
+        if (!this.isLoading) {
+          this.isLoading = true
+          utils.loading.show()
+        }
+        if (!this.pendingUploads) {
+          this.pendingUploads = 0;
+        }
+        this.pendingUploads++;
 
-      useFetch(opt).then(r => {
-        if (!this.uploadResults) {
-          this.uploadResults = [];
+      const r = await useFetch(opt)
+      if (!this.uploadResults) {
+        this.uploadResults = [];
+      }
+      this.uploadResults.push(r);
+      this.pendingUploads--;
+      if (this.pendingUploads === 0) {
+        let allProcessed = this.uploadResults.every(result => !result.error);
+        this.uploadResults = [];
+        this.pendingUploads = null;
+        if (allProcessed) {
+          utils.toast('Imagens inseridas com sucesso!')
+          await this.getClassesPhotos('dontShowLoading')
+        } else {
+          utils.loading.hide();
+          this.isLoading = false;
         }
-        this.uploadResults.push(r);
-        this.pendingUploads--;
-        if (this.pendingUploads === 0) {
-          let allProcessed = this.uploadResults.every(result => !result.error);
-          this.uploadResults = [];
-          this.pendingUploads = null;
-          if (allProcessed) {
-            this.getClassesPhotos(() => {
-              utils.loading.hide();
-              this.isLoading = false;
-            });
-          } else {
-            utils.loading.hide();
-            this.isLoading = false;
-          }
-        }
-      });
+      }
     },
-    getClassesPhotos(){
+    async getClassesPhotos(loading){
       const opt = {
         route: '/mobile/workers/chat/getClassesPhotos',
         body: {
@@ -226,17 +208,13 @@ export default {
           rowsPerPage: this.pagination.rowsPerPage
         }
       }
-      utils.loading.show()
-      useFetch(opt).then(r => {
-        utils.loading.hide()
-        if(!r.error){
-          this.classPhotos = r.data.list
-          if (typeof callback === 'function') {
-            callback();
-          }
-          return
-        }
-      })
+      loading === 'dontShowLoading' ? utils.loading.hide() : utils.loading.show()
+      const r = await useFetch(opt)
+      utils.loading.hide()
+      if(!r.error){
+        this.classPhotos = r.data.list
+        return
+      }
     },
     captured(img, imgBlob, fileName, imageCaption) {
       this.step = 'initial'
@@ -259,7 +237,6 @@ export default {
       }
     },
     async download (item) {
-      console.log("🚀 ~ clkDownloadAttachment ~ docccccccccc:", item)
       return
       const retDownload = await utils.downloadFile({
         filename: doc.file.filename,
@@ -284,7 +261,7 @@ ion-avatar {
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 10;
+  z-index: 1;
   background: var(--ion-color-light);
   padding-bottom: var(--ion-safe-area-bottom);
 }

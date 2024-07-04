@@ -154,15 +154,15 @@
         >
           Mídias do chat
         </ion-button>
-        <!-- <ion-button
+        <ion-button
           color="primary"
           expand="block"
           fill="outline"
           class="q-mt-sm"
-          @click="$router.push('/classPhotos?classId=' + $route.query.classId)" 
+          @click="$router.push('/classPhotos?classId=' + $route.query.classId + '&className=' + classData.className)" 
         >
           Fotos da turma
-        </ion-button> -->
+        </ion-button>
         <ion-button
           color="primary"
           expand="block"
