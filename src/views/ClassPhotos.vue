@@ -20,7 +20,7 @@
           <ion-card @click="openImageModal(item.img.filename)" class="card q-ma-none">
             <ion-img
               class="img-style"
-              :src="utils.attachmentsAddress() + item.img.filename + '_thumbnail'"
+              :src="utils.attachmentsAddress() + item.img.filename"
             >
           
           </ion-img>
@@ -159,6 +159,7 @@ export default {
       this.getClassesPhotos()
     },
     async sendImages(file) {
+      console.log("🚀 ~ sendImages ~ file:", file)
       if(!file && file.length === 0){
         utils.toast('Insira pelo menos 1 imagem')
         return

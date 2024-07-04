@@ -14,8 +14,7 @@
             
           >
             <ion-label>
-              <div v-if="doc.type === 'Boleto'">Boleto</div>
-              <div v-else>Arquivo</div>
+              <div>{{ doc.type }}</div>
               <ion-note>
                 {{ doc.createdAt.createdAtOnlyDate }}
               </ion-note>

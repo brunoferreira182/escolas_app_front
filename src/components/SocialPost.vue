@@ -9,7 +9,7 @@
               <p>{{ post.postData.resume.classData.functionName }} em {{ post.postData.resume.classData.className }}</p>
             </div> -->
             
-            <h3 v-if="post.scope === 'private'">
+            <h3 class="text-capitalize" v-if="post.scope === 'private'">
               {{ post.createdBy.name }}
             </h3>
             <h3 class="text-capitalize" v-else>

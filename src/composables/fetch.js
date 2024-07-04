@@ -82,11 +82,15 @@ export async function useFetch ({
   /// ANEXOS ///////////////////////////////////////
   let form
   if (file && file.length > 0) {
+    console.log("🚀 ~ file:", file)
     newBody.destinationserver = destinationserver
     newBody.destinationroute = destinationroute
     form = new FormData();
     form.append('body', JSON.stringify(newBody))
     file.forEach(f => {
+      // console.log(f, 'f')
+      // console.log(f.file, 'f.file')
+      // console.log(typeof f.file, 'typeof f.file')
       form.append('file', f.file, f.name ? f.name : 'userFile.png');
     });
     
