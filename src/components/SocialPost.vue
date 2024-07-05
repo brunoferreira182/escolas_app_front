@@ -4,11 +4,6 @@
       <div >
         <ion-item lines="none">
           <ion-label class="ion-text-nowrap">
-            <!-- <div v-if="post.type === 'activities' || post.type === 'presence'">
-              <h2>{{ post.createdBy.name }}</h2>
-              <p>{{ post.postData.resume.classData.functionName }} em {{ post.postData.resume.classData.className }}</p>
-            </div> -->
-            
             <h3 class="text-capitalize" v-if="post.scope === 'private'">
               {{ post.createdBy.name }}
             </h3>
@@ -35,7 +30,7 @@
       />
       <div>
         <ion-item lines="none" >
-          <ion-label>
+          <ion-label class="ion-text-wrap">
             <div>{{ post.postData.resume.description }}</div>
           </ion-label>
         </ion-item>

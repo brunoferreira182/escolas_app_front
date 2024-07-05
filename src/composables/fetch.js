@@ -88,9 +88,9 @@ export async function useFetch ({
     form = new FormData();
     form.append('body', JSON.stringify(newBody))
     file.forEach(f => {
-      // console.log(f, 'f')
-      // console.log(f.file, 'f.file')
-      // console.log(typeof f.file, 'typeof f.file')
+      console.log(f, 'f')
+      console.log(f.file, 'f.file')
+      console.log(typeof f.file, 'typeof f.file')
       form.append('file', f.file, f.name ? f.name : 'userFile.png');
     });
     

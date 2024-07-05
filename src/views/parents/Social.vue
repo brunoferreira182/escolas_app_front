@@ -6,9 +6,6 @@
       </ion-toolbar>
     </ion-header>
     <ion-content color="light" :fullscreen="true">
-
-      
-
       <ion-header collapse="condense">
         <ion-toolbar color="light">
           <ion-title size="large">
@@ -16,7 +13,6 @@
           </ion-title>
         </ion-toolbar>
       </ion-header>
-
       <div class="q-mx-sm">
         <ion-chip
           v-for="(filter, i) in filterTypes"
@@ -26,7 +22,6 @@
           :color="filter.type === selectedFilter.type ? 'success' : 'primary'"
         >{{ filter.label }}</ion-chip>
       </div>
-
       <swiper 
         class="q-my-md"
         :modules="modules"
@@ -108,6 +103,7 @@ import SocialPost from '../../components/SocialPost.vue'
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Autoplay } from 'swiper/modules'
+import { useCurrentView } from '@/stores/currentView'
 import 'swiper/css'
 import utils from '../../composables/utils.js';
 </script>
@@ -123,6 +119,7 @@ export default {
     return {
       page: 1,
       modules: [Pagination, Autoplay],
+      currentViewName: useCurrentView().currentView,
       rowsPerPage: 10,
       posts: [],
       notesList: [],
@@ -174,6 +171,7 @@ export default {
       this.$router.push('/login')
     },
     async startView () {
+      
       this.getPosts(null)
       this.getUserNotes()
       this.getStories()

@@ -16,7 +16,7 @@
           @click="clkTab($event,tab)"
           :selected="$route.path === tab.to ? true : false"
         >
-          <ion-icon :src="tab.icon" />
+        <ion-icon :src="tab.icon" />
           <ion-label style="font-size: 12px;">{{ tab.label }}</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
@@ -27,9 +27,8 @@
       vertical="bottom"
       horizontal="end"
       style="margin-bottom: 50px; padding-bottom: var(ion-safe-area-bottom);"
-      v-if="showSwitchButton && currentRoute.includes('social')"
+      v-if="showSwitchButton || currentRoute.includes('social')"
       @click="switchViews"
-      class=""
     >
       <ion-fab-button size="small">
         <ion-icon :icon="reload"></ion-icon>
@@ -92,6 +91,7 @@ export default {
   },
   beforeMount () {
     this.currentRoute = this.$route.path
+    console.log("🚀 ~ beforeMount ~ this.currentRoute:", this.currentRoute)
   },
   watch: {
     $route(to, from) {
@@ -163,4 +163,5 @@ export default {
   }
 };
 </script>
+
 

@@ -17,19 +17,20 @@
           #default="{ item }"
           class="q-pa-xs"
         >  
-          <ion-card @click="openImageModal(item.img.filename)" class="card q-ma-none">
+          <ion-card  class="card q-ma-none">
             <ion-img
+              @click="openImageModal(item.img.filename)"
               class="img-style"
               :src="utils.attachmentsAddress() + item.img.filename"
+            />
+            <ion-button 
+              class="card-button"
+              shape="round"
+              fill="clear"
+              @click="download(item.img)"
             >
-          
-          </ion-img>
-          <ion-button 
-            slot="icon-only" 
-            style="margin-top: -100px; margin-left: -100px;"
-            :icon="add" 
-            @click="download(item.img)"
-          />
+              <ion-icon slot="icon-only" :icon="cloudDownload" />
+            </ion-button>
           </ion-card>
         </MasonryWall>
       </div>
@@ -61,12 +62,18 @@
         :showModal="showModal"
         @closeModal="showModal = false"
       />
-    </ion-content>
-    <ion-footer class="load-more-footer">
-      <ion-button @click="clkLoadMore()" expand="block">
-        Carregar mais
+      <ion-button 
+        class="footer-next-button"
+        :disabled="animationLoading ? true : false"
+        @click="clkLoadMore()" 
+        expand="block"
+      >
+        <div style="width: 60px;display: flex;align-items: center;justify-content: center;">
+          <div v-if="animationLoading" class="dot-pulse"></div>
+          <div v-else>Carregar mais</div>
+        </div>
       </ion-button>
-    </ion-footer>
+    </ion-content>
   </ion-page>
 </template>
 
@@ -103,6 +110,7 @@ import ModalPinchZoomImage from '../components/ModalPinchZoomImage.vue'
 import { useCurrentView } from '@/stores/currentView'
 import {
   add,
+  cloudDownload,
 } from 'ionicons/icons';
 import { ref } from 'vue';
 const showModal = ref(false);
@@ -118,7 +126,9 @@ export default {
   name: "ClassPhotos",
   data() {
     return {
+      noMoreData: false,
       showModal: false,
+      animationLoading: false,
       modalImageUrl: null,
       searchDocument: '',
       searchResult: null,
@@ -155,6 +165,10 @@ export default {
       this.startPhotoHandler = true
     },
     clkLoadMore () {
+      this.animationLoading = true
+      setTimeout(() => {
+        this.animationLoading = false
+      }, 200)
       this.pagination.page++
       this.getClassesPhotos()
     },
@@ -213,7 +227,13 @@ export default {
       const r = await useFetch(opt)
       utils.loading.hide()
       if(!r.error){
-        this.classPhotos = r.data.list
+        // if (r.data.length === 0) {
+        //   this.noMoreData = true
+        //   return
+        // }
+        // this.classPhotos = r.data.list
+        console.log("🚀 ~ getClassesPhotos ~ r.data.list:", r.data.list)
+        this.classPhotos.push(...r.data.list)
         return
       }
     },
@@ -238,16 +258,27 @@ export default {
       }
     },
     async download (item) {
-      return
       const retDownload = await utils.downloadFile({
-        filename: doc.file.filename,
-        originalname: doc.file.originalname
+        filename: item.filename,
+        originalname: item.originalname
       })
     },
   }
 };
 </script>
 <style scoped>
+.card-button {
+  position: fixed;
+  top: -12px;  
+  right: -16px;  
+  z-index: 10;  
+  color: rgb(0, 140, 255);
+  /* --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 4px;
+  --padding-bottom: 2px;
+  --border-radius: 10rem; */
+}
 .img-style {
   width: 100%;
   object-fit: cover;
@@ -265,5 +296,73 @@ ion-avatar {
   z-index: 1;
   background: var(--ion-color-light);
   padding-bottom: var(--ion-safe-area-bottom);
+}
+
+.dot-pulse {
+  position: relative;
+  left: -9999px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 9999px 0 0 -5px;
+  animation: dot-pulse 1.5s infinite linear;
+  animation-delay: 0.25s;
+}
+.dot-pulse::before, .dot-pulse::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #ffffff;
+}
+.dot-pulse::before {
+  box-shadow: 9980px 0 0 -5px;
+  animation: dot-pulse-before 1.5s infinite linear;
+  animation-delay: 0s;
+}
+.dot-pulse::after {
+  box-shadow: 10008px 0 0 -5px;
+  animation: dot-pulse-after 1.5s infinite linear;
+  animation-delay: 0.5s;
+}
+
+@keyframes dot-pulse-before {
+  0% {
+    box-shadow: 9980px 0 0 -5px;
+  }
+  30% {
+    box-shadow: 9980px 0 0 2px;
+  }
+  60%, 100% {
+    box-shadow: 9980px 0 0 -5px;
+  }
+}
+@keyframes dot-pulse {
+  0% {
+    box-shadow: 9999px 0 0 -5px;
+  }
+  30% {
+    box-shadow: 9999px 0 0 2px;
+  }
+  60%, 100% {
+    box-shadow: 9999px 0 0 -5px;
+  }
+}
+@keyframes dot-pulse-after {
+  0% {
+    box-shadow: 10008px 0 0 -5px;
+  }
+  30% {
+    box-shadow: 10008px 0 0 2px;
+  }
+  60%, 100% {
+    box-shadow: 10008px 0 0 -5px;
+  }
 }
 </style>
