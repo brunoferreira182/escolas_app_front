@@ -27,7 +27,7 @@
       vertical="bottom"
       horizontal="end"
       style="margin-bottom: 50px; padding-bottom: var(ion-safe-area-bottom);"
-      v-if="showSwitchButton || currentRoute.includes('social')"
+      v-if="showSwitchButton"
       @click="switchViews"
     >
       <ion-fab-button size="small">
@@ -98,6 +98,8 @@ export default {
       this.currentRoute = this.$route.path
       if (to.path === '/tabsLayout/social') {
         this.verifyShowSwitchButton()
+      } else {
+        this.showSwitchButton = false
       }
     }
   },
@@ -113,7 +115,7 @@ export default {
       this.$router.push(tab.to)
     },
     verifyShowSwitchButton () {
-      if (this.currentRoute.includes('social') && this.userPermissions.permissions.includes('IS_WORKER')) {
+      if (this.userPermissions.permissions.includes('IS_WORKER')) {
         this.showSwitchButton = true
       } else {
         this.showSwitchButton = false

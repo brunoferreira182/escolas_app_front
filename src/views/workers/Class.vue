@@ -1,6 +1,6 @@
 <template>
   <ion-page  ref="page">
-    <ion-header :translucent="true">
+    <ion-header class="ion-no-border" :translucent="true">
       <ion-toolbar>
         <ion-title>Atividades</ion-title>
       </ion-toolbar>

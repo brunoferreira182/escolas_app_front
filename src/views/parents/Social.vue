@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
+    <ion-header class="ion-no-border" :translucent="true">
       <ion-toolbar>
         <ion-title>{{ APP_NAME }}</ion-title>
       </ion-toolbar>
@@ -13,7 +13,7 @@
           </ion-title>
         </ion-toolbar>
       </ion-header>
-      <div class="q-mx-sm">
+      <div class="q-mx-sm q-mt-md">
         <ion-chip
           v-for="(filter, i) in filterTypes"
           :key="i"
