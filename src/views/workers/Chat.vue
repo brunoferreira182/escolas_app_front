@@ -1,7 +1,7 @@
 <template>
   <ion-page  ref="page">
     
-    <ion-header :translucent="true">
+    <ion-header class="ion-no-border" :translucent="true">
       <ion-toolbar>
         <ion-title>Salas</ion-title>
       </ion-toolbar>

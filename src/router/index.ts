@@ -75,7 +75,6 @@ const routes: Array<RouteRecordRaw> = [
           { path: '/tabsLayout/attendance', component: workerAttendance},
           { path: '/tabsLayout/class', component: workerClass},
           { path: '/tabsLayout/chatWorkers', component: workerChat},
-          { path: '/tabsLayout/more', component: More}
         ]
       },
       { path: '/classPhotos', component: ClassPhotos },
