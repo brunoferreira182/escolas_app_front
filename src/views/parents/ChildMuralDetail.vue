@@ -21,6 +21,7 @@
       <ion-text class="ion-text-center">
         <ion-datetime-button
           datetime="datetimeChildMural"
+          @click="isModalOpen = true"
         />
       </ion-text>
 
@@ -80,7 +81,7 @@
       </div>
     </ion-content>
 
-    <ion-modal :keep-contents-mounted="true">
+    <ion-modal :is-open="isModalOpen" :keep-contents-mounted="true">
       <ion-datetime
         id="datetimeChildMural"
         presentation="date"
@@ -109,7 +110,8 @@ export default {
   data() {
     return {
       mural: null,
-      dateSelected: null
+      dateSelected: null,
+      isModalOpen: false
     };
   },
   beforeMount () {
@@ -121,8 +123,11 @@ export default {
   },
   methods: {
     onChangeDate($event, c) {
-      this.dateSelected = $event.detail.value.split('T')[0]
-      this.getChildMural()
+      this.dateSelected = $event.detail.value.split('T')[0];
+      this.getChildMural();
+      
+      // Fechar o modal
+      this.isModalOpen = false;
     },
     async getChildMural () { 
       const opt = {
