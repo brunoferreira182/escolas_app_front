@@ -125,8 +125,6 @@ export default {
     onChangeDate($event, c) {
       this.dateSelected = $event.detail.value.split('T')[0];
       this.getChildMural();
-      
-      // Fechar o modal
       this.isModalOpen = false;
     },
     async getChildMural () { 
@@ -142,6 +140,7 @@ export default {
       utils.loading.hide()
       if (r.error) return
       this.mural = r.data
+      console.log("🚀 ~ getChildMural ~ r.data:", r.data)
     },
     
   }
