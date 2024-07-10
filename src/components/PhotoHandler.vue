@@ -173,7 +173,6 @@ async function openCamera () {
 }
 
 async function pickFile (type) {
-  console.log(props.multiple, 'props.multiple')
   let types = ['image/*']
   if (type === 'documents') types = ['application/pdf', 'video/quicktime']
   let res
@@ -189,15 +188,21 @@ async function pickFile (type) {
     return
   }
   const file = props.multiple ? res.files : res.files[0];
-  console.log("🚀 ~ pickFile ~ file:", file)
   
-  if (file.path) {
-    const fileSrc = Capacitor.convertFileSrc(file.path);
-    const fileTemp = await fetch(fileSrc)
-    file.blob = await fileTemp.blob()
+  if (props.multiple) {
+    for (let i = 0; i < file.length; i++) {
+      const fileSrc = Capacitor.convertFileSrc(file[i].path);
+      const fileTemp = await fetch(fileSrc);
+      file[i].blob = await fileTemp.blob();
+    }
+  }else if(!props.multiple && file.path){
+      const fileSrc = Capacitor.convertFileSrc(file.path);
+      const fileTemp = await fetch(fileSrc)
+      file.blob = await fileTemp.blob()
   }
 
   if (type === 'gallery' && !props.noCrop) {
+    console.log("🚀 ~ pickFile ~ type === 'gallery' && !props.noCro:")
     // img.value é base64
     if(props.multiple){
       for(let i = 0; i < file.length; i++){
