@@ -19,8 +19,6 @@
 
 
       <ion-text class="ion-text-center">
-        <!-- <h3>Mural do dia</h3> -->
-        <!-- <ion-note>Escolha uma data para ver de outros dias</ion-note> -->
         <ion-datetime-button
           datetime="datetimeChildMural"
         />
@@ -28,10 +26,11 @@
 
 
       <h2 class="q-px-md">Comparecimento</h2>
-      <ion-list :inset="true" v-if="mural?.attendance">
+      <ion-list :inset="true" v-if="mural?.attendance.length">
         <ion-item 
           v-for="e in mural?.attendance"
           :key="e"
+          class="q-ma-sm"
           detail="false"
         >
           <ion-label>
@@ -46,6 +45,9 @@
               v-else-if="e.childAttendanceType === 'absent'"
               color="danger">Ausência
             </ion-badge>
+            <div class="text-caption">
+              {{e.date.dateLocale}}
+            </div>
           </div>
         </ion-item>
       </ion-list>
@@ -54,7 +56,7 @@
       </div>
 
       <h2 class="q-pt-lg q-px-md">Atividades</h2>
-      <ion-list :inset="true" v-if="mural?.activities">
+      <ion-list :inset="true" v-if="mural?.activities.length">
         <ion-item 
           v-for="e in mural?.activities"
           :key="e"
@@ -82,6 +84,7 @@
       <ion-datetime
         id="datetimeChildMural"
         presentation="date"
+        :value="dateSelected"
         @ionChange="onChangeDate($event, c)"
       ></ion-datetime>
     </ion-modal>
@@ -110,6 +113,10 @@ export default {
     };
   },
   beforeMount () {
+    if(this.$route.query.date){
+      const date = this.$route.query.date
+      this.dateSelected = date
+    }
     this.getChildMural()
   },
   methods: {
@@ -125,7 +132,9 @@ export default {
           dateSelected: this.dateSelected
         }
       }
+      utils.loading.show()
       const r = await useFetch(opt)
+      utils.loading.hide()
       if (r.error) return
       this.mural = r.data
     },
