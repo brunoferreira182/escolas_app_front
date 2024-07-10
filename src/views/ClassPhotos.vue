@@ -5,7 +5,7 @@
       :backButton="true"
     />
     <ion-content color="light" >
-      <div v-for="item in classPhotos">
+      <div v-for="item in classPhotos" >
         <ion-text>
           <h3 class="q-mx-md">{{ item._id }}</h3>
         </ion-text>
@@ -15,7 +15,7 @@
           :gap="10"
           :ssr-columns="100"
           #default="{ item }"
-          class="q-pa-xs"
+          class="q-pa-xs q-mb-xl"
         >  
           <ion-card  class="card q-ma-none">
             <ion-img
@@ -24,12 +24,11 @@
               :src="utils.attachmentsAddress() + item.img.filename"
             />
             <ion-button 
-              class="card-button"
-              shape="round"
-              fill="clear"
+              expand="block"
+              size="small"
               @click="download(item.img)"
             >
-              <ion-icon slot="icon-only" :icon="cloudDownload" />
+              <ion-icon :icon="cloudDownload" />
             </ion-button>
           </ion-card>
         </MasonryWall>
@@ -62,17 +61,18 @@
         :showModal="showModal"
         @closeModal="showModal = false"
       />
-      <ion-button 
-        class="footer-next-button"
-        :disabled="animationLoading ? true : false"
-        @click="clkLoadMore()" 
-        expand="block"
-      >
-        <div style="width: 60px;display: flex;align-items: center;justify-content: center;">
-          <div v-if="animationLoading" class="dot-pulse"></div>
-          <div v-else>Carregar mais</div>
-        </div>
-      </ion-button>
+      <ion-footer class="load-more-footer">
+        <ion-button 
+          :disabled="animationLoading ? true : false"
+          @click="clkLoadMore()" 
+          expand="block"
+        >
+          <div style="width: 60px;display: flex;align-items: center;justify-content: center;">
+            <div v-if="animationLoading" class="dot-pulse"></div>
+            <div v-else>Carregar mais</div>
+          </div>
+        </ion-button>
+      </ion-footer>
     </ion-content>
   </ion-page>
 </template>
@@ -291,7 +291,7 @@ ion-avatar {
 }
 .load-more-footer {
   position: fixed;
-  bottom: 0;
+  bottom: -5px;
   width: 100%;
   z-index: 1;
   background: var(--ion-color-light);
