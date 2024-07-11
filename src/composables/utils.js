@@ -218,7 +218,7 @@ const useUtils = {
       message,
       duration: 2500,
       cssClass: 'custom-toast',
-      position: position ? position : 'bottom',
+      position: position ? position : 'top',
       buttons: [
         {
           text: 'Fechar',

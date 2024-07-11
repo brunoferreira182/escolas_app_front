@@ -55,12 +55,14 @@
           <h3>Atividades do dia</h3>
           <ion-note>Veja aqui as atividades já cadastrdas para os alunos das suas turmas</ion-note>
         </ion-text>
+  
       </div>
       <ion-list :inset="true" color="light">
         <ion-item 
           v-for="e in classEventsHistory"
           :key="e"
           detail="false"
+          @click="clkOpenDialogEditClassEvent(e)"
         >
           <ion-avatar
             aria-hidden="true"
@@ -85,17 +87,29 @@
       <ion-modal 
         :is-open="dialogInsertClassActivity.open" 
         :presenting-element="presentingElement"
-        @onDidDismiss="dialogInsertClassActivity.open = false"
+        @onDidDismiss="clearDialogEdit()"
       >
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="end">
               <ion-button @click="closeDialogInsertClassActivity">Fechar</ion-button>
             </ion-buttons>
-            <ion-title >Inserir atividades</ion-title>
+            <ion-title >{{ dialogInsertClassActivity.edit ? 'Editar' : 'Inserir atividades' }}</ion-title>
           </ion-toolbar>
         </ion-header>
         <ion-content color="light">
+          <div v-if="dialogInsertClassActivity.edit">
+            <div class="ion-padding ion-text-center">
+              <img
+                :src="utils.makeFileUrl(dialogInsertClassActivity.classData.childPhoto)"
+                :style="`border-radius: 50%; height: 250px; width: 250px; object-fit: cover; object-position: center;`"
+              /><br>
+              <ion-text>
+                <h5> {{ `${'Editando atividade de ' + dialogInsertClassActivity.classData.childName}` }}</h5>
+              </ion-text>
+              
+            </div>
+          </div>
           <div class="text-h6 q-pa-md">
             Selecione a atividade
           </div>
@@ -144,7 +158,7 @@
             </ion-list>
           </div>
 
-          <div v-if="dialogInsertClassActivity.showChildren">
+          <div v-if="dialogInsertClassActivity.showChildren && !dialogInsertClassActivity.edit">
             <div class="text-h6 q-pa-md">
               Selecione as crianças
             </div>
@@ -180,10 +194,19 @@
             </ion-list>
           </div>
           <ion-button 
+            v-if="dialogInsertClassActivity.edit === false"
             @click="createUserChildActivity" 
             class="q-pa-md" 
             expand="block"
             :disabled="dialogInsertClassActivity.selectedChildren.array.length === 0"
+          >
+            Salvar
+          </ion-button>
+          <ion-button 
+            v-if="dialogInsertClassActivity.edit === true"
+            @click="updateUserClassEvents" 
+            class="q-pa-md" 
+            expand="block"
           >
             Salvar
           </ion-button>
@@ -206,6 +229,7 @@ import {
   IonHeader,
   IonToolbar,
   IonItem,
+  IonRow,
   IonButtons,
   IonTitle,
   IonLabel,
@@ -234,6 +258,8 @@ export default {
       presentingElement: null,
       selectedActivity: null,
       dialogInsertClassActivity: {
+        childName: '',
+        edit: false,
         open: false,
         activitiesList: [],
         classData: {},
@@ -261,7 +287,7 @@ export default {
       classEventsHistory: [],
       show: true,
       selectedEvent: null,
-      dateSelected: null
+      dateSelected: null,
     };
   },
   mounted () {
@@ -284,11 +310,68 @@ export default {
   },
   methods: {
     clkOpenDialogClassEvent (c) {
+      this.dialogInsertClassActivity.edit = false
       this.dialogInsertClassActivity.classData = c
       this.getChildEvents(this.dialogInsertClassActivity.classData.classId)
       this.dialogInsertClassActivity.childrenFromClass = this.childrenInClassesList.filter((child) => child.classId === c.classId)
       this.dialogInsertClassActivity.open = true
       console.log('chegou aqui')
+    },
+    updateUserClassEvents(){
+      const opt = {
+        route: '/mobile/workers/updateUserClassEvents',
+        body: {
+          selectedChildren: this.dialogInsertClassActivity.selectedChildren.data,
+          childEventId: this.dialogInsertClassActivity.classData.childEventId,
+          newChildEventId: this.dialogInsertClassActivity.activitySelected._id,
+          selectedSubtype: this.dialogInsertClassActivity.subactivitySelected?.name,
+          resume: {
+            title: this.dialogInsertClassActivity.activitySelected.name,
+            subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name,
+            activityId: this.dialogInsertClassActivity.activitySelected._id,
+            classData: this.dialogInsertClassActivity.classData,
+          },
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          utils.toast("Atividade editada com sucesso!")
+          this.clearDialogEdit()
+          this.getLastActivityFromChildrenOfClasses()
+          return
+        }
+        else {
+          utils.toast("Ocorreu um erro, tente novamente.")
+        } 
+      })
+    },
+    clearDialogEdit(){
+      this.dialogInsertClassActivity= {
+        childName: '',
+        edit: false,
+        open: false,
+        activitiesList: [],
+        classData: {},
+        obs: '',
+        activitySelected: null,
+        subactivitySelected: null,
+        subactivityTypes: null,
+        showChildren: false,
+        selectedChildren: {
+          data: [],
+          array: [],
+          selectAllChildren: false,
+        },
+        childrenFromClass: []
+      }
+    },
+    clkOpenDialogEditClassEvent (e) {
+      console.log("🚀 ~ clkOpenDialogEditClassEvent ~ e:", e)
+      this.dialogInsertClassActivity.edit = true
+      this.dialogInsertClassActivity.classData = e
+      this.getChildEvents(this.dialogInsertClassActivity.classData.classId)
+      this.dialogInsertClassActivity.childrenFromClass = this.childrenInClassesList.filter((child) => child.classId === e.classId)
+      this.dialogInsertClassActivity.open = true
     },
     clkActivity (act) {
       this.dialogInsertClassActivity.activitySelected = act
@@ -339,7 +422,7 @@ export default {
       this.dateSelected = $event.detail.value.split('T')[0]
       this.getLastActivityFromChildrenOfClasses()
     },
-    getLastActivityFromChildrenOfClasses(classId) {
+    getLastActivityFromChildrenOfClasses(classId){
       const opt = {
         route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
         body: {
@@ -363,6 +446,7 @@ export default {
     closeDialogInsertClassActivity() {
       this.dialogInsertClassActivity = {
         open: false,
+        edit: false,
         childEventsList: [],
         classData: {},
         obs: '',
@@ -378,7 +462,9 @@ export default {
         childrenFromClass: []
       }
     },
-    getChildEvents(classId) {
+    getChildEvents(classIdData) {
+      console.log("🚀 ~ getChildEvents ~ classId:", classIdData)
+      const classId = classIdData
       const opt = {
         route: '/mobile/workers/getChildEvents',
         body: {
@@ -392,6 +478,7 @@ export default {
       useFetch(opt).then((r) => {
         utils.loading.hide()
         if (r.error) {
+          console.log('opaksdkasopkdposakpo')
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
         }

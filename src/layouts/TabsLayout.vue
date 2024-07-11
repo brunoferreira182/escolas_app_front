@@ -31,7 +31,7 @@
       @click="switchViews"
     >
       <ion-fab-button size="small">
-        <ion-icon :icon="reload"></ion-icon>
+        <ion-icon :icon="swapHorizontal"></ion-icon>
       </ion-fab-button>
     </ion-fab>
   </ion-page>
@@ -55,7 +55,7 @@ import {
   calendar,
   informationCircle,
   accessibility,
-  reload
+  swapHorizontal
 } from 'ionicons/icons';
 import utils from '../composables/utils'
 import { useBackButton } from '@ionic/vue';

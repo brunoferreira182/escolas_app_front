@@ -144,8 +144,7 @@ export default {
   watch: {
     $route (to, from) {
       if (to.path === '/tabsLayout/social') {
-        this.getUserNotes()
-        // this.verifyNewContent()
+        this.startView()
       }
     }
   },

@@ -16,16 +16,17 @@
         </ion-text>
         
       </div>
-
-
-      <ion-text class="ion-text-center">
-        <ion-datetime-button
-          datetime="datetimeChildMural"
-          @click="isModalOpen = true"
-        />
-      </ion-text>
-
-
+      <div class="button-wrapper">
+        <div class="ion-content-center">
+          <ion-text class="ion-text-center button-container">
+            <ion-datetime-button
+              datetime="datetimeChildMural"
+              class="highlight-button"
+              @click="isModalOpen = true"
+            />
+          </ion-text>
+        </div>
+      </div>
       <h2 class="q-px-md">Comparecimento</h2>
       <ion-list :inset="true" v-if="mural?.attendance.length">
         <ion-item 
@@ -111,7 +112,9 @@ export default {
     return {
       mural: null,
       dateSelected: null,
-      isModalOpen: false
+      isModalOpen: false,
+      showBadge: true,
+      popoverEvent: null,
     };
   },
   beforeMount () {
@@ -140,9 +143,78 @@ export default {
       utils.loading.hide()
       if (r.error) return
       this.mural = r.data
-      console.log("🚀 ~ getChildMural ~ r.data:", r.data)
     },
     
   }
 }
 </script>
+<style scoped>
+
+.ion-content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.button-container {
+  position: relative;
+  display: inline-block;
+}
+
+.highlight-button {
+  background-color: var(--ion-color-primary);
+  color: #fff;
+  border-radius: 10px;
+  padding: 2px;
+  box-shadow: 0 0 12px var(--ion-color-primary);
+  animation: pulse 1s infinite;
+}
+
+.badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #ff4081;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  animation: fadeRotate 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeRotate {
+  0% {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: rotate(180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+}
+</style>
