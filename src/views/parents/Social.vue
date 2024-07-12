@@ -11,7 +11,16 @@
           <ion-title size="large">
             {{ APP_NAME }}
           </ion-title>
+          
         </ion-toolbar>
+        <Transition name="slide-fade">
+          <div class="q-px-md" v-if="currentViewName === 'parent' ">
+            Familiar
+          </div>
+          <div v-else class="q-px-md">
+            Funcionário
+          </div>
+        </Transition>
       </ion-header>
       <div class="q-mx-sm q-mt-md">
         <ion-chip
@@ -40,7 +49,6 @@
           <PostSchoolNotes
             :note="note"
             :i="i"
-            
           />
         </swiper-slide>
       </swiper>
@@ -82,8 +90,8 @@
     </ion-content>
   </ion-page>
 </template>
-<script setup>
 
+<script setup>
 import {
   IonPage,
   IonContent,
@@ -119,7 +127,6 @@ export default {
     return {
       page: 1,
       modules: [Pagination, Autoplay],
-      currentViewName: useCurrentView().currentView,
       rowsPerPage: 10,
       posts: [],
       notesList: [],
@@ -138,42 +145,46 @@ export default {
       showInfiniteScroll: true
     };
   },
-  mounted () {
-    this.startView()
+  computed: {
+    currentViewName() {
+      return useCurrentView().currentView;
+    }
+  },
+  mounted() {
+    this.startView();
   },
   watch: {
-    $route (to, from) {
+    $route(to, from) {
       if (to.path === '/tabsLayout/social') {
-        this.startView()
+        this.startView();
       }
     }
   },
   methods: {
-    clkFilterPosts (filter) {
-      this.selectedFilter = filter
-      this.page = 1
-      this.posts = []
-      this.getPosts(true)
+    clkFilterPosts(filter) {
+      this.selectedFilter = filter;
+      this.page = 1;
+      this.posts = [];
+      this.getPosts(true);
     },
-    async verifyNewContent () {
+    async verifyNewContent() {
       const opt = {
         route: '/mobile/social/verifyNewContent',
         body: {
           posixLastContent: this.posts[0].createdAt.createdAtPosix
         }
       }
-      const ret = await useFetch(opt)
-      if (r.error) return
-      this.newContent = r.data
+      const ret = await useFetch(opt);
+      if (ret.error) return;
+      this.newContent = ret.data;
     },
     backLogin() {
-      this.$router.push('/login')
+      this.$router.push('/login');
     },
-    async startView () {
-      
-      this.getPosts(null)
-      this.getUserNotes()
-      this.getStories()
+    async startView() {
+      this.getPosts(null);
+      this.getUserNotes();
+      this.getStories();
     },
     async getUserNotes() {
       const opt = {
@@ -184,7 +195,7 @@ export default {
         }
       }
       try {
-        const response = await useFetch(opt)
+        const response = await useFetch(opt);
         if (response.data.count.length > 0 && response.data.count) {
           this.userNotes = response.data.count[0].count;
           const toast = await toastController.create({
@@ -196,19 +207,19 @@ export default {
               {
                 text: 'Ver Recados',
                 handler: () => {
-                  this.$router.push('/userNotesList'); 
+                  this.$router.push('/userNotesList');
                 }
               }
-            ] 
-          })
+            ]
+          });
           await toast.present();
         }
       } catch (error) {
         console.error('Error fetching user notes:', error);
       }
     },
-    async getStories (refreshPage) {
-      if (refreshPage) this.page = 0
+    async getStories(refreshPage) {
+      if (refreshPage) this.page = 0;
       const opt = {
         route: '/mobile/social/getStories',
         body: {
@@ -216,23 +227,22 @@ export default {
           rowsPerPage: this.rowsPerPage
         }
       }
-      const ret = await useFetch(opt)
-      // this.page++
-      if (!refreshPage) this.storiesPosts = ret.data.list
-      else this.storiesPosts.push(...ret.data.list)
-      return
+      const ret = await useFetch(opt);
+      if (!refreshPage) this.storiesPosts = ret.data.list;
+      else this.storiesPosts.push(...ret.data.list);
+      return;
     },
-    async refresh ($event) {
-      this.page = 1
-      await utils.sleep(500)
-      this.getPosts($event)
+    async refresh($event) {
+      this.page = 1;
+      await utils.sleep(500);
+      this.getPosts($event);
     },
-    async bottomOfPage () {
-      this.page++
-      await this.getPosts(null)
+    async bottomOfPage() {
+      this.page++;
+      await this.getPosts(null);
     },
-    async getPosts ($event) {
-      this.showInfiniteScroll = true
+    async getPosts($event) {
+      this.showInfiniteScroll = true;
       const opt = {
         route: '/mobile/social/getPosts',
         body: {
@@ -241,28 +251,35 @@ export default {
           scope: this.selectedFilter.type
         }
       }
-      const ret = await useFetch(opt)
-      // this.page++
+      const ret = await useFetch(opt);
       if ($event) {
-        if(ret.data.list) {
-          this.posts = ret.data.list
+        if (ret.data.list) {
+          this.posts = ret.data.list;
         }
-        try { $event.target.complete() }
-        catch (e) { console.log('vindo do filtro') }
-      }
-      else this.posts.push(...ret.data.list)
-      if (ret.data.list.length < this.rowsPerPage) this.showInfiniteScroll = false
-      return
-    },
+        try { $event.target.complete(); }
+        catch (e) { console.log('vindo do filtro'); }
+      } else this.posts.push(...ret.data.list);
+      if (ret.data.list.length < this.rowsPerPage) this.showInfiniteScroll = false;
+      return;
+    }
   }
 }
-
 </script>
 
 <style scoped>
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
 
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
 
-
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(50px);
+  opacity: 0;
+}
 
 
 .q-carousel__slide {
@@ -270,7 +287,6 @@ export default {
   padding-left: 0%;
 }
 .login-logo {
-  /* width: 12em; */
   height: 19em;
 }
 .login-logo-letters {

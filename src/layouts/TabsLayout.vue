@@ -43,14 +43,11 @@ import {
   IonIcon,
   IonPage, IonRouterOutlet,
   IonFab, IonFabButton,
-  IonModal, IonContent,
-  IonImg, IonAvatar, IonAlert,
   toastController
 } from '@ionic/vue';
 import { 
   idCardOutline,
   chatboxOutline,
-  personCircleOutline,
   ellipsisHorizontalOutline,
   calendar,
   informationCircle,
@@ -58,12 +55,10 @@ import {
   swapHorizontal
 } from 'ionicons/icons';
 import utils from '../composables/utils'
-import { useBackButton } from '@ionic/vue';
 import { useUserPermissions } from '@/stores/userPermissions'
 import { useCurrentView } from '@/stores/currentView'
 </script>
 <script>
-import { useFetch } from '@/composables/fetch';
 export default {
   name: "TabsLayout",
   data() {
