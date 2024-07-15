@@ -202,11 +202,18 @@ async function pickFile (type) {
       file[i].blob = await fileTemp.blob();
     }
   }
-  // else if(!props.multiple && file.path){
-  //     const fileSrc = Capacitor.convertFileSrc(file.path);
-  //     const fileTemp = await fetch(fileSrc)
-  //     file.blob = await fileTemp.blob()
-  // }
+  if (props.multiple && !file.path) {
+    for (let i = 0; i < file.length; i++) {
+      const fileSrc = Capacitor.convertFileSrc(file[i].path);
+      const fileTemp = await fetch(fileSrc);
+      file[i].blob = await fileTemp.blob();
+    }
+  }
+  else if(!props.multiple && file.path){
+      const fileSrc = Capacitor.convertFileSrc(file.path);
+      const fileTemp = await fetch(fileSrc)
+      file.blob = await fileTemp.blob()
+  }
 
   if (type === 'gallery' && !props.noCrop) {
     console.log("🚀 ~ pickFile ~ type === 'gallery' && !props.noCro:")
