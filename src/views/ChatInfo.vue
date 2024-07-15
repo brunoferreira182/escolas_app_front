@@ -98,6 +98,9 @@
               <ion-avatar aria-hidden="true" slot="start" v-if="parent.image">
                 <img :src="utils.makeFileUrl(parent.image, 'thumbnail')"/>
               </ion-avatar>
+              <ion-avatar aria-hidden="true" slot="start" v-else>
+                <img :src="utils.makeFileUrl(parent.image, 'thumbnail')"/>
+              </ion-avatar>
               <ion-label>
                 <h6>{{ parent.userName }}</h6>
                 <ion-note>{{ parent.relationType }}</ion-note>

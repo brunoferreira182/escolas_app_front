@@ -20,7 +20,7 @@
         <div class="ion-content-center">
           <ion-text class="ion-text-center button-container">
             <ion-datetime-button
-              datetime="datetimeChildMural"
+              datetime="datetimeChildMural3"
               class="highlight-button"
               @click="isModalOpen = true"
             />
@@ -84,7 +84,7 @@
 
     <ion-modal :is-open="isModalOpen" :keep-contents-mounted="true">
       <ion-datetime
-        id="datetimeChildMural"
+        id="datetimeChildMural3"
         presentation="date"
         :value="dateSelected"
         @ionChange="onChangeDate($event, c)"
@@ -123,6 +123,13 @@ export default {
       this.dateSelected = date
     }
     this.getChildMural()
+  },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/childMuralDetail') {
+        this.getChildMural()
+      }
+    }
   },
   methods: {
     onChangeDate($event, c) {

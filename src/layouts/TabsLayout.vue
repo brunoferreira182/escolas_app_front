@@ -55,6 +55,8 @@ import {
   swapHorizontal
 } from 'ionicons/icons';
 import utils from '../composables/utils'
+
+
 import { useUserPermissions } from '@/stores/userPermissions'
 import { useCurrentView } from '@/stores/currentView'
 </script>
@@ -102,6 +104,7 @@ export default {
     this.verifyView()
   },
   methods: {
+    
     makeProfilePhotoUrl () {
       this.userProfilePhotoUrl = this.userInfo.profileImage ? `${utils.attachmentsAddress()}${this.userInfo.profileImage.filename}` : '../../assets/blank-profile-picture-973460.svg'
     }, 

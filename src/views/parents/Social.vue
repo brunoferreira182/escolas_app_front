@@ -2,7 +2,16 @@
   <ion-page>
     <ion-header class="ion-no-border" :translucent="true">
       <ion-toolbar>
-        <ion-title>{{ APP_NAME }}</ion-title>
+        <ion-title class="">
+          {{ APP_NAME }}
+          <br>
+          <ion-note class="ion-text-wrap" v-if="currentViewName === 'parent' ">
+            Familiar
+          </ion-note>
+          <ion-note class="ion-text-wrap" v-else>
+            Funcionário
+          </ion-note>
+        </ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content color="light" :fullscreen="true">
@@ -100,6 +109,7 @@ import {
   IonHeader,
   IonRefresher, IonRefresherContent,
   IonChip,
+  IonNote,
   IonInfiniteScroll, IonInfiniteScrollContent
 } from '@ionic/vue';
 import { APP_NAME } from '../../composables/variables';

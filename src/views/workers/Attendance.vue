@@ -14,13 +14,25 @@
       </ion-header>
 
 
-      <div class="q-ml-md q-mt-md">
-        <ion-datetime-button
-          datetime="datetime"
-          style="justify-content: left;"
-        />
+      <div class="button-wrapper">
+        <div class="ion-content-center">
+          <ion-text class="ion-text-center button-container">
+            <ion-datetime-button
+              datetime="datetimeChildMural2"
+              class="highlight-button"
+              @click="isModalOpen = true"
+            />
+          </ion-text>
+        </div>
       </div>
-
+      <ion-modal :is-open="isModalOpen" :keep-contents-mounted="true">
+        <ion-datetime
+          id="datetimeChildMural2"
+          presentation="date"
+          :value="dateSelected"
+          @ionChange="onChangeDate($event, c)"
+        ></ion-datetime>
+      </ion-modal>
       <div class="q-px-md">
         <ion-text>
           <h3>Turmas</h3>
@@ -172,15 +184,6 @@
       
     </ion-modal>
 
-    <ion-modal 
-      :keep-contents-mounted="true" 
-    >
-      <ion-datetime
-        id="datetime"
-        presentation="date"
-        @ionChange="onChangeDate($event, c)"
-      ></ion-datetime>
-    </ion-modal>
 
     <!-- <ion-alert
       :isOpen="dialogConfirmPresence.open"
@@ -234,6 +237,10 @@ export default {
   name: "Attendance",
   data() {
     return {
+      isModalOpen: false,
+      showBadge: true,
+      popoverEvent: null,
+      dateSelected: null,
       presentingElement: null,
       dialogConfirmPresence: {
         open: false,
@@ -316,9 +323,11 @@ export default {
         this.dialogAttendance.selectedChildren.data.push(child)
       }
     },
+
     onChangeDate($event, c) {
-      this.dateAttendance = $event.detail.value.split('T')[0]
-      this.getChildrenInClassesList()
+      this.dateSelected = $event.detail.value.split('T')[0];
+      this.getChildrenInClassesList();
+      this.isModalOpen = false;
     },
     async createUserChildAttendance() {
       const opt = {
@@ -376,7 +385,9 @@ export default {
           dateAttendance: this.dateAttendance
         }
       }
+      utils.loading.show()
       useFetch(opt).then((r) => {
+        utils.loading.hide()
         if (!r.error) {
           r.data && r.data.list ? this.childrenInClassesList = r.data.list : this.childrenInClassesList = []
           return
@@ -404,6 +415,74 @@ export default {
 };
 </script>
 <style scoped>
+.ion-content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 100%;
+  margin-left: 12px;
+  margin-top: 20px;
+}
+
+.button-container {
+  position: relative;
+  display: inline-block;
+}
+
+.highlight-button {
+  background-color: var(--ion-color-primary);
+  color: #fff;
+  border-radius: 10px;
+  padding: 2px;
+  box-shadow: 0 0 12px var(--ion-color-primary);
+  animation: pulse 1s infinite;
+}
+
+.badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #ff4081;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  animation: fadeRotate 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeRotate {
+  0% {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: rotate(180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+}
 ion-avatar {
   width: 56px;
   height: 56px
