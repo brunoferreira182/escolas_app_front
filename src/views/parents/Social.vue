@@ -2,15 +2,8 @@
   <ion-page>
     <ion-header class="ion-no-border" :translucent="true">
       <ion-toolbar>
-        <ion-title class="ion-text-center">
+        <ion-title>
           {{ APP_NAME }}
-          <br>
-          <ion-note class="ion-text-wrap" v-if="currentViewName === 'parent' ">
-            Familiar
-          </ion-note>
-          <ion-note class="ion-text-wrap" v-else>
-            Funcionário
-          </ion-note>
         </ion-title>
       </ion-toolbar>
     </ion-header>
