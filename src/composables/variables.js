@@ -1,6 +1,6 @@
 //////////// VARIAVEIS DA APLICACAO //////
-const MODE_MASTER_SERVER = 'prod'
-const COMPANY_ID = 10
+const MODE_MASTER_SERVER = 'bruno'
+const COMPANY_ID = 1
 const VERSION = 3.2
 const BUILD = 29
 //////////// NAO MUDAR //////

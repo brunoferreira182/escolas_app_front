@@ -188,18 +188,25 @@ async function pickFile (type) {
     return
   }
   const file = props.multiple ? res.files : res.files[0];
-  
-  if (props.multiple) {
+  // if (file.path) {
+  //   //codigo antigo
+  //   const fileSrc = Capacitor.convertFileSrc(file.path);
+  //   const fileTemp = await fetch(fileSrc)
+  //   file.blob = await fileTemp.blob()
+  // }
+  //aqui pra baixo codigo adaptado para multiplos
+  if (props.multiple && file.path) {
     for (let i = 0; i < file.length; i++) {
       const fileSrc = Capacitor.convertFileSrc(file[i].path);
       const fileTemp = await fetch(fileSrc);
       file[i].blob = await fileTemp.blob();
     }
-  }else if(!props.multiple && file.path){
-      const fileSrc = Capacitor.convertFileSrc(file.path);
-      const fileTemp = await fetch(fileSrc)
-      file.blob = await fileTemp.blob()
   }
+  // else if(!props.multiple && file.path){
+  //     const fileSrc = Capacitor.convertFileSrc(file.path);
+  //     const fileTemp = await fetch(fileSrc)
+  //     file.blob = await fileTemp.blob()
+  // }
 
   if (type === 'gallery' && !props.noCrop) {
     console.log("🚀 ~ pickFile ~ type === 'gallery' && !props.noCro:")
