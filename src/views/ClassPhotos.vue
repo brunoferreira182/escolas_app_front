@@ -49,7 +49,7 @@
       <PhotoHandler
         v-show="startPhotoHandler"
         :start="startPhotoHandler"
-        :allFiles="true"
+        :allFiles="false"
         :noCrop="false"
         :acceptImageCaption="true"
         :multiple="true"
