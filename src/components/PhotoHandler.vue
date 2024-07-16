@@ -200,29 +200,51 @@ async function pickFile (type) {
   // }
   //aqui pra baixo codigo adaptado para multiplos
 
-  switch(props.multiple){
-    case true || file.path:
-      console.log(1)
+  if(props.multiple === true && file && file.path){
+    console.log(1)
+      //aqui funciona navegador
       for (let i = 0; i < file.length; i++) {
         const fileSrc = Capacitor.convertFileSrc(file[i].path);
         const fileTemp = await fetch(fileSrc);
         file[i].blob = await fileTemp.blob();
       }
-    break;
-    // case true || file.path:
+  }
+  // else if(props.multiple === true && !file && !file.path){
+  //   console.log(2)
+  //     //aqui funciona navegador
+  //     for (let i = 0; i < file.length; i++) {
+  //       const fileSrc = Capacitor.convertFileSrc(file[i].path);
+  //       const fileTemp = await fetch(fileSrc);
+  //       file[i].blob = await fileTemp.blob();
+  //     }
+  // }
+  switch(props.multiple){
+    // case true && file.path:
+    //   console.log(1)
+    //   //aqui funciona navegador
     //   for (let i = 0; i < file.length; i++) {
     //     const fileSrc = Capacitor.convertFileSrc(file[i].path);
     //     const fileTemp = await fetch(fileSrc);
     //     file[i].blob = await fileTemp.blob();
     //   }
     // break;
-    case false :
-      console.log(3)
-      const fileSrc = Capacitor.convertFileSrc(file.path);
-      const fileTemp = await fetch(fileSrc)
-      file.blob = await fileTemp.blob()
-    break;
-  }
+    case true || !file.path:
+    console.log(2)
+    //aquifunciona android studio
+      for (let i = 0; i < file.length; i++) {
+        const fileSrc = Capacitor.convertFileSrc(file[i].path);
+        const fileTemp = await fetch(fileSrc);
+        file[i].blob = await fileTemp.blob();
+      }
+    }
+  //   // break;
+  //   // case false :
+  //   //   console.log(3)
+  //   //   const fileSrc = Capacitor.convertFileSrc(file.path);
+  //   //   const fileTemp = await fetch(fileSrc)
+  //   //   file.blob = await fileTemp.blob()
+  //   // break;
+  // }
   // if (file.path && props.multiple ) {
   //   console.log(file, 'tem filepath e multiple')
   //   for (let i = 0; i < file.length; i++) {
