@@ -195,27 +195,61 @@ async function pickFile (type) {
   //   file.blob = await fileTemp.blob()
   // }
   //aqui pra baixo codigo adaptado para multiplos
+//   if (file) {
+//   if (file.path && props.multiple) {
+//     // Alternativa 1: Vários arquivos com caminhos definidos
+//     for (const f of Array.isArray(file) ? file : [file]) {
+//       const fileSrc = Capacitor.convertFileSrc(f.path);
+//       const fileTemp = await fetch(fileSrc);
+//       f.blob = await fileTemp.blob();
+//     }
+//     console.log("1");
+//   } else if (!file.path && props.multiple) {
+//     // Alternativa 2: Vários arquivos sem caminhos definidos
+//     for (const f of Array.isArray(file) ? file : [file]) {
+//       const fileSrc = Capacitor.convertFileSrc(f.path);
+//       const fileTemp = await fetch(fileSrc);
+//       f.blob = await fileTemp.blob();
+//     }
+//     console.log("2");
+//   } else if (!file.path && !props.multiple) {
+//     // Alternativa 3: Apenas um arquivo sem caminho definido
+//     const fileSrc = Capacitor.convertFileSrc(file.path);
+//     const fileTemp = await fetch(fileSrc);
+//     file.blob = await fileTemp.blob();
+//     console.log("3");
+//   }
+// }
+
+
   switch(file){
     case file.path:
       if(props.multiple){
         for (let i = 0; i < file.length; i++) {
+        console.log(1)
           const fileSrc = Capacitor.convertFileSrc(file[i].path);
           const fileTemp = await fetch(fileSrc);
           file[i].blob = await fileTemp.blob();
         }
       }
+    break;
     case !file.path:
       if(props.multiple){
+        console.log(2)
         for (let i = 0; i < file.length; i++) {
           const fileSrc = Capacitor.convertFileSrc(file[i].path);
           const fileTemp = await fetch(fileSrc);
           file[i].blob = await fileTemp.blob();
         }
       }else{
+        console.log(3
+
+        )
         const fileSrc = Capacitor.convertFileSrc(file.path);
         const fileTemp = await fetch(fileSrc)
         file.blob = await fileTemp.blob()
       }
+    break;
   }
   // if (file.path && props.multiple ) {
   //   for (let i = 0; i < file.length; i++) {
