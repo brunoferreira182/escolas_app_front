@@ -1,5 +1,5 @@
 //////////// VARIAVEIS DA APLICACAO //////
-const MODE_MASTER_SERVER = 'local'
+const MODE_MASTER_SERVER = 'brun2'
 const COMPANY_ID = 1
 const VERSION = 3.2
 const BUILD = 29
