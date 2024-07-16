@@ -214,7 +214,7 @@ export default {
         }
       }
     },
-    async getClassesPhotos(loading){
+    async getClassesPhotos(loading) {
       const opt = {
         route: '/mobile/workers/chat/getClassesPhotos',
         body: {
@@ -222,19 +222,22 @@ export default {
           page: this.pagination.page,
           rowsPerPage: this.pagination.rowsPerPage
         }
-      }
-      loading === 'dontShowLoading' ? utils.loading.hide() : utils.loading.show()
-      const r = await useFetch(opt)
-      utils.loading.hide()
-      if(!r.error){
-        // if (r.data.length === 0) {
-        //   this.noMoreData = true
-        //   return
-        // }
-        // this.classPhotos = r.data.list
-        console.log("🚀 ~ getClassesPhotos ~ r.data.list:", r.data.list)
-        this.classPhotos.push(...r.data.list)
-        return
+      };
+      loading === 'dontShowLoading' ? utils.loading.hide() : utils.loading.show();
+      const r = await useFetch(opt);
+      utils.loading.hide();
+      if (!r.error) {
+        console.log("🚀 ~ getClassesPhotos ~ r.data.list:", r.data.list);
+        r.data.list.forEach(img => {
+          const existingItemIndex = this.classPhotos.findIndex(item => item._id === img._id);
+          if (existingItemIndex !== -1) {
+            this.classPhotos.splice(existingItemIndex, 1, img);
+          } else {
+            this.classPhotos.push(img);
+          }
+        });
+        this.classPhotos.sort((a, b) => b.createdAt.createdAtPosix - a.createdAt.createdAtPosix);
+        return;
       }
     },
     captured(img, imgBlob, fileName, imageCaption) {
