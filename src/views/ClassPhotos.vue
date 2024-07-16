@@ -42,7 +42,7 @@
         v-if="showAddPhoto && currentRoute.includes('classPhotos')"
         @click="clkAddAttachment"
       >
-        <ion-fab-button size="medium">
+        <ion-fab-button size="small">
           <ion-icon :icon="add" />
         </ion-fab-button>
       </ion-fab>
@@ -196,18 +196,24 @@ export default {
         this.pendingUploads++;
 
       const r = await useFetch(opt)
+   
       if (!this.uploadResults) {
         this.uploadResults = [];
       }
+      this.uploadResults.forEach(step => {
+        console.log('step',step)
+      });
       this.uploadResults.push(r);
       this.pendingUploads--;
       if (this.pendingUploads === 0) {
         let allProcessed = this.uploadResults.every(result => !result.error);
+        console.log("🚀 ~ sendImages ~ allProcessed:", allProcessed)
         this.uploadResults = [];
         this.pendingUploads = null;
         if (allProcessed) {
           utils.toast('Imagens inseridas com sucesso!')
           await this.getClassesPhotos('dontShowLoading')
+          this.isLoading = false
         } else {
           utils.loading.hide();
           this.isLoading = false;

@@ -1,5 +1,5 @@
 <template>
-  <ion-modal :isOpen="step === 'crop'" @didDismiss="step.value = 'initial'">
+  <ion-modal :isOpen="step === 'crop'" @didDismiss="clkBack()">
     <cropper
       :src="img.webPath"
       @change="crop"
@@ -195,50 +195,44 @@ async function pickFile (type) {
   //   file.blob = await fileTemp.blob()
   // }
   //aqui pra baixo codigo adaptado para multiplos
-
-
-  switch(file){
-    case file.path:
-      if(props.multiple){
-        for (let i = 0; i < file.length; i++) {
-          const fileSrc = Capacitor.convertFileSrc(file[i].path);
-          const fileTemp = await fetch(fileSrc);
-          file[i].blob = await fileTemp.blob();
-        }
-      }
-    break;
-    case !file.path:
-      if(props.multiple){
-        for (let i = 0; i < file.length; i++) {
-          const fileSrc = Capacitor.convertFileSrc(file[i].path);
-          const fileTemp = await fetch(fileSrc);
-          file[i].blob = await fileTemp.blob();
-        }
-      }else{
-        const fileSrc = Capacitor.convertFileSrc(file.path);
-        const fileTemp = await fetch(fileSrc)
-        file.blob = await fileTemp.blob()
-      }
-    break;
+  if (props.multiple && !props.multiple) {
+    console.log('primeiro if', props.multiple)
+  for (let i = 0; i < file.length; i++) {
+    console.log('for', props.multiple)
+      const fileSrc = Capacitor.convertFileSrc(file[i].path);
+      const fileTemp = await fetch(fileSrc);
+      file[i].blob = await fileTemp.blob();
+    }
+  } else if (file.path) {
+    console.log('era pra ta aqui if', file)
+    const fileSrc = Capacitor.convertFileSrc(file.path);
+    const fileTemp = await fetch(fileSrc);
+    file.blob = await fileTemp.blob();
   }
-  // if (file.path && props.multiple ) {
-  //   for (let i = 0; i < file.length; i++) {
-  //     const fileSrc = Capacitor.convertFileSrc(file[i].path);
-  //     const fileTemp = await fetch(fileSrc);
-  //     file[i].blob = await fileTemp.blob();
-  //   }
-  // }
-  // if (!file.path && props.multiple) {
-  //   for (let i = 0; i < file.length; i++) {
-  //     const fileSrc = Capacitor.convertFileSrc(file[i].path);
-  //     const fileTemp = await fetch(fileSrc);
-  //     file[i].blob = await fileTemp.blob();
-  //   }
-  // }
-  // else if(!props.multiple && file.path){
-  //     const fileSrc = Capacitor.convertFileSrc(file.path);
-  //     const fileTemp = await fetch(fileSrc)
-  //     file.blob = await fileTemp.blob()
+
+  // switch(file){
+  //   case file.path:
+  //     if(props.multiple){
+  //       for (let i = 0; i < file.length; i++) {
+  //         const fileSrc = Capacitor.convertFileSrc(file[i].path);
+  //         const fileTemp = await fetch(fileSrc);
+  //         file[i].blob = await fileTemp.blob();
+  //       }
+  //     }
+  //   break;
+  //   case !file.path:
+  //     if(props.multiple){
+  //       for (let i = 0; i < file.length; i++) {
+  //         const fileSrc = Capacitor.convertFileSrc(file[i].path);
+  //         const fileTemp = await fetch(fileSrc);
+  //         file[i].blob = await fileTemp.blob();
+  //       }
+  //     }else{
+  //       const fileSrc = Capacitor.convertFileSrc(file.path);
+  //       const fileTemp = await fetch(fileSrc)
+  //       file.blob = await fileTemp.blob()
+  //     }
+  //   break;
   // }
 
   if (type === 'gallery' && !props.noCrop) {
@@ -248,6 +242,7 @@ async function pickFile (type) {
       for(let i = 0; i < file.length; i++){
         emits('captured', file[i], file[i].blob, file[i].name, imageCaption, '', type)
       }
+      utils.loading.hide()
       return
     }
     img.value = await convertBlobToBase64(file.blob)
