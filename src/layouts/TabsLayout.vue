@@ -27,7 +27,7 @@
       vertical="bottom"
       horizontal="end"
       style="margin-bottom: 50px; padding-bottom: var(--ion-safe-area-bottom);"
-      v-if="showSwitchButton"
+      v-if="showSwitchButton && $route.path === '/tabsLayout/social'"
       @click="switchViews"
     >
       <ion-fab-button size="small">
