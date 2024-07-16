@@ -63,7 +63,7 @@
           <ion-note>Arraste para a esquerda para opções</ion-note>
         </ion-text>
       </div>
-      <ion-list :inset="true" lines="inset">
+      <ion-list :inset="true" lines="inset" v-if="childrenInClassesList.length">
         <ion-item-sliding
           v-for="child in childrenInClassesList"
           :key="child"
@@ -100,7 +100,6 @@
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
-
     </ion-content>
 
     <ion-modal 

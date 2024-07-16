@@ -201,7 +201,7 @@ async function pickFile (type) {
   //aqui pra baixo codigo adaptado para multiplos
 
   switch(props.multiple){
-    case true || !file.path:
+    case true || file.path:
       console.log(1)
       for (let i = 0; i < file.length; i++) {
         const fileSrc = Capacitor.convertFileSrc(file[i].path);
@@ -209,13 +209,13 @@ async function pickFile (type) {
         file[i].blob = await fileTemp.blob();
       }
     break;
-    case true || file.path:
-      for (let i = 0; i < file.length; i++) {
-        const fileSrc = Capacitor.convertFileSrc(file[i].path);
-        const fileTemp = await fetch(fileSrc);
-        file[i].blob = await fileTemp.blob();
-      }
-    break;
+    // case true || file.path:
+    //   for (let i = 0; i < file.length; i++) {
+    //     const fileSrc = Capacitor.convertFileSrc(file[i].path);
+    //     const fileTemp = await fetch(fileSrc);
+    //     file[i].blob = await fileTemp.blob();
+    //   }
+    // break;
     case false :
       console.log(3)
       const fileSrc = Capacitor.convertFileSrc(file.path);
