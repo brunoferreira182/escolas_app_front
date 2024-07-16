@@ -1,5 +1,5 @@
 <template>
-  <ion-modal :isOpen="step === 'crop'" @didDismiss="step = 'initial'">
+  <ion-modal :isOpen="step === 'crop'" @didDismiss="step.value = 'initial'">
     <cropper
       :src="img.webPath"
       @change="crop"

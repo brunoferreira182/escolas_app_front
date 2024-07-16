@@ -227,7 +227,6 @@ export default {
       const r = await useFetch(opt);
       utils.loading.hide();
       if (!r.error) {
-        console.log("🚀 ~ getClassesPhotos ~ r.data.list:", r.data.list);
         r.data.list.forEach(img => {
           const existingItemIndex = this.classPhotos.findIndex(item => item._id === img._id);
           if (existingItemIndex !== -1) {
