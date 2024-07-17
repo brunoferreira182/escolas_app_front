@@ -183,7 +183,6 @@ async function pickFile (type) {
       console.log("🚀 ~ pickFile ~ res1:", res)
     } else {
       res = await FilePicker.pickFiles({ types, multiple: props.multiple });
-      console.log("🚀 ~ pickFile ~ res2:", res)
     }
   } catch (e) {
     emits('cancel')
@@ -201,7 +200,6 @@ async function pickFile (type) {
   //aqui pra baixo codigo adaptado para multiplos
 
   if(props.multiple === true && file && file.path){
-    console.log(1)
       //aqui funciona navegador
       for (let i = 0; i < file.length; i++) {
         const fileSrc = Capacitor.convertFileSrc(file[i].path);
@@ -209,69 +207,17 @@ async function pickFile (type) {
         file[i].blob = await fileTemp.blob();
       }
   }
-  // else if(props.multiple === true && !file && !file.path){
-  //   console.log(2)
-  //     //aqui funciona navegador
-  //     for (let i = 0; i < file.length; i++) {
-  //       const fileSrc = Capacitor.convertFileSrc(file[i].path);
-  //       const fileTemp = await fetch(fileSrc);
-  //       file[i].blob = await fileTemp.blob();
-  //     }
-  // }
-  switch(props.multiple){
-    // case true && file.path:
-    //   console.log(1)
-    //   //aqui funciona navegador
-    //   for (let i = 0; i < file.length; i++) {
-    //     const fileSrc = Capacitor.convertFileSrc(file[i].path);
-    //     const fileTemp = await fetch(fileSrc);
-    //     file[i].blob = await fileTemp.blob();
-    //   }
-    // break;
-    case true || !file.path:
-    console.log(2)
-    //aquifunciona android studio
-      for (let i = 0; i < file.length; i++) {
-        const fileSrc = Capacitor.convertFileSrc(file[i].path);
-        const fileTemp = await fetch(fileSrc);
-        file[i].blob = await fileTemp.blob();
-      }
-    }
-  //   // break;
-  //   // case false :
-  //   //   console.log(3)
-  //   //   const fileSrc = Capacitor.convertFileSrc(file.path);
-  //   //   const fileTemp = await fetch(fileSrc)
-  //   //   file.blob = await fileTemp.blob()
-  //   // break;
-  // }
-  // if (file.path && props.multiple ) {
-  //   console.log(file, 'tem filepath e multiple')
-  //   for (let i = 0; i < file.length; i++) {
-  //     const fileSrc = Capacitor.convertFileSrc(file[i].path);
-  //     const fileTemp = await fetch(fileSrc);
-  //     file[i].blob = await fileTemp.blob();
-  //   }
-  // }
-  // if (!file.path && props.multiple) {
-  //   console.log(file, 'nao tem filepath e tem multiple')
-
-  //   const fileSrc = Capacitor.convertFileSrc(file.path);
-  //   const fileTemp = await fetch(fileSrc)
-  //   file.blob = await fileTemp.blob()
-  // }
-  // else if(!file.path && !props.multiple){
-  //   console.log(file, 'nao tem filepath e nao tem multiple')
-  //     const fileSrc = Capacitor.convertFileSrc(file.path);
-  //     const fileTemp = await fetch(fileSrc)
-  //     file.blob = await fileTemp.blob()
-  // }
 
   if (type === 'gallery' && !props.noCrop) {
-    console.log("🚀 ~ pickFile ~ type === 'gallery' && !props.noCro:")
     // img.value é base64
     if(props.multiple){
-      console.log('passou por if type === ')
+      for (let i = 0; i < file.length; i++) {
+        if(file[i].path){
+          const fileSrc = Capacitor.convertFileSrc(file[i].path);
+          const fileTemp = await fetch(fileSrc);
+          file[i].blob = await fileTemp.blob();
+        }
+      }
       for(let i = 0; i < file.length; i++){
         emits('captured', file[i], file[i].blob, file[i].name, imageCaption, '', type)
       }
