@@ -37,7 +37,7 @@
           <ion-note>Selecione uma turma para inserir uma atividade para vários alunos</ion-note>
         </ion-text>
       </div>
-      <ion-list :inset="true">
+      <ion-list :inset="true" v-if="classesData.length">
         <ion-item 
           v-for="c in classesData"
           :key="c"
@@ -62,7 +62,7 @@
         </ion-text>
   
       </div>
-      <ion-list :inset="true" color="light">
+      <ion-list :inset="true" color="light" v-if="classEventsHistory.length">
         <ion-item 
           v-for="e in classEventsHistory"
           :key="e"

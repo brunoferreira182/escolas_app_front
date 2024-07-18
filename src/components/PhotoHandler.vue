@@ -1,5 +1,5 @@
 <template>
-  <ion-modal :isOpen="step === 'crop'" @didDismiss="clkBack()">
+  <ion-modal :isOpen="step === 'crop'" >
     <cropper
       :src="img.webPath"
       @change="crop"
@@ -180,6 +180,7 @@ async function pickFile (type) {
     if (type === 'gallery' && !isPlatform('desktop')) {
       console.log('media',getPlatforms())
       res = await FilePicker.pickMedia({ types, multiple: props.multiple });
+      console.log("🚀 ~ pickFile ~ res1:", res)
     } else {
       res = await FilePicker.pickFiles({ types, multiple: props.multiple });
     }
@@ -187,7 +188,9 @@ async function pickFile (type) {
     emits('cancel')
     return
   }
+  
   const file = props.multiple ? res.files : res.files[0];
+  console.log("🚀 ~ pickFile ~ file:", file)
   // if (file.path) {
   //   //codigo antigo
   //   const fileSrc = Capacitor.convertFileSrc(file.path);
@@ -195,56 +198,32 @@ async function pickFile (type) {
   //   file.blob = await fileTemp.blob()
   // }
   //aqui pra baixo codigo adaptado para multiplos
-  if (props.multiple && !props.multiple) {
-    console.log('primeiro if', props.multiple)
-  for (let i = 0; i < file.length; i++) {
-    console.log('for', props.multiple)
-      const fileSrc = Capacitor.convertFileSrc(file[i].path);
-      const fileTemp = await fetch(fileSrc);
-      file[i].blob = await fileTemp.blob();
-    }
-  } else if (file.path) {
-    console.log('era pra ta aqui if', file)
-    const fileSrc = Capacitor.convertFileSrc(file.path);
-    const fileTemp = await fetch(fileSrc);
-    file.blob = await fileTemp.blob();
+
+  if(props.multiple === true && file && file.path){
+      //aqui funciona navegador
+      for (let i = 0; i < file.length; i++) {
+        const fileSrc = Capacitor.convertFileSrc(file[i].path);
+        const fileTemp = await fetch(fileSrc);
+        file[i].blob = await fileTemp.blob();
+      }
   }
 
-  // switch(file){
-  //   case file.path:
-  //     if(props.multiple){
-  //       for (let i = 0; i < file.length; i++) {
-  //         const fileSrc = Capacitor.convertFileSrc(file[i].path);
-  //         const fileTemp = await fetch(fileSrc);
-  //         file[i].blob = await fileTemp.blob();
-  //       }
-  //     }
-  //   break;
-  //   case !file.path:
-  //     if(props.multiple){
-  //       for (let i = 0; i < file.length; i++) {
-  //         const fileSrc = Capacitor.convertFileSrc(file[i].path);
-  //         const fileTemp = await fetch(fileSrc);
-  //         file[i].blob = await fileTemp.blob();
-  //       }
-  //     }else{
-  //       const fileSrc = Capacitor.convertFileSrc(file.path);
-  //       const fileTemp = await fetch(fileSrc)
-  //       file.blob = await fileTemp.blob()
-  //     }
-  //   break;
-  // }
-
   if (type === 'gallery' && !props.noCrop) {
-    console.log("🚀 ~ pickFile ~ type === 'gallery' && !props.noCro:")
     // img.value é base64
     if(props.multiple){
+      for (let i = 0; i < file.length; i++) {
+        if(file[i].path){
+          const fileSrc = Capacitor.convertFileSrc(file[i].path);
+          const fileTemp = await fetch(fileSrc);
+          file[i].blob = await fileTemp.blob();
+        }
+      }
       for(let i = 0; i < file.length; i++){
         emits('captured', file[i], file[i].blob, file[i].name, imageCaption, '', type)
       }
-      utils.loading.hide()
       return
     }
+    console.log('saiu agora')
     img.value = await convertBlobToBase64(file.blob)
     step.value = 'crop'
     imgType.value = 'gallery'
