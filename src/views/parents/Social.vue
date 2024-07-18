@@ -10,19 +10,26 @@
     <ion-content color="light" :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar color="light">
-          <ion-title size="large">
+          <ion-button 
+            fill="clear" 
+            class="text-caption" 
+            color="primary" v-if="registrationData"
+            @click="goToRegistration"
+          >
+            Fazer rematrícula
+          </ion-button>
+          <div class="text-h4 q-px-md">
             {{ APP_NAME }}
-          </ion-title>
-          
+          </div>  
+          <Transition name="slide-fade" >
+            <div class="pd" v-if="currentViewName === 'parent' ">
+              Familiar
+            </div>
+            <div v-else class="pd">
+              Funcionário
+            </div>
+          </Transition>
         </ion-toolbar>
-        <Transition name="slide-fade">
-          <div class="q-px-md" v-if="currentViewName === 'parent' ">
-            Familiar
-          </div>
-          <div v-else class="q-px-md">
-            Funcionário
-          </div>
-        </Transition>
       </ion-header>
       <div class="q-mx-sm q-mt-md">
         <ion-chip
@@ -84,11 +91,9 @@
         @getPosts="getPosts"
         :i="i"
       />
-
       <ion-infinite-scroll @ionInfinite="bottomOfPage" v-if="showInfiniteScroll">
         <ion-infinite-scroll-content></ion-infinite-scroll-content>
       </ion-infinite-scroll>
-
     </ion-content>
   </ion-page>
 </template>
@@ -98,6 +103,7 @@ import {
   IonPage,
   IonContent,
   IonTitle,
+  IonButton,
   IonToolbar,
   IonHeader,
   IonRefresher, IonRefresherContent,
@@ -136,6 +142,7 @@ export default {
       userNotes: '',
       noteString: '',
       storiesPosts: [],
+      registrationData: '',
       filterTypes: [
         { label: 'Todos', type: 'all' },
         { label: 'Público', type: 'public' },
@@ -188,6 +195,23 @@ export default {
       this.getPosts(null);
       this.getUserNotes();
       this.getStories();
+      this.getRegistration()
+    },
+    async getRegistration(){
+      const opt = {
+        route: '/mobile/social/getRegistration',
+        body: {
+          page: this.page,
+          rowsPerPage: this.rowsPerPage
+        }
+      }
+      const ret = await useFetch(opt);
+      this.registrationData = ret.data
+      
+    },
+    goToRegistration(){
+      const registrationId = this.registrationData._id
+      this.$router.push('/registration?registrationId=' + registrationId)
     },
     async getUserNotes() {
       const opt = {
@@ -270,6 +294,10 @@ export default {
 </script>
 
 <style scoped>
+.pd{
+  padding-left: 18px;
+  padding-right: 18px;
+}
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
 }

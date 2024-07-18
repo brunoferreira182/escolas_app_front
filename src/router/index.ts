@@ -5,6 +5,7 @@ import MainLayout from '../layouts/MainLayout.vue'
 import Login from '../views/Login.vue';
 import ChatUserAndWorker from '../views/ChatUserAndWorker.vue';
 import Register from '../views/Register.vue';
+import Registration from '../views/parents/Registration.vue';
 import waitingAproval from '../views/WaitingAproval.vue';
 import waitingPermission from '../views/WaitingPermission.vue';
 import parentsSocial from '../views/parents/Social.vue'
@@ -61,6 +62,7 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       { path: '/login', component: Login },
       { path: '/ChatUserAndWorker', component: ChatUserAndWorker },
+      { path: '/Registration', component: Registration },
       { path: '/messenger', component: Messenger },
       {
         path: '/tabsLayout',
@@ -79,6 +81,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       { path: '/classPhotos', component: ClassPhotos },
       { path: '/register', component: Register },
+      { path: '/registration', component: Registration },
       { path: '/waitingAproval', component: waitingAproval },
       { path: '/waitingpermission', component: waitingPermission },
       { path: '/userPersonalData', component: userPersonalData },

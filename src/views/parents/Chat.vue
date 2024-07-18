@@ -96,7 +96,7 @@ import utils from '../../composables/utils'
 <script>
 import { useFetch } from '@/composables/fetch';
 export default {
-  name: 'chatParents',
+  name: 'ChatParents',
   components: {
     IonPage, IonButton,
     IonContent,
