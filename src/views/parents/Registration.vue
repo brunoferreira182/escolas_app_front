@@ -119,7 +119,7 @@ export default {
       this.getParentChildren()
     },
     createRegistrationRequest(){
-      const selectedChildren = this.selectedChildren.array.map(childId => ({ childId }));
+      const selectedChildren = this.selectedChildren.data.map(child => ( child.childData ));
       const opt = {
         route: '/mobile/social/createRegistrationRequest',
         body: {
