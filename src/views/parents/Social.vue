@@ -200,10 +200,6 @@ export default {
     async getRegistration(){
       const opt = {
         route: '/mobile/social/getRegistration',
-        body: {
-          page: this.page,
-          rowsPerPage: this.rowsPerPage
-        }
       }
       const ret = await useFetch(opt);
       this.registrationData = ret.data
