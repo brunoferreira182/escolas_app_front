@@ -119,17 +119,20 @@ export default {
       this.getParentChildren()
     },
     createRegistrationRequest(){
+      const selectedChildren = this.selectedChildren.array.map(childId => ({ childId }));
       const opt = {
         route: '/mobile/social/createRegistrationRequest',
         body: {
           registrationId: this.$route.query.registrationId,
-          selectedChildren: this.selectedChildren.data
+          selectedChildren: selectedChildren
           
         }
       }
       useFetch(opt).then(r => {
         if (r.error) return
+        utils.toast('Rematrícula encaminhada com sucesso! Aguarde um retorno da escola')
         this.children = r.data
+        this.$router.back()
       })
     },
     clkAllChildren () {
