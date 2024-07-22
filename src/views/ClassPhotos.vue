@@ -5,7 +5,7 @@
       :backButton="true"
     />
     <ion-content color="light" >
-      <div v-for="item in classPhotos">
+      <div v-for="item in classPhotos" >
         <ion-text>
           <h3 class="q-mx-md">{{ item._id }}</h3>
         </ion-text>
@@ -15,7 +15,7 @@
           :gap="10"
           :ssr-columns="100"
           #default="{ item }"
-          class="q-pa-xs"
+          class="q-pa-xs q-mb-xl"
         >  
           <ion-card  class="card q-ma-none">
             <ion-img
@@ -24,12 +24,11 @@
               :src="utils.attachmentsAddress() + item.img.filename"
             />
             <ion-button 
-              class="card-button"
-              shape="round"
-              fill="clear"
+              expand="block"
+              size="small"
               @click="download(item.img)"
             >
-              <ion-icon slot="icon-only" :icon="cloudDownload" />
+              <ion-icon :icon="cloudDownload" />
             </ion-button>
           </ion-card>
         </MasonryWall>
@@ -43,14 +42,14 @@
         v-if="showAddPhoto && currentRoute.includes('classPhotos')"
         @click="clkAddAttachment"
       >
-        <ion-fab-button size="medium">
+        <ion-fab-button size="small">
           <ion-icon :icon="add" />
         </ion-fab-button>
       </ion-fab>
       <PhotoHandler
         v-show="startPhotoHandler"
         :start="startPhotoHandler"
-        :allFiles="true"
+        :allFiles="false"
         :noCrop="false"
         :acceptImageCaption="true"
         :multiple="true"
@@ -62,17 +61,18 @@
         :showModal="showModal"
         @closeModal="showModal = false"
       />
-      <ion-button 
-        class="footer-next-button"
-        :disabled="animationLoading ? true : false"
-        @click="clkLoadMore()" 
-        expand="block"
-      >
-        <div style="width: 60px;display: flex;align-items: center;justify-content: center;">
-          <div v-if="animationLoading" class="dot-pulse"></div>
-          <div v-else>Carregar mais</div>
-        </div>
-      </ion-button>
+      <ion-footer class="load-more-footer">
+        <ion-button 
+          :disabled="animationLoading ? true : false"
+          @click="clkLoadMore()" 
+          expand="block"
+        >
+          <div style="width: 60px;display: flex;align-items: center;justify-content: center;">
+            <div v-if="animationLoading" class="dot-pulse"></div>
+            <div v-else>Carregar mais</div>
+          </div>
+        </ion-button>
+      </ion-footer>
     </ion-content>
   </ion-page>
 </template>
@@ -196,25 +196,31 @@ export default {
         this.pendingUploads++;
 
       const r = await useFetch(opt)
+   
       if (!this.uploadResults) {
         this.uploadResults = [];
       }
+      this.uploadResults.forEach(step => {
+        console.log('step',step)
+      });
       this.uploadResults.push(r);
       this.pendingUploads--;
       if (this.pendingUploads === 0) {
         let allProcessed = this.uploadResults.every(result => !result.error);
+        console.log("🚀 ~ sendImages ~ allProcessed:", allProcessed)
         this.uploadResults = [];
         this.pendingUploads = null;
         if (allProcessed) {
           utils.toast('Imagens inseridas com sucesso!')
           await this.getClassesPhotos('dontShowLoading')
+          this.isLoading = false
         } else {
           utils.loading.hide();
           this.isLoading = false;
         }
       }
     },
-    async getClassesPhotos(loading){
+    async getClassesPhotos(loading) {
       const opt = {
         route: '/mobile/workers/chat/getClassesPhotos',
         body: {
@@ -222,19 +228,21 @@ export default {
           page: this.pagination.page,
           rowsPerPage: this.pagination.rowsPerPage
         }
-      }
-      loading === 'dontShowLoading' ? utils.loading.hide() : utils.loading.show()
-      const r = await useFetch(opt)
-      utils.loading.hide()
-      if(!r.error){
-        // if (r.data.length === 0) {
-        //   this.noMoreData = true
-        //   return
-        // }
-        // this.classPhotos = r.data.list
-        console.log("🚀 ~ getClassesPhotos ~ r.data.list:", r.data.list)
-        this.classPhotos.push(...r.data.list)
-        return
+      };
+      loading === 'dontShowLoading' ? utils.loading.hide() : utils.loading.show();
+      const r = await useFetch(opt);
+      utils.loading.hide();
+      if (!r.error) {
+        r.data.list.forEach(img => {
+          const existingItemIndex = this.classPhotos.findIndex(item => item._id === img._id);
+          if (existingItemIndex !== -1) {
+            this.classPhotos.splice(existingItemIndex, 1, img);
+          } else {
+            this.classPhotos.push(img);
+          }
+        });
+        this.classPhotos.sort((a, b) => b.createdAt.createdAtPosix - a.createdAt.createdAtPosix);
+        return;
       }
     },
     captured(img, imgBlob, fileName, imageCaption) {
@@ -291,7 +299,7 @@ ion-avatar {
 }
 .load-more-footer {
   position: fixed;
-  bottom: 0;
+  bottom: -5px;
   width: 100%;
   z-index: 1;
   background: var(--ion-color-light);

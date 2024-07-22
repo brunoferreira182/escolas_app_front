@@ -76,25 +76,25 @@ const useUtils = {
     else nameToDownload = originalnameSplit[0] + '_' + currentDate + '.' + originalnameSplit[originalnameSplit.length - 1]
     return nameToDownload
   },
-  async downloadFile2 (obj) {
-    const perm = await this.getFilesystemAccess()
-    const opt = {
-      route: '/download/' + obj.filename,
-      method: 'GET'
-    }
-    const httpResponse = await useFetch(opt)
-    const resBlob = new Blob([httpResponse])
-    // console.log("🚀 ~ downloadFile ~ httpResponse:", httpResponse)
-    let nameToDownload = this.makeFileName(obj.originalname)
-    const writeFile = await this.writeFile2(resBlob, nameToDownload)
-    if (writeFile.error) {
-      this.toast('Ocorreu um erro ao baixar o arquivo')
-      return
-    }
-    this.toast('Arquivo baixado na pasta Documentos')
-    // this.openFile(writeFile)
-    return
-  },
+  // async downloadFile2 (obj) {
+  //   const perm = await this.getFilesystemAccess()
+  //   const opt = {
+  //     route: '/download/' + obj.filename,
+  //     method: 'GET'
+  //   }
+  //   const httpResponse = await useFetch(opt)
+  //   const resBlob = new Blob([httpResponse])
+  //   // console.log("🚀 ~ downloadFile ~ httpResponse:", httpResponse)
+  //   let nameToDownload = this.makeFileName(obj.originalname)
+  //   const writeFile = await this.writeFile2(resBlob, nameToDownload)
+  //   if (writeFile.error) {
+  //     this.toast('Ocorreu um erro ao baixar o arquivo')
+  //     return
+  //   }
+  //   this.toast('Arquivo baixado na pasta Documentos')
+  //   // this.openFile(writeFile)
+  //   return
+  // },
   async downloadFile (obj) {
     const filename = this.makeFileName(obj.originalname)
     const opt = {
@@ -218,7 +218,7 @@ const useUtils = {
       message,
       duration: 2500,
       cssClass: 'custom-toast',
-      position: position ? position : 'bottom',
+      position: position ? position : 'top',
       buttons: [
         {
           text: 'Fechar',

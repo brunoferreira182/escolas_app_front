@@ -11,17 +11,22 @@
           <ion-title size="large">Atividades</ion-title>
         </ion-toolbar>
       </ion-header>
-
-      <div class="q-ml-md q-mt-md">
-        <ion-datetime-button
-          datetime="datetime"
-          style="justify-content: left;"
-        />
+      <div class="button-wrapper">
+        <div class="ion-content-center">
+          <ion-text class="ion-text-center button-container">
+            <ion-datetime-button
+              datetime="datetimeChildMural1"
+              class="highlight-button"
+              @click="isModalOpen = true"
+            />
+          </ion-text>
+        </div>
       </div>
-      <ion-modal :keep-contents-mounted="true">
+      <ion-modal :is-open="isModalOpen" :keep-contents-mounted="true">
         <ion-datetime
-          id="datetime"
+          id="datetimeChildMural1"
           presentation="date"
+          :value="dateSelected"
           @ionChange="onChangeDate($event, c)"
         ></ion-datetime>
       </ion-modal>
@@ -32,7 +37,7 @@
           <ion-note>Selecione uma turma para inserir uma atividade para vários alunos</ion-note>
         </ion-text>
       </div>
-      <ion-list :inset="true">
+      <ion-list :inset="true" v-if="classesData.length">
         <ion-item 
           v-for="c in classesData"
           :key="c"
@@ -55,12 +60,14 @@
           <h3>Atividades do dia</h3>
           <ion-note>Veja aqui as atividades já cadastrdas para os alunos das suas turmas</ion-note>
         </ion-text>
+  
       </div>
-      <ion-list :inset="true" color="light">
+      <ion-list :inset="true" color="light" v-if="classEventsHistory.length">
         <ion-item 
           v-for="e in classEventsHistory"
           :key="e"
           detail="false"
+          @click="clkOpenDialogEditClassEvent(e)"
         >
           <ion-avatar
             aria-hidden="true"
@@ -85,17 +92,29 @@
       <ion-modal 
         :is-open="dialogInsertClassActivity.open" 
         :presenting-element="presentingElement"
-        @onDidDismiss="dialogInsertClassActivity.open = false"
+        @onDidDismiss="clearDialogEdit()"
       >
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="end">
               <ion-button @click="closeDialogInsertClassActivity">Fechar</ion-button>
             </ion-buttons>
-            <ion-title >Inserir atividades</ion-title>
+            <ion-title >{{ dialogInsertClassActivity.edit ? 'Editar' : 'Inserir atividades' }}</ion-title>
           </ion-toolbar>
         </ion-header>
         <ion-content color="light">
+          <div v-if="dialogInsertClassActivity.edit">
+            <div class="ion-padding ion-text-center">
+              <img
+                :src="utils.makeFileUrl(dialogInsertClassActivity.classData.childPhoto)"
+                :style="`border-radius: 50%; height: 250px; width: 250px; object-fit: cover; object-position: center;`"
+              /><br>
+              <ion-text>
+                <h5> {{ `${'Editando atividade de ' + dialogInsertClassActivity.classData.childName}` }}</h5>
+              </ion-text>
+              
+            </div>
+          </div>
           <div class="text-h6 q-pa-md">
             Selecione a atividade
           </div>
@@ -144,7 +163,7 @@
             </ion-list>
           </div>
 
-          <div v-if="dialogInsertClassActivity.showChildren">
+          <div v-if="dialogInsertClassActivity.showChildren && !dialogInsertClassActivity.edit">
             <div class="text-h6 q-pa-md">
               Selecione as crianças
             </div>
@@ -180,10 +199,19 @@
             </ion-list>
           </div>
           <ion-button 
+            v-if="dialogInsertClassActivity.edit === false"
             @click="createUserChildActivity" 
             class="q-pa-md" 
             expand="block"
             :disabled="dialogInsertClassActivity.selectedChildren.array.length === 0"
+          >
+            Salvar
+          </ion-button>
+          <ion-button 
+            v-if="dialogInsertClassActivity.edit === true"
+            @click="updateUserClassEvents" 
+            class="q-pa-md" 
+            expand="block"
           >
             Salvar
           </ion-button>
@@ -206,6 +234,7 @@ import {
   IonHeader,
   IonToolbar,
   IonItem,
+  IonRow,
   IonButtons,
   IonTitle,
   IonLabel,
@@ -231,9 +260,15 @@ export default {
   name: "Class",
   data() {
     return {
+      isModalOpen: false,
+      showBadge: true,
+      popoverEvent: null,
+      dateSelected: null,
       presentingElement: null,
       selectedActivity: null,
       dialogInsertClassActivity: {
+        childName: '',
+        edit: false,
         open: false,
         activitiesList: [],
         classData: {},
@@ -261,7 +296,6 @@ export default {
       classEventsHistory: [],
       show: true,
       selectedEvent: null,
-      dateSelected: null
     };
   },
   mounted () {
@@ -284,11 +318,68 @@ export default {
   },
   methods: {
     clkOpenDialogClassEvent (c) {
+      this.dialogInsertClassActivity.edit = false
       this.dialogInsertClassActivity.classData = c
       this.getChildEvents(this.dialogInsertClassActivity.classData.classId)
       this.dialogInsertClassActivity.childrenFromClass = this.childrenInClassesList.filter((child) => child.classId === c.classId)
       this.dialogInsertClassActivity.open = true
       console.log('chegou aqui')
+    },
+    updateUserClassEvents(){
+      const opt = {
+        route: '/mobile/workers/updateUserClassEvents',
+        body: {
+          selectedChildren: this.dialogInsertClassActivity.selectedChildren.data,
+          childEventId: this.dialogInsertClassActivity.classData.childEventId,
+          newChildEventId: this.dialogInsertClassActivity.activitySelected._id,
+          selectedSubtype: this.dialogInsertClassActivity.subactivitySelected?.name,
+          resume: {
+            title: this.dialogInsertClassActivity.activitySelected.name,
+            subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name,
+            activityId: this.dialogInsertClassActivity.activitySelected._id,
+            classData: this.dialogInsertClassActivity.classData,
+          },
+        }
+      }
+      useFetch(opt).then((r) => {
+        if (!r.error) {
+          utils.toast("Atividade editada com sucesso!")
+          this.clearDialogEdit()
+          this.getLastActivityFromChildrenOfClasses()
+          return
+        }
+        else {
+          utils.toast("Ocorreu um erro, tente novamente.")
+        } 
+      })
+    },
+    clearDialogEdit(){
+      this.dialogInsertClassActivity= {
+        childName: '',
+        edit: false,
+        open: false,
+        activitiesList: [],
+        classData: {},
+        obs: '',
+        activitySelected: null,
+        subactivitySelected: null,
+        subactivityTypes: null,
+        showChildren: false,
+        selectedChildren: {
+          data: [],
+          array: [],
+          selectAllChildren: false,
+        },
+        childrenFromClass: []
+      }
+    },
+    clkOpenDialogEditClassEvent (e) {
+      console.log("🚀 ~ clkOpenDialogEditClassEvent ~ e:", e)
+      this.dialogInsertClassActivity.edit = true
+      this.dialogInsertClassActivity.classData = e
+      this.getChildEvents(this.dialogInsertClassActivity.classData.classId)
+      this.dialogInsertClassActivity.childrenFromClass = this.childrenInClassesList.filter((child) => child.classId === e.classId)
+      this.dialogInsertClassActivity.open = true
     },
     clkActivity (act) {
       this.dialogInsertClassActivity.activitySelected = act
@@ -336,10 +427,12 @@ export default {
       }
     },
     onChangeDate($event, c) {
-      this.dateSelected = $event.detail.value.split('T')[0]
-      this.getLastActivityFromChildrenOfClasses()
+      this.dateSelected = $event.detail.value.split('T')[0];
+      this.getLastActivityFromChildrenOfClasses();
+      this.isModalOpen = false;
     },
-    getLastActivityFromChildrenOfClasses(classId) {
+
+    getLastActivityFromChildrenOfClasses(classId){
       const opt = {
         route: '/mobile/workers/classes/getLastActivityFromChildrenOfClasses',
         body: {
@@ -349,7 +442,10 @@ export default {
         }
       }
       if (classId) opt.body.classId = classId
+      utils.loading.show()
       useFetch(opt).then((r) => {
+        utils.loading.hide()
+        console.log("🚀 ~ useFetch ~ r.data.list:", r.data.list)
         if (!r.error) {
           r.data && r.data.list ? this.classEventsHistory = r.data.list : 
           this.classEventsHistory = []
@@ -363,6 +459,7 @@ export default {
     closeDialogInsertClassActivity() {
       this.dialogInsertClassActivity = {
         open: false,
+        edit: false,
         childEventsList: [],
         classData: {},
         obs: '',
@@ -378,7 +475,9 @@ export default {
         childrenFromClass: []
       }
     },
-    getChildEvents(classId) {
+    getChildEvents(classIdData) {
+      console.log("🚀 ~ getChildEvents ~ classId:", classIdData)
+      const classId = classIdData
       const opt = {
         route: '/mobile/workers/getChildEvents',
         body: {
@@ -392,6 +491,7 @@ export default {
       useFetch(opt).then((r) => {
         utils.loading.hide()
         if (r.error) {
+          console.log('opaksdkasopkdposakpo')
           utils.toast('Ocorreu um erro. Tente novamente.')
           return
         }
@@ -407,6 +507,7 @@ export default {
           selectedChildren: this.dialogInsertClassActivity.selectedChildren.data,
           childEventId: this.dialogInsertClassActivity.activitySelected._id,
           selectedSubtype: this.dialogInsertClassActivity.subactivitySelected?.name,
+          classId: this.dialogInsertClassActivity.classData.classId,
           resume: {
             title: this.dialogInsertClassActivity.activitySelected.name,
             subactivitySelected: this.dialogInsertClassActivity.subactivitySelected.name,
@@ -469,6 +570,75 @@ export default {
 </script>
 
 <style scoped>
+
+.ion-content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 100%;
+  margin-left: 12px;
+  margin-top: 20px;
+}
+
+.button-container {
+  position: relative;
+  display: inline-block;
+}
+
+.highlight-button {
+  background-color: var(--ion-color-primary);
+  color: #fff;
+  border-radius: 10px;
+  padding: 2px;
+  box-shadow: 0 0 12px var(--ion-color-primary);
+  animation: pulse 1s infinite;
+}
+
+.badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #ff4081;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  animation: fadeRotate 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeRotate {
+  0% {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: rotate(180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+}
 ion-avatar {
   width: 56px;
   height: 56px

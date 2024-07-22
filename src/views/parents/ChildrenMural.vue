@@ -64,6 +64,13 @@ export default {
     utils.loading.clear()
     this.startView()
   },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/tabsLayout/childrenMural') {
+        this.startView()
+      }
+    }
+  },
   methods: {
     startView(){
       this.getParentChildren()

@@ -173,7 +173,6 @@ async function openCamera () {
 }
 
 async function pickFile (type) {
-  console.log(props.multiple, 'props.multiple')
   let types = ['image/*']
   if (type === 'documents') types = ['application/pdf', 'video/quicktime']
   let res
@@ -181,6 +180,7 @@ async function pickFile (type) {
     if (type === 'gallery' && !isPlatform('desktop')) {
       console.log('media',getPlatforms())
       res = await FilePicker.pickMedia({ types, multiple: props.multiple });
+      console.log("🚀 ~ pickFile ~ res1:", res)
     } else {
       res = await FilePicker.pickFiles({ types, multiple: props.multiple });
     }
@@ -188,23 +188,42 @@ async function pickFile (type) {
     emits('cancel')
     return
   }
+  
   const file = props.multiple ? res.files : res.files[0];
   console.log("🚀 ~ pickFile ~ file:", file)
-  
-  if (file.path) {
-    const fileSrc = Capacitor.convertFileSrc(file.path);
-    const fileTemp = await fetch(fileSrc)
-    file.blob = await fileTemp.blob()
+  // if (file.path) {
+  //   //codigo antigo
+  //   const fileSrc = Capacitor.convertFileSrc(file.path);
+  //   const fileTemp = await fetch(fileSrc)
+  //   file.blob = await fileTemp.blob()
+  // }
+  //aqui pra baixo codigo adaptado para multiplos
+
+  if(props.multiple === true && file && file.path){
+      //aqui funciona navegador
+      for (let i = 0; i < file.length; i++) {
+        const fileSrc = Capacitor.convertFileSrc(file[i].path);
+        const fileTemp = await fetch(fileSrc);
+        file[i].blob = await fileTemp.blob();
+      }
   }
 
   if (type === 'gallery' && !props.noCrop) {
     // img.value é base64
     if(props.multiple){
+      for (let i = 0; i < file.length; i++) {
+        if(file[i].path){
+          const fileSrc = Capacitor.convertFileSrc(file[i].path);
+          const fileTemp = await fetch(fileSrc);
+          file[i].blob = await fileTemp.blob();
+        }
+      }
       for(let i = 0; i < file.length; i++){
         emits('captured', file[i], file[i].blob, file[i].name, imageCaption, '', type)
       }
       return
     }
+    console.log('saiu agora')
     img.value = await convertBlobToBase64(file.blob)
     step.value = 'crop'
     imgType.value = 'gallery'

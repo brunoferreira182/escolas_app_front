@@ -16,22 +16,23 @@
         </ion-text>
         
       </div>
-
-
-      <ion-text class="ion-text-center">
-        <!-- <h3>Mural do dia</h3> -->
-        <!-- <ion-note>Escolha uma data para ver de outros dias</ion-note> -->
-        <ion-datetime-button
-          datetime="datetimeChildMural"
-        />
-      </ion-text>
-
-
+      <div class="button-wrapper">
+        <div class="ion-content-center">
+          <ion-text class="ion-text-center button-container">
+            <ion-datetime-button
+              datetime="datetimeChildMural3"
+              class="highlight-button"
+              @click="isModalOpen = true"
+            />
+          </ion-text>
+        </div>
+      </div>
       <h2 class="q-px-md">Comparecimento</h2>
-      <ion-list :inset="true" v-if="mural?.attendance">
+      <ion-list :inset="true" v-if="mural?.attendance.length">
         <ion-item 
           v-for="e in mural?.attendance"
           :key="e"
+          class="q-ma-sm"
           detail="false"
         >
           <ion-label>
@@ -46,6 +47,9 @@
               v-else-if="e.childAttendanceType === 'absent'"
               color="danger">Ausência
             </ion-badge>
+            <div class="text-caption">
+              {{e.date.dateLocale}}
+            </div>
           </div>
         </ion-item>
       </ion-list>
@@ -54,7 +58,7 @@
       </div>
 
       <h2 class="q-pt-lg q-px-md">Atividades</h2>
-      <ion-list :inset="true" v-if="mural?.activities">
+      <ion-list :inset="true" v-if="mural?.activities.length">
         <ion-item 
           v-for="e in mural?.activities"
           :key="e"
@@ -78,10 +82,11 @@
       </div>
     </ion-content>
 
-    <ion-modal :keep-contents-mounted="true">
+    <ion-modal :is-open="isModalOpen" :keep-contents-mounted="true">
       <ion-datetime
-        id="datetimeChildMural"
+        id="datetimeChildMural3"
         presentation="date"
+        :value="dateSelected"
         @ionChange="onChangeDate($event, c)"
       ></ion-datetime>
     </ion-modal>
@@ -106,16 +111,31 @@ export default {
   data() {
     return {
       mural: null,
-      dateSelected: null
+      dateSelected: null,
+      isModalOpen: false,
+      showBadge: true,
+      popoverEvent: null,
     };
   },
   beforeMount () {
+    if(this.$route.query.date){
+      const date = this.$route.query.date
+      this.dateSelected = date
+    }
     this.getChildMural()
+  },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/childMuralDetail') {
+        this.getChildMural()
+      }
+    }
   },
   methods: {
     onChangeDate($event, c) {
-      this.dateSelected = $event.detail.value.split('T')[0]
-      this.getChildMural()
+      this.dateSelected = $event.detail.value.split('T')[0];
+      this.getChildMural();
+      this.isModalOpen = false;
     },
     async getChildMural () { 
       const opt = {
@@ -125,7 +145,9 @@ export default {
           dateSelected: this.dateSelected
         }
       }
+      utils.loading.show()
       const r = await useFetch(opt)
+      utils.loading.hide()
       if (r.error) return
       this.mural = r.data
     },
@@ -133,3 +155,73 @@ export default {
   }
 }
 </script>
+<style scoped>
+
+.ion-content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.button-container {
+  position: relative;
+  display: inline-block;
+}
+
+.highlight-button {
+  background-color: var(--ion-color-primary);
+  color: #fff;
+  border-radius: 10px;
+  padding: 2px;
+  box-shadow: 0 0 12px var(--ion-color-primary);
+  animation: pulse 1s infinite;
+}
+
+.badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #ff4081;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  animation: fadeRotate 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeRotate {
+  0% {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: rotate(180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+}
+</style>

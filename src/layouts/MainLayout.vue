@@ -49,6 +49,7 @@ export default defineComponent({
       if (this.$route.path === '/login') return
       else this.checkUserAuthentication()
       
+      
     },
     // async getUserPermissions(){
     //   const opt = {
